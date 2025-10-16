@@ -24,6 +24,9 @@
                 },
                 "email": {
                   "example": "johnchrismaina@gmail.com"
+                },
+                "password": {
+                  "example": "password"
                 }
               }
             }

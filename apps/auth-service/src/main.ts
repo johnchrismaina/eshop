@@ -1,14 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import { errorMiddleware } from '../../../packages/error-handler/error-middleware';
+import { errorMiddleware } from '@packages/error-handler/error-middleware';
 import cookieParser from 'cookie-parser';
 import router from './routes/auth.router';
 import swaggerUi from 'swagger-ui-express';
 const path = require('path');
-const swaggerDocument = require(path.resolve(
-  __dirname,
-  '../../../swagger-output.json'
-));
+const swaggerDocument = require(path.resolve(__dirname, 'swagger-output.json'));
 
 const app = express();
 

@@ -20,7 +20,16 @@
           "main": "apps/auth-service/src/main.ts",
           "tsConfig": "apps/auth-service/tsconfig.app.json",
           "assets": [
-            "apps/auth-service/src/assets"
+            {
+              "input": "apps/auth-service/src",
+              "glob": "swagger-output.json",
+              "output": "."
+            },
+            {
+              "input": "apps/auth-service/src/assets",
+              "glob": "**/*",
+              "output": "assets"
+            }
           ],
           "esbuildOptions": {
             "sourcemap": true,
@@ -111,5 +120,6 @@
   },
   "dependencies": {
     "express": "^4.21.2"
-  }
+  },
+  "scripts": {}
 }

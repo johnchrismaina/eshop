@@ -21,7 +21,8 @@
       "@packages/*": ["packages/*"],
       "@auth/*": ["apps/auth-service/src/*"],
       "@gateway/*": ["apps/api-gateway/src/*"],
-      "@shared/*": ["libs/shared/src/*"]
+      "@shared/*": ["libs/shared/src/*"],
+      "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"]
     }
     // "customConditions": ["@eshop/source"]
   }

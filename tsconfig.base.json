@@ -18,12 +18,11 @@
     "strict": true,
     "target": "es2022",
     "paths": {
-      "@packages/*": ["packages/*"],
       "@auth/*": ["apps/auth-service/src/*"],
+      "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"],
       "@gateway/*": ["apps/api-gateway/src/*"],
-      "@shared/*": ["libs/shared/src/*"],
-      "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"]
+      "@packages/*": ["packages/*"],
+      "@shared/*": ["libs/shared/src/*"]
     }
-    // "customConditions": ["@eshop/source"]
   }
 }

@@ -2,17 +2,23 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff } from 'lucide-react';
-// import Link from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
 
+type FormData = {
+  name: 'string';
+  email: 'string';
+  password: 'string';
+};
+
 const Signup = () => {
   const [activeStep, setActiveStep] = useState(1);
 
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [showOtp, setShowOtp] = useState(false);
+  const [showOtp, setShowOtp] = useState(true);
   const [canResend, setCanResend] = useState(true);
   const [timer, setTimer] = useState(60);
   const [otp, setOtp] = useState(['', '', '', '']);
@@ -25,7 +31,7 @@ const Signup = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
   const startResendTimer = () => {
     const interval = setInterval(() => {
@@ -74,7 +80,7 @@ const Signup = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormData) => {
     signupMutation.mutate(data);
   };
 
@@ -155,7 +161,7 @@ const Signup = () => {
                   </p>
                 )}
 
-                {/* Email label */}
+                {/* Password label */}
                 <label className="block text-gray-700 mb-1">Email</label>
                 <input
                   type="email"
@@ -176,35 +182,6 @@ const Signup = () => {
                   </p>
                 )}
 
-                <label className="block text-gray-700 mb-1">Phone Number</label>
-                <input
-                  type="tel"
-                  placeholder="+254700123456"
-                  className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
-                  {...register('phone_number', {
-                    required: 'Phone number is required',
-                    pattern: {
-                      value: /^\+?[1-9]\d{1,14}$/,
-                      message: 'Invalid phone number format',
-                    },
-                    minLength: {
-                      value: 10,
-                      message: 'Phone number must be at least 10 digits',
-                    },
-                    maxLength: {
-                      value: 15,
-                      message: 'Phone number cannot exceed 15 digits',
-                    },
-                  })}
-                />
-
-                {errors.phone_number && (
-                  <p className="text-red-500 text-sm">
-                    {String(errors.phone_number.message)}
-                  </p>
-                )}
-
-                {/* Password label */}
                 <label className="block text-gray-700 mb-1">Password</label>
                 <div className="relative">
                   <input
@@ -268,7 +245,7 @@ const Signup = () => {
                   disabled={verifyOtpMutation.isPending}
                   onClick={() => verifyOtpMutation.mutate()}
                 >
-                  {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
+                  {verifyOtpMutation.isPending ? 'Verifying... ' : 'Verify OTP'}
                 </button>
                 <p className="text-center text-sm mt-4">
                   {canResend ? (

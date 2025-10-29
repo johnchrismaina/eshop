@@ -2,11 +2,17 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff } from 'lucide-react';
-// import Link from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
+
+type FormData = {
+  name: 'string';
+  email: 'string';
+  password: 'string';
+};
 
 const Signup = () => {
   const [activeStep, setActiveStep] = useState(1);
@@ -25,7 +31,7 @@ const Signup = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
   const startResendTimer = () => {
     const interval = setInterval(() => {
@@ -74,7 +80,7 @@ const Signup = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormData) => {
     signupMutation.mutate(data);
   };
 
@@ -131,14 +137,42 @@ const Signup = () => {
       </div>
 
       {/* Steps content */}
-      <div className="md:w-[480px] p-8 bg-white shadow rounded-lg">
+      <div className='md:w-[480px] p-8 bg-white shadow rounded-lg'>
         {activeStep === 1 && (
-          <>
+            <>
+            {!showOtp ? (
+                <form action=""></form>
+            ) : (
+                <div>
+
+                </div>
+            )}
+            </>
+        )}
+      </div>
+
+      <div className="w-full py-10 min-h-screen bg-[#f1f1f1]">
+
+        <div className="w-full flex justify-center">
+          <div className="md:w-[480px] p-8 bg-white shadow rounded-lg">
+            <h3 className="text-3xl font-semibold text-center mb-2">
+              Sign up to Eshop
+            </h3>
+            <p className="text-center text-gray-500 mb-4">
+              Already have an account?{' '}
+              <Link href={'/login'} className="text-blue-500">
+                Login
+              </Link>
+            </p>
+
+            <div className="flex items-center my-5 text-gray-400 text-sm">
+              <div className="flex-1 border-t border-gray-300" />
+              <span className="px-3">or Sign in with Email</span>
+              <div className="flex-1 border-t border-gray-300" />
+            </div>
+
             {!showOtp ? (
               <form onSubmit={handleSubmit(onSubmit)}>
-                <h3 className="text-2xl font-semibold text-center mb-4">
-                  Create Account
-                </h3>
                 {/* Name label */}
                 <label className="block text-gray-700 mb-1">Name</label>
                 <input
@@ -155,7 +189,7 @@ const Signup = () => {
                   </p>
                 )}
 
-                {/* Email label */}
+                {/* Password label */}
                 <label className="block text-gray-700 mb-1">Email</label>
                 <input
                   type="email"
@@ -176,35 +210,6 @@ const Signup = () => {
                   </p>
                 )}
 
-                <label className="block text-gray-700 mb-1">Phone Number</label>
-                <input
-                  type="tel"
-                  placeholder="+254700123456"
-                  className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
-                  {...register('phone_number', {
-                    required: 'Phone number is required',
-                    pattern: {
-                      value: /^\+?[1-9]\d{1,14}$/,
-                      message: 'Invalid phone number format',
-                    },
-                    minLength: {
-                      value: 10,
-                      message: 'Phone number must be at least 10 digits',
-                    },
-                    maxLength: {
-                      value: 15,
-                      message: 'Phone number cannot exceed 15 digits',
-                    },
-                  })}
-                />
-
-                {errors.phone_number && (
-                  <p className="text-red-500 text-sm">
-                    {String(errors.phone_number.message)}
-                  </p>
-                )}
-
-                {/* Password label */}
                 <label className="block text-gray-700 mb-1">Password</label>
                 <div className="relative">
                   <input
@@ -268,7 +273,7 @@ const Signup = () => {
                   disabled={verifyOtpMutation.isPending}
                   onClick={() => verifyOtpMutation.mutate()}
                 >
-                  {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
+                  {verifyOtpMutation.isPending ? 'Verifying... ' : 'Verify OTP'}
                 </button>
                 <p className="text-center text-sm mt-4">
                   {canResend ? (
@@ -291,8 +296,8 @@ const Signup = () => {
                   )}
               </div>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff } from 'lucide-react';
-// import Link from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -181,10 +181,11 @@ const Signup = () => {
                   type="tel"
                   placeholder="+254700123456"
                   className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
-                  {...register('phone_number', {
+                  {...(register('phone_number'),
+                  {
                     required: 'Phone number is required',
                     pattern: {
-                      value: /^\+?[1-9]\d{1,14}$/,
+                      value: /^\+?[1-9]\d{1,14}$/, // Follows E.164 format
                       message: 'Invalid phone number format',
                     },
                     minLength: {

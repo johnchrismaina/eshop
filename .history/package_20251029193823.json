@@ -7,7 +7,7 @@
     "dev": "npx nx run-many --target=serve --all",
     "auth-docs": "node apps/auth-service/src/swagger.js",
     "user-ui": "npx nx run-many --target=dev --all --projects=user-ui",
-    "seller-ui": "npx nx run-many --target=dev --all --projects=seller-ui"
+    "seller-ui": 
   },
   "private": true,
   "dependencies": {

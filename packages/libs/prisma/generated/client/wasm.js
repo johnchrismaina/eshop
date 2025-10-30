@@ -35,12 +35,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.17.1
- * Query Engine version: 272a37d34178c2894197e17273bf937f25acdeac
+ * Prisma Client JS version: 6.18.0
+ * Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f
  */
 Prisma.prismaVersion = {
-  client: "6.17.1",
-  engine: "272a37d34178c2894197e17273bf937f25acdeac"
+  client: "6.18.0",
+  engine: "34b5a692b7bd79939a9a2c3ef97d816e749cda2f"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -89,7 +89,8 @@ exports.Prisma.ImagesScalarFieldEnum = {
   id: 'id',
   file_id: 'file_id',
   url: 'url',
-  usersId: 'usersId'
+  usersId: 'usersId',
+  shopId: 'shopId'
 };
 
 exports.Prisma.UsersScalarFieldEnum = {
@@ -100,6 +101,46 @@ exports.Prisma.UsersScalarFieldEnum = {
   following: 'following',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ShopReviewsScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  rating: 'rating',
+  reviews: 'reviews',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  shopsId: 'shopsId'
+};
+
+exports.Prisma.ShopsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  bio: 'bio',
+  category: 'category',
+  coverBanner: 'coverBanner',
+  address: 'address',
+  opening_hours: 'opening_hours',
+  website: 'website',
+  socialLinks: 'socialLinks',
+  ratings: 'ratings',
+  sellerId: 'sellerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SellersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone_number: 'phone_number',
+  country: 'country',
+  password: 'password',
+  stripeId: 'stripeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  shopId: 'shopId',
+  shopsId: 'shopsId'
 };
 
 exports.Prisma.SortOrder = {
@@ -115,7 +156,10 @@ exports.Prisma.QueryMode = {
 
 exports.Prisma.ModelName = {
   images: 'images',
-  users: 'users'
+  users: 'users',
+  shopReviews: 'shopReviews',
+  shops: 'shops',
+  sellers: 'sellers'
 };
 /**
  * Create the Client
@@ -146,17 +190,16 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../../../.env"
   },
   "relativePath": "../..",
-  "clientVersion": "6.17.1",
-  "engineVersion": "272a37d34178c2894197e17273bf937f25acdeac",
+  "clientVersion": "6.18.0",
+  "engineVersion": "34b5a692b7bd79939a9a2c3ef97d816e749cda2f",
   "datasourceNames": [
     "db"
   ],
   "activeProvider": "mongodb",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -165,13 +208,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel images {\n  id      String  @id @default(auto()) @map(\"_id\") @db.ObjectId\n  file_id String\n  url     String\n  usersId String? @unique @db.ObjectId\n  users   users?  @relation(fields: [usersId], references: [id])\n}\n\nmodel users {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name      String\n  email     String   @unique\n  password  String?\n  following String[]\n  avatar    images?\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "461e61f794adb7bd215d445f68686b3b0286f1e952027f3743e6ce69725299fe",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel images {\n  id      String  @id @default(auto()) @map(\"_id\") @db.ObjectId\n  file_id String\n  url     String\n  usersId String? @unique @db.ObjectId\n  shopId  String? @unique @db.ObjectId\n  users   users?  @relation(fields: [usersId], references: [id])\n  shops   shops?  @relation(fields: [shopId], references: [id])\n}\n\nmodel users {\n  id          String        @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name        String\n  email       String        @unique\n  password    String?\n  following   String[]\n  avatar      images?\n  createdAt   DateTime      @default(now())\n  updatedAt   DateTime      @updatedAt\n  shopReviews shopReviews[]\n}\n\nmodel shopReviews {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  userID    String?  @db.ObjectId\n  user      users?   @relation(fields: [userID], references: [id])\n  rating    Float\n  reviews   String?\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  shopsId   String?  @db.ObjectId\n  shops     shops?   @relation(fields: [shopsId], references: [id])\n}\n\nmodel shops {\n  id            String        @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name          String\n  bio           String?\n  category      String\n  avatar        images?\n  coverBanner   String?\n  address       String\n  opening_hours String?\n  website       String?\n  socialLinks   Json[]\n  ratings       Float         @default(0)\n  reviews       shopReviews[]\n  sellerId      String        @unique @db.ObjectId\n  sellers       sellers[]\n  createdAt     DateTime      @default(now())\n  updatedAt     DateTime      @updatedAt\n}\n\nmodel sellers {\n  id           String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name         String\n  email        String   @unique\n  phone_number String\n  country      String\n  password     String\n  stripeId     String?\n  shop         shops?   @relation(fields: [shopId], references: [id])\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n  shopId       String?  @db.ObjectId\n  shopsId      String?  @db.ObjectId\n}\n\n// model\n",
+  "inlineSchemaHash": "b0b171f55f74afcebb692b041618bac3b4dd9fe85c62db9eb79972bd5ac1a6ad",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"images\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"file_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usersId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"imagesTousers\"}],\"dbName\":null},\"users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"following\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar\",\"kind\":\"object\",\"type\":\"images\",\"relationName\":\"imagesTousers\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"images\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"file_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usersId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shopId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"imagesTousers\"},{\"name\":\"shops\",\"kind\":\"object\",\"type\":\"shops\",\"relationName\":\"imagesToshops\"}],\"dbName\":null},\"users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"following\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar\",\"kind\":\"object\",\"type\":\"images\",\"relationName\":\"imagesTousers\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"shopReviews\",\"kind\":\"object\",\"type\":\"shopReviews\",\"relationName\":\"shopReviewsTousers\"}],\"dbName\":null},\"shopReviews\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"userID\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"shopReviewsTousers\"},{\"name\":\"rating\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"reviews\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"shopsId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shops\",\"kind\":\"object\",\"type\":\"shops\",\"relationName\":\"shopReviewsToshops\"}],\"dbName\":null},\"shops\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar\",\"kind\":\"object\",\"type\":\"images\",\"relationName\":\"imagesToshops\"},{\"name\":\"coverBanner\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"opening_hours\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"website\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"socialLinks\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"ratings\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"reviews\",\"kind\":\"object\",\"type\":\"shopReviews\",\"relationName\":\"shopReviewsToshops\"},{\"name\":\"sellerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sellers\",\"kind\":\"object\",\"type\":\"sellers\",\"relationName\":\"sellersToshops\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"sellers\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"country\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stripeId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shop\",\"kind\":\"object\",\"type\":\"shops\",\"relationName\":\"sellersToshops\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"shopId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shopsId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

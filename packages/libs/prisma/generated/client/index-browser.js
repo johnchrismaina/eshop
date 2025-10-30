@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.17.1
- * Query Engine version: 272a37d34178c2894197e17273bf937f25acdeac
+ * Prisma Client JS version: 6.18.0
+ * Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f
  */
 Prisma.prismaVersion = {
-  client: "6.17.1",
-  engine: "272a37d34178c2894197e17273bf937f25acdeac"
+  client: "6.18.0",
+  engine: "34b5a692b7bd79939a9a2c3ef97d816e749cda2f"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -117,7 +117,8 @@ exports.Prisma.ImagesScalarFieldEnum = {
   id: 'id',
   file_id: 'file_id',
   url: 'url',
-  usersId: 'usersId'
+  usersId: 'usersId',
+  shopId: 'shopId'
 };
 
 exports.Prisma.UsersScalarFieldEnum = {
@@ -128,6 +129,46 @@ exports.Prisma.UsersScalarFieldEnum = {
   following: 'following',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ShopReviewsScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  rating: 'rating',
+  reviews: 'reviews',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  shopsId: 'shopsId'
+};
+
+exports.Prisma.ShopsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  bio: 'bio',
+  category: 'category',
+  coverBanner: 'coverBanner',
+  address: 'address',
+  opening_hours: 'opening_hours',
+  website: 'website',
+  socialLinks: 'socialLinks',
+  ratings: 'ratings',
+  sellerId: 'sellerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SellersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone_number: 'phone_number',
+  country: 'country',
+  password: 'password',
+  stripeId: 'stripeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  shopId: 'shopId',
+  shopsId: 'shopsId'
 };
 
 exports.Prisma.SortOrder = {
@@ -143,7 +184,10 @@ exports.Prisma.QueryMode = {
 
 exports.Prisma.ModelName = {
   images: 'images',
-  users: 'users'
+  users: 'users',
+  shopReviews: 'shopReviews',
+  shops: 'shops',
+  sellers: 'sellers'
 };
 
 /**

@@ -1,1 +1,0 @@
-export const isSeller = (req:any,res)

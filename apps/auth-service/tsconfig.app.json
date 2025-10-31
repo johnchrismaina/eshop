@@ -28,5 +28,10 @@
     "jest.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts"
+  ],
+  "references": [
+    {
+      "path": "../../packages/tsconfig.lib.json"
+    }
   ]
 }

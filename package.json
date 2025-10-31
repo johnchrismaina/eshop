@@ -41,6 +41,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@nrwl/js": "^19.8.4",
     "@nx/docker": "21.6.4",
     "@nx/esbuild": "21.6.4",
     "@nx/express": "^21.6.4",
@@ -90,6 +91,7 @@
     "webpack-cli": "^5.1.4"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages"
   ]
 }

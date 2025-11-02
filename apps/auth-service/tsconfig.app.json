@@ -19,7 +19,8 @@
     "src/**/*.ts",
     "src/**/*.json",
     "src/swagger-output.json",
-    "../../packages/**/*.ts"
+    "../../packages/**/*.ts",
+    "../../packages/components/color-selector/index.tsx"
   ],
 
   "exclude": [

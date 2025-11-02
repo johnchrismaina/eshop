@@ -21,9 +21,8 @@
       "@auth/*": ["apps/auth-service/src/*"],
       "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"],
       "@gateway/*": ["apps/api-gateway/src/*"],
-      "@packages/*": ["packages/*"],
       "@shared/*": ["libs/shared/src/*"],
-      "@components/spinning": ["packages/libs/shared/components/spinning"]
+      "packages/*": ["packages/*"]
     }
   }
 }

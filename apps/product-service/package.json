@@ -4,6 +4,53 @@
   "private": true,
   "nx": {
     "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "apps/product-service/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": true,
+          "main": "apps/product-service/src/main.ts",
+          "tsConfig": "apps/product-service/tsconfig.app.json",
+          "assets": [
+            {
+              "input": "apps/product-service/src",
+              "glob": "swagger-output.json",
+              "output": "."
+            },
+            {
+              "input": "apps/product-service/src/assets",
+              "glob": "**/*",
+              "output": "assets"
+            }
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "generateLockfile": true,
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
       "prune-lockfile": {
         "dependsOn": [
           "build"

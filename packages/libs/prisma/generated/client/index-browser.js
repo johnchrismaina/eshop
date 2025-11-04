@@ -171,6 +171,12 @@ exports.Prisma.SellersScalarFieldEnum = {
   shopsId: 'shopsId'
 };
 
+exports.Prisma.Site_configScalarFieldEnum = {
+  id: 'id',
+  categories: 'categories',
+  subCategories: 'subCategories'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -187,7 +193,8 @@ exports.Prisma.ModelName = {
   users: 'users',
   shopReviews: 'shopReviews',
   shops: 'shops',
-  sellers: 'sellers'
+  sellers: 'sellers',
+  site_config: 'site_config'
 };
 
 /**

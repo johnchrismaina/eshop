@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "importHelpers": true,
     "isolatedModules": true,
     "baseUrl": ".",
-    "lib": ["es2022"],
+    "lib": ["dom", "es2022"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "noEmitOnError": true,
@@ -21,8 +22,10 @@
       "@auth/*": ["apps/auth-service/src/*"],
       "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"],
       "@gateway/*": ["apps/api-gateway/src/*"],
-      "@shared/*": ["libs/shared/src/*"],
-      "packages/*": ["packages/*"]
+      "@gateway/libs/*": ["apps/api-gateway/src/libs/*"],
+      "@packages/*": ["packages/*"],
+      "@prisma/client": ["node_modules/.prisma/client"],
+      "@shared/*": ["libs/shared/src/*"]
     }
   }
 }

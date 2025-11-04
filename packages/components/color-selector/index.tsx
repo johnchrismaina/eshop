@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Plus } from 'lucide-react';
@@ -26,7 +26,7 @@ const ColorSelector = ({ control, errors }: any) => {
         name="colors"
         control={control}
         render={({ field }) => (
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex gap-3 flex-wrap ">
             {[...defaultColors, ...customColors].map((color) => {
               const isSelected = (field.value || []).includes(color);
               const isLightColor = ['#ffffff', '#ffff00'].includes(color);
@@ -42,7 +42,7 @@ const ColorSelector = ({ control, errors }: any) => {
                         : [...(field.value || []), color]
                     )
                   }
-                  className={`w-7 h-7 p-2 rounded-md my-1 flex items-center justify-center border-2 transition ${
+                  className={`w-7 h-7 p-2 rounded-md my-1 flex items-center justify-center border-2 border-gray-100 transition ${
                     isSelected ? 'scale-110 border-white' : 'border-transparent'
                   } ${isLightColor ? 'border-gray-600' : ''}`}
                   style={{ backgroundColor: color }}
@@ -61,12 +61,15 @@ const ColorSelector = ({ control, errors }: any) => {
 
             {/* Color picker */}
             {showColorPicker && (
-              <div className="relative flex items-center gap-2">
+              <div className="relative flex items-center gap-2 ">
                 <input
                   type="color"
                   value={newColor}
                   onChange={(e) => setNewColor(e.target.value)}
-                  className="w-10 h-10 p-0 rounded-sm border-none cursor-pointer"
+                  // onChange={(e) =>
+                  //   setNewColor((e.target as HTMLInputElement).value)
+                  // }
+                  className="w-10 h-10 p-0 rounded-sm border-none cursor-pointer "
                 />
                 <button
                   type="button"

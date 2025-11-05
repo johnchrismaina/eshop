@@ -37,6 +37,8 @@ const SidebarWrapper = () => {
   const getIconColor = (route: string) =>
     activeSidebar === route ? '#0085ff' : '#969696';
 
+  console.log('Sidebar seller:', seller);
+
   return (
     <Box
       css={{
@@ -56,11 +58,22 @@ const SidebarWrapper = () => {
             <Grid2X2Icon />
             <Box>
               <h3 className="text-xl font-medium text-[#ecedee]">
+                {seller?.shop?.name
+                  ? seller.shop.name
+                  : 'No shop name available'}
+              </h3>
+              <h5 className="font-medium pl-2 text-xs text-[#ecedeecf] whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
+                {seller?.shop?.address
+                  ? seller.shop.address
+                  : 'No address available'}
+              </h5>
+
+              {/* <h3 className="text-xl font-medium text-[#ecedee]">
                 {seller?.shop?.name}
               </h3>
               <h5 className="font-medium pl-2 text-xs text-[#ecedeecf] whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
                 {seller?.shop?.address}
-              </h5>
+              </h5> */}
             </Box>
           </Link>
         </Box>

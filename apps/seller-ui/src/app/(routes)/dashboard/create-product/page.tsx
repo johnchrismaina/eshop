@@ -1,5 +1,7 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
+import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import { ChevronRight } from 'lucide-react';
 import ColorSelector from 'packages/components/color-selector';
 import CustomProperties from 'packages/components/custom-properties';
@@ -23,6 +25,28 @@ const Page = () => {
   const [isChanged, setIsChanged] = useState(false);
   const [images, setImages] = useState<(File | null)[]>([null]);
   const [loading, setLoading] = useState(false);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      try {
+        const res = await axiosProduct.get('/get-categories');
+        return res.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    staleTime: 1000 * 60 * 5,
+    retry: 2,
+  });
+
+  const categories = data?.categories || [];
+  const subCategoriesData = data?.subCategories || {};
+
+  const selectedCategory = watch('category');
+  const regularPrice = watch('regular_price');
+
+  console.log(categories, subCategoriesData);
 
   const onSubmit = (data: any) => {
     console.log(data);

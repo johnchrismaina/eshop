@@ -1,4 +1,4 @@
-import { prisma } from '@packages/libs/prisma';
+import { prisma } from '@eshop/libs/prisma';
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -39,6 +39,8 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       });
       req.seller = account;
     }
+
+    console.log('Authenticated seller:', account);
 
     if (!account) {
       return res.status(401).json({ message: 'Account not found!' });

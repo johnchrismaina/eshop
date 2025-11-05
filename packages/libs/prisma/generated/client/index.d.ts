@@ -1298,12 +1298,10 @@ export namespace Prisma {
 
   export type ShopsCountOutputType = {
     reviews: number
-    sellers: number
   }
 
   export type ShopsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | ShopsCountOutputTypeCountReviewsArgs
-    sellers?: boolean | ShopsCountOutputTypeCountSellersArgs
   }
 
   // Custom InputTypes
@@ -1322,13 +1320,6 @@ export namespace Prisma {
    */
   export type ShopsCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: shopReviewsWhereInput
-  }
-
-  /**
-   * ShopsCountOutputType without action
-   */
-  export type ShopsCountOutputTypeCountSellersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: sellersWhereInput
   }
 
 
@@ -4740,7 +4731,7 @@ export namespace Prisma {
     updatedAt?: boolean
     avatar?: boolean | shops$avatarArgs<ExtArgs>
     reviews?: boolean | shops$reviewsArgs<ExtArgs>
-    sellers?: boolean | shops$sellersArgs<ExtArgs>
+    seller?: boolean | sellersDefaultArgs<ExtArgs>
     _count?: boolean | ShopsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["shops"]>
 
@@ -4766,7 +4757,7 @@ export namespace Prisma {
   export type shopsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     avatar?: boolean | shops$avatarArgs<ExtArgs>
     reviews?: boolean | shops$reviewsArgs<ExtArgs>
-    sellers?: boolean | shops$sellersArgs<ExtArgs>
+    seller?: boolean | sellersDefaultArgs<ExtArgs>
     _count?: boolean | ShopsCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4775,7 +4766,7 @@ export namespace Prisma {
     objects: {
       avatar: Prisma.$imagesPayload<ExtArgs> | null
       reviews: Prisma.$shopReviewsPayload<ExtArgs>[]
-      sellers: Prisma.$sellersPayload<ExtArgs>[]
+      seller: Prisma.$sellersPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5156,7 +5147,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     avatar<T extends shops$avatarArgs<ExtArgs> = {}>(args?: Subset<T, shops$avatarArgs<ExtArgs>>): Prisma__imagesClient<$Result.GetResult<Prisma.$imagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     reviews<T extends shops$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, shops$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$shopReviewsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    sellers<T extends shops$sellersArgs<ExtArgs> = {}>(args?: Subset<T, shops$sellersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$sellersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    seller<T extends sellersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, sellersDefaultArgs<ExtArgs>>): Prisma__sellersClient<$Result.GetResult<Prisma.$sellersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5612,30 +5603,6 @@ export namespace Prisma {
   }
 
   /**
-   * shops.sellers
-   */
-  export type shops$sellersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sellers
-     */
-    select?: sellersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sellers
-     */
-    omit?: sellersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: sellersInclude<ExtArgs> | null
-    where?: sellersWhereInput
-    orderBy?: sellersOrderByWithRelationInput | sellersOrderByWithRelationInput[]
-    cursor?: sellersWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: SellersScalarFieldEnum | SellersScalarFieldEnum[]
-  }
-
-  /**
    * shops without action
    */
   export type shopsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5674,8 +5641,6 @@ export namespace Prisma {
     stripeId: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    shopId: string | null
-    shopsId: string | null
   }
 
   export type SellersMaxAggregateOutputType = {
@@ -5688,8 +5653,6 @@ export namespace Prisma {
     stripeId: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    shopId: string | null
-    shopsId: string | null
   }
 
   export type SellersCountAggregateOutputType = {
@@ -5702,8 +5665,6 @@ export namespace Prisma {
     stripeId: number
     createdAt: number
     updatedAt: number
-    shopId: number
-    shopsId: number
     _all: number
   }
 
@@ -5718,8 +5679,6 @@ export namespace Prisma {
     stripeId?: true
     createdAt?: true
     updatedAt?: true
-    shopId?: true
-    shopsId?: true
   }
 
   export type SellersMaxAggregateInputType = {
@@ -5732,8 +5691,6 @@ export namespace Prisma {
     stripeId?: true
     createdAt?: true
     updatedAt?: true
-    shopId?: true
-    shopsId?: true
   }
 
   export type SellersCountAggregateInputType = {
@@ -5746,8 +5703,6 @@ export namespace Prisma {
     stripeId?: true
     createdAt?: true
     updatedAt?: true
-    shopId?: true
-    shopsId?: true
     _all?: true
   }
 
@@ -5833,8 +5788,6 @@ export namespace Prisma {
     stripeId: string | null
     createdAt: Date
     updatedAt: Date
-    shopId: string | null
-    shopsId: string | null
     _count: SellersCountAggregateOutputType | null
     _min: SellersMinAggregateOutputType | null
     _max: SellersMaxAggregateOutputType | null
@@ -5864,8 +5817,6 @@ export namespace Prisma {
     stripeId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    shopId?: boolean
-    shopsId?: boolean
     shop?: boolean | sellers$shopArgs<ExtArgs>
   }, ExtArgs["result"]["sellers"]>
 
@@ -5881,11 +5832,9 @@ export namespace Prisma {
     stripeId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    shopId?: boolean
-    shopsId?: boolean
   }
 
-  export type sellersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone_number" | "country" | "password" | "stripeId" | "createdAt" | "updatedAt" | "shopId" | "shopsId", ExtArgs["result"]["sellers"]>
+  export type sellersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone_number" | "country" | "password" | "stripeId" | "createdAt" | "updatedAt", ExtArgs["result"]["sellers"]>
   export type sellersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     shop?: boolean | sellers$shopArgs<ExtArgs>
   }
@@ -5905,8 +5854,6 @@ export namespace Prisma {
       stripeId: string | null
       createdAt: Date
       updatedAt: Date
-      shopId: string | null
-      shopsId: string | null
     }, ExtArgs["result"]["sellers"]>
     composites: {}
   }
@@ -6309,8 +6256,6 @@ export namespace Prisma {
     readonly stripeId: FieldRef<"sellers", 'String'>
     readonly createdAt: FieldRef<"sellers", 'DateTime'>
     readonly updatedAt: FieldRef<"sellers", 'DateTime'>
-    readonly shopId: FieldRef<"sellers", 'String'>
-    readonly shopsId: FieldRef<"sellers", 'String'>
   }
     
 
@@ -7689,9 +7634,7 @@ export namespace Prisma {
     password: 'password',
     stripeId: 'stripeId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    shopId: 'shopId',
-    shopsId: 'shopsId'
+    updatedAt: 'updatedAt'
   };
 
   export type SellersScalarFieldEnum = (typeof SellersScalarFieldEnum)[keyof typeof SellersScalarFieldEnum]
@@ -8015,7 +7958,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"shops"> | Date | string
     avatar?: XOR<ImagesNullableScalarRelationFilter, imagesWhereInput> | null
     reviews?: ShopReviewsListRelationFilter
-    sellers?: SellersListRelationFilter
+    seller?: XOR<SellersScalarRelationFilter, sellersWhereInput>
   }
 
   export type shopsOrderByWithRelationInput = {
@@ -8034,7 +7977,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     avatar?: imagesOrderByWithRelationInput
     reviews?: shopReviewsOrderByRelationAggregateInput
-    sellers?: sellersOrderByRelationAggregateInput
+    seller?: sellersOrderByWithRelationInput
   }
 
   export type shopsWhereUniqueInput = Prisma.AtLeast<{
@@ -8056,7 +7999,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"shops"> | Date | string
     avatar?: XOR<ImagesNullableScalarRelationFilter, imagesWhereInput> | null
     reviews?: ShopReviewsListRelationFilter
-    sellers?: SellersListRelationFilter
+    seller?: XOR<SellersScalarRelationFilter, sellersWhereInput>
   }, "id" | "sellerId">
 
   export type shopsOrderByWithAggregationInput = {
@@ -8112,8 +8055,6 @@ export namespace Prisma {
     stripeId?: StringNullableFilter<"sellers"> | string | null
     createdAt?: DateTimeFilter<"sellers"> | Date | string
     updatedAt?: DateTimeFilter<"sellers"> | Date | string
-    shopId?: StringNullableFilter<"sellers"> | string | null
-    shopsId?: StringNullableFilter<"sellers"> | string | null
     shop?: XOR<ShopsNullableScalarRelationFilter, shopsWhereInput> | null
   }
 
@@ -8127,8 +8068,6 @@ export namespace Prisma {
     stripeId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shopId?: SortOrder
-    shopsId?: SortOrder
     shop?: shopsOrderByWithRelationInput
   }
 
@@ -8145,8 +8084,6 @@ export namespace Prisma {
     stripeId?: StringNullableFilter<"sellers"> | string | null
     createdAt?: DateTimeFilter<"sellers"> | Date | string
     updatedAt?: DateTimeFilter<"sellers"> | Date | string
-    shopId?: StringNullableFilter<"sellers"> | string | null
-    shopsId?: StringNullableFilter<"sellers"> | string | null
     shop?: XOR<ShopsNullableScalarRelationFilter, shopsWhereInput> | null
   }, "id" | "email">
 
@@ -8160,8 +8097,6 @@ export namespace Prisma {
     stripeId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shopId?: SortOrder
-    shopsId?: SortOrder
     _count?: sellersCountOrderByAggregateInput
     _max?: sellersMaxOrderByAggregateInput
     _min?: sellersMinOrderByAggregateInput
@@ -8180,8 +8115,6 @@ export namespace Prisma {
     stripeId?: StringNullableWithAggregatesFilter<"sellers"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"sellers"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"sellers"> | Date | string
-    shopId?: StringNullableWithAggregatesFilter<"sellers"> | string | null
-    shopsId?: StringNullableWithAggregatesFilter<"sellers"> | string | null
   }
 
   export type site_configWhereInput = {
@@ -8425,12 +8358,11 @@ export namespace Prisma {
     website?: string | null
     socialLinks?: shopsCreatesocialLinksInput | InputJsonValue[]
     ratings?: number
-    sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     avatar?: imagesCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsCreateNestedManyWithoutShopsInput
-    sellers?: sellersCreateNestedManyWithoutShopInput
+    seller: sellersCreateNestedOneWithoutShopInput
   }
 
   export type shopsUncheckedCreateInput = {
@@ -8449,7 +8381,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     avatar?: imagesUncheckedCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsUncheckedCreateNestedManyWithoutShopsInput
-    sellers?: sellersUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type shopsUpdateInput = {
@@ -8462,12 +8393,11 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
     ratings?: FloatFieldUpdateOperationsInput | number
-    sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatar?: imagesUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUpdateManyWithoutShopsNestedInput
-    sellers?: sellersUpdateManyWithoutShopNestedInput
+    seller?: sellersUpdateOneRequiredWithoutShopNestedInput
   }
 
   export type shopsUncheckedUpdateInput = {
@@ -8485,7 +8415,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatar?: imagesUncheckedUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUncheckedUpdateManyWithoutShopsNestedInput
-    sellers?: sellersUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type shopsCreateManyInput = {
@@ -8514,7 +8443,6 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
     ratings?: FloatFieldUpdateOperationsInput | number
-    sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8544,8 +8472,7 @@ export namespace Prisma {
     stripeId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    shopsId?: string | null
-    shop?: shopsCreateNestedOneWithoutSellersInput
+    shop?: shopsCreateNestedOneWithoutSellerInput
   }
 
   export type sellersUncheckedCreateInput = {
@@ -8558,8 +8485,7 @@ export namespace Prisma {
     stripeId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    shopId?: string | null
-    shopsId?: string | null
+    shop?: shopsUncheckedCreateNestedOneWithoutSellerInput
   }
 
   export type sellersUpdateInput = {
@@ -8571,8 +8497,7 @@ export namespace Prisma {
     stripeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopsId?: NullableStringFieldUpdateOperationsInput | string | null
-    shop?: shopsUpdateOneWithoutSellersNestedInput
+    shop?: shopsUpdateOneWithoutSellerNestedInput
   }
 
   export type sellersUncheckedUpdateInput = {
@@ -8584,8 +8509,7 @@ export namespace Prisma {
     stripeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopId?: NullableStringFieldUpdateOperationsInput | string | null
-    shopsId?: NullableStringFieldUpdateOperationsInput | string | null
+    shop?: shopsUncheckedUpdateOneWithoutSellerNestedInput
   }
 
   export type sellersCreateManyInput = {
@@ -8598,8 +8522,6 @@ export namespace Prisma {
     stripeId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    shopId?: string | null
-    shopsId?: string | null
   }
 
   export type sellersUpdateManyMutationInput = {
@@ -8611,7 +8533,6 @@ export namespace Prisma {
     stripeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopsId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type sellersUncheckedUpdateManyInput = {
@@ -8623,8 +8544,6 @@ export namespace Prisma {
     stripeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopId?: NullableStringFieldUpdateOperationsInput | string | null
-    shopsId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type site_configCreateInput = {
@@ -8922,14 +8841,9 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type SellersListRelationFilter = {
-    every?: sellersWhereInput
-    some?: sellersWhereInput
-    none?: sellersWhereInput
-  }
-
-  export type sellersOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type SellersScalarRelationFilter = {
+    is?: sellersWhereInput
+    isNot?: sellersWhereInput
   }
 
   export type shopsCountOrderByAggregateInput = {
@@ -8996,8 +8910,6 @@ export namespace Prisma {
     stripeId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shopId?: SortOrder
-    shopsId?: SortOrder
   }
 
   export type sellersMaxOrderByAggregateInput = {
@@ -9010,8 +8922,6 @@ export namespace Prisma {
     stripeId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shopId?: SortOrder
-    shopsId?: SortOrder
   }
 
   export type sellersMinOrderByAggregateInput = {
@@ -9024,8 +8934,6 @@ export namespace Prisma {
     stripeId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shopId?: SortOrder
-    shopsId?: SortOrder
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -9252,11 +9160,10 @@ export namespace Prisma {
     connect?: shopReviewsWhereUniqueInput | shopReviewsWhereUniqueInput[]
   }
 
-  export type sellersCreateNestedManyWithoutShopInput = {
-    create?: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput> | sellersCreateWithoutShopInput[] | sellersUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: sellersCreateOrConnectWithoutShopInput | sellersCreateOrConnectWithoutShopInput[]
-    createMany?: sellersCreateManyShopInputEnvelope
-    connect?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
+  export type sellersCreateNestedOneWithoutShopInput = {
+    create?: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput>
+    connectOrCreate?: sellersCreateOrConnectWithoutShopInput
+    connect?: sellersWhereUniqueInput
   }
 
   export type imagesUncheckedCreateNestedOneWithoutShopsInput = {
@@ -9270,13 +9177,6 @@ export namespace Prisma {
     connectOrCreate?: shopReviewsCreateOrConnectWithoutShopsInput | shopReviewsCreateOrConnectWithoutShopsInput[]
     createMany?: shopReviewsCreateManyShopsInputEnvelope
     connect?: shopReviewsWhereUniqueInput | shopReviewsWhereUniqueInput[]
-  }
-
-  export type sellersUncheckedCreateNestedManyWithoutShopInput = {
-    create?: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput> | sellersCreateWithoutShopInput[] | sellersUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: sellersCreateOrConnectWithoutShopInput | sellersCreateOrConnectWithoutShopInput[]
-    createMany?: sellersCreateManyShopInputEnvelope
-    connect?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
   }
 
   export type shopsUpdatesocialLinksInput = {
@@ -9308,18 +9208,12 @@ export namespace Prisma {
     deleteMany?: shopReviewsScalarWhereInput | shopReviewsScalarWhereInput[]
   }
 
-  export type sellersUpdateManyWithoutShopNestedInput = {
-    create?: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput> | sellersCreateWithoutShopInput[] | sellersUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: sellersCreateOrConnectWithoutShopInput | sellersCreateOrConnectWithoutShopInput[]
-    upsert?: sellersUpsertWithWhereUniqueWithoutShopInput | sellersUpsertWithWhereUniqueWithoutShopInput[]
-    createMany?: sellersCreateManyShopInputEnvelope
-    set?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    disconnect?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    delete?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    connect?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    update?: sellersUpdateWithWhereUniqueWithoutShopInput | sellersUpdateWithWhereUniqueWithoutShopInput[]
-    updateMany?: sellersUpdateManyWithWhereWithoutShopInput | sellersUpdateManyWithWhereWithoutShopInput[]
-    deleteMany?: sellersScalarWhereInput | sellersScalarWhereInput[]
+  export type sellersUpdateOneRequiredWithoutShopNestedInput = {
+    create?: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput>
+    connectOrCreate?: sellersCreateOrConnectWithoutShopInput
+    upsert?: sellersUpsertWithoutShopInput
+    connect?: sellersWhereUniqueInput
+    update?: XOR<XOR<sellersUpdateToOneWithWhereWithoutShopInput, sellersUpdateWithoutShopInput>, sellersUncheckedUpdateWithoutShopInput>
   }
 
   export type imagesUncheckedUpdateOneWithoutShopsNestedInput = {
@@ -9346,34 +9240,36 @@ export namespace Prisma {
     deleteMany?: shopReviewsScalarWhereInput | shopReviewsScalarWhereInput[]
   }
 
-  export type sellersUncheckedUpdateManyWithoutShopNestedInput = {
-    create?: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput> | sellersCreateWithoutShopInput[] | sellersUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: sellersCreateOrConnectWithoutShopInput | sellersCreateOrConnectWithoutShopInput[]
-    upsert?: sellersUpsertWithWhereUniqueWithoutShopInput | sellersUpsertWithWhereUniqueWithoutShopInput[]
-    createMany?: sellersCreateManyShopInputEnvelope
-    set?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    disconnect?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    delete?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    connect?: sellersWhereUniqueInput | sellersWhereUniqueInput[]
-    update?: sellersUpdateWithWhereUniqueWithoutShopInput | sellersUpdateWithWhereUniqueWithoutShopInput[]
-    updateMany?: sellersUpdateManyWithWhereWithoutShopInput | sellersUpdateManyWithWhereWithoutShopInput[]
-    deleteMany?: sellersScalarWhereInput | sellersScalarWhereInput[]
-  }
-
-  export type shopsCreateNestedOneWithoutSellersInput = {
-    create?: XOR<shopsCreateWithoutSellersInput, shopsUncheckedCreateWithoutSellersInput>
-    connectOrCreate?: shopsCreateOrConnectWithoutSellersInput
+  export type shopsCreateNestedOneWithoutSellerInput = {
+    create?: XOR<shopsCreateWithoutSellerInput, shopsUncheckedCreateWithoutSellerInput>
+    connectOrCreate?: shopsCreateOrConnectWithoutSellerInput
     connect?: shopsWhereUniqueInput
   }
 
-  export type shopsUpdateOneWithoutSellersNestedInput = {
-    create?: XOR<shopsCreateWithoutSellersInput, shopsUncheckedCreateWithoutSellersInput>
-    connectOrCreate?: shopsCreateOrConnectWithoutSellersInput
-    upsert?: shopsUpsertWithoutSellersInput
-    disconnect?: boolean
+  export type shopsUncheckedCreateNestedOneWithoutSellerInput = {
+    create?: XOR<shopsCreateWithoutSellerInput, shopsUncheckedCreateWithoutSellerInput>
+    connectOrCreate?: shopsCreateOrConnectWithoutSellerInput
+    connect?: shopsWhereUniqueInput
+  }
+
+  export type shopsUpdateOneWithoutSellerNestedInput = {
+    create?: XOR<shopsCreateWithoutSellerInput, shopsUncheckedCreateWithoutSellerInput>
+    connectOrCreate?: shopsCreateOrConnectWithoutSellerInput
+    upsert?: shopsUpsertWithoutSellerInput
+    disconnect?: shopsWhereInput | boolean
     delete?: shopsWhereInput | boolean
     connect?: shopsWhereUniqueInput
-    update?: XOR<XOR<shopsUpdateToOneWithWhereWithoutSellersInput, shopsUpdateWithoutSellersInput>, shopsUncheckedUpdateWithoutSellersInput>
+    update?: XOR<XOR<shopsUpdateToOneWithWhereWithoutSellerInput, shopsUpdateWithoutSellerInput>, shopsUncheckedUpdateWithoutSellerInput>
+  }
+
+  export type shopsUncheckedUpdateOneWithoutSellerNestedInput = {
+    create?: XOR<shopsCreateWithoutSellerInput, shopsUncheckedCreateWithoutSellerInput>
+    connectOrCreate?: shopsCreateOrConnectWithoutSellerInput
+    upsert?: shopsUpsertWithoutSellerInput
+    disconnect?: shopsWhereInput | boolean
+    delete?: shopsWhereInput | boolean
+    connect?: shopsWhereUniqueInput
+    update?: XOR<XOR<shopsUpdateToOneWithWhereWithoutSellerInput, shopsUpdateWithoutSellerInput>, shopsUncheckedUpdateWithoutSellerInput>
   }
 
   export type site_configCreatecategoriesInput = {
@@ -9573,11 +9469,10 @@ export namespace Prisma {
     website?: string | null
     socialLinks?: shopsCreatesocialLinksInput | InputJsonValue[]
     ratings?: number
-    sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: shopReviewsCreateNestedManyWithoutShopsInput
-    sellers?: sellersCreateNestedManyWithoutShopInput
+    seller: sellersCreateNestedOneWithoutShopInput
   }
 
   export type shopsUncheckedCreateWithoutAvatarInput = {
@@ -9595,7 +9490,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: shopReviewsUncheckedCreateNestedManyWithoutShopsInput
-    sellers?: sellersUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type shopsCreateOrConnectWithoutAvatarInput = {
@@ -9655,11 +9549,10 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
     ratings?: FloatFieldUpdateOperationsInput | number
-    sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: shopReviewsUpdateManyWithoutShopsNestedInput
-    sellers?: sellersUpdateManyWithoutShopNestedInput
+    seller?: sellersUpdateOneRequiredWithoutShopNestedInput
   }
 
   export type shopsUncheckedUpdateWithoutAvatarInput = {
@@ -9676,7 +9569,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: shopReviewsUncheckedUpdateManyWithoutShopsNestedInput
-    sellers?: sellersUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type imagesCreateWithoutUsersInput = {
@@ -9815,11 +9707,10 @@ export namespace Prisma {
     website?: string | null
     socialLinks?: shopsCreatesocialLinksInput | InputJsonValue[]
     ratings?: number
-    sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     avatar?: imagesCreateNestedOneWithoutShopsInput
-    sellers?: sellersCreateNestedManyWithoutShopInput
+    seller: sellersCreateNestedOneWithoutShopInput
   }
 
   export type shopsUncheckedCreateWithoutReviewsInput = {
@@ -9837,7 +9728,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     avatar?: imagesUncheckedCreateNestedOneWithoutShopsInput
-    sellers?: sellersUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type shopsCreateOrConnectWithoutReviewsInput = {
@@ -9897,11 +9787,10 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
     ratings?: FloatFieldUpdateOperationsInput | number
-    sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatar?: imagesUpdateOneWithoutShopsNestedInput
-    sellers?: sellersUpdateManyWithoutShopNestedInput
+    seller?: sellersUpdateOneRequiredWithoutShopNestedInput
   }
 
   export type shopsUncheckedUpdateWithoutReviewsInput = {
@@ -9918,7 +9807,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatar?: imagesUncheckedUpdateOneWithoutShopsNestedInput
-    sellers?: sellersUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type imagesCreateWithoutShopsInput = {
@@ -9977,7 +9865,6 @@ export namespace Prisma {
     stripeId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    shopsId?: string | null
   }
 
   export type sellersUncheckedCreateWithoutShopInput = {
@@ -9990,16 +9877,11 @@ export namespace Prisma {
     stripeId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    shopsId?: string | null
   }
 
   export type sellersCreateOrConnectWithoutShopInput = {
     where: sellersWhereUniqueInput
     create: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput>
-  }
-
-  export type sellersCreateManyShopInputEnvelope = {
-    data: sellersCreateManyShopInput | sellersCreateManyShopInput[]
   }
 
   export type imagesUpsertWithoutShopsInput = {
@@ -10041,40 +9923,40 @@ export namespace Prisma {
     data: XOR<shopReviewsUpdateManyMutationInput, shopReviewsUncheckedUpdateManyWithoutShopsInput>
   }
 
-  export type sellersUpsertWithWhereUniqueWithoutShopInput = {
-    where: sellersWhereUniqueInput
+  export type sellersUpsertWithoutShopInput = {
     update: XOR<sellersUpdateWithoutShopInput, sellersUncheckedUpdateWithoutShopInput>
     create: XOR<sellersCreateWithoutShopInput, sellersUncheckedCreateWithoutShopInput>
+    where?: sellersWhereInput
   }
 
-  export type sellersUpdateWithWhereUniqueWithoutShopInput = {
-    where: sellersWhereUniqueInput
+  export type sellersUpdateToOneWithWhereWithoutShopInput = {
+    where?: sellersWhereInput
     data: XOR<sellersUpdateWithoutShopInput, sellersUncheckedUpdateWithoutShopInput>
   }
 
-  export type sellersUpdateManyWithWhereWithoutShopInput = {
-    where: sellersScalarWhereInput
-    data: XOR<sellersUpdateManyMutationInput, sellersUncheckedUpdateManyWithoutShopInput>
+  export type sellersUpdateWithoutShopInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    stripeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type sellersScalarWhereInput = {
-    AND?: sellersScalarWhereInput | sellersScalarWhereInput[]
-    OR?: sellersScalarWhereInput[]
-    NOT?: sellersScalarWhereInput | sellersScalarWhereInput[]
-    id?: StringFilter<"sellers"> | string
-    name?: StringFilter<"sellers"> | string
-    email?: StringFilter<"sellers"> | string
-    phone_number?: StringFilter<"sellers"> | string
-    country?: StringFilter<"sellers"> | string
-    password?: StringFilter<"sellers"> | string
-    stripeId?: StringNullableFilter<"sellers"> | string | null
-    createdAt?: DateTimeFilter<"sellers"> | Date | string
-    updatedAt?: DateTimeFilter<"sellers"> | Date | string
-    shopId?: StringNullableFilter<"sellers"> | string | null
-    shopsId?: StringNullableFilter<"sellers"> | string | null
+  export type sellersUncheckedUpdateWithoutShopInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    stripeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type shopsCreateWithoutSellersInput = {
+  export type shopsCreateWithoutSellerInput = {
     id?: string
     name: string
     bio?: string | null
@@ -10085,14 +9967,13 @@ export namespace Prisma {
     website?: string | null
     socialLinks?: shopsCreatesocialLinksInput | InputJsonValue[]
     ratings?: number
-    sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     avatar?: imagesCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsCreateNestedManyWithoutShopsInput
   }
 
-  export type shopsUncheckedCreateWithoutSellersInput = {
+  export type shopsUncheckedCreateWithoutSellerInput = {
     id?: string
     name: string
     bio?: string | null
@@ -10103,30 +9984,29 @@ export namespace Prisma {
     website?: string | null
     socialLinks?: shopsCreatesocialLinksInput | InputJsonValue[]
     ratings?: number
-    sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     avatar?: imagesUncheckedCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsUncheckedCreateNestedManyWithoutShopsInput
   }
 
-  export type shopsCreateOrConnectWithoutSellersInput = {
+  export type shopsCreateOrConnectWithoutSellerInput = {
     where: shopsWhereUniqueInput
-    create: XOR<shopsCreateWithoutSellersInput, shopsUncheckedCreateWithoutSellersInput>
+    create: XOR<shopsCreateWithoutSellerInput, shopsUncheckedCreateWithoutSellerInput>
   }
 
-  export type shopsUpsertWithoutSellersInput = {
-    update: XOR<shopsUpdateWithoutSellersInput, shopsUncheckedUpdateWithoutSellersInput>
-    create: XOR<shopsCreateWithoutSellersInput, shopsUncheckedCreateWithoutSellersInput>
+  export type shopsUpsertWithoutSellerInput = {
+    update: XOR<shopsUpdateWithoutSellerInput, shopsUncheckedUpdateWithoutSellerInput>
+    create: XOR<shopsCreateWithoutSellerInput, shopsUncheckedCreateWithoutSellerInput>
     where?: shopsWhereInput
   }
 
-  export type shopsUpdateToOneWithWhereWithoutSellersInput = {
+  export type shopsUpdateToOneWithWhereWithoutSellerInput = {
     where?: shopsWhereInput
-    data: XOR<shopsUpdateWithoutSellersInput, shopsUncheckedUpdateWithoutSellersInput>
+    data: XOR<shopsUpdateWithoutSellerInput, shopsUncheckedUpdateWithoutSellerInput>
   }
 
-  export type shopsUpdateWithoutSellersInput = {
+  export type shopsUpdateWithoutSellerInput = {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
@@ -10136,14 +10016,13 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
     ratings?: FloatFieldUpdateOperationsInput | number
-    sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatar?: imagesUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUpdateManyWithoutShopsNestedInput
   }
 
-  export type shopsUncheckedUpdateWithoutSellersInput = {
+  export type shopsUncheckedUpdateWithoutSellerInput = {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
@@ -10153,7 +10032,6 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
     ratings?: FloatFieldUpdateOperationsInput | number
-    sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatar?: imagesUncheckedUpdateOneWithoutShopsNestedInput
@@ -10202,19 +10080,6 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type sellersCreateManyShopInput = {
-    id?: string
-    name: string
-    email: string
-    phone_number: string
-    country: string
-    password: string
-    stripeId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    shopsId?: string | null
-  }
-
   export type shopReviewsUpdateWithoutShopsInput = {
     rating?: FloatFieldUpdateOperationsInput | number
     reviews?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10237,42 +10102,6 @@ export namespace Prisma {
     reviews?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type sellersUpdateWithoutShopInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    stripeId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopsId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type sellersUncheckedUpdateWithoutShopInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    stripeId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopsId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type sellersUncheckedUpdateManyWithoutShopInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    stripeId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopsId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

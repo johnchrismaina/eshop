@@ -14,8 +14,6 @@ model images {
   url     String
   usersId String? @unique @db.ObjectId
   shopId  String? @unique @db.ObjectId
-  // users   users?  @relation(fields: [usersId], references: [id])
-  // shops   shops?  @relation(fields: [shopId], references: [id])
   users   users?  @relation("UserImage", fields: [usersId], references: [id])
   shops   shops?  @relation("ShopImage", fields: [shopId], references: [id])
 }
@@ -26,7 +24,6 @@ model users {
   email       String        @unique
   password    String?
   following   String[]
-  // avatar      images?
   avatar      images?       @relation("UserImage")
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -41,8 +38,6 @@ model shopReviews {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   shopsId   String?  @db.ObjectId
-  //   user      users?   @relation(fields: [userID], references: [id])
-  // shops     shops?   @relation(fields: [shopsId], references: [id])
   user      users?   @relation("UserReview", fields: [userID], references: [id])
   shops     shops?   @relation("ShopReview", fields: [shopsId], references: [id])
 }
@@ -52,7 +47,6 @@ model shops {
   name          String
   bio           String?
   category      String
-  // avatar        images?
   avatar        images?       @relation("ShopImage")
   coverBanner   String?
   address       String
@@ -84,4 +78,15 @@ model site_config {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   categories    String[]
   subCategories Json
+}
+
+model discount_codes {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  public_name   String
+  discountType  String
+  discountValue Float
+  discountCode  String   @unique
+  sellerId      String   @db.ObjectId
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

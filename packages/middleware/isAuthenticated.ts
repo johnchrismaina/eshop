@@ -40,7 +40,7 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       req.seller = account;
     }
 
-    console.log('Authenticated seller:', account);
+    // console.log('Authenticated seller:', account);
 
     if (!account) {
       return res.status(401).json({ message: 'Account not found!' });

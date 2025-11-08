@@ -1,5 +1,6 @@
 import { prisma } from '@eshop/libs/prisma';
 import { NotFoundError, ValidationError } from '@packages/error-handler';
+import { imagekit } from '@packages/libs/imagekit';
 import { NextFunction, Request, Response } from 'express';
 
 //get product categories
@@ -116,6 +117,35 @@ export const deleteDiscountCode = async (
 
     res.status(200).json({
       message: 'Discount code successfully deleted',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Upload product image
+export const uploadProductImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const fileBuffer = req.file?.buffer;
+
+    if (!fileBuffer) {
+      res.status(400).json({ error: 'No image file provided' });
+      return; // ✅ Explicit return to satisfy TypeScript
+    }
+
+    const response = await imagekit.upload({
+      file: fileBuffer,
+      fileName: `product-${Date.now()}.jpg`,
+      folder: '/products',
+    });
+
+    res.status(201).json({
+      file_url: response.url,
+      fileId: response.fileId,
     });
   } catch (error) {
     next(error);

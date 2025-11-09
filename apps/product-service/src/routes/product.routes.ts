@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import {
   createDiscountCodes,
   deleteDiscountCode,
+  deleteProductImage,
   getCategories,
   getDiscountCodes,
   uploadProductImage,
@@ -22,5 +23,6 @@ router.post(
   isAuthenticated,
   uploadProductImage
 );
+router.delete('/delete-product-image', isAuthenticated, deleteProductImage);
 
 export default router;

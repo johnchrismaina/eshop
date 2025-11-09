@@ -1,9 +1,10 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
+import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-// import { error } from 'console';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Wand, X } from 'lucide-react';
+import Image from 'next/image';
 import ColorSelector from 'packages/components/color-selector';
 import CustomProperties from 'packages/components/custom-properties';
 import CustomSpecifications from 'packages/components/custom-specifications';
@@ -13,6 +14,11 @@ import SizeSelector from 'packages/components/size-selector';
 // import { Spinner } from 'packages/components/spinner';
 import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+
+interface UploadedImage {
+  fileId: string;
+  file_url: string;
+}
 
 const Page = () => {
   const {
@@ -26,8 +32,12 @@ const Page = () => {
 
   const [openImageModal, setOpenImageModal] = useState(false);
   const [isChanged, setIsChanged] = useState(true);
-  const [images, setImages] = useState<(File | null)[]>([null]);
+  const [activeEffect, setActiveEffect] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
+  const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['categories'],
@@ -78,6 +88,7 @@ const Page = () => {
 
   const handleImageChange = async (file: File | null, index: number) => {
     if (!file) return;
+    setPictureUploadingLoader(true);
 
     try {
       const formData = new FormData();
@@ -93,8 +104,14 @@ const Page = () => {
         }
       );
 
+      const uploadedImage: UploadedImage = {
+        fileId: response.data.file_id,
+        file_url: response.data.file_url,
+      };
+
       const updatedImages = [...images];
-      updatedImages[index] = response.data.file_url;
+
+      updatedImages[index] = uploadedImage;
 
       if (index === images.length - 1 && updatedImages.length < 8) {
         updatedImages.push(null);
@@ -104,6 +121,8 @@ const Page = () => {
       setValue('images', updatedImages);
     } catch (error) {
       console.log(error);
+    } finally {
+      setPictureUploadingLoader(false);
     }
 
     // const updatedImages = [...images];
@@ -118,13 +137,15 @@ const Page = () => {
     // setValue('images', updatedImages);
   };
 
-  const handleRemoveImage = (index: number) => {
+  const handleRemoveImage = async (index: number) => {
     try {
       const updatedImages = [...images];
 
       const imageToDelete = updatedImages[index];
-      if (imageToDelete && typeof imageToDelete === 'string') {
-        //  delete our picture
+      if (imageToDelete && typeof imageToDelete === 'object') {
+        await axiosProduct.delete('/delete-product-image', {
+          data: { fileId: imageToDelete.fileId! },
+        });
       }
 
       updatedImages.splice(index, 1);
@@ -155,6 +176,21 @@ const Page = () => {
     // setValue('images', images);
   };
 
+  const applyTransformation = async (transformation: string) => {
+    if (!selectedImage || processing) return;
+    setProcessing(true);
+    setActiveEffect(transformation);
+
+    try {
+      const transformedUrl = `${selectedImage}?tr=${transformation}`;
+      setSelectedImage(transformedUrl);
+    } catch (error) {
+      console.log;
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const handleSaveDraft = () => {};
 
   return (
@@ -180,8 +216,11 @@ const Page = () => {
               setOpenImageModal={setOpenImageModal}
               size="765 x 850"
               small={false}
+              images={images}
+              pictureUploadingLoader={pictureUploadingLoader}
               index={0}
               onImageChange={handleImageChange}
+              setSelectedImage={setSelectedImage}
               onRemove={handleRemoveImage}
             />
           )}
@@ -191,8 +230,11 @@ const Page = () => {
               <ImagePlaceholder
                 setOpenImageModal={setOpenImageModal}
                 size="765 x 850"
+                pictureUploadingLoader={pictureUploadingLoader}
+                images={images}
                 key={index}
                 small
+                setSelectedImage={setSelectedImage}
                 index={index + 1}
                 onImageChange={handleImageChange}
                 onRemove={handleRemoveImage}
@@ -607,6 +649,49 @@ const Page = () => {
           </div>
         </div>
       </div>
+
+      {openImageModal && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 z-50">
+          <div className="bg-gray-800 p-6 rounded-lg w-[450px] text-white">
+            <div className="flex justify-between items-center pb-3 mb-4">
+              <h2 className="text-lg font-semibold">Enhance Product Image</h2>
+              <X
+                size={20}
+                className="cursor-pointer"
+                onClick={() => setOpenImageModal(!openImageModal)}
+              />
+            </div>
+
+            <div className="w-full h-[250px] rounded-md overflow-hidden border border-gray-600">
+              <Image src={selectedImage} alt="product-image" layout="fill" />
+            </div>
+            {selectedImage && (
+              <div className="mt-4 space-y-2">
+                <h3 className="text-white text-sm font-semibold">
+                  AI Enhancements
+                </h3>
+                <div className="grid grid-cols-2 gap-3 mx-h-[250px] overflow-y-auto">
+                  {enhancements?.map(({ label, effect }) => (
+                    <button
+                      key={effect}
+                      className={`p-2 rounded-md flex items-center gap-2 ${
+                        activeEffect === effect
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-700 hover:bg-gray-600'
+                      }`}
+                      onClick={() => applyTransformation(effect)}
+                      disabled={processing}
+                    >
+                      <Wand size={18} />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       <div className="mt-6 flex justify-end gap-3">
         {isChanged && (
           <button

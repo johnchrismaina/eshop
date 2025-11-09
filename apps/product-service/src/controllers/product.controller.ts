@@ -151,3 +151,24 @@ export const uploadProductImage = async (
     next(error);
   }
 };
+
+// Delete product image
+export const deleteProductImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { fileId } = req.body;
+
+    const response = await imagekit.deleteFile(fileId);
+
+    res.status(201).json({
+      success: true,
+      message: 'Image deleted successfully',
+      response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

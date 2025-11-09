@@ -5,7 +5,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
-import { countries } from '../../utils/countries';
+import { countries } from '../../../utils/countries';
 import Link from 'next/link';
 import CreateShop from 'apps/seller-ui/src/shared/modules/auth/create-shop';
 

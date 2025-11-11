@@ -5,6 +5,7 @@ import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import { ChevronRight, Wand, X } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import ColorSelector from 'packages/components/color-selector';
 import CustomProperties from 'packages/components/custom-properties';
 import CustomSpecifications from 'packages/components/custom-specifications';
@@ -14,6 +15,7 @@ import SizeSelector from 'packages/components/size-selector';
 // import { Spinner } from 'packages/components/spinner';
 import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 interface UploadedImage {
   fileId: string;
@@ -38,6 +40,7 @@ const Page = () => {
   const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const router = useRouter();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['categories'],
@@ -71,10 +74,18 @@ const Page = () => {
     return selectedCategory ? subCategoriesData[selectedCategory] || [] : [];
   }, [selectedCategory, subCategoriesData]);
 
-  console.log(categories, subCategoriesData);
+  // console.log(categories, subCategoriesData);
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    try {
+      setLoading(true);
+      await axiosProduct.post('/create-product', data);
+      router.push('/dashboard/all-products');
+    } catch (error: any) {
+      toast.error(error?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const convertFiletoBase64 = (file: File) => {
@@ -266,7 +277,7 @@ const Page = () => {
                   cols={10}
                   label="Short description * (Max 150 words)"
                   placeholder="Enter product description for quick view"
-                  {...register('description', {
+                  {...register('short_description', {
                     required: 'Description is required',
                     validate: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
@@ -649,7 +660,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-
+      {/* Image transformation modal */}
       {openImageModal && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 z-50">
           <div className="bg-gray-800 p-6 rounded-lg w-[450px] text-white">
@@ -662,8 +673,13 @@ const Page = () => {
               />
             </div>
 
-            <div className="w-full h-[250px] rounded-md overflow-hidden border border-gray-600">
-              <Image src={selectedImage} alt="product-image" layout="fill" />
+            <div className="relative w-full h-[250px] rounded-md overflow-hidden border border-gray-600">
+              <Image
+                src={selectedImage}
+                alt="product-image"
+                layout="fill"
+                objectFit="cover"
+              />
             </div>
             {selectedImage && (
               <div className="mt-4 space-y-2">
@@ -692,6 +708,7 @@ const Page = () => {
           </div>
         </div>
       )}
+      {/* Create product */}
       <div className="mt-6 flex justify-end gap-3">
         {isChanged && (
           <button

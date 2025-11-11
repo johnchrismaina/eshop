@@ -37,7 +37,7 @@ const SidebarWrapper = () => {
   const getIconColor = (route: string) =>
     activeSidebar === route ? '#0085ff' : '#969696';
 
-  console.log('Sidebar seller:', seller);
+  // console.log('Sidebar seller:', seller);
 
   return (
     <Box

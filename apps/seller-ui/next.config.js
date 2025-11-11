@@ -12,6 +12,14 @@ const nextConfig = {
   // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
 
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'ik.imagekit.io',
+      },
+    ],
+  },
+
   // ✅ Add Webpack alias for 'packages/*'
   webpack: (config, { isServer }) => {
     config.resolve.alias = {

@@ -183,6 +183,8 @@ export const createProduct = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log('➡️ Entered createProduct controller');
+
   try {
     const {
       title,
@@ -207,6 +209,8 @@ export const createProduct = async (
       images = [],
     } = req.body;
 
+    console.log('📦 Incoming body:', req.body);
+
     if (
       !title ||
       !slug ||
@@ -219,30 +223,18 @@ export const createProduct = async (
       !stock ||
       !regular_price
     ) {
+      console.log('❌ Validation failed: missing required fields');
       return next(new ValidationError('Missing required fields'));
     }
 
     if (!req.seller.id) {
+      console.log('❌ Auth failed: seller not found');
       return next(new AuthError('Only seller can create products!'));
     }
 
     console.log('Incoming images:', images);
 
-    // Validate images array for required fields
-    if (Array.isArray(images) && images.length > 0) {
-      const invalidImage = images.find(
-        (img: any) =>
-          !img ||
-          typeof img.fileId === 'undefined' ||
-          typeof img.file_url === 'undefined'
-      );
-      if (invalidImage) {
-        return next(
-          new ValidationError('Each image must have both fileId and file_url')
-        );
-      }
-    }
-
+    console.log('🔎 Checking slug uniqueness:', slug);
     const slugChecking = await prisma.products.findUnique({
       where: {
         slug,
@@ -250,11 +242,13 @@ export const createProduct = async (
     });
 
     if (slugChecking) {
+      console.log('❌ Slug already exists:', slug);
       return next(
         new ValidationError('Slug already exists! Please use a different slug!')
       );
     }
 
+    console.log('🛠 Creating product in DB...');
     const newProduct = await prisma.products.create({
       data: {
         title,
@@ -270,7 +264,7 @@ export const createProduct = async (
         category,
         subCategory,
         colors: colors || [],
-        discount_codes: discountCodes.map((codeId: string) => codeId),
+        discount_codes: discountCodes ?? [],
         sizes: sizes || [],
         stock: parseInt(stock),
         sale_price: parseFloat(sale_price),
@@ -289,9 +283,15 @@ export const createProduct = async (
       include: { images: true },
     });
 
+    console.log('✅ Product created successfully:', newProduct.id);
+
     res.status(201).json({
       success: true,
       newProduct,
     });
-  } catch (error) {}
+    console.log('📤 Response sent to client');
+  } catch (error) {
+    console.error('💥 Error in createProduct:', error);
+    next(error);
+  }
 };

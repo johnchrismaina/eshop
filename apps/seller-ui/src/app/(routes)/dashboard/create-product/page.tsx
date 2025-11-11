@@ -79,10 +79,19 @@ const Page = () => {
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
-      await axiosProduct.post('/create-product', data);
+
+      // ✅ Clean up images before sending
+      const payload = {
+        ...data,
+        images: (data.images || []).filter(
+          (img: any) => img && img.file_url && img.fileId
+        ),
+      };
+
+      await axiosProduct.post('/create-product', payload);
       router.push('/dashboard/all-products');
     } catch (error: any) {
-      toast.error(error?.data?.message);
+      toast.error(error?.response?.data?.message ?? 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -115,9 +124,14 @@ const Page = () => {
         }
       );
 
+      // const uploadedImage: UploadedImage = {
+      //   fileId: response.data.fileId,
+      //   file_url: response.data.file_url,
+      // };
+
       const uploadedImage: UploadedImage = {
-        fileId: response.data.file_id,
-        file_url: response.data.file_url,
+        fileId: response.data.fileId ?? response.data.file_id,
+        file_url: response.data.file_url ?? response.data.url,
       };
 
       const updatedImages = [...images];
@@ -135,6 +149,8 @@ const Page = () => {
     } finally {
       setPictureUploadingLoader(false);
     }
+
+    console.log('Incoming images:', images);
 
     // const updatedImages = [...images];
 

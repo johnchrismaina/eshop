@@ -1,11 +1,12 @@
 import express from 'express';
+import './jobs/product-cron.job';
 import cors from 'cors';
 import { errorMiddleware } from '@packages/error-handler/error-middleware';
 import cookieParser from 'cookie-parser';
 import router from './routes/product.routes';
-// const path = require('path');
-// import swaggerUi from 'swagger-ui-express';
-// const swaggerDocument = require(path.resolve(__dirname, 'swagger-output.json'));
+const path = require('path');
+import swaggerUi from 'swagger-ui-express';
+const swaggerDocument = require(path.resolve(__dirname, 'swagger-output.json'));
 
 const app = express();
 
@@ -25,10 +26,10 @@ app.get('/', (req, res) => {
 });
 
 // Swagger Documentation api setup
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// app.get('/docs.json', (req, res) => {
-//   res.json(swaggerDocument);
-// });
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/docs.json', (req, res) => {
+  res.json(swaggerDocument);
+});
 
 // Routes
 app.use('/api', router);

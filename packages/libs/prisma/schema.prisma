@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/client"
 }
 
 datasource db {
@@ -9,15 +8,12 @@ datasource db {
 }
 
 model images {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  file_id    String
-  url        String
-  usersId    String?   @unique @db.ObjectId
-  shopId     String?   @unique @db.ObjectId
-  users      users?    @relation("UserImage", fields: [usersId], references: [id])
-  shops      shops?    @relation("ShopImage", fields: [shopId], references: [id])
-  products   products? @relation("ProductImage", fields: [productsId], references: [id])
-  productsId String?   @db.ObjectId
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  file_id String
+  url     String
+
+  productId String?   @db.ObjectId
+  product   products? @relation("ProductImages", fields: [productId], references: [id])
 }
 
 model users {
@@ -26,7 +22,7 @@ model users {
   email       String        @unique
   password    String?
   following   String[]
-  avatar      images?       @relation("UserImage")
+  avatar      String? // just store avatar URL directly
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   shopReviews shopReviews[] @relation("UserReview")
@@ -49,7 +45,7 @@ model shops {
   name          String
   bio           String?
   category      String
-  avatar        images?       @relation("ShopImage")
+  avatar        String? // store shop logo/banner URL directly
   coverBanner   String?
   address       String
   opening_hours String?
@@ -61,7 +57,7 @@ model shops {
   seller        sellers       @relation("SellerShop", fields: [sellerId], references: [id])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-  products      products[]    @relation("ShopProducts")
+  products      products[]    @relation("ShopProducts") // one-to-many products
 }
 
 model sellers {
@@ -108,7 +104,6 @@ model products {
   subCategory           String
   short_description     String
   detailed_description  String
-  images                images[]      @relation("ProductImage")
   video_url             String?
   tags                  String[]
   brand                 String?
@@ -130,6 +125,9 @@ model products {
   deletedAt             DateTime?
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
-  shopId                String        @db.ObjectId
-  Shop                  shops         @relation("ShopProducts", fields: [shopId], references: [id])
+
+  // Relations
+  shopId String   @db.ObjectId
+  Shop   shops    @relation("ShopProducts", fields: [shopId], references: [id])
+  images images[] @relation("ProductImages") // one-to-many gallery
 }

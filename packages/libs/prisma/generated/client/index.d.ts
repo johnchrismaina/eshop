@@ -1581,27 +1581,21 @@ export namespace Prisma {
     id: string | null
     file_id: string | null
     url: string | null
-    usersId: string | null
-    shopId: string | null
-    productsId: string | null
+    productId: string | null
   }
 
   export type ImagesMaxAggregateOutputType = {
     id: string | null
     file_id: string | null
     url: string | null
-    usersId: string | null
-    shopId: string | null
-    productsId: string | null
+    productId: string | null
   }
 
   export type ImagesCountAggregateOutputType = {
     id: number
     file_id: number
     url: number
-    usersId: number
-    shopId: number
-    productsId: number
+    productId: number
     _all: number
   }
 
@@ -1610,27 +1604,21 @@ export namespace Prisma {
     id?: true
     file_id?: true
     url?: true
-    usersId?: true
-    shopId?: true
-    productsId?: true
+    productId?: true
   }
 
   export type ImagesMaxAggregateInputType = {
     id?: true
     file_id?: true
     url?: true
-    usersId?: true
-    shopId?: true
-    productsId?: true
+    productId?: true
   }
 
   export type ImagesCountAggregateInputType = {
     id?: true
     file_id?: true
     url?: true
-    usersId?: true
-    shopId?: true
-    productsId?: true
+    productId?: true
     _all?: true
   }
 
@@ -1710,9 +1698,7 @@ export namespace Prisma {
     id: string
     file_id: string
     url: string
-    usersId: string | null
-    shopId: string | null
-    productsId: string | null
+    productId: string | null
     _count: ImagesCountAggregateOutputType | null
     _min: ImagesMinAggregateOutputType | null
     _max: ImagesMaxAggregateOutputType | null
@@ -1736,12 +1722,8 @@ export namespace Prisma {
     id?: boolean
     file_id?: boolean
     url?: boolean
-    usersId?: boolean
-    shopId?: boolean
-    productsId?: boolean
-    users?: boolean | images$usersArgs<ExtArgs>
-    shops?: boolean | images$shopsArgs<ExtArgs>
-    products?: boolean | images$productsArgs<ExtArgs>
+    productId?: boolean
+    product?: boolean | images$productArgs<ExtArgs>
   }, ExtArgs["result"]["images"]>
 
 
@@ -1750,32 +1732,24 @@ export namespace Prisma {
     id?: boolean
     file_id?: boolean
     url?: boolean
-    usersId?: boolean
-    shopId?: boolean
-    productsId?: boolean
+    productId?: boolean
   }
 
-  export type imagesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "file_id" | "url" | "usersId" | "shopId" | "productsId", ExtArgs["result"]["images"]>
+  export type imagesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "file_id" | "url" | "productId", ExtArgs["result"]["images"]>
   export type imagesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | images$usersArgs<ExtArgs>
-    shops?: boolean | images$shopsArgs<ExtArgs>
-    products?: boolean | images$productsArgs<ExtArgs>
+    product?: boolean | images$productArgs<ExtArgs>
   }
 
   export type $imagesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "images"
     objects: {
-      users: Prisma.$usersPayload<ExtArgs> | null
-      shops: Prisma.$shopsPayload<ExtArgs> | null
-      products: Prisma.$productsPayload<ExtArgs> | null
+      product: Prisma.$productsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       file_id: string
       url: string
-      usersId: string | null
-      shopId: string | null
-      productsId: string | null
+      productId: string | null
     }, ExtArgs["result"]["images"]>
     composites: {}
   }
@@ -2139,9 +2113,7 @@ export namespace Prisma {
    */
   export interface Prisma__imagesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    users<T extends images$usersArgs<ExtArgs> = {}>(args?: Subset<T, images$usersArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    shops<T extends images$shopsArgs<ExtArgs> = {}>(args?: Subset<T, images$shopsArgs<ExtArgs>>): Prisma__shopsClient<$Result.GetResult<Prisma.$shopsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    products<T extends images$productsArgs<ExtArgs> = {}>(args?: Subset<T, images$productsArgs<ExtArgs>>): Prisma__productsClient<$Result.GetResult<Prisma.$productsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    product<T extends images$productArgs<ExtArgs> = {}>(args?: Subset<T, images$productArgs<ExtArgs>>): Prisma__productsClient<$Result.GetResult<Prisma.$productsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2174,9 +2146,7 @@ export namespace Prisma {
     readonly id: FieldRef<"images", 'String'>
     readonly file_id: FieldRef<"images", 'String'>
     readonly url: FieldRef<"images", 'String'>
-    readonly usersId: FieldRef<"images", 'String'>
-    readonly shopId: FieldRef<"images", 'String'>
-    readonly productsId: FieldRef<"images", 'String'>
+    readonly productId: FieldRef<"images", 'String'>
   }
     
 
@@ -2547,47 +2517,9 @@ export namespace Prisma {
   }
 
   /**
-   * images.users
+   * images.product
    */
-  export type images$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the users
-     */
-    select?: usersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the users
-     */
-    omit?: usersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: usersInclude<ExtArgs> | null
-    where?: usersWhereInput
-  }
-
-  /**
-   * images.shops
-   */
-  export type images$shopsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the shops
-     */
-    select?: shopsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the shops
-     */
-    omit?: shopsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: shopsInclude<ExtArgs> | null
-    where?: shopsWhereInput
-  }
-
-  /**
-   * images.products
-   */
-  export type images$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type images$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the products
      */
@@ -2637,6 +2569,7 @@ export namespace Prisma {
     name: string | null
     email: string | null
     password: string | null
+    avatar: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2646,6 +2579,7 @@ export namespace Prisma {
     name: string | null
     email: string | null
     password: string | null
+    avatar: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2656,6 +2590,7 @@ export namespace Prisma {
     email: number
     password: number
     following: number
+    avatar: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2667,6 +2602,7 @@ export namespace Prisma {
     name?: true
     email?: true
     password?: true
+    avatar?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2676,6 +2612,7 @@ export namespace Prisma {
     name?: true
     email?: true
     password?: true
+    avatar?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2686,6 +2623,7 @@ export namespace Prisma {
     email?: true
     password?: true
     following?: true
+    avatar?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2769,6 +2707,7 @@ export namespace Prisma {
     email: string
     password: string | null
     following: string[]
+    avatar: string | null
     createdAt: Date
     updatedAt: Date
     _count: UsersCountAggregateOutputType | null
@@ -2796,9 +2735,9 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     following?: boolean
+    avatar?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    avatar?: boolean | users$avatarArgs<ExtArgs>
     shopReviews?: boolean | users$shopReviewsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
@@ -2811,13 +2750,13 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     following?: boolean
+    avatar?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "following" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
+  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "following" | "avatar" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    avatar?: boolean | users$avatarArgs<ExtArgs>
     shopReviews?: boolean | users$shopReviewsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -2825,7 +2764,6 @@ export namespace Prisma {
   export type $usersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "users"
     objects: {
-      avatar: Prisma.$imagesPayload<ExtArgs> | null
       shopReviews: Prisma.$shopReviewsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2834,6 +2772,7 @@ export namespace Prisma {
       email: string
       password: string | null
       following: string[]
+      avatar: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["users"]>
@@ -3199,7 +3138,6 @@ export namespace Prisma {
    */
   export interface Prisma__usersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    avatar<T extends users$avatarArgs<ExtArgs> = {}>(args?: Subset<T, users$avatarArgs<ExtArgs>>): Prisma__imagesClient<$Result.GetResult<Prisma.$imagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     shopReviews<T extends users$shopReviewsArgs<ExtArgs> = {}>(args?: Subset<T, users$shopReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$shopReviewsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3235,6 +3173,7 @@ export namespace Prisma {
     readonly email: FieldRef<"users", 'String'>
     readonly password: FieldRef<"users", 'String'>
     readonly following: FieldRef<"users", 'String[]'>
+    readonly avatar: FieldRef<"users", 'String'>
     readonly createdAt: FieldRef<"users", 'DateTime'>
     readonly updatedAt: FieldRef<"users", 'DateTime'>
   }
@@ -3604,25 +3543,6 @@ export namespace Prisma {
      * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
      */
     options?: InputJsonValue
-  }
-
-  /**
-   * users.avatar
-   */
-  export type users$avatarArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the images
-     */
-    select?: imagesSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the images
-     */
-    omit?: imagesOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    where?: imagesWhereInput
   }
 
   /**
@@ -4770,6 +4690,7 @@ export namespace Prisma {
     name: string | null
     bio: string | null
     category: string | null
+    avatar: string | null
     coverBanner: string | null
     address: string | null
     opening_hours: string | null
@@ -4785,6 +4706,7 @@ export namespace Prisma {
     name: string | null
     bio: string | null
     category: string | null
+    avatar: string | null
     coverBanner: string | null
     address: string | null
     opening_hours: string | null
@@ -4800,6 +4722,7 @@ export namespace Prisma {
     name: number
     bio: number
     category: number
+    avatar: number
     coverBanner: number
     address: number
     opening_hours: number
@@ -4826,6 +4749,7 @@ export namespace Prisma {
     name?: true
     bio?: true
     category?: true
+    avatar?: true
     coverBanner?: true
     address?: true
     opening_hours?: true
@@ -4841,6 +4765,7 @@ export namespace Prisma {
     name?: true
     bio?: true
     category?: true
+    avatar?: true
     coverBanner?: true
     address?: true
     opening_hours?: true
@@ -4856,6 +4781,7 @@ export namespace Prisma {
     name?: true
     bio?: true
     category?: true
+    avatar?: true
     coverBanner?: true
     address?: true
     opening_hours?: true
@@ -4959,6 +4885,7 @@ export namespace Prisma {
     name: string
     bio: string | null
     category: string
+    avatar: string | null
     coverBanner: string | null
     address: string
     opening_hours: string | null
@@ -4994,6 +4921,7 @@ export namespace Prisma {
     name?: boolean
     bio?: boolean
     category?: boolean
+    avatar?: boolean
     coverBanner?: boolean
     address?: boolean
     opening_hours?: boolean
@@ -5003,7 +4931,6 @@ export namespace Prisma {
     sellerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    avatar?: boolean | shops$avatarArgs<ExtArgs>
     reviews?: boolean | shops$reviewsArgs<ExtArgs>
     seller?: boolean | sellersDefaultArgs<ExtArgs>
     products?: boolean | shops$productsArgs<ExtArgs>
@@ -5017,6 +4944,7 @@ export namespace Prisma {
     name?: boolean
     bio?: boolean
     category?: boolean
+    avatar?: boolean
     coverBanner?: boolean
     address?: boolean
     opening_hours?: boolean
@@ -5028,9 +4956,8 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type shopsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "bio" | "category" | "coverBanner" | "address" | "opening_hours" | "website" | "socialLinks" | "ratings" | "sellerId" | "createdAt" | "updatedAt", ExtArgs["result"]["shops"]>
+  export type shopsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "bio" | "category" | "avatar" | "coverBanner" | "address" | "opening_hours" | "website" | "socialLinks" | "ratings" | "sellerId" | "createdAt" | "updatedAt", ExtArgs["result"]["shops"]>
   export type shopsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    avatar?: boolean | shops$avatarArgs<ExtArgs>
     reviews?: boolean | shops$reviewsArgs<ExtArgs>
     seller?: boolean | sellersDefaultArgs<ExtArgs>
     products?: boolean | shops$productsArgs<ExtArgs>
@@ -5040,7 +4967,6 @@ export namespace Prisma {
   export type $shopsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "shops"
     objects: {
-      avatar: Prisma.$imagesPayload<ExtArgs> | null
       reviews: Prisma.$shopReviewsPayload<ExtArgs>[]
       seller: Prisma.$sellersPayload<ExtArgs>
       products: Prisma.$productsPayload<ExtArgs>[]
@@ -5050,6 +4976,7 @@ export namespace Prisma {
       name: string
       bio: string | null
       category: string
+      avatar: string | null
       coverBanner: string | null
       address: string
       opening_hours: string | null
@@ -5422,7 +5349,6 @@ export namespace Prisma {
    */
   export interface Prisma__shopsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    avatar<T extends shops$avatarArgs<ExtArgs> = {}>(args?: Subset<T, shops$avatarArgs<ExtArgs>>): Prisma__imagesClient<$Result.GetResult<Prisma.$imagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     reviews<T extends shops$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, shops$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$shopReviewsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seller<T extends sellersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, sellersDefaultArgs<ExtArgs>>): Prisma__sellersClient<$Result.GetResult<Prisma.$sellersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     products<T extends shops$productsArgs<ExtArgs> = {}>(args?: Subset<T, shops$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$productsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5459,6 +5385,7 @@ export namespace Prisma {
     readonly name: FieldRef<"shops", 'String'>
     readonly bio: FieldRef<"shops", 'String'>
     readonly category: FieldRef<"shops", 'String'>
+    readonly avatar: FieldRef<"shops", 'String'>
     readonly coverBanner: FieldRef<"shops", 'String'>
     readonly address: FieldRef<"shops", 'String'>
     readonly opening_hours: FieldRef<"shops", 'String'>
@@ -5835,25 +5762,6 @@ export namespace Prisma {
      * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
      */
     options?: InputJsonValue
-  }
-
-  /**
-   * shops.avatar
-   */
-  export type shops$avatarArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the images
-     */
-    select?: imagesSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the images
-     */
-    omit?: imagesOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    where?: imagesWhereInput
   }
 
   /**
@@ -9244,8 +9152,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     shopId?: boolean
-    images?: boolean | products$imagesArgs<ExtArgs>
     Shop?: boolean | shopsDefaultArgs<ExtArgs>
+    images?: boolean | products$imagesArgs<ExtArgs>
     _count?: boolean | ProductsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["products"]>
 
@@ -9285,16 +9193,16 @@ export namespace Prisma {
 
   export type productsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "category" | "subCategory" | "short_description" | "detailed_description" | "video_url" | "tags" | "brand" | "colors" | "sizes" | "starting_date" | "ending_date" | "stock" | "sale_price" | "regular_price" | "ratings" | "warranty" | "custom_specifications" | "customProperties" | "isDeleted" | "cashOnDelivery" | "discount_codes" | "status" | "deletedAt" | "createdAt" | "updatedAt" | "shopId", ExtArgs["result"]["products"]>
   export type productsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    images?: boolean | products$imagesArgs<ExtArgs>
     Shop?: boolean | shopsDefaultArgs<ExtArgs>
+    images?: boolean | products$imagesArgs<ExtArgs>
     _count?: boolean | ProductsCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $productsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "products"
     objects: {
-      images: Prisma.$imagesPayload<ExtArgs>[]
       Shop: Prisma.$shopsPayload<ExtArgs>
+      images: Prisma.$imagesPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9689,8 +9597,8 @@ export namespace Prisma {
    */
   export interface Prisma__productsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    images<T extends products$imagesArgs<ExtArgs> = {}>(args?: Subset<T, products$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$imagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Shop<T extends shopsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, shopsDefaultArgs<ExtArgs>>): Prisma__shopsClient<$Result.GetResult<Prisma.$shopsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    images<T extends products$imagesArgs<ExtArgs> = {}>(args?: Subset<T, products$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$imagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10169,9 +10077,7 @@ export namespace Prisma {
     id: 'id',
     file_id: 'file_id',
     url: 'url',
-    usersId: 'usersId',
-    shopId: 'shopId',
-    productsId: 'productsId'
+    productId: 'productId'
   };
 
   export type ImagesScalarFieldEnum = (typeof ImagesScalarFieldEnum)[keyof typeof ImagesScalarFieldEnum]
@@ -10183,6 +10089,7 @@ export namespace Prisma {
     email: 'email',
     password: 'password',
     following: 'following',
+    avatar: 'avatar',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -10208,6 +10115,7 @@ export namespace Prisma {
     name: 'name',
     bio: 'bio',
     category: 'category',
+    avatar: 'avatar',
     coverBanner: 'coverBanner',
     address: 'address',
     opening_hours: 'opening_hours',
@@ -10417,48 +10325,34 @@ export namespace Prisma {
     id?: StringFilter<"images"> | string
     file_id?: StringFilter<"images"> | string
     url?: StringFilter<"images"> | string
-    usersId?: StringNullableFilter<"images"> | string | null
-    shopId?: StringNullableFilter<"images"> | string | null
-    productsId?: StringNullableFilter<"images"> | string | null
-    users?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
-    shops?: XOR<ShopsNullableScalarRelationFilter, shopsWhereInput> | null
-    products?: XOR<ProductsNullableScalarRelationFilter, productsWhereInput> | null
+    productId?: StringNullableFilter<"images"> | string | null
+    product?: XOR<ProductsNullableScalarRelationFilter, productsWhereInput> | null
   }
 
   export type imagesOrderByWithRelationInput = {
     id?: SortOrder
     file_id?: SortOrder
     url?: SortOrder
-    usersId?: SortOrder
-    shopId?: SortOrder
-    productsId?: SortOrder
-    users?: usersOrderByWithRelationInput
-    shops?: shopsOrderByWithRelationInput
-    products?: productsOrderByWithRelationInput
+    productId?: SortOrder
+    product?: productsOrderByWithRelationInput
   }
 
   export type imagesWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    usersId?: string
-    shopId?: string
     AND?: imagesWhereInput | imagesWhereInput[]
     OR?: imagesWhereInput[]
     NOT?: imagesWhereInput | imagesWhereInput[]
     file_id?: StringFilter<"images"> | string
     url?: StringFilter<"images"> | string
-    productsId?: StringNullableFilter<"images"> | string | null
-    users?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
-    shops?: XOR<ShopsNullableScalarRelationFilter, shopsWhereInput> | null
-    products?: XOR<ProductsNullableScalarRelationFilter, productsWhereInput> | null
-  }, "id" | "usersId" | "shopId">
+    productId?: StringNullableFilter<"images"> | string | null
+    product?: XOR<ProductsNullableScalarRelationFilter, productsWhereInput> | null
+  }, "id">
 
   export type imagesOrderByWithAggregationInput = {
     id?: SortOrder
     file_id?: SortOrder
     url?: SortOrder
-    usersId?: SortOrder
-    shopId?: SortOrder
-    productsId?: SortOrder
+    productId?: SortOrder
     _count?: imagesCountOrderByAggregateInput
     _max?: imagesMaxOrderByAggregateInput
     _min?: imagesMinOrderByAggregateInput
@@ -10471,9 +10365,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"images"> | string
     file_id?: StringWithAggregatesFilter<"images"> | string
     url?: StringWithAggregatesFilter<"images"> | string
-    usersId?: StringNullableWithAggregatesFilter<"images"> | string | null
-    shopId?: StringNullableWithAggregatesFilter<"images"> | string | null
-    productsId?: StringNullableWithAggregatesFilter<"images"> | string | null
+    productId?: StringNullableWithAggregatesFilter<"images"> | string | null
   }
 
   export type usersWhereInput = {
@@ -10485,9 +10377,9 @@ export namespace Prisma {
     email?: StringFilter<"users"> | string
     password?: StringNullableFilter<"users"> | string | null
     following?: StringNullableListFilter<"users">
+    avatar?: StringNullableFilter<"users"> | string | null
     createdAt?: DateTimeFilter<"users"> | Date | string
     updatedAt?: DateTimeFilter<"users"> | Date | string
-    avatar?: XOR<ImagesNullableScalarRelationFilter, imagesWhereInput> | null
     shopReviews?: ShopReviewsListRelationFilter
   }
 
@@ -10497,9 +10389,9 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     following?: SortOrder
+    avatar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    avatar?: imagesOrderByWithRelationInput
     shopReviews?: shopReviewsOrderByRelationAggregateInput
   }
 
@@ -10512,9 +10404,9 @@ export namespace Prisma {
     name?: StringFilter<"users"> | string
     password?: StringNullableFilter<"users"> | string | null
     following?: StringNullableListFilter<"users">
+    avatar?: StringNullableFilter<"users"> | string | null
     createdAt?: DateTimeFilter<"users"> | Date | string
     updatedAt?: DateTimeFilter<"users"> | Date | string
-    avatar?: XOR<ImagesNullableScalarRelationFilter, imagesWhereInput> | null
     shopReviews?: ShopReviewsListRelationFilter
   }, "id" | "email">
 
@@ -10524,6 +10416,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     following?: SortOrder
+    avatar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: usersCountOrderByAggregateInput
@@ -10540,6 +10433,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"users"> | string
     password?: StringNullableWithAggregatesFilter<"users"> | string | null
     following?: StringNullableListFilter<"users">
+    avatar?: StringNullableWithAggregatesFilter<"users"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"users"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"users"> | Date | string
   }
@@ -10622,6 +10516,7 @@ export namespace Prisma {
     name?: StringFilter<"shops"> | string
     bio?: StringNullableFilter<"shops"> | string | null
     category?: StringFilter<"shops"> | string
+    avatar?: StringNullableFilter<"shops"> | string | null
     coverBanner?: StringNullableFilter<"shops"> | string | null
     address?: StringFilter<"shops"> | string
     opening_hours?: StringNullableFilter<"shops"> | string | null
@@ -10631,7 +10526,6 @@ export namespace Prisma {
     sellerId?: StringFilter<"shops"> | string
     createdAt?: DateTimeFilter<"shops"> | Date | string
     updatedAt?: DateTimeFilter<"shops"> | Date | string
-    avatar?: XOR<ImagesNullableScalarRelationFilter, imagesWhereInput> | null
     reviews?: ShopReviewsListRelationFilter
     seller?: XOR<SellersScalarRelationFilter, sellersWhereInput>
     products?: ProductsListRelationFilter
@@ -10642,6 +10536,7 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     category?: SortOrder
+    avatar?: SortOrder
     coverBanner?: SortOrder
     address?: SortOrder
     opening_hours?: SortOrder
@@ -10651,7 +10546,6 @@ export namespace Prisma {
     sellerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    avatar?: imagesOrderByWithRelationInput
     reviews?: shopReviewsOrderByRelationAggregateInput
     seller?: sellersOrderByWithRelationInput
     products?: productsOrderByRelationAggregateInput
@@ -10666,6 +10560,7 @@ export namespace Prisma {
     name?: StringFilter<"shops"> | string
     bio?: StringNullableFilter<"shops"> | string | null
     category?: StringFilter<"shops"> | string
+    avatar?: StringNullableFilter<"shops"> | string | null
     coverBanner?: StringNullableFilter<"shops"> | string | null
     address?: StringFilter<"shops"> | string
     opening_hours?: StringNullableFilter<"shops"> | string | null
@@ -10674,7 +10569,6 @@ export namespace Prisma {
     ratings?: FloatFilter<"shops"> | number
     createdAt?: DateTimeFilter<"shops"> | Date | string
     updatedAt?: DateTimeFilter<"shops"> | Date | string
-    avatar?: XOR<ImagesNullableScalarRelationFilter, imagesWhereInput> | null
     reviews?: ShopReviewsListRelationFilter
     seller?: XOR<SellersScalarRelationFilter, sellersWhereInput>
     products?: ProductsListRelationFilter
@@ -10685,6 +10579,7 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     category?: SortOrder
+    avatar?: SortOrder
     coverBanner?: SortOrder
     address?: SortOrder
     opening_hours?: SortOrder
@@ -10709,6 +10604,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"shops"> | string
     bio?: StringNullableWithAggregatesFilter<"shops"> | string | null
     category?: StringWithAggregatesFilter<"shops"> | string
+    avatar?: StringNullableWithAggregatesFilter<"shops"> | string | null
     coverBanner?: StringNullableWithAggregatesFilter<"shops"> | string | null
     address?: StringWithAggregatesFilter<"shops"> | string
     opening_hours?: StringNullableWithAggregatesFilter<"shops"> | string | null
@@ -10939,8 +10835,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"products"> | Date | string
     updatedAt?: DateTimeFilter<"products"> | Date | string
     shopId?: StringFilter<"products"> | string
-    images?: ImagesListRelationFilter
     Shop?: XOR<ShopsScalarRelationFilter, shopsWhereInput>
+    images?: ImagesListRelationFilter
   }
 
   export type productsOrderByWithRelationInput = {
@@ -10973,8 +10869,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     shopId?: SortOrder
-    images?: imagesOrderByRelationAggregateInput
     Shop?: shopsOrderByWithRelationInput
+    images?: imagesOrderByRelationAggregateInput
   }
 
   export type productsWhereUniqueInput = Prisma.AtLeast<{
@@ -11010,8 +10906,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"products"> | Date | string
     updatedAt?: DateTimeFilter<"products"> | Date | string
     shopId?: StringFilter<"products"> | string
-    images?: ImagesListRelationFilter
     Shop?: XOR<ShopsScalarRelationFilter, shopsWhereInput>
+    images?: ImagesListRelationFilter
   }, "id" | "slug">
 
   export type productsOrderByWithAggregationInput = {
@@ -11090,43 +10986,33 @@ export namespace Prisma {
     id?: string
     file_id: string
     url: string
-    users?: usersCreateNestedOneWithoutAvatarInput
-    shops?: shopsCreateNestedOneWithoutAvatarInput
-    products?: productsCreateNestedOneWithoutImagesInput
+    product?: productsCreateNestedOneWithoutImagesInput
   }
 
   export type imagesUncheckedCreateInput = {
     id?: string
     file_id: string
     url: string
-    usersId?: string | null
-    shopId?: string | null
-    productsId?: string | null
+    productId?: string | null
   }
 
   export type imagesUpdateInput = {
     file_id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    users?: usersUpdateOneWithoutAvatarNestedInput
-    shops?: shopsUpdateOneWithoutAvatarNestedInput
-    products?: productsUpdateOneWithoutImagesNestedInput
+    product?: productsUpdateOneWithoutImagesNestedInput
   }
 
   export type imagesUncheckedUpdateInput = {
     file_id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
-    shopId?: NullableStringFieldUpdateOperationsInput | string | null
-    productsId?: NullableStringFieldUpdateOperationsInput | string | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type imagesCreateManyInput = {
     id?: string
     file_id: string
     url: string
-    usersId?: string | null
-    shopId?: string | null
-    productsId?: string | null
+    productId?: string | null
   }
 
   export type imagesUpdateManyMutationInput = {
@@ -11137,9 +11023,7 @@ export namespace Prisma {
   export type imagesUncheckedUpdateManyInput = {
     file_id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
-    shopId?: NullableStringFieldUpdateOperationsInput | string | null
-    productsId?: NullableStringFieldUpdateOperationsInput | string | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usersCreateInput = {
@@ -11148,9 +11032,9 @@ export namespace Prisma {
     email: string
     password?: string | null
     following?: usersCreatefollowingInput | string[]
+    avatar?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesCreateNestedOneWithoutUsersInput
     shopReviews?: shopReviewsCreateNestedManyWithoutUserInput
   }
 
@@ -11160,9 +11044,9 @@ export namespace Prisma {
     email: string
     password?: string | null
     following?: usersCreatefollowingInput | string[]
+    avatar?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesUncheckedCreateNestedOneWithoutUsersInput
     shopReviews?: shopReviewsUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -11171,9 +11055,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     following?: usersUpdatefollowingInput | string[]
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUpdateOneWithoutUsersNestedInput
     shopReviews?: shopReviewsUpdateManyWithoutUserNestedInput
   }
 
@@ -11182,9 +11066,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     following?: usersUpdatefollowingInput | string[]
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUncheckedUpdateOneWithoutUsersNestedInput
     shopReviews?: shopReviewsUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -11194,6 +11078,7 @@ export namespace Prisma {
     email: string
     password?: string | null
     following?: usersCreatefollowingInput | string[]
+    avatar?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11203,6 +11088,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     following?: usersUpdatefollowingInput | string[]
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11212,6 +11098,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     following?: usersUpdatefollowingInput | string[]
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11285,6 +11172,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -11293,7 +11181,6 @@ export namespace Prisma {
     ratings?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsCreateNestedManyWithoutShopsInput
     seller: sellersCreateNestedOneWithoutShopInput
     products?: productsCreateNestedManyWithoutShopInput
@@ -11304,6 +11191,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -11313,7 +11201,6 @@ export namespace Prisma {
     sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesUncheckedCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsUncheckedCreateNestedManyWithoutShopsInput
     products?: productsUncheckedCreateNestedManyWithoutShopInput
   }
@@ -11322,6 +11209,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11330,7 +11218,6 @@ export namespace Prisma {
     ratings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUpdateManyWithoutShopsNestedInput
     seller?: sellersUpdateOneRequiredWithoutShopNestedInput
     products?: productsUpdateManyWithoutShopNestedInput
@@ -11340,6 +11227,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11349,7 +11237,6 @@ export namespace Prisma {
     sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUncheckedUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUncheckedUpdateManyWithoutShopsNestedInput
     products?: productsUncheckedUpdateManyWithoutShopNestedInput
   }
@@ -11359,6 +11246,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -11374,6 +11262,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11388,6 +11277,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11623,8 +11513,8 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    images?: imagesCreateNestedManyWithoutProductsInput
     Shop: shopsCreateNestedOneWithoutProductsInput
+    images?: imagesCreateNestedManyWithoutProductInput
   }
 
   export type productsUncheckedCreateInput = {
@@ -11657,7 +11547,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     shopId: string
-    images?: imagesUncheckedCreateNestedManyWithoutProductsInput
+    images?: imagesUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type productsUpdateInput = {
@@ -11688,8 +11578,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    images?: imagesUpdateManyWithoutProductsNestedInput
     Shop?: shopsUpdateOneRequiredWithoutProductsNestedInput
+    images?: imagesUpdateManyWithoutProductNestedInput
   }
 
   export type productsUncheckedUpdateInput = {
@@ -11721,7 +11611,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     shopId?: StringFieldUpdateOperationsInput | string
-    images?: imagesUncheckedUpdateManyWithoutProductsNestedInput
+    images?: imagesUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type productsCreateManyInput = {
@@ -11848,16 +11738,6 @@ export namespace Prisma {
     isSet?: boolean
   }
 
-  export type UsersNullableScalarRelationFilter = {
-    is?: usersWhereInput | null
-    isNot?: usersWhereInput | null
-  }
-
-  export type ShopsNullableScalarRelationFilter = {
-    is?: shopsWhereInput | null
-    isNot?: shopsWhereInput | null
-  }
-
   export type ProductsNullableScalarRelationFilter = {
     is?: productsWhereInput | null
     isNot?: productsWhereInput | null
@@ -11867,27 +11747,21 @@ export namespace Prisma {
     id?: SortOrder
     file_id?: SortOrder
     url?: SortOrder
-    usersId?: SortOrder
-    shopId?: SortOrder
-    productsId?: SortOrder
+    productId?: SortOrder
   }
 
   export type imagesMaxOrderByAggregateInput = {
     id?: SortOrder
     file_id?: SortOrder
     url?: SortOrder
-    usersId?: SortOrder
-    shopId?: SortOrder
-    productsId?: SortOrder
+    productId?: SortOrder
   }
 
   export type imagesMinOrderByAggregateInput = {
     id?: SortOrder
     file_id?: SortOrder
     url?: SortOrder
-    usersId?: SortOrder
-    shopId?: SortOrder
-    productsId?: SortOrder
+    productId?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -11946,11 +11820,6 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type ImagesNullableScalarRelationFilter = {
-    is?: imagesWhereInput | null
-    isNot?: imagesWhereInput | null
-  }
-
   export type ShopReviewsListRelationFilter = {
     every?: shopReviewsWhereInput
     some?: shopReviewsWhereInput
@@ -11967,6 +11836,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     following?: SortOrder
+    avatar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11976,6 +11846,7 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    avatar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11985,6 +11856,7 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    avatar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12012,6 +11884,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type UsersNullableScalarRelationFilter = {
+    is?: usersWhereInput | null
+    isNot?: usersWhereInput | null
+  }
+
+  export type ShopsNullableScalarRelationFilter = {
+    is?: shopsWhereInput | null
+    isNot?: shopsWhereInput | null
   }
 
   export type shopReviewsCountOrderByAggregateInput = {
@@ -12102,6 +11984,7 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     category?: SortOrder
+    avatar?: SortOrder
     coverBanner?: SortOrder
     address?: SortOrder
     opening_hours?: SortOrder
@@ -12122,6 +12005,7 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     category?: SortOrder
+    avatar?: SortOrder
     coverBanner?: SortOrder
     address?: SortOrder
     opening_hours?: SortOrder
@@ -12137,6 +12021,7 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     category?: SortOrder
+    avatar?: SortOrder
     coverBanner?: SortOrder
     address?: SortOrder
     opening_hours?: SortOrder
@@ -12315,15 +12200,15 @@ export namespace Prisma {
     not?: NestedEnumproductStatusFilter<$PrismaModel> | $Enums.productStatus
   }
 
+  export type ShopsScalarRelationFilter = {
+    is?: shopsWhereInput
+    isNot?: shopsWhereInput
+  }
+
   export type ImagesListRelationFilter = {
     every?: imagesWhereInput
     some?: imagesWhereInput
     none?: imagesWhereInput
-  }
-
-  export type ShopsScalarRelationFilter = {
-    is?: shopsWhereInput
-    isNot?: shopsWhereInput
   }
 
   export type imagesOrderByRelationAggregateInput = {
@@ -12493,18 +12378,6 @@ export namespace Prisma {
     _max?: NestedEnumproductStatusFilter<$PrismaModel>
   }
 
-  export type usersCreateNestedOneWithoutAvatarInput = {
-    create?: XOR<usersCreateWithoutAvatarInput, usersUncheckedCreateWithoutAvatarInput>
-    connectOrCreate?: usersCreateOrConnectWithoutAvatarInput
-    connect?: usersWhereUniqueInput
-  }
-
-  export type shopsCreateNestedOneWithoutAvatarInput = {
-    create?: XOR<shopsCreateWithoutAvatarInput, shopsUncheckedCreateWithoutAvatarInput>
-    connectOrCreate?: shopsCreateOrConnectWithoutAvatarInput
-    connect?: shopsWhereUniqueInput
-  }
-
   export type productsCreateNestedOneWithoutImagesInput = {
     create?: XOR<productsCreateWithoutImagesInput, productsUncheckedCreateWithoutImagesInput>
     connectOrCreate?: productsCreateOrConnectWithoutImagesInput
@@ -12513,26 +12386,6 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
-  }
-
-  export type usersUpdateOneWithoutAvatarNestedInput = {
-    create?: XOR<usersCreateWithoutAvatarInput, usersUncheckedCreateWithoutAvatarInput>
-    connectOrCreate?: usersCreateOrConnectWithoutAvatarInput
-    upsert?: usersUpsertWithoutAvatarInput
-    disconnect?: boolean
-    delete?: usersWhereInput | boolean
-    connect?: usersWhereUniqueInput
-    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutAvatarInput, usersUpdateWithoutAvatarInput>, usersUncheckedUpdateWithoutAvatarInput>
-  }
-
-  export type shopsUpdateOneWithoutAvatarNestedInput = {
-    create?: XOR<shopsCreateWithoutAvatarInput, shopsUncheckedCreateWithoutAvatarInput>
-    connectOrCreate?: shopsCreateOrConnectWithoutAvatarInput
-    upsert?: shopsUpsertWithoutAvatarInput
-    disconnect?: boolean
-    delete?: shopsWhereInput | boolean
-    connect?: shopsWhereUniqueInput
-    update?: XOR<XOR<shopsUpdateToOneWithWhereWithoutAvatarInput, shopsUpdateWithoutAvatarInput>, shopsUncheckedUpdateWithoutAvatarInput>
   }
 
   export type productsUpdateOneWithoutImagesNestedInput = {
@@ -12554,23 +12407,11 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type imagesCreateNestedOneWithoutUsersInput = {
-    create?: XOR<imagesCreateWithoutUsersInput, imagesUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutUsersInput
-    connect?: imagesWhereUniqueInput
-  }
-
   export type shopReviewsCreateNestedManyWithoutUserInput = {
     create?: XOR<shopReviewsCreateWithoutUserInput, shopReviewsUncheckedCreateWithoutUserInput> | shopReviewsCreateWithoutUserInput[] | shopReviewsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: shopReviewsCreateOrConnectWithoutUserInput | shopReviewsCreateOrConnectWithoutUserInput[]
     createMany?: shopReviewsCreateManyUserInputEnvelope
     connect?: shopReviewsWhereUniqueInput | shopReviewsWhereUniqueInput[]
-  }
-
-  export type imagesUncheckedCreateNestedOneWithoutUsersInput = {
-    create?: XOR<imagesCreateWithoutUsersInput, imagesUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutUsersInput
-    connect?: imagesWhereUniqueInput
   }
 
   export type shopReviewsUncheckedCreateNestedManyWithoutUserInput = {
@@ -12589,16 +12430,6 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type imagesUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<imagesCreateWithoutUsersInput, imagesUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutUsersInput
-    upsert?: imagesUpsertWithoutUsersInput
-    disconnect?: imagesWhereInput | boolean
-    delete?: imagesWhereInput | boolean
-    connect?: imagesWhereUniqueInput
-    update?: XOR<XOR<imagesUpdateToOneWithWhereWithoutUsersInput, imagesUpdateWithoutUsersInput>, imagesUncheckedUpdateWithoutUsersInput>
-  }
-
   export type shopReviewsUpdateManyWithoutUserNestedInput = {
     create?: XOR<shopReviewsCreateWithoutUserInput, shopReviewsUncheckedCreateWithoutUserInput> | shopReviewsCreateWithoutUserInput[] | shopReviewsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: shopReviewsCreateOrConnectWithoutUserInput | shopReviewsCreateOrConnectWithoutUserInput[]
@@ -12611,16 +12442,6 @@ export namespace Prisma {
     update?: shopReviewsUpdateWithWhereUniqueWithoutUserInput | shopReviewsUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: shopReviewsUpdateManyWithWhereWithoutUserInput | shopReviewsUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: shopReviewsScalarWhereInput | shopReviewsScalarWhereInput[]
-  }
-
-  export type imagesUncheckedUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<imagesCreateWithoutUsersInput, imagesUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutUsersInput
-    upsert?: imagesUpsertWithoutUsersInput
-    disconnect?: imagesWhereInput | boolean
-    delete?: imagesWhereInput | boolean
-    connect?: imagesWhereUniqueInput
-    update?: XOR<XOR<imagesUpdateToOneWithWhereWithoutUsersInput, imagesUpdateWithoutUsersInput>, imagesUncheckedUpdateWithoutUsersInput>
   }
 
   export type shopReviewsUncheckedUpdateManyWithoutUserNestedInput = {
@@ -12681,12 +12502,6 @@ export namespace Prisma {
     set: InputJsonValue[]
   }
 
-  export type imagesCreateNestedOneWithoutShopsInput = {
-    create?: XOR<imagesCreateWithoutShopsInput, imagesUncheckedCreateWithoutShopsInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutShopsInput
-    connect?: imagesWhereUniqueInput
-  }
-
   export type shopReviewsCreateNestedManyWithoutShopsInput = {
     create?: XOR<shopReviewsCreateWithoutShopsInput, shopReviewsUncheckedCreateWithoutShopsInput> | shopReviewsCreateWithoutShopsInput[] | shopReviewsUncheckedCreateWithoutShopsInput[]
     connectOrCreate?: shopReviewsCreateOrConnectWithoutShopsInput | shopReviewsCreateOrConnectWithoutShopsInput[]
@@ -12707,12 +12522,6 @@ export namespace Prisma {
     connect?: productsWhereUniqueInput | productsWhereUniqueInput[]
   }
 
-  export type imagesUncheckedCreateNestedOneWithoutShopsInput = {
-    create?: XOR<imagesCreateWithoutShopsInput, imagesUncheckedCreateWithoutShopsInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutShopsInput
-    connect?: imagesWhereUniqueInput
-  }
-
   export type shopReviewsUncheckedCreateNestedManyWithoutShopsInput = {
     create?: XOR<shopReviewsCreateWithoutShopsInput, shopReviewsUncheckedCreateWithoutShopsInput> | shopReviewsCreateWithoutShopsInput[] | shopReviewsUncheckedCreateWithoutShopsInput[]
     connectOrCreate?: shopReviewsCreateOrConnectWithoutShopsInput | shopReviewsCreateOrConnectWithoutShopsInput[]
@@ -12730,16 +12539,6 @@ export namespace Prisma {
   export type shopsUpdatesocialLinksInput = {
     set?: InputJsonValue[]
     push?: InputJsonValue | InputJsonValue[]
-  }
-
-  export type imagesUpdateOneWithoutShopsNestedInput = {
-    create?: XOR<imagesCreateWithoutShopsInput, imagesUncheckedCreateWithoutShopsInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutShopsInput
-    upsert?: imagesUpsertWithoutShopsInput
-    disconnect?: imagesWhereInput | boolean
-    delete?: imagesWhereInput | boolean
-    connect?: imagesWhereUniqueInput
-    update?: XOR<XOR<imagesUpdateToOneWithWhereWithoutShopsInput, imagesUpdateWithoutShopsInput>, imagesUncheckedUpdateWithoutShopsInput>
   }
 
   export type shopReviewsUpdateManyWithoutShopsNestedInput = {
@@ -12776,16 +12575,6 @@ export namespace Prisma {
     update?: productsUpdateWithWhereUniqueWithoutShopInput | productsUpdateWithWhereUniqueWithoutShopInput[]
     updateMany?: productsUpdateManyWithWhereWithoutShopInput | productsUpdateManyWithWhereWithoutShopInput[]
     deleteMany?: productsScalarWhereInput | productsScalarWhereInput[]
-  }
-
-  export type imagesUncheckedUpdateOneWithoutShopsNestedInput = {
-    create?: XOR<imagesCreateWithoutShopsInput, imagesUncheckedCreateWithoutShopsInput>
-    connectOrCreate?: imagesCreateOrConnectWithoutShopsInput
-    upsert?: imagesUpsertWithoutShopsInput
-    disconnect?: imagesWhereInput | boolean
-    delete?: imagesWhereInput | boolean
-    connect?: imagesWhereUniqueInput
-    update?: XOR<XOR<imagesUpdateToOneWithWhereWithoutShopsInput, imagesUpdateWithoutShopsInput>, imagesUncheckedUpdateWithoutShopsInput>
   }
 
   export type shopReviewsUncheckedUpdateManyWithoutShopsNestedInput = {
@@ -12873,23 +12662,23 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type imagesCreateNestedManyWithoutProductsInput = {
-    create?: XOR<imagesCreateWithoutProductsInput, imagesUncheckedCreateWithoutProductsInput> | imagesCreateWithoutProductsInput[] | imagesUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProductsInput | imagesCreateOrConnectWithoutProductsInput[]
-    createMany?: imagesCreateManyProductsInputEnvelope
-    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-  }
-
   export type shopsCreateNestedOneWithoutProductsInput = {
     create?: XOR<shopsCreateWithoutProductsInput, shopsUncheckedCreateWithoutProductsInput>
     connectOrCreate?: shopsCreateOrConnectWithoutProductsInput
     connect?: shopsWhereUniqueInput
   }
 
-  export type imagesUncheckedCreateNestedManyWithoutProductsInput = {
-    create?: XOR<imagesCreateWithoutProductsInput, imagesUncheckedCreateWithoutProductsInput> | imagesCreateWithoutProductsInput[] | imagesUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProductsInput | imagesCreateOrConnectWithoutProductsInput[]
-    createMany?: imagesCreateManyProductsInputEnvelope
+  export type imagesCreateNestedManyWithoutProductInput = {
+    create?: XOR<imagesCreateWithoutProductInput, imagesUncheckedCreateWithoutProductInput> | imagesCreateWithoutProductInput[] | imagesUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: imagesCreateOrConnectWithoutProductInput | imagesCreateOrConnectWithoutProductInput[]
+    createMany?: imagesCreateManyProductInputEnvelope
+    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
+  }
+
+  export type imagesUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<imagesCreateWithoutProductInput, imagesUncheckedCreateWithoutProductInput> | imagesCreateWithoutProductInput[] | imagesUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: imagesCreateOrConnectWithoutProductInput | imagesCreateOrConnectWithoutProductInput[]
+    createMany?: imagesCreateManyProductInputEnvelope
     connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
   }
 
@@ -12935,20 +12724,6 @@ export namespace Prisma {
     set?: $Enums.productStatus
   }
 
-  export type imagesUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<imagesCreateWithoutProductsInput, imagesUncheckedCreateWithoutProductsInput> | imagesCreateWithoutProductsInput[] | imagesUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProductsInput | imagesCreateOrConnectWithoutProductsInput[]
-    upsert?: imagesUpsertWithWhereUniqueWithoutProductsInput | imagesUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: imagesCreateManyProductsInputEnvelope
-    set?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    disconnect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    delete?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    update?: imagesUpdateWithWhereUniqueWithoutProductsInput | imagesUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: imagesUpdateManyWithWhereWithoutProductsInput | imagesUpdateManyWithWhereWithoutProductsInput[]
-    deleteMany?: imagesScalarWhereInput | imagesScalarWhereInput[]
-  }
-
   export type shopsUpdateOneRequiredWithoutProductsNestedInput = {
     create?: XOR<shopsCreateWithoutProductsInput, shopsUncheckedCreateWithoutProductsInput>
     connectOrCreate?: shopsCreateOrConnectWithoutProductsInput
@@ -12957,17 +12732,31 @@ export namespace Prisma {
     update?: XOR<XOR<shopsUpdateToOneWithWhereWithoutProductsInput, shopsUpdateWithoutProductsInput>, shopsUncheckedUpdateWithoutProductsInput>
   }
 
-  export type imagesUncheckedUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<imagesCreateWithoutProductsInput, imagesUncheckedCreateWithoutProductsInput> | imagesCreateWithoutProductsInput[] | imagesUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProductsInput | imagesCreateOrConnectWithoutProductsInput[]
-    upsert?: imagesUpsertWithWhereUniqueWithoutProductsInput | imagesUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: imagesCreateManyProductsInputEnvelope
+  export type imagesUpdateManyWithoutProductNestedInput = {
+    create?: XOR<imagesCreateWithoutProductInput, imagesUncheckedCreateWithoutProductInput> | imagesCreateWithoutProductInput[] | imagesUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: imagesCreateOrConnectWithoutProductInput | imagesCreateOrConnectWithoutProductInput[]
+    upsert?: imagesUpsertWithWhereUniqueWithoutProductInput | imagesUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: imagesCreateManyProductInputEnvelope
     set?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
     disconnect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
     delete?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
     connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    update?: imagesUpdateWithWhereUniqueWithoutProductsInput | imagesUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: imagesUpdateManyWithWhereWithoutProductsInput | imagesUpdateManyWithWhereWithoutProductsInput[]
+    update?: imagesUpdateWithWhereUniqueWithoutProductInput | imagesUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: imagesUpdateManyWithWhereWithoutProductInput | imagesUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: imagesScalarWhereInput | imagesScalarWhereInput[]
+  }
+
+  export type imagesUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<imagesCreateWithoutProductInput, imagesUncheckedCreateWithoutProductInput> | imagesCreateWithoutProductInput[] | imagesUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: imagesCreateOrConnectWithoutProductInput | imagesCreateOrConnectWithoutProductInput[]
+    upsert?: imagesUpsertWithWhereUniqueWithoutProductInput | imagesUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: imagesCreateManyProductInputEnvelope
+    set?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
+    disconnect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
+    delete?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
+    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
+    update?: imagesUpdateWithWhereUniqueWithoutProductInput | imagesUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: imagesUpdateManyWithWhereWithoutProductInput | imagesUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: imagesScalarWhereInput | imagesScalarWhereInput[]
   }
 
@@ -13208,74 +12997,6 @@ export namespace Prisma {
     _max?: NestedEnumproductStatusFilter<$PrismaModel>
   }
 
-  export type usersCreateWithoutAvatarInput = {
-    id?: string
-    name: string
-    email: string
-    password?: string | null
-    following?: usersCreatefollowingInput | string[]
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    shopReviews?: shopReviewsCreateNestedManyWithoutUserInput
-  }
-
-  export type usersUncheckedCreateWithoutAvatarInput = {
-    id?: string
-    name: string
-    email: string
-    password?: string | null
-    following?: usersCreatefollowingInput | string[]
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    shopReviews?: shopReviewsUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type usersCreateOrConnectWithoutAvatarInput = {
-    where: usersWhereUniqueInput
-    create: XOR<usersCreateWithoutAvatarInput, usersUncheckedCreateWithoutAvatarInput>
-  }
-
-  export type shopsCreateWithoutAvatarInput = {
-    id?: string
-    name: string
-    bio?: string | null
-    category: string
-    coverBanner?: string | null
-    address: string
-    opening_hours?: string | null
-    website?: string | null
-    socialLinks?: shopsCreatesocialLinksInput | InputJsonValue[]
-    ratings?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviews?: shopReviewsCreateNestedManyWithoutShopsInput
-    seller: sellersCreateNestedOneWithoutShopInput
-    products?: productsCreateNestedManyWithoutShopInput
-  }
-
-  export type shopsUncheckedCreateWithoutAvatarInput = {
-    id?: string
-    name: string
-    bio?: string | null
-    category: string
-    coverBanner?: string | null
-    address: string
-    opening_hours?: string | null
-    website?: string | null
-    socialLinks?: shopsCreatesocialLinksInput | InputJsonValue[]
-    ratings?: number
-    sellerId: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviews?: shopReviewsUncheckedCreateNestedManyWithoutShopsInput
-    products?: productsUncheckedCreateNestedManyWithoutShopInput
-  }
-
-  export type shopsCreateOrConnectWithoutAvatarInput = {
-    where: shopsWhereUniqueInput
-    create: XOR<shopsCreateWithoutAvatarInput, shopsUncheckedCreateWithoutAvatarInput>
-  }
-
   export type productsCreateWithoutImagesInput = {
     id?: string
     title: string
@@ -13343,82 +13064,6 @@ export namespace Prisma {
   export type productsCreateOrConnectWithoutImagesInput = {
     where: productsWhereUniqueInput
     create: XOR<productsCreateWithoutImagesInput, productsUncheckedCreateWithoutImagesInput>
-  }
-
-  export type usersUpsertWithoutAvatarInput = {
-    update: XOR<usersUpdateWithoutAvatarInput, usersUncheckedUpdateWithoutAvatarInput>
-    create: XOR<usersCreateWithoutAvatarInput, usersUncheckedCreateWithoutAvatarInput>
-    where?: usersWhereInput
-  }
-
-  export type usersUpdateToOneWithWhereWithoutAvatarInput = {
-    where?: usersWhereInput
-    data: XOR<usersUpdateWithoutAvatarInput, usersUncheckedUpdateWithoutAvatarInput>
-  }
-
-  export type usersUpdateWithoutAvatarInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    following?: usersUpdatefollowingInput | string[]
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopReviews?: shopReviewsUpdateManyWithoutUserNestedInput
-  }
-
-  export type usersUncheckedUpdateWithoutAvatarInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    following?: usersUpdatefollowingInput | string[]
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shopReviews?: shopReviewsUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type shopsUpsertWithoutAvatarInput = {
-    update: XOR<shopsUpdateWithoutAvatarInput, shopsUncheckedUpdateWithoutAvatarInput>
-    create: XOR<shopsCreateWithoutAvatarInput, shopsUncheckedCreateWithoutAvatarInput>
-    where?: shopsWhereInput
-  }
-
-  export type shopsUpdateToOneWithWhereWithoutAvatarInput = {
-    where?: shopsWhereInput
-    data: XOR<shopsUpdateWithoutAvatarInput, shopsUncheckedUpdateWithoutAvatarInput>
-  }
-
-  export type shopsUpdateWithoutAvatarInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
-    opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
-    ratings?: FloatFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: shopReviewsUpdateManyWithoutShopsNestedInput
-    seller?: sellersUpdateOneRequiredWithoutShopNestedInput
-    products?: productsUpdateManyWithoutShopNestedInput
-  }
-
-  export type shopsUncheckedUpdateWithoutAvatarInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
-    opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    socialLinks?: shopsUpdatesocialLinksInput | InputJsonValue[]
-    ratings?: FloatFieldUpdateOperationsInput | number
-    sellerId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: shopReviewsUncheckedUpdateManyWithoutShopsNestedInput
-    products?: productsUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type productsUpsertWithoutImagesInput = {
@@ -13494,27 +13139,6 @@ export namespace Prisma {
     shopId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type imagesCreateWithoutUsersInput = {
-    id?: string
-    file_id: string
-    url: string
-    shops?: shopsCreateNestedOneWithoutAvatarInput
-    products?: productsCreateNestedOneWithoutImagesInput
-  }
-
-  export type imagesUncheckedCreateWithoutUsersInput = {
-    id?: string
-    file_id: string
-    url: string
-    shopId?: string | null
-    productsId?: string | null
-  }
-
-  export type imagesCreateOrConnectWithoutUsersInput = {
-    where: imagesWhereUniqueInput
-    create: XOR<imagesCreateWithoutUsersInput, imagesUncheckedCreateWithoutUsersInput>
-  }
-
   export type shopReviewsCreateWithoutUserInput = {
     id?: string
     rating: number
@@ -13540,31 +13164,6 @@ export namespace Prisma {
 
   export type shopReviewsCreateManyUserInputEnvelope = {
     data: shopReviewsCreateManyUserInput | shopReviewsCreateManyUserInput[]
-  }
-
-  export type imagesUpsertWithoutUsersInput = {
-    update: XOR<imagesUpdateWithoutUsersInput, imagesUncheckedUpdateWithoutUsersInput>
-    create: XOR<imagesCreateWithoutUsersInput, imagesUncheckedCreateWithoutUsersInput>
-    where?: imagesWhereInput
-  }
-
-  export type imagesUpdateToOneWithWhereWithoutUsersInput = {
-    where?: imagesWhereInput
-    data: XOR<imagesUpdateWithoutUsersInput, imagesUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type imagesUpdateWithoutUsersInput = {
-    file_id?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    shops?: shopsUpdateOneWithoutAvatarNestedInput
-    products?: productsUpdateOneWithoutImagesNestedInput
-  }
-
-  export type imagesUncheckedUpdateWithoutUsersInput = {
-    file_id?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    shopId?: NullableStringFieldUpdateOperationsInput | string | null
-    productsId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type shopReviewsUpsertWithWhereUniqueWithoutUserInput = {
@@ -13602,9 +13201,9 @@ export namespace Prisma {
     email: string
     password?: string | null
     following?: usersCreatefollowingInput | string[]
+    avatar?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesCreateNestedOneWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutShopReviewsInput = {
@@ -13613,9 +13212,9 @@ export namespace Prisma {
     email: string
     password?: string | null
     following?: usersCreatefollowingInput | string[]
+    avatar?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutShopReviewsInput = {
@@ -13628,6 +13227,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -13636,7 +13236,6 @@ export namespace Prisma {
     ratings?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesCreateNestedOneWithoutShopsInput
     seller: sellersCreateNestedOneWithoutShopInput
     products?: productsCreateNestedManyWithoutShopInput
   }
@@ -13646,6 +13245,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -13655,7 +13255,6 @@ export namespace Prisma {
     sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesUncheckedCreateNestedOneWithoutShopsInput
     products?: productsUncheckedCreateNestedManyWithoutShopInput
   }
 
@@ -13680,9 +13279,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     following?: usersUpdatefollowingInput | string[]
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUpdateOneWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutShopReviewsInput = {
@@ -13690,9 +13289,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     following?: usersUpdatefollowingInput | string[]
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type shopsUpsertWithoutReviewsInput = {
@@ -13710,6 +13309,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13718,7 +13318,6 @@ export namespace Prisma {
     ratings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUpdateOneWithoutShopsNestedInput
     seller?: sellersUpdateOneRequiredWithoutShopNestedInput
     products?: productsUpdateManyWithoutShopNestedInput
   }
@@ -13727,6 +13326,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13736,29 +13336,7 @@ export namespace Prisma {
     sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUncheckedUpdateOneWithoutShopsNestedInput
     products?: productsUncheckedUpdateManyWithoutShopNestedInput
-  }
-
-  export type imagesCreateWithoutShopsInput = {
-    id?: string
-    file_id: string
-    url: string
-    users?: usersCreateNestedOneWithoutAvatarInput
-    products?: productsCreateNestedOneWithoutImagesInput
-  }
-
-  export type imagesUncheckedCreateWithoutShopsInput = {
-    id?: string
-    file_id: string
-    url: string
-    usersId?: string | null
-    productsId?: string | null
-  }
-
-  export type imagesCreateOrConnectWithoutShopsInput = {
-    where: imagesWhereUniqueInput
-    create: XOR<imagesCreateWithoutShopsInput, imagesUncheckedCreateWithoutShopsInput>
   }
 
   export type shopReviewsCreateWithoutShopsInput = {
@@ -13846,7 +13424,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    images?: imagesCreateNestedManyWithoutProductsInput
+    images?: imagesCreateNestedManyWithoutProductInput
   }
 
   export type productsUncheckedCreateWithoutShopInput = {
@@ -13878,7 +13456,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    images?: imagesUncheckedCreateNestedManyWithoutProductsInput
+    images?: imagesUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type productsCreateOrConnectWithoutShopInput = {
@@ -13888,31 +13466,6 @@ export namespace Prisma {
 
   export type productsCreateManyShopInputEnvelope = {
     data: productsCreateManyShopInput | productsCreateManyShopInput[]
-  }
-
-  export type imagesUpsertWithoutShopsInput = {
-    update: XOR<imagesUpdateWithoutShopsInput, imagesUncheckedUpdateWithoutShopsInput>
-    create: XOR<imagesCreateWithoutShopsInput, imagesUncheckedCreateWithoutShopsInput>
-    where?: imagesWhereInput
-  }
-
-  export type imagesUpdateToOneWithWhereWithoutShopsInput = {
-    where?: imagesWhereInput
-    data: XOR<imagesUpdateWithoutShopsInput, imagesUncheckedUpdateWithoutShopsInput>
-  }
-
-  export type imagesUpdateWithoutShopsInput = {
-    file_id?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    users?: usersUpdateOneWithoutAvatarNestedInput
-    products?: productsUpdateOneWithoutImagesNestedInput
-  }
-
-  export type imagesUncheckedUpdateWithoutShopsInput = {
-    file_id?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
-    productsId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type shopReviewsUpsertWithWhereUniqueWithoutShopsInput = {
@@ -14020,6 +13573,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -14028,7 +13582,6 @@ export namespace Prisma {
     ratings?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsCreateNestedManyWithoutShopsInput
     products?: productsCreateNestedManyWithoutShopInput
   }
@@ -14038,6 +13591,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -14046,7 +13600,6 @@ export namespace Prisma {
     ratings?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesUncheckedCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsUncheckedCreateNestedManyWithoutShopsInput
     products?: productsUncheckedCreateNestedManyWithoutShopInput
   }
@@ -14071,6 +13624,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14079,7 +13633,6 @@ export namespace Prisma {
     ratings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUpdateManyWithoutShopsNestedInput
     products?: productsUpdateManyWithoutShopNestedInput
   }
@@ -14088,6 +13641,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14096,34 +13650,8 @@ export namespace Prisma {
     ratings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUncheckedUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUncheckedUpdateManyWithoutShopsNestedInput
     products?: productsUncheckedUpdateManyWithoutShopNestedInput
-  }
-
-  export type imagesCreateWithoutProductsInput = {
-    id?: string
-    file_id: string
-    url: string
-    users?: usersCreateNestedOneWithoutAvatarInput
-    shops?: shopsCreateNestedOneWithoutAvatarInput
-  }
-
-  export type imagesUncheckedCreateWithoutProductsInput = {
-    id?: string
-    file_id: string
-    url: string
-    usersId?: string | null
-    shopId?: string | null
-  }
-
-  export type imagesCreateOrConnectWithoutProductsInput = {
-    where: imagesWhereUniqueInput
-    create: XOR<imagesCreateWithoutProductsInput, imagesUncheckedCreateWithoutProductsInput>
-  }
-
-  export type imagesCreateManyProductsInputEnvelope = {
-    data: imagesCreateManyProductsInput | imagesCreateManyProductsInput[]
   }
 
   export type shopsCreateWithoutProductsInput = {
@@ -14131,6 +13659,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -14139,7 +13668,6 @@ export namespace Prisma {
     ratings?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsCreateNestedManyWithoutShopsInput
     seller: sellersCreateNestedOneWithoutShopInput
   }
@@ -14149,6 +13677,7 @@ export namespace Prisma {
     name: string
     bio?: string | null
     category: string
+    avatar?: string | null
     coverBanner?: string | null
     address: string
     opening_hours?: string | null
@@ -14158,7 +13687,6 @@ export namespace Prisma {
     sellerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    avatar?: imagesUncheckedCreateNestedOneWithoutShopsInput
     reviews?: shopReviewsUncheckedCreateNestedManyWithoutShopsInput
   }
 
@@ -14167,32 +13695,25 @@ export namespace Prisma {
     create: XOR<shopsCreateWithoutProductsInput, shopsUncheckedCreateWithoutProductsInput>
   }
 
-  export type imagesUpsertWithWhereUniqueWithoutProductsInput = {
+  export type imagesCreateWithoutProductInput = {
+    id?: string
+    file_id: string
+    url: string
+  }
+
+  export type imagesUncheckedCreateWithoutProductInput = {
+    id?: string
+    file_id: string
+    url: string
+  }
+
+  export type imagesCreateOrConnectWithoutProductInput = {
     where: imagesWhereUniqueInput
-    update: XOR<imagesUpdateWithoutProductsInput, imagesUncheckedUpdateWithoutProductsInput>
-    create: XOR<imagesCreateWithoutProductsInput, imagesUncheckedCreateWithoutProductsInput>
+    create: XOR<imagesCreateWithoutProductInput, imagesUncheckedCreateWithoutProductInput>
   }
 
-  export type imagesUpdateWithWhereUniqueWithoutProductsInput = {
-    where: imagesWhereUniqueInput
-    data: XOR<imagesUpdateWithoutProductsInput, imagesUncheckedUpdateWithoutProductsInput>
-  }
-
-  export type imagesUpdateManyWithWhereWithoutProductsInput = {
-    where: imagesScalarWhereInput
-    data: XOR<imagesUpdateManyMutationInput, imagesUncheckedUpdateManyWithoutProductsInput>
-  }
-
-  export type imagesScalarWhereInput = {
-    AND?: imagesScalarWhereInput | imagesScalarWhereInput[]
-    OR?: imagesScalarWhereInput[]
-    NOT?: imagesScalarWhereInput | imagesScalarWhereInput[]
-    id?: StringFilter<"images"> | string
-    file_id?: StringFilter<"images"> | string
-    url?: StringFilter<"images"> | string
-    usersId?: StringNullableFilter<"images"> | string | null
-    shopId?: StringNullableFilter<"images"> | string | null
-    productsId?: StringNullableFilter<"images"> | string | null
+  export type imagesCreateManyProductInputEnvelope = {
+    data: imagesCreateManyProductInput | imagesCreateManyProductInput[]
   }
 
   export type shopsUpsertWithoutProductsInput = {
@@ -14210,6 +13731,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14218,7 +13740,6 @@ export namespace Prisma {
     ratings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUpdateManyWithoutShopsNestedInput
     seller?: sellersUpdateOneRequiredWithoutShopNestedInput
   }
@@ -14227,6 +13748,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     coverBanner?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     opening_hours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14236,8 +13758,33 @@ export namespace Prisma {
     sellerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    avatar?: imagesUncheckedUpdateOneWithoutShopsNestedInput
     reviews?: shopReviewsUncheckedUpdateManyWithoutShopsNestedInput
+  }
+
+  export type imagesUpsertWithWhereUniqueWithoutProductInput = {
+    where: imagesWhereUniqueInput
+    update: XOR<imagesUpdateWithoutProductInput, imagesUncheckedUpdateWithoutProductInput>
+    create: XOR<imagesCreateWithoutProductInput, imagesUncheckedCreateWithoutProductInput>
+  }
+
+  export type imagesUpdateWithWhereUniqueWithoutProductInput = {
+    where: imagesWhereUniqueInput
+    data: XOR<imagesUpdateWithoutProductInput, imagesUncheckedUpdateWithoutProductInput>
+  }
+
+  export type imagesUpdateManyWithWhereWithoutProductInput = {
+    where: imagesScalarWhereInput
+    data: XOR<imagesUpdateManyMutationInput, imagesUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type imagesScalarWhereInput = {
+    AND?: imagesScalarWhereInput | imagesScalarWhereInput[]
+    OR?: imagesScalarWhereInput[]
+    NOT?: imagesScalarWhereInput | imagesScalarWhereInput[]
+    id?: StringFilter<"images"> | string
+    file_id?: StringFilter<"images"> | string
+    url?: StringFilter<"images"> | string
+    productId?: StringNullableFilter<"images"> | string | null
   }
 
   export type shopReviewsCreateManyUserInput = {
@@ -14365,7 +13912,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    images?: imagesUpdateManyWithoutProductsNestedInput
+    images?: imagesUpdateManyWithoutProductNestedInput
   }
 
   export type productsUncheckedUpdateWithoutShopInput = {
@@ -14396,7 +13943,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    images?: imagesUncheckedUpdateManyWithoutProductsNestedInput
+    images?: imagesUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type productsUncheckedUpdateManyWithoutShopInput = {
@@ -14429,33 +13976,25 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type imagesCreateManyProductsInput = {
+  export type imagesCreateManyProductInput = {
     id?: string
     file_id: string
     url: string
-    usersId?: string | null
-    shopId?: string | null
   }
 
-  export type imagesUpdateWithoutProductsInput = {
+  export type imagesUpdateWithoutProductInput = {
     file_id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    users?: usersUpdateOneWithoutAvatarNestedInput
-    shops?: shopsUpdateOneWithoutAvatarNestedInput
   }
 
-  export type imagesUncheckedUpdateWithoutProductsInput = {
+  export type imagesUncheckedUpdateWithoutProductInput = {
     file_id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
-    shopId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type imagesUncheckedUpdateManyWithoutProductsInput = {
+  export type imagesUncheckedUpdateManyWithoutProductInput = {
     file_id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
-    shopId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

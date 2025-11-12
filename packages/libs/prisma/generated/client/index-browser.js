@@ -117,9 +117,7 @@ exports.Prisma.ImagesScalarFieldEnum = {
   id: 'id',
   file_id: 'file_id',
   url: 'url',
-  usersId: 'usersId',
-  shopId: 'shopId',
-  productsId: 'productsId'
+  productId: 'productId'
 };
 
 exports.Prisma.UsersScalarFieldEnum = {
@@ -128,6 +126,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   email: 'email',
   password: 'password',
   following: 'following',
+  avatar: 'avatar',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -147,6 +146,7 @@ exports.Prisma.ShopsScalarFieldEnum = {
   name: 'name',
   bio: 'bio',
   category: 'category',
+  avatar: 'avatar',
   coverBanner: 'coverBanner',
   address: 'address',
   opening_hours: 'opening_hours',

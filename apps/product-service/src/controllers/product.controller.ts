@@ -1,11 +1,17 @@
-import { prisma } from '@eshop/libs/prisma';
+// import { prisma } from '@eshop/libs/prisma';
+// import { prisma } from '@eshop/libs/prisma';
+import { prisma } from '@packages/libs/prisma/';
+import { PrismaClient } from '@prisma/client';
 import {
   AuthError,
   NotFoundError,
   ValidationError,
 } from '@packages/error-handler';
 import { imagekit } from '@packages/libs/imagekit';
+import { Prisma } from '@packages/libs/prisma/generated/client';
 import { NextFunction, Request, Response } from 'express';
+import Stripe from 'stripe';
+// import { ApiVersion } from 'stripe/types/apiVersion';
 
 //get product categories
 export const getCategories = async (
@@ -403,5 +409,117 @@ export const restoreProduct = async (
     return res.status(200).json({ message: 'Product successfully restored!' });
   } catch (error) {
     return res.status(500).json({ message: 'Error restoring product', error });
+  }
+};
+
+// Get seller stripe information
+export const getStripeAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+      apiVersion: '2025-10-29.clover', // always pin API version
+    });
+
+    // 1. Extract sellerId from request (could be params or auth middleware)
+    const { sellerId } = req.params;
+
+    if (!sellerId) {
+      return res.status(400).json({ error: 'Seller ID is required' });
+    }
+
+    // 2. Look up seller in DB
+    const seller = await prisma.sellers.findUnique({
+      where: { id: sellerId },
+      select: { stripeId: true },
+    });
+
+    if (!seller || !seller.stripeId) {
+      return res
+        .status(404)
+        .json({ error: 'Seller or Stripe account not found' });
+    }
+
+    // 3. Fetch account details from Stripe
+    const account = await stripe.accounts.retrieve(seller.stripeId);
+
+    // 4. Return safe subset of account info
+    return res.status(200).json({
+      id: account.id,
+      email: account.email,
+      business_type: account.business_type,
+      charges_enabled: account.charges_enabled,
+      payouts_enabled: account.payouts_enabled,
+      requirements: account.requirements,
+    });
+  } catch (err) {
+    console.error('Error fetching Stripe account:', err);
+    return next(err); // pass to error middleware
+  }
+};
+
+// Get all products
+export const getAllProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const prisma = new PrismaClient();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+    const type = req.query.type;
+
+    const baseFilter = {
+      OR: [
+        {
+          starting_data: null,
+        },
+        {
+          ending_date: null,
+        },
+      ],
+    };
+
+    const orderBy: Prisma.productsOrderByWithRelationInput[] =
+      type === 'latest'
+        ? [{ createdAt: Prisma.SortOrder.desc }]
+        : [{ totalSales: Prisma.SortOrder.desc }];
+
+    const [products, total, top10Products] = await Promise.all([
+      prisma.products.findMany({
+        skip,
+        take: limit,
+        include: {
+          images: true,
+          Shop: true,
+        },
+        where: baseFilter,
+        orderBy: {
+          totalSales: 'desc',
+        },
+      }),
+
+      prisma.products.count({ where: baseFilter }),
+      prisma.products.findMany({
+        take: 10,
+        where: baseFilter,
+        orderBy,
+      }),
+    ]);
+
+    res.status(200).json({
+      products,
+      top10By: type === 'latest' ? 'latest' : 'topSales',
+      top10Products,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    next(error);
   }
 };

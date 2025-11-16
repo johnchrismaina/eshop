@@ -130,4 +130,7 @@ model products {
   shopId String   @db.ObjectId
   Shop   shops    @relation("ShopProducts", fields: [shopId], references: [id])
   images images[] @relation("ProductImages") // one-to-many gallery
+
+  // New field for sales tracking
+  totalSales Int @default(0)
 }

@@ -474,14 +474,7 @@ export const getAllProducts = async (
     const type = req.query.type;
 
     const baseFilter = {
-      OR: [
-        {
-          starting_data: null,
-        },
-        {
-          ending_date: null,
-        },
-      ],
+      isDeleted: false,
     };
 
     const orderBy: Prisma.productsOrderByWithRelationInput =

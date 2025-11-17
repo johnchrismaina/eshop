@@ -51,32 +51,34 @@ const ProductCard = ({
         </div>
       )}
 
-      <Link href={`/product/${product?.slug}`}>
+      <Link
+        href={`/product/${product?.slug}`}
+        className="block relative w-full h-[200px] overflow-hidden rounded-t-md bg-gray-200"
+      >
         <img
           src={
             product?.images[0]?.url ||
-            'https://images.unsplash.com/photo-1635405074683-96d6921a2a68?w=500&auto=for.png'
+            'https://ik.imagekit.io/johnchrismaina/products/slider-img-1.webp?updatedAt=1763137176151'
           }
-          alt={product?.title}
-          width={300}
-          height={300}
-          className="w-full h-[200px] object-cover mx-auto rounded-t-md"
+          alt={product?.title || 'product'}
+          style={{ width: 'auto', height: 'auto' }}
+          className="w-full h-full object-cover"
         />
       </Link>
 
-      <link
+      <Link
         href={`/shop/${product?.Shop?.id}`}
         className="block text-blue-500 text-sm font-medium my-2 px-2"
       >
         {product?.Shop?.name}
-      </link>
+      </Link>
 
       {/* product title */}
-      <link href={`/product/${product?.slug}`}>
+      <Link href={`/product/${product?.slug}`}>
         <h3 className="text-base font-semibold px-2 text-gray-800">
           {product?.title}
         </h3>
-      </link>
+      </Link>
 
       {/* product ratings */}
       <div className="mt-2 px-2 ">

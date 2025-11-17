@@ -16,6 +16,12 @@ const nextConfig = {
       {
         hostname: 'ik.imagekit.io',
       },
+      {
+        hostname: 'images.unsplash.com',
+      },
+      {
+        hostname: 'localhost',
+      },
     ],
   },
 };

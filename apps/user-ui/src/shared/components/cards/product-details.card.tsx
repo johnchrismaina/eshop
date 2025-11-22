@@ -4,6 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Ratings from '../ratings';
 import { Heart, MapPin, ShoppingCartIcon, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useStore } from 'apps/user-ui/src/store';
+import useUser from 'apps/user-ui/src/hooks/useUser';
+import useLocationTracking from 'apps/user-ui/src/hooks/useLocationTracking';
+import useDeviceTracking from 'apps/user-ui/src/hooks/useDeviceTracking';
 
 const ProductDetailsCard = ({
   data,
@@ -19,6 +23,21 @@ const ProductDetailsCard = ({
   const [isSelected, setIsSelected] = useState(data?.colors?.[0] || '');
   const [isSizeSelected, setIsSizeSelected] = useState(data?.sizes?.[0] || '');
   const [quantity, setQuantity] = useState(1);
+
+  const addToCart = useStore((state: any) => state.addToCart);
+  const cart = useStore((state: any) => state.cart);
+  const isInCart = cart.some((item: any) => item.id === data.id);
+  const addToWishlist = useStore((state: any) => state.addToWishlist);
+  const removeFromWishlist = useStore((state: any) => state.removeFromWishlist);
+  const wishlist = useStore((state: any) => state.wishlist);
+  const isWishlisted = wishlist.some((item: any) => item.id === data.id);
+  const { user } = useUser();
+  const location = useLocationTracking();
+  const deviceInfo = useDeviceTracking();
+
+  const estimatedDelivery = new Date();
+  estimatedDelivery.setDate(estimatedDelivery.getDate() + 5);
+
   const router = useRouter();
 
   // Reset active image if it exceeds valid images length
@@ -125,23 +144,19 @@ const ProductDetailsCard = ({
                 <X size={25} onClick={() => setOpen(false)} />
               </button>
             </div>
-
             {/* Product title */}
             <h3 className="text-xl font-semibold mt-3">{data?.title}</h3>
-
             {/* Product description */}
             <p className="mt-2 text-gray-700 whitespace-pre-wrap w-full">
               {data?.short_description}{' '}
               {`Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis, soluta eum maiores laudantium quaerat labore iure modi perspiciatis! Veniam delectus vitae vero dolores soluta quis iure iusto fugit iste suscipit.`}
             </p>
-
             {/* Brand */}
             {data?.brand && (
               <p className="mt-2">
                 <strong>Brand:</strong> {data.brand}
               </p>
             )}
-
             {/* Color & Size selection */}
             <div className="flex flex-col md:flex-row items-start gap-5 mt-4">
               {/* Color options */}
@@ -187,52 +202,90 @@ const ProductDetailsCard = ({
                   </div>
                 </div>
               )}
-              {/* Price section */}
-              <div className="mt-5 flex items-center gap-4">
-                <h3 className="text-2xl font-semibold text-gray-900">
-                  ${data?.sale_price}
-                </h3>
-                {data?.regular_price && (
-                  <h3 className="text-lg text-red-600 line-through">
-                    ${data.regular_price}
-                  </h3>
-                )}
-              </div>
-              <div className="mt-5 flex items-center gap-5">
-                <div className="flex items-center rounded-md">
-                  <button
-                    className="px-3 cursor-pointer py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-l-md"
-                    onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-                  >
-                    -
-                  </button>
-                  <span className="px-4 bg-gray-100 py-1">{quantity}</span>
-                  <button
-                    className="px-3 py-1 cursor-pointer bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-r-md"
-                    onClick={() => setQuantity((prev) => prev + 1)}
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  className={`flex items-center gap-2 px-4 py-2 bg-[#ff5722] hover:bg-[#e64a19] text-white font-medium rounded-lg transition`}
-                >
-                  <ShoppingCartIcon size={18} />
-                </button>
-                <button className="opacity-[.7] cursor-pointer">
-                  <Heart size={30} fill="red" color="black" />
-                </button>
-              </div>
-              <div className="mt-3">
-                {data.stock > 0 ? (
-                  <span className="text-green-600 font-semibold">In Stock</span>
-                ) : (
-                  <span className="text-red-600 font-semibold">
-                    Out of Stock
-                  </span>
-                )}
-              </div>{' '}
             </div>
+            {/* Price section */}
+            <div className="mt-5 flex items-center gap-4">
+              <h3 className="text-2xl font-semibold text-gray-900">
+                ${data?.sale_price}
+              </h3>
+              {data?.regular_price && (
+                <h3 className="text-lg text-red-600 line-through">
+                  ${data.regular_price}
+                </h3>
+              )}
+            </div>
+            <div className="mt-5 flex items-center gap-5">
+              <div className="flex items-center rounded-md">
+                <button
+                  className="px-3 cursor-pointer py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-l-md"
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                >
+                  -
+                </button>
+                <span className="px-4 bg-gray-100 py-1">{quantity}</span>
+                <button
+                  className="px-3 py-1 cursor-pointer bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-r-md"
+                  onClick={() => setQuantity((prev) => prev + 1)}
+                >
+                  +
+                </button>
+              </div>
+              <button
+                disabled={isInCart}
+                onClick={() =>
+                  addToCart(
+                    {
+                      ...data,
+                      quantity,
+                      selectedOptions: {
+                        color: isSelected,
+                        size: isSizeSelected,
+                      },
+                    },
+                    user,
+                    location,
+                    deviceInfo
+                  )
+                }
+                className={`flex items-center gap-2 px-4 py-2 bg-[#ff5722] hover:bg-[#e64a19] text-white font-medium rounded-lg transition ${
+                  isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
+              >
+                <ShoppingCartIcon size={18} />
+                Add to Cart
+              </button>
+              <button className="opacity-[.7] cursor-pointer">
+                <Heart
+                  size={30}
+                  fill={isWishlisted ? 'red' : 'transparent'}
+                  color={isWishlisted ? 'transparent' : 'black'}
+                  onClick={() =>
+                    isWishlisted
+                      ? removeFromWishlist(data.id, user, location, deviceInfo)
+                      : addToWishlist(
+                          {
+                            ...data,
+                            quantity,
+                            selectedOptions: {
+                              color: isSelected,
+                              size: isSizeSelected,
+                            },
+                          },
+                          user,
+                          location,
+                          deviceInfo
+                        )
+                  }
+                />
+              </button>
+            </div>
+            <div className="mt-3">
+              {data.stock > 0 ? (
+                <span className="text-green-600 font-semibold">In Stock</span>
+              ) : (
+                <span className="text-red-600 font-semibold">Out of Stock</span>
+              )}
+            </div>{' '}
           </div>
         </div>
       </div>

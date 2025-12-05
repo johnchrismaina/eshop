@@ -8,6 +8,7 @@ import {
   getAllProducts,
   getCategories,
   getDiscountCodes,
+  getProductDetails,
   getShopProducts,
   // getStripeAccount,
   restoreProduct,
@@ -37,5 +38,6 @@ router.delete('/delete-product/:productId', isAuthenticated, deleteProduct);
 router.put('/restore-product/:productId', isAuthenticated, restoreProduct);
 // router.get('/get-stripe-account', isAuthenticated, isSeller, getStripeAccount)
 router.get('/get-all-products', getAllProducts);
+router.get('/get-product/:slug', getProductDetails);
 
 export default router;

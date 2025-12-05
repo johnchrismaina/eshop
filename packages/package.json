@@ -11,6 +11,11 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./utils/kafka": {
+      "types": "./utils/kafka/index.ts",
+      "import": "./utils/kafka/index.ts",
+      "default": "./utils/kafka/index.ts"
+    },
     "./package.json": "./package.json"
   },
   "dependencies": {}

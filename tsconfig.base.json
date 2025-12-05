@@ -20,7 +20,10 @@
     "target": "es2022",
     "paths": {
       "@auth/*": ["apps/auth-service/src/*"],
+      "@eshop/error-handler": ["packages/error-handler/index.ts"],
       "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"],
+      "@eshop/prisma": ["packages/libs/prisma/index.ts"],
+      "@eshop/redis": ["packages/libs/redis/index.ts"],
       "@gateway/*": ["apps/api-gateway/src/*"],
       "@gateway/libs/*": ["apps/api-gateway/src/libs/*"],
       "@packages/*": ["packages/*"],

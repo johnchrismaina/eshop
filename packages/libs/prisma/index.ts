@@ -1,14 +1,14 @@
-import { PrismaClient } from './generated/client';
-
+import { PrismaClient } from '@prisma/client';
 declare global {
-  namespace globalThis {
-    var prismadb: PrismaClient | undefined;
-  }
+  // allow global prisma reuse in dev
+  // eslint-disable-next-line no-var
+  var prismadb: PrismaClient | undefined;
 }
 
-// Reuse PrismaClient in dev to avoid exhausting database connections
 export const prisma = globalThis.prismadb ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prismadb = prisma;
 }
+
+export {};

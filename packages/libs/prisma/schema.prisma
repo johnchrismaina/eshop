@@ -134,3 +134,48 @@ model products {
   // New field for sales tracking
   totalSales Int @default(0)
 }
+
+// Define an embedded type for actions
+type ActionEntry {
+  productId String?
+  shopId    String?
+  action    String
+  timestamp DateTime
+}
+
+// model UserAnalytics {
+//   id          String    @id @default(auto()) @map("_id") @db.ObjectId
+//   userId      String?   @db.ObjectId
+//   lastVisited DateTime?
+// }
+
+model UserAnalytics {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String        @unique @db.ObjectId // rename from userID to userId and make unique
+  lastVisited DateTime?
+  actions     ActionEntry[] // new embedded array of action entries
+
+  // Optional enrichment fields you referenced in code
+  country String?
+  city    String?
+  device  String?
+}
+
+// model ProductAnalytics {
+//   id           String    @id @default(auto()) @map("_id") @db.ObjectId
+//   productId    String?   @db.ObjectId
+//   lastViewedAt DateTime?
+// }
+
+model ProductAnalytics {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  productId    String    @unique @db.ObjectId // make this unique so upsert can use it
+  shopId       String?   @db.ObjectId
+  lastViewedAt DateTime?
+
+  // Counters used in your service
+  views        Int @default(0)
+  cartAdds     Int @default(0)
+  wishlistAdds Int @default(0)
+  purchases    Int @default(0)
+}

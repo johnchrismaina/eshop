@@ -46,8 +46,10 @@ const Header = () => {
         <div>
           <Link href={'/'}>
             <Image
-              // src={''}
-              src={'https://ik.imagekit.io/sjbr5usgh/logo/Blue%20Waves%20'}
+              src={
+                'https://ik.imagekit.io/johnchrismaina/happy-basket.png?updatedAt=1764842031651'
+              }
+              // src={'https://ik.imagekit.io/sjbr5usgh/logo/Blue%20Waves%20'}
               alt=""
               width={300}
               height={100}

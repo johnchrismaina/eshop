@@ -1,5 +1,3 @@
-// import { prisma } from '@eshop/libs/prisma';
-// import { prisma } from '@eshop/libs/prisma';
 import { prisma } from '@packages/libs/prisma/';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -512,5 +510,30 @@ export const getAllProducts = async (
     });
   } catch (error) {
     next(error);
+  }
+};
+
+// Get product details
+export const getProductDetails = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const product = await prisma.products.findUnique({
+      where: {
+        slug: req.params.slug!,
+      },
+      include: {
+        images: true,
+        Shop: true,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    return next(error);
   }
 };

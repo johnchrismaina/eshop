@@ -63,7 +63,9 @@ export const useStore = create<Store>()(
               ),
             };
           }
-          return { cart: [...state.cart, { ...product, quantity: 1 }] };
+          return {
+            cart: [...state.cart, { ...product, quantity: product?.quantity }],
+          };
         });
 
         // Send kafka event

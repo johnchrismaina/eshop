@@ -17,15 +17,16 @@ model images {
 }
 
 model users {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  email       String        @unique
-  password    String?
-  following   String[]
-  avatar      String? // just store avatar URL directly
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  shopReviews shopReviews[] @relation("UserReview")
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String            @unique
+  password      String?
+  following     String[]
+  avatar        String? // just store avatar URL directly
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  shopReviews   shopReviews[]     @relation("UserReview")
+  followedShops UserFollowsShop[]
 }
 
 model shopReviews {
@@ -40,7 +41,26 @@ model shopReviews {
   shops     shops?   @relation("ShopReview", fields: [shopsId], references: [id])
 }
 
+model UserFollowsShop {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String
+  shopId String
+
+  user users @relation(fields: [userId], references: [id])
+  shop shops @relation(fields: [shopId], references: [id])
+}
+
+model Order {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId // generates ObjectId
+  shopId    String
+  total     Float
+  createdAt DateTime @default(now())
+
+  shop shops @relation(fields: [shopId], references: [id])
+}
+
 model shops {
+  // id          String   @id @map("_id") @default(auto()) @db.ObjectId
   id            String        @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   bio           String?
@@ -58,6 +78,9 @@ model shops {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   products      products[]    @relation("ShopProducts") // one-to-many products
+
+  orders    Order[]
+  followers UserFollowsShop[]
 }
 
 model sellers {
@@ -143,12 +166,6 @@ type ActionEntry {
   timestamp DateTime
 }
 
-// model UserAnalytics {
-//   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-//   userId      String?   @db.ObjectId
-//   lastVisited DateTime?
-// }
-
 model UserAnalytics {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   userId      String        @unique @db.ObjectId // rename from userID to userId and make unique
@@ -160,12 +177,6 @@ model UserAnalytics {
   city    String?
   device  String?
 }
-
-// model ProductAnalytics {
-//   id           String    @id @default(auto()) @map("_id") @db.ObjectId
-//   productId    String?   @db.ObjectId
-//   lastViewedAt DateTime?
-// }
 
 model ProductAnalytics {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId

@@ -52,6 +52,7 @@
     "react-inner-image-zoom": "^4.0.1",
     "react-medium-image-zoom": "^5.4.0",
     "react-quill-new": "^3.6.0",
+    "react-range": "^1.10.0",
     "stripe": "^19.2.0",
     "styled-components": "^6.1.19",
     "swagger-autogen": "^2.23.7",

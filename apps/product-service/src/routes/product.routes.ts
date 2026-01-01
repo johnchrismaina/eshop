@@ -8,10 +8,15 @@ import {
   getAllProducts,
   getCategories,
   getDiscountCodes,
+  getFilteredEvents,
+  getFilteredProducts,
+  getFilteredShops,
   getProductDetails,
   getShopProducts,
   // getStripeAccount,
   restoreProduct,
+  searchProducts,
+  topShops,
   uploadProductImage,
 } from '../controllers/product.controller';
 import isAuthenticated from '@packages/middleware/isAuthenticated';
@@ -39,5 +44,10 @@ router.put('/restore-product/:productId', isAuthenticated, restoreProduct);
 // router.get('/get-stripe-account', isAuthenticated, isSeller, getStripeAccount)
 router.get('/get-all-products', getAllProducts);
 router.get('/get-product/:slug', getProductDetails);
+router.get('/get-filtered-products', getFilteredProducts);
+router.get('/get-filtered-offers', getFilteredEvents);
+router.get('/get-filtered-shops', getFilteredShops);
+router.get('/search-products', searchProducts);
+router.get('/top-shops', topShops);
 
 export default router;

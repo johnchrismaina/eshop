@@ -621,6 +621,57 @@ export const getFilteredProducts = async (
   }
 };
 
+// Get all events
+export const getAllEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+
+    const baseFilter = {
+      AND: [{ starting_data: { not: null } }, { ending_date: { not: null } }],
+    };
+
+    const [events, total, top10BySales] = await Promise.all([
+      prisma.products.findMany({
+        skip,
+        take: limit,
+        where: baseFilter,
+        include: {
+          images: true,
+          Shop: true,
+        },
+        orderBy: {
+          totalSales: 'desc',
+        },
+      }),
+
+      prisma.products.count({ where: baseFilter }),
+      prisma.products.findMany({
+        where: baseFilter,
+        take: 10,
+        orderBy: {
+          totalSales: 'desc',
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      events,
+      top10BySales,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch events' });
+  }
+};
+
 // Get filtered offers
 export const getFilteredEvents = async (
   req: Request,
@@ -809,8 +860,11 @@ export const topShops = async (
   next: NextFunction
 ) => {
   try {
-    // Aggregate total sales per shop from orders
+    // Quick debug: check if any orders exist
+    // const orders = await prisma.order.findMany({ take: 5 });
+    // console.log('orders sample:', orders);
 
+    // Aggregate total sales per shop from orders
     const topShopsData = await prisma.order.groupBy({
       by: ['shopId'],
       _sum: {
@@ -824,16 +878,11 @@ export const topShops = async (
       take: 10,
     });
 
-    // const topShopsData = await prisma.order.groupBy({
-    //   by: ['shopId'],
-    //   _sum: { total: true },
-    //   orderBy: { _sum: { total: 'desc' } },
-    //   take: 10,
-    // });
+    // console.log('topShopsData', topShopsData);
 
-    //  Fetch the corresponding shop details
-    // const shopIds = topShopsData.map((item) => item.shopId);
     const shopIds = topShopsData.map((item) => item.shopId);
+
+    // console.log('shopIds', shopIds);
 
     const shops = await prisma.shops.findMany({
       where: {

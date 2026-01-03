@@ -24,13 +24,11 @@ const ShopCard: React.FC<ShopCardProps> = ({ shop }) => {
       <div className="h-[120px] w-full relative">
         <Image
           src={
-            shop?.coverBanner ||
-            'https://ik.imagekit.io/johnchrismaina/freepik__adjust__3843.png'
+            shop?.coverBanner ??
+            'https://ik.imagekit.io/johnchrismaina/fashion-banner.png'
           }
-          alt={shop.name}
+          alt={shop?.name ?? 'Shop banner'}
           fill
-          //   width={400}
-          //   height={200}
           className="w-full h-full object-cover"
         />
       </div>

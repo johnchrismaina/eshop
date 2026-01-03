@@ -14,6 +14,9 @@
     "db:pull": "prisma db pull --schema=packages/libs/prisma/schema.prisma",
     "reset:cache": "rm -rf node_modules/.prisma && npx prisma generate --schema=packages/libs/prisma/schema.prisma"
   },
+  "prisma": {
+    "seed": "tsx packages/libs/prisma/seed.ts"
+  },
   "private": true,
   "dependencies": {
     "@imagekit/nodejs": "^7.1.1",

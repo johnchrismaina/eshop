@@ -1,5 +1,4 @@
 'use client';
-
 import { useMutation } from '@tanstack/react-query';
 import GoogleButton from 'apps/user-ui/src/shared/components/google-button';
 import axios, { AxiosError } from 'axios';

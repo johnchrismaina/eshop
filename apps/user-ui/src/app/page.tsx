@@ -60,12 +60,6 @@ const Page = () => {
     staleTime: 1000 * 60 * 2,
   });
 
-  // useEffect(() => {
-  //   if (shops) {
-  //     console.log('shops', shops);
-  //   }
-  // }, [shops]);
-
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
       <Hero />

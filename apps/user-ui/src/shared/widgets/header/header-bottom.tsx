@@ -1,5 +1,4 @@
 'use client';
-
 import { useQuery } from '@tanstack/react-query';
 import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
 import { navItems } from 'apps/user-ui/src/configs/constants';

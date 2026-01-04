@@ -49,7 +49,6 @@ const Header = () => {
               src={
                 'https://ik.imagekit.io/johnchrismaina/happy-basket.png?updatedAt=1764842031651'
               }
-              // src={'https://ik.imagekit.io/sjbr5usgh/logo/Blue%20Waves%20'}
               alt=""
               width={300}
               height={100}
@@ -106,14 +105,12 @@ const Header = () => {
             {!isLoading && user ? (
               <>
                 <Link
-                  href={'/'}
-                  // href={'/profile'}
+                  href={'/profile'}
                   className="border-2 w-[50px] h-[50px] flex items-center justify-center rounded-full border-[#010f1c1a]"
                 >
                   <ProfileIcon />
                 </Link>
-                <Link href={'/'}>
-                  {/* href={'/profile'} */}
+                <Link href={'/profile'}>
                   <span className="block font-medium">Hello,</span>
                   <span className="font-semibold">
                     {user?.name?.split(' ')[0]}

@@ -5,11 +5,20 @@ import { NextFunction, Request, Response } from 'express';
 import Stripe from 'stripe';
 import crypto from 'crypto';
 import { Prisma } from '@prisma/client';
-// import { sendEmail } from '../utils/send-email';
+import { sendEmail } from '../utils/send-email';
+import { ReceiverType, NotificationStatus } from '@prisma/client';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover',
 });
+
+// Local type for embedded actions
+type ActionEntry = {
+  productId: string | null;
+  shopId: string | null;
+  action: string;
+  timestamp: Date; // ✅ matches schema DateTime
+};
 
 // Create payment intent
 export const createPaymentIntent = async (
@@ -281,7 +290,7 @@ export const createOrder = async (
                 productId: item.id,
                 quantity: item.quantity,
                 price: item.sale_price,
-                selectedOptions: item.selectedOptions,
+                selectedOptions: item.selectedOptions, // ✅ stored as JSON
               })),
             },
           },
@@ -316,15 +325,28 @@ export const createOrder = async (
             where: { userId },
           });
 
-          const newAction = {
+          // const newAction = {
+          //   productId,
+          //   shopId,
+          //   action: 'purchase',
+          //   timestamp: Date.now(),
+          // };
+
+          const newAction: ActionEntry = {
             productId,
             shopId,
             action: 'purchase',
-            timestamp: Date.now(),
+            timestamp: new Date(), // ✅ Date works here
           };
 
-          const currentActions = Array.isArray(existingAnalytics?.actions)
-            ? (existingAnalytics.actions as Prisma.JsonArray)
+          // const currentActions = Array.isArray(existingAnalytics?.actions)
+          //   ? (existingAnalytics.actions as Prisma.JsonArray)
+          //   : [];
+
+          const currentActions: ActionEntry[] = Array.isArray(
+            existingAnalytics?.actions
+          )
+            ? (existingAnalytics.actions as unknown as ActionEntry[])
             : [];
 
           if (existingAnalytics) {
@@ -347,7 +369,7 @@ export const createOrder = async (
         }
 
         // Send email for user
-        await SendEmail(
+        await sendEmail(
           email,
           '🛍 Your Eshop Order Confirmation',
           'order-confirmation',
@@ -372,31 +394,55 @@ export const createOrder = async (
           },
         });
 
-        for (const shop of sellerShops) {
-          const firstProduct = shopGrouped[shop.id][0];
-          const productTitle = firstProduct?.title || 'new item';
+        // Collect seller notifications
+        // Explicit type annotation here
+        const notificationsData: Prisma.NotificationCreateManyInput[] =
+          sellerShops.map((shop) => {
+            const firstProduct = shopGrouped[shop.id][0];
+            const productTitle = firstProduct?.title || 'new item';
 
-          await prisma.notifications.create({
-            data: {
+            return {
               title: '🛒 New Order Received',
               message: `A customer just ordered ${productTitle} from your shop.`,
               creatorId: userId,
               receiverId: shop.sellerId,
+              receiverType: ReceiverType.SELLER, // ✅ enum
               redirect_link: `https://eshop.com/order/${sessionId}`,
-            },
+              status: NotificationStatus.UNREAD, // ✅ enum
+            };
           });
-        }
 
-        // Create notification for admin
-        await prisma.notifications.create({
-          data: {
-            title: '📦 Platform Order Alert',
-            message: `A new order was placed by ${name}.`,
-            creatorId: userId,
-            receiverId: 'admin',
-            redirect_link: `https://eshop.com/order/${sessionId}`,
-          },
+        // Add admin notification
+        notificationsData.push({
+          title: '📦 Platform Order Alert',
+          message: `A new order was placed by ${name}.`,
+          creatorId: userId,
+          receiverId: 'admin',
+          receiverType: ReceiverType.ADMIN, // ✅ enum
+          redirect_link: `https://eshop.com/order/${sessionId}`,
+          status: NotificationStatus.UNREAD,
         });
+
+        // Add customer notification
+        notificationsData.push({
+          title: '✅ Order Confirmation',
+          message: `Thanks ${name}, your order has been placed successfully!`,
+          creatorId: userId,
+          receiverId: userId,
+          receiverType: ReceiverType.CUSTOMER, // ✅ enum
+          redirect_link: `https://eshop.com/order/${sessionId}`,
+          status: NotificationStatus.UNREAD,
+        });
+
+        // Create all notifications in one go
+        // await prisma.notifications.createMany({
+        //   data: notificationsData,
+        // });
+        try {
+          await prisma.notification.createMany({ data: notificationsData });
+        } catch (error) {
+          console.error('Failed to create notifications:', error);
+        }
 
         await redis.del(sessionKey);
       }

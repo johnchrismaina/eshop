@@ -28,6 +28,7 @@ model users {
   shopReviews   shopReviews[]     @relation("UserReview")
   followedShops UserFollowsShop[]
   addresses     Address[] // relation: one user can have many addresses
+  orders        Order[] // ✅ relation: one user has many orders
 }
 
 enum addressType {
@@ -74,12 +75,18 @@ model UserFollowsShop {
 }
 
 model Order {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId // generates ObjectId
-  shopId    String
-  total     Float
-  createdAt DateTime @default(now())
-
-  shop shops @relation(fields: [shopId], references: [id])
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String
+  user              users       @relation(fields: [userId], references: [id])
+  shopId            String
+  total             Float
+  status            String
+  shippingAddressId String?
+  couponCode        String?
+  discountAmount    Float?
+  shop              shops       @relation(fields: [shopId], references: [id])
+  items             OrderItem[] // ✅ relation: one order has many items
+  createdAt         DateTime    @default(now())
 }
 
 model shops {
@@ -212,4 +219,37 @@ model ProductAnalytics {
   cartAdds     Int @default(0)
   wishlistAdds Int @default(0)
   purchases    Int @default(0)
+}
+
+enum ReceiverType {
+  SELLER
+  ADMIN
+  CUSTOMER
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+}
+
+model OrderItem {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  orderId         String
+  order           Order  @relation(fields: [orderId], references: [id])
+  productId       String
+  quantity        Int
+  price           Float
+  selectedOptions Json? // ✅ store options as JSON (safe for arrays/objects)
+}
+
+model Notification {
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  message       String
+  creatorId     String
+  receiverId    String
+  receiverType  ReceiverType
+  redirect_link String
+  status        NotificationStatus @default(UNREAD)
+  createdAt     DateTime           @default(now())
 }

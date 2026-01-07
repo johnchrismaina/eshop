@@ -37,7 +37,7 @@ app.use('/api', router);
 app.use(errorMiddleware);
 
 //Server listening port
-const port = process.env.PORT || 6002;
+const port = process.env.PORT || 6003;
 
 const server = app.listen(port, () => {
   console.log(`Product service is running at http://localhost:${port}/api`);

@@ -1,15 +1,16 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": "src",
-    "outDir": "dist",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "emitDeclarationOnly": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
-    "jsx": "react-jsx"
+    "composite": true,
+    "outDir": "out-tsc/packages",
+    "rootDir": ".",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "target": "ES2020",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "references": []
+  "include": ["libs/**/*.ts", "middleware/**/*.ts", "utils/**/*.ts"],
+  "exclude": ["out-tsc", "dist", "**/*.spec.ts", "**/*.test.ts"]
 }

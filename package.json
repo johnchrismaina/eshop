@@ -12,7 +12,10 @@
     "db:push": "prisma db push --schema=packages/libs/prisma/schema.prisma",
     "db:generate": "prisma generate --schema=packages/libs/prisma/schema.prisma",
     "db:pull": "prisma db pull --schema=packages/libs/prisma/schema.prisma",
-    "reset:cache": "rm -rf node_modules/.prisma && npx prisma generate --schema=packages/libs/prisma/schema.prisma"
+    "reset:cache": "rm -rf node_modules/.prisma && npx prisma generate --schema=packages/libs/prisma/schema.prisma",
+    "start:product": "node --inspect=9230 dist/apps/product-service/main.js",
+    "start:order": "node --inspect=9231 dist/apps/order-service/main.js",
+    "start:auth": "node --inspect=9232 dist/apps/auth-service/main.js"
   },
   "prisma": {
     "seed": "tsx packages/libs/prisma/seed.ts"

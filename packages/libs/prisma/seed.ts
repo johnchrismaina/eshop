@@ -6,63 +6,73 @@ async function main() {
   console.log('🚀 Seed script starting...');
   // 1. Create sample users
   console.log('Creating users...');
-  const alice = await prisma.users.create({
-    data: {
+
+  const alice = await prisma.users.upsert({
+    where: { email: 'alice@example.com' },
+    update: {}, // nothing to update for now
+    create: {
       name: 'Alice',
       email: 'alice@example.com',
-      password: 'password123', // optional since it's String?
+      password: 'hashedpassword',
     },
   });
   console.log('Alice created:', alice);
 
-  const bob = await prisma.users.create({
-    data: {
+  const bob = await prisma.users.upsert({
+    where: { email: 'bob@example.com' },
+    update: {},
+    create: {
       name: 'Bob',
       email: 'bob@example.com',
+      password: 'hashedpassword',
     },
   });
 
-  const charlie = await prisma.users.create({
-    data: {
+  const charlie = await prisma.users.upsert({
+    where: { email: 'bob@example.com' },
+    update: {},
+    create: {
       name: 'Charlie',
       email: 'charlie@example.com',
+      password: 'hashedpassword',
     },
   });
 
   // 2. Create shops with sellers
   console.log('Creating shops...');
-  const fashionHub = await prisma.shops.create({
-    data: {
+
+  const fashionHub = await prisma.shops.upsert({
+    where: { sellerId: alice.id }, // sellerId is unique
+    update: {}, // nothing to update for now
+    create: {
       name: 'Fashion Hub',
       avatar:
-        'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg?updatedAt=1767361896968',
+        'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg',
       coverBanner: 'https://ik.imagekit.io/johnchrismaina/fashion-banner.png',
       address: 'Nakuru',
       ratings: 4.5,
       category: 'Fashion',
-      sellerId: alice.id, // required relation
+      sellerId: alice.id,
       followers: {
-        create: [
-          { userId: bob.id }, // Bob follows Fashion Hub
-          { userId: charlie.id }, // Charlie follows Fashion Hub
-        ],
+        create: [{ userId: bob.id }, { userId: charlie.id }],
       },
     },
   });
-  console.log('Fashion Hub created:', fashionHub);
 
-  const techWorld = await prisma.shops.create({
-    data: {
+  const techWorld = await prisma.shops.upsert({
+    where: { sellerId: bob.id },
+    update: {},
+    create: {
       name: 'Tech World',
       avatar:
-        'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg?updatedAt=1767361896968',
+        'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg',
       coverBanner: 'https://ik.imagekit.io/johnchrismaina/fashion-banner.png',
       address: 'Nairobi',
       ratings: 4.2,
       category: 'Electronics',
       sellerId: bob.id,
       followers: {
-        create: [{ userId: alice.id }], // Alice follows Tech World
+        create: [{ userId: alice.id }],
       },
     },
   });
@@ -70,22 +80,28 @@ async function main() {
   // 3. Create orders linked to shops
   await prisma.order.create({
     data: {
-      shopId: fashionHub.id,
+      shop: { connect: { id: fashionHub.id } },
+      user: { connect: { id: alice.id } },
       total: 5000,
+      status: 'Paid',
     },
   });
 
   await prisma.order.create({
     data: {
-      shopId: techWorld.id,
+      shop: { connect: { id: techWorld.id } },
+      user: { connect: { id: bob.id } },
       total: 3000,
+      status: 'Paid',
     },
   });
 
   await prisma.order.create({
     data: {
-      shopId: fashionHub.id,
+      shop: { connect: { id: fashionHub.id } },
+      user: { connect: { id: alice.id } },
       total: 2000,
+      status: 'Paid',
     },
   });
 

@@ -275,22 +275,30 @@ export const createOrder = async (
           }
         }
 
+        // Define a type for order items
+        type OrderItemInput = {
+          id: string;
+          quantity: number;
+          sale_price: number;
+          selectedOptions?: Record<string, any>; // or a stricter type if you know the shape
+        };
+
         // Create order
         await prisma.order.create({
           data: {
-            userId,
-            shopId,
+            user: { connect: { id: userId } }, // ✅ relational connect
+            shop: { connect: { id: shopId } }, // ✅ relational connect
             total: orderTotal,
             status: 'Paid',
             shippingAddressId: shippingAddressId || null,
             couponCode: coupon?.code || null,
-            discountAmount: coupon?.discountAmount || 0,
+            discountAmount: coupon?.discountAmount ?? 0,
             items: {
-              create: orderItems.map((item: any) => ({
+              create: orderItems.map((item: OrderItemInput) => ({
                 productId: item.id,
                 quantity: item.quantity,
                 price: item.sale_price,
-                selectedOptions: item.selectedOptions, // ✅ stored as JSON
+                selectedOptions: item.selectedOptions ?? {}, // ✅ JSON-safe default
               })),
             },
           },

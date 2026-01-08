@@ -4,7 +4,6 @@ import proxy from 'express-http-proxy';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
-// import initializeSiteConfig from './libs/initializeSiteConfig';
 import initializeSiteConfig from '@gateway/libs/initializeSiteConfig';
 
 const app = express();
@@ -33,14 +32,16 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-app.use('/product', proxy('http://localhost:6002')); // Product Service
-app.use('/', proxy('http://localhost:6001')); // Auth Service
-
 // app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('/gateway-health', (req, res) => {
   res.send({ message: 'Welcome to api-gateway!' });
 });
+
+app.use('/order', proxy('http://localhost:6004')); // Order Service
+app.use('/seller', proxy('http://localhost:6003')); // Seller Service
+app.use('/product', proxy('http://localhost:6002')); // Product Service
+app.use('/', proxy('http://localhost:6001')); // Auth Service
 
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {

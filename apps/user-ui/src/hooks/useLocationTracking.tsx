@@ -5,23 +5,36 @@ import { useEffect, useState } from 'react';
 const LOCATION_STORAGE_KEY = 'user_location';
 const LOCATION_EXPIRY_DAYS = 20;
 
-const getStoredLocation = () => {
-  const storedData = localStorage.getItem(LOCATION_STORAGE_KEY);
+type StoredLocation = {
+  country: string;
+  city: string;
+  timestamp: number;
+};
 
+const getStoredLocation = (): StoredLocation | null => {
+  // ✅ Guard against SSR
+  if (typeof window === 'undefined') return null;
+
+  const storedData = localStorage.getItem(LOCATION_STORAGE_KEY);
   if (!storedData) return null;
 
-  const parsedData = JSON.parse(storedData);
-  const expiryTime = LOCATION_EXPIRY_DAYS * 24 * 60 * 60 * 1000; // 20days in ms
-  const isExpired = Date.now() - parsedData.timestamp > expiryTime;
+  try {
+    const parsedData: StoredLocation = JSON.parse(storedData);
+    const expiryTime = LOCATION_EXPIRY_DAYS * 24 * 60 * 60 * 1000; // days → ms
+    const isExpired = Date.now() - parsedData.timestamp > expiryTime;
 
-  return isExpired ? null : parsedData;
+    return isExpired ? null : parsedData;
+  } catch (err) {
+    console.error('Failed to parse stored location:', err);
+    return null;
+  }
 };
 
 const useLocationTracking = () => {
-  const [location, setLocation] = useState<{
-    country: string;
-    city: string;
-  } | null>(getStoredLocation());
+  // ✅ Safe to call getStoredLocation here because of the SSR guard
+  const [location, setLocation] = useState<StoredLocation | null>(
+    getStoredLocation()
+  );
 
   useEffect(() => {
     if (location) return;
@@ -29,7 +42,7 @@ const useLocationTracking = () => {
     fetch('http://ip-api.com/json/')
       .then((res) => res.json())
       .then((data) => {
-        const newLocation = {
+        const newLocation: StoredLocation = {
           country: data?.country,
           city: data.city,
           timestamp: Date.now(),
@@ -39,6 +52,7 @@ const useLocationTracking = () => {
         setLocation(newLocation);
       })
       .catch((error) => console.log('Failed to get location', error));
+    // }, [location]);
   }, []);
 
   return location;

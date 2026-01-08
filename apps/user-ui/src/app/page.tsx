@@ -39,7 +39,7 @@ const Page = () => {
   });
 
   // Fetch top shops from the API and display them
-  const { data: shops, isLoading: shopsLoading } = useQuery({
+  const { data: shops = [], isLoading: shopsLoading } = useQuery({
     queryKey: ['shops'],
     queryFn: async () => {
       const res = await axiosProductService.get('/api/top-shops');
@@ -47,6 +47,8 @@ const Page = () => {
     },
     staleTime: 1000 * 60 * 2,
   });
+
+  console.log('shops:', shops);
 
   // Fetch Offers from the API and display them
   const { data: offers, isLoading: offersLoading } = useQuery({

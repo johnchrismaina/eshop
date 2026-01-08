@@ -11,6 +11,11 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": ["libs/**/*.ts", "middleware/**/*.ts", "utils/**/*.ts"],
+  "include": [
+    "libs/**/*.ts",
+    "middleware/**/*.ts",
+    "utils/**/*.ts",
+    "error-handler/**/*.ts"
+  ],
   "exclude": ["out-tsc", "dist", "**/*.spec.ts", "**/*.test.ts"]
 }

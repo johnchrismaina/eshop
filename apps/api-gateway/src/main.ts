@@ -41,7 +41,8 @@ app.get('/gateway-health', (req, res) => {
 app.use('/order', proxy('http://localhost:6004')); // Order Service
 app.use('/seller', proxy('http://localhost:6003')); // Seller Service
 app.use('/product', proxy('http://localhost:6002')); // Product Service
-app.use('/', proxy('http://localhost:6001')); // Auth Service
+// app.use('/', proxy('http://localhost:6001')); // Auth Service
+app.use('/user', proxy('http://localhost:6001')); // Auth Service
 
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {

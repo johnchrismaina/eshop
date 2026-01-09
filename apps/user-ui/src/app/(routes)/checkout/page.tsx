@@ -4,11 +4,21 @@ import { Elements } from '@stripe/react-stripe-js';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import { XCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import CheckoutForm from 'apps/user-ui/src/shared/components/checkout/checkoutForm';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+// Example: if you store it in localStorage
+const token = localStorage.getItem('token');
+
+type CartItem = {
+  productId: string;
+  quantity: number;
+  shopId: string;
+  sale_price: number;
+  selectedOptions?: Record<string, any>;
+};
 
 const Page = () => {
   const [clientSecret, setClientSecret] = useState('');
@@ -19,50 +29,51 @@ const Page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+    null
+  );
+
   const sessionId = searchParams.get('sessionId');
 
   useEffect(() => {
     const fetchSessionAndClientSecret = async () => {
       if (!sessionId) {
-        // setError('No session ID provided');
         setError('Invalid session. Please try again.');
         setLoading(false);
         return;
       }
 
       try {
-        const verifyRes = await axiosInstance.get(
-          `/order/api/verifying-payment-session?sessionId=${sessionId}`
+        // Option B: backend createPaymentSession returns everything in one go
+        const res = await axiosInstance.post(
+          '/order/api/create-payment-session',
+          {
+            cart,
+            selectedAddressId,
+            coupon: {},
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        const { totalAmount, seller, cart, coupon } = verifyRes.data.session;
+        const {
+          clientSecret,
+          totalAmount,
+          cart: returnedCart,
+          coupon: returnedCoupon,
+        } = res.data;
 
         if (
-          !seller ||
-          seller.length === 0 ||
+          !clientSecret ||
           totalAmount === undefined ||
           totalAmount === null
         ) {
           throw new Error('Invalid payment session data.');
         }
 
-        setCartItems(cart);
-        setCoupon(coupon);
-        const sellerStripeAccountId = seller[0].stripeAccountId;
-
-        const intentRes = await axiosInstance.post(
-          '/order/api/create-payment-intent',
-          {
-            amount: coupon?.discountAmount
-              ? totalAmount - coupon?.discountAmount
-              : totalAmount,
-            sellerStripeAccountId,
-            sessionId,
-          }
-        );
-
-        setClientSecret(intentRes.data.clientSecret);
-        // });
+        setCartItems(returnedCart);
+        setCoupon(returnedCoupon);
+        setClientSecret(clientSecret);
       } catch (err: any) {
         console.error(err);
         setError(

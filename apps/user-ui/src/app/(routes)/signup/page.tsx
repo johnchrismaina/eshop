@@ -48,7 +48,7 @@ const Signup = () => {
   const signupMutation = useMutation({
     mutationFn: async (data: FormData) => {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/api/user-registration`,
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/user/api/user-registration`,
         data
       );
       return response.data;

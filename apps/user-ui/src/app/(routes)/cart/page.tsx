@@ -24,8 +24,11 @@ const CartPage = () => {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [couponCode, setCouponCode] = useState('');
   const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const createPaymentSession = async () => {
+    console.log('Button clicked, starting payment session');
+
     setLoading(true);
     try {
       const res = await axiosInstance.post(
@@ -33,21 +36,25 @@ const CartPage = () => {
         {
           cart,
           selectedAddressId,
-          couponCode: {},
+          coupon: {},
         }
       );
       const sessionId = res.data.sessionId;
+
+      console.log('Payment session response:', res.data);
       // Redirect to checkout session
       router.push(`/checkout?sessionId=${sessionId}`);
     } catch (error) {
+      console.error('Payment session error:', error);
       toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
+  console.log('Cart payload:', cart);
+
   const removeFromCart = useStore((state: any) => state.removeFromCart);
-  const [loading, setLoading] = useState(false);
 
   const decreaseQuantity = (id: string) => {
     useStore.setState((state: any) => ({
@@ -72,14 +79,15 @@ const CartPage = () => {
   };
 
   const subtotal = cart.reduce(
-    (total: number, item: any) => total + item.quantity * item.sale_price
+    (total: number, item: any) => total + item.quantity * item.sale_price,
+    0
   );
 
   // Get address
   const { data: addresses = [] } = useQuery<any[], Error>({
     queryKey: ['shipping-addresses'],
     queryFn: async () => {
-      const res = await axiosInstance.get('/api/shipping-addresses');
+      const res = await axiosInstance.get('/user/api/shipping-addresses');
       return res.data.addresses;
     },
   });
@@ -301,7 +309,8 @@ const CartPage = () => {
                 </div>
 
                 <button
-                  onClick={createPaymentSession}
+                  // onClick={createPaymentSession}
+                  onClick={() => createPaymentSession()}
                   disabled={loading}
                   className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 bg-[#010f1c] text-white hover:bg-[#0989FF] transition-all rounded-lg"
                 >

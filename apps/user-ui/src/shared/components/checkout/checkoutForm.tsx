@@ -78,11 +78,11 @@ const CheckoutForm = ({
           ))}
 
           <div className="flex justify-between font-semibold pt-2 border-t border-gray-300">
-            {coupon?.discountAmount !== 0 && (
+            {coupon && coupon?.discountAmount !== 0 && (
               <>
                 <span>Discount</span>
                 <span className="text-green-600">
-                  ${(coupon?.discountAmount).toFixed(2)}
+                  ${coupon?.discountAmount?.toFixed(2)}
                 </span>{' '}
               </>
             )}

@@ -73,6 +73,8 @@ const Page = () => {
     }
   };
 
+  // console.log('This is products data', products);
+
   useEffect(() => {
     updateURL();
     fetchFilteredProducts();
@@ -83,11 +85,11 @@ const Page = () => {
     queryFn: async () => {
       const res = await axiosProductService.get('/api/get-categories');
       return res.data;
-
-      //   console.log(res.data);
     },
     staleTime: 1000 * 60 * 30, // 30 minutes
   });
+
+  // console.log('This is categories data', data);
 
   const toggleCategory = (label: string) => {
     setSelectedCategories((prev) =>

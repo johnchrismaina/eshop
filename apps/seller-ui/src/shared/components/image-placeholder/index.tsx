@@ -49,16 +49,20 @@ const ImagePlaceholder = ({
       />
       {imagePreview ? (
         <>
-          <button
-            type="button"
-            disabled={pictureUploadingLoader}
-            onClick={() => onRemove?.(index!)}
-            className="absolute top-3 right-3 p-2 !rounded bg-red-600 shadow-lg"
-          >
-            <X size={16} />
+          <div className="absolute top-3 right-3 flex gap-2">
             <button
+              type="button"
               disabled={pictureUploadingLoader}
-              className="absolute top-3 right-[70px] p-2 !rounded bg-blue-500 shadow-lg cursor-pointer"
+              onClick={() => onRemove?.(index!)}
+              className="p-2 !rounded bg-red-600 shadow-lg"
+            >
+              <X size={16} />
+            </button>
+
+            <button
+              type="button"
+              disabled={pictureUploadingLoader}
+              className="p-2 !rounded bg-blue-500 shadow-lg cursor-pointer"
               onClick={() => {
                 setOpenImageModal(true);
                 setSelectedImage(images[index].file_url);
@@ -66,7 +70,7 @@ const ImagePlaceholder = ({
             >
               <WandSparkles size={16} />
             </button>
-          </button>
+          </div>
         </>
       ) : (
         <label

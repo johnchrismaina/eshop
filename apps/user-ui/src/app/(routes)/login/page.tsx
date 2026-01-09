@@ -26,15 +26,15 @@ const Login = () => {
   } = useForm<FormData>();
 
   const loginMutation = useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async (data: { email: string; password: string }) => {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/api/login-user`,
-        data,
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/user/api/login-user`,
+        data, // plain JSON object, not FormData
         { withCredentials: true }
       );
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setServerError(null);
       router.push('/');
     },
@@ -45,6 +45,8 @@ const Login = () => {
       setServerError(errorMessage);
     },
   });
+
+  // console.log('login data', response.data);
 
   const onSubmit = (data: FormData) => {
     loginMutation.mutate(data);

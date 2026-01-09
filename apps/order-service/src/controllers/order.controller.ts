@@ -31,15 +31,17 @@ export const createPaymentIntent = async (
   const customerAmount = Math.round(amount * 100);
   const platformFee = Math.floor(customerAmount * 0.1);
 
+  console.log(sellerStripeAccountId);
+
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: customerAmount,
       currency: 'usd',
       payment_method_types: ['card'],
-      application_fee_amount: platformFee,
-      transfer_data: {
-        destination: sellerStripeAccountId,
-      },
+      // application_fee_amount: platformFee,
+      // transfer_data: {
+      //   destination: sellerStripeAccountId,
+      // },
       metadata: {
         sessionId,
         userId: req.user.id,
@@ -53,7 +55,7 @@ export const createPaymentIntent = async (
   }
 };
 
-// Create payment session
+// Create payment session + payment intent
 export const createPaymentSession = async (
   req: any,
   res: Response,
@@ -67,6 +69,7 @@ export const createPaymentSession = async (
       return next(new ValidationError('Cart is empty or invalid.'));
     }
 
+    // Normalize cart for comparison
     const normalizedCart = JSON.stringify(
       cart
         .map((item: any) => ({
@@ -76,9 +79,10 @@ export const createPaymentSession = async (
           shopId: item.shopId,
           selectedOptions: item.selectedOptions || {},
         }))
-        .sort((a, b) => a.id.localCompare(b.id))
+        .sort((a, b) => a.id.localeCompare(b.id))
     );
 
+    // Check existing sessions in Redis
     const keys = await redis.keys('payment-session:*');
     for (const key of keys) {
       const data = await redis.get(key);
@@ -94,11 +98,17 @@ export const createPaymentSession = async (
                 shopId: item.shopId,
                 selectedOptions: item.selectedOptions || {},
               }))
-              .sort((a: any, b: any) => a.id.localCompare(b.id))
+              .sort((a: any, b: any) => a.id.localeCompare(b.id))
           );
 
           if (existingCart === normalizedCart) {
-            return res.status(200).json({ sessionId: key.split(':')[1] });
+            return res.status(200).json({
+              sessionId: key.split(':')[1],
+              clientSecret: session.clientSecret,
+              totalAmount: session.totalAmount,
+              cart: session.cart,
+              coupon: session.coupon,
+            });
           } else {
             await redis.del(key);
           }
@@ -107,36 +117,54 @@ export const createPaymentSession = async (
     }
 
     // Fetch sellers and their stripe accounts
-    const uniqueShopIds = [...new Set(cart.map((item: any) => item.shopId))];
+    const uniqueShopIds = [
+      ...new Set(cart.map((item: any) => item.shopId).filter(Boolean)),
+    ];
 
-    const shops = await prisma.shops.findMany({
-      where: {
-        id: { in: uniqueShopIds },
-      },
-      select: {
-        id: true,
-        sellerId: true,
-        seller: {
-          select: {
-            stripeId: true,
-          },
+    let shops: any[] = [];
+    if (uniqueShopIds.length > 0) {
+      shops = await prisma.shops.findMany({
+        where: { id: { in: uniqueShopIds } },
+        select: {
+          id: true,
+          sellerId: true,
+          seller: { select: { stripeId: true } },
         },
-      },
-    });
+      });
+    }
 
     const sellerData = shops.map((shop) => ({
       shopId: shop.id,
       sellerId: shop.sellerId,
-      stripeAccountId: shop?.seller?.stripeId,
+      stripeAccountId: shop?.seller?.stripeId ?? null,
     }));
 
     // Calculate total
-    const totalAmount = cart.reduce((total: number, item: any) => {
-      return total + item.quantity * item.sale_price;
-    }, 0);
+    const totalAmount = cart.reduce(
+      (total: number, item: any) => total + item.quantity * item.sale_price,
+      0
+    );
 
     // Create session payload
     const sessionId = crypto.randomUUID();
+
+    // Create Stripe PaymentIntent
+    const customerAmount = Math.round(totalAmount * 100);
+    const platformFee = Math.floor(customerAmount * 0.1);
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: customerAmount,
+      currency: 'usd',
+      payment_method_types: ['card'],
+      // application_fee_amount: platformFee,
+      // transfer_data: {
+      //   destination: sellerData[0]?.stripeAccountId, // for now, first seller
+      // },
+      metadata: {
+        sessionId,
+        userId,
+      },
+    });
 
     const sessionData = {
       userId,
@@ -145,6 +173,7 @@ export const createPaymentSession = async (
       totalAmount,
       shippingAddressId: selectedAddressId || null,
       coupon: coupon || null,
+      clientSecret: paymentIntent.client_secret,
     };
 
     await redis.setex(
@@ -153,7 +182,13 @@ export const createPaymentSession = async (
       JSON.stringify(sessionData)
     );
 
-    return res.status(201).json({ sessionId });
+    return res.status(201).json({
+      sessionId,
+      clientSecret: paymentIntent.client_secret,
+      totalAmount,
+      cart,
+      coupon,
+    });
   } catch (error) {
     next(error);
   }

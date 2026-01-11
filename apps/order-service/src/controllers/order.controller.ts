@@ -1,4 +1,4 @@
-import { ValidationError } from '@eshop/error-handler';
+// import { ValidationError } from '@eshop/error-handler';
 import { prisma } from '@eshop/libs/prisma';
 import redis from '@eshop/redis';
 import { NextFunction, Request, Response } from 'express';
@@ -29,7 +29,7 @@ export const createPaymentIntent = async (
   const { amount, sellerStripeAccountId, sessionId } = req.body;
 
   const customerAmount = Math.round(amount * 100);
-  const platformFee = Math.floor(customerAmount * 0.1);
+  // const platformFee = Math.floor(customerAmount * 0.1);
 
   console.log(sellerStripeAccountId);
 
@@ -55,158 +55,87 @@ export const createPaymentIntent = async (
   }
 };
 
-// Create payment session + payment intent
 export const createPaymentSession = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { cart, selectedAddressId, coupon } = req.body;
-    const userId = req.user.id;
-
-    if (!cart || !Array.isArray(cart) || cart.length === 0) {
-      return next(new ValidationError('Cart is empty or invalid.'));
-    }
-
-    // Normalize cart for comparison
-    const normalizedCart = JSON.stringify(
-      cart
-        .map((item: any) => ({
-          id: item.id,
-          quantity: item.quantity,
-          sale_price: item.sale_price,
-          shopId: item.shopId,
-          selectedOptions: item.selectedOptions || {},
-        }))
-        .sort((a, b) => a.id.localeCompare(b.id))
-    );
-
-    // Check existing sessions in Redis
-    const keys = await redis.keys('payment-session:*');
-    for (const key of keys) {
-      const data = await redis.get(key);
-      if (data) {
-        const session = JSON.parse(data);
-        if (session.userId === userId) {
-          const existingCart = JSON.stringify(
-            session.cart
-              .map((item: any) => ({
-                id: item.id,
-                quantity: item.quantity,
-                sale_price: item.sale_price,
-                shopId: item.shopId,
-                selectedOptions: item.selectedOptions || {},
-              }))
-              .sort((a: any, b: any) => a.id.localeCompare(b.id))
-          );
-
-          if (existingCart === normalizedCart) {
-            return res.status(200).json({
-              sessionId: key.split(':')[1],
-              clientSecret: session.clientSecret,
-              totalAmount: session.totalAmount,
-              cart: session.cart,
-              coupon: session.coupon,
-            });
-          } else {
-            await redis.del(key);
-          }
-        }
-      }
-    }
-
-    // Fetch sellers and their stripe accounts
-    const uniqueShopIds = [
-      ...new Set(cart.map((item: any) => item.shopId).filter(Boolean)),
-    ];
-
-    let shops: any[] = [];
-    if (uniqueShopIds.length > 0) {
-      shops = await prisma.shops.findMany({
-        where: { id: { in: uniqueShopIds } },
-        select: {
-          id: true,
-          sellerId: true,
-          seller: { select: { stripeId: true } },
-        },
-      });
-    }
-
-    const sellerData = shops.map((shop) => ({
-      shopId: shop.id,
-      sellerId: shop.sellerId,
-      stripeAccountId: shop?.seller?.stripeId ?? null,
-    }));
-
-    // Calculate total
-    const totalAmount = cart.reduce(
-      (total: number, item: any) => total + item.quantity * item.sale_price,
-      0
-    );
-
-    // Create session payload
-    const sessionId = crypto.randomUUID();
-
-    // Create Stripe PaymentIntent
-    const customerAmount = Math.round(totalAmount * 100);
-    const platformFee = Math.floor(customerAmount * 0.1);
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: customerAmount,
-      currency: 'usd',
-      payment_method_types: ['card'],
-      // application_fee_amount: platformFee,
-      // transfer_data: {
-      //   destination: sellerData[0]?.stripeAccountId, // for now, first seller
-      // },
-      metadata: {
-        sessionId,
-        userId,
-      },
-    });
-
-    const sessionData = {
-      userId,
-      cart,
-      sellers: sellerData,
-      totalAmount,
-      shippingAddressId: selectedAddressId || null,
-      coupon: coupon || null,
-      clientSecret: paymentIntent.client_secret,
-    };
-
-    await redis.setex(
-      `payment-session:${sessionId}`,
-      600, // 10 minutes
-      JSON.stringify(sessionData)
-    );
-
-    return res.status(201).json({
-      sessionId,
-      clientSecret: paymentIntent.client_secret,
-      totalAmount,
-      cart,
-      coupon,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Verifying payment session
-export const verifyingPaymentSession = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const sessionId = req.query.sessionId as string;
+    const { cart, coupon, selectedAddressId, userId } = req.body;
+
+    if (!cart || cart.length === 0) {
+      return res.status(400).json({ error: 'Cart is empty or invalid.' });
+    }
+
+    // Calculate total
+    const totalAmount = cart.reduce(
+      (sum: number, item: any) => sum + item.sale_price * item.quantity,
+      0
+    );
+
+    // 🔎 1. Check Redis for existing session
+    const existingKeys = await redis.keys(`payment-session:*`);
+    const existingKey = existingKeys.find(async (key) => {
+      const data = await redis.get(key);
+      if (!data) return false;
+      const parsed = JSON.parse(data);
+      return parsed.userId === userId;
+    });
+
+    if (existingKey) {
+      const sessionData = await redis.get(existingKey);
+      if (sessionData) {
+        const session = JSON.parse(sessionData);
+        // ✅ Return the same sessionId and payload
+        return res.status(200).json(session);
+      }
+    }
+
+    // 🆕 2. Otherwise create a new PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: totalAmount * 100,
+      currency: 'usd',
+      metadata: { userId },
+    });
+
+    const sessionId = crypto.randomUUID();
+    const sessionPayload = {
+      sessionId,
+      userId,
+      clientSecret: paymentIntent.client_secret,
+      totalAmount,
+      cart,
+      coupon,
+      selectedAddressId,
+    };
+
+    await redis.set(
+      `payment-session:${sessionId}`,
+      JSON.stringify(sessionPayload),
+      'EX',
+      60 * 30 // 30 minutes TTL
+    );
+
+    console.log('Saved session to Redis:', sessionId);
+
+    return res.status(200).json(sessionPayload);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// GET /order/api/payment-session/:sessionId
+export const getPaymentSession = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { sessionId } = req.params;
     if (!sessionId) {
       return res.status(400).json({ error: 'Session ID is required.' });
     }
 
-    //    Fetsch session from redis
     const sessionKey = `payment-session:${sessionId}`;
     const sessionData = await redis.get(sessionKey);
 
@@ -214,12 +143,20 @@ export const verifyingPaymentSession = async (
       return res.status(404).json({ error: 'Session not found or expired.' });
     }
 
-    // Parse and return session
-    const session = JSON.parse(sessionData);
+    let session;
+    try {
+      session = JSON.parse(sessionData);
+    } catch (parseErr) {
+      return res.status(500).json({ error: 'Failed to parse session data.' });
+    }
 
+    // Return the session fields directly
     return res.status(200).json({
       success: true,
-      session,
+      clientSecret: session.clientSecret,
+      totalAmount: session.totalAmount,
+      cart: session.cart,
+      coupon: session.coupon,
     });
   } catch (error) {
     return next(error);

@@ -7,8 +7,14 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import CheckoutForm from 'apps/user-ui/src/shared/components/checkout/checkoutForm';
+// import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
+
 // Example: if you store it in localStorage
 const token = localStorage.getItem('token');
 
@@ -36,8 +42,10 @@ const Page = () => {
 
   const sessionId = searchParams.get('sessionId');
 
+  console.log('Redirecting with sessionId:', sessionId);
+
   useEffect(() => {
-    const fetchSessionAndClientSecret = async () => {
+    const fetchSession = async () => {
       if (!sessionId) {
         setError('Invalid session. Please try again.');
         setLoading(false);
@@ -45,37 +53,22 @@ const Page = () => {
       }
 
       try {
-        // Option B: backend createPaymentSession returns everything in one go
-        const res = await axiosInstance.post(
-          '/order/api/create-payment-session',
-          {
-            cart,
-            selectedAddressId,
-            coupon: {},
-          },
+        const res = await axiosInstance.get(
+          `/order/payment-session/${sessionId}`, // ✅ goes through gateway
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        const {
-          clientSecret,
-          totalAmount,
-          cart: returnedCart,
-          coupon: returnedCoupon,
-        } = res.data;
+        const { clientSecret, totalAmount, cart, coupon } = res.data;
 
-        if (
-          !clientSecret ||
-          totalAmount === undefined ||
-          totalAmount === null
-        ) {
+        if (!clientSecret || totalAmount == null) {
           throw new Error('Invalid payment session data.');
         }
 
-        setCartItems(returnedCart);
-        setCoupon(returnedCoupon);
+        setCartItems(cart);
+        setCoupon(coupon);
         setClientSecret(clientSecret);
       } catch (err: any) {
-        console.error(err);
+        console.error('Checkout fetch error:', err);
         setError(
           'Something went wrong while preparing your payment, please try again.'
         );
@@ -84,8 +77,8 @@ const Page = () => {
       }
     };
 
-    fetchSessionAndClientSecret();
-  }, [sessionId]);
+    fetchSession();
+  }, [sessionId, token]);
 
   const appearance: Appearance = {
     theme: 'stripe',

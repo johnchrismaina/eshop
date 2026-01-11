@@ -19,6 +19,7 @@ const CartPage = () => {
   const location = useLocationTracking();
   const deviceInfo = useDeviceTracking();
   const cart = useStore((state: any) => state.cart);
+
   const [discountedProductId, setDiscountedProductId] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
@@ -26,23 +27,50 @@ const CartPage = () => {
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const createPaymentSession = async () => {
-    console.log('Button clicked, starting payment session');
+  // ✅ Calculate subtotal
+  const subtotal = cart.reduce(
+    (total: number, item: any) => total + item.quantity * item.sale_price,
+    0
+  );
 
+  // ✅ Create payment session (calls backend)
+  const createPaymentSession = async () => {
     setLoading(true);
     try {
+      console.log(
+        'Posting to:',
+        axiosInstance.defaults.baseURL + '/api/create-order'
+      );
+
+      console.log(
+        'Subtotal:',
+        subtotal,
+        'Discount:',
+        discountAmount,
+        'Total:',
+        subtotal - discountAmount
+      );
+
       const res = await axiosInstance.post(
-        '/order/api/create-payment-session',
+        '/order/create-order', // ✅ goes through gateway to order-service
         {
           cart,
           selectedAddressId,
-          coupon: {},
-        }
+          coupon: {
+            code: couponCode,
+            discountedProductId,
+            discountPercent,
+            discountAmount,
+          },
+          totalAmount: Number(subtotal) - Number(discountAmount), // ✅ ensure numeric
+          userId: user?.id, // ✅ include userId if backend expects it
+        },
+        { headers: { Authorization: `Bearer ${user?.token}` } }
       );
-      const sessionId = res.data.sessionId;
 
-      console.log('Payment session response:', res.data);
-      // Redirect to checkout session
+      const { sessionId } = res.data;
+
+      // ✅ Redirect to checkout page with sessionId
       router.push(`/checkout?sessionId=${sessionId}`);
     } catch (error) {
       console.error('Payment session error:', error);
@@ -51,8 +79,6 @@ const CartPage = () => {
       setLoading(false);
     }
   };
-
-  console.log('Cart payload:', cart);
 
   const removeFromCart = useStore((state: any) => state.removeFromCart);
 
@@ -75,15 +101,10 @@ const CartPage = () => {
   };
 
   const removeItem = (id: string) => {
-    removeFromCart(id, user, Location, deviceInfo);
+    removeFromCart(id, user, location, deviceInfo);
   };
 
-  const subtotal = cart.reduce(
-    (total: number, item: any) => total + item.quantity * item.sale_price,
-    0
-  );
-
-  // Get address
+  // ✅ Fetch addresses
   const { data: addresses = [] } = useQuery<any[], Error>({
     queryKey: ['shipping-addresses'],
     queryFn: async () => {
@@ -309,8 +330,8 @@ const CartPage = () => {
                 </div>
 
                 <button
-                  // onClick={createPaymentSession}
-                  onClick={() => createPaymentSession()}
+                  onClick={createPaymentSession}
+                  // onClick={() => createPaymentSession()}
                   disabled={loading}
                   className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 bg-[#010f1c] text-white hover:bg-[#0989FF] transition-all rounded-lg"
                 >

@@ -4,7 +4,7 @@ import { createCheckoutSession } from '../controllers/checkout.controller';
 
 const router = Router();
 
-// existing create-order route...
+// Receives forwarded path: POST http://localhost:6004/api/create-order
 router.post('/create-order', createCheckoutSession);
 
 // new GET route to fetch session

@@ -3,6 +3,11 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
+// ✅ Stripe React hooks and UI components
+// - PaymentElement: renders Stripe’s unified payment form (card, wallets, etc.)
+// - useStripe: gives access to Stripe.js instance
+// - useElements: gives access to form elements created by Stripe
+
 import { CheckCircle, Loader2, XCircle } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -25,26 +30,31 @@ const CheckoutForm = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // ✅ prevent default form submission
     setLoading(true);
     setErrorMsg(null);
 
     if (!stripe || !elements) {
+      // ✅ Ensure Stripe.js and Elements are loaded before proceeding
       setLoading(false);
       return;
     }
 
+    // ✅ Final confirmation step with Stripe.js
     const result = await stripe.confirmPayment({
-      elements,
+      elements, // uses PaymentElement form fields
       confirmParams: {
+        // return_url: where Stripe redirects after payment confirmation
         return_url: `${window.location.origin}/payment-success?sessionId=${sessionId}`,
       },
     });
 
     if (result.error) {
+      // ✅ Payment failed: update status + show error message
       setStatus('failed');
       setErrorMsg(result.error.message || 'Payment failed. Please try again.');
     } else {
+      // ✅ Payment succeeded
       setStatus('success');
     }
 

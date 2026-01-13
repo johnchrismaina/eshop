@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log('Stripe key:', process.env.STRIPE_SECRET_KEY);
-
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -13,6 +11,8 @@ import checkoutRoutes from './routes/checkout.routes'; // frontend initializer
 import orderRoutes from './routes/order.routes'; // other order routes
 import { createOrder } from './controllers/order.controller'; // webhook finalizer
 
+console.log('Stripe key loaded:', !!process.env.STRIPE_SECRET_KEY);
+
 const app = express();
 
 // --- Middleware ---
@@ -22,6 +22,13 @@ app.use(
     allowedHeaders: ['Authorization', 'Content-Type'],
     credentials: true,
   })
+);
+
+// 2️⃣ Stripe webhook: POST /api/create-order (MUST come before express.json())
+app.post(
+  '/api/create-order',
+  bodyParser.raw({ type: 'application/json' }),
+  createOrder
 );
 
 app.use(express.json()); // must come before checkoutRoutes
@@ -36,22 +43,16 @@ app.get('/', (req, res) => {
 // 1️⃣ Frontend initializer: POST /api/checkout-session
 app.use('/api', checkoutRoutes);
 
-// 2️⃣ Stripe webhook: POST /api/stripe-webhook
-app.post(
-  '/api/stripe-webhook',
-  bodyParser.raw({ type: 'application/json' }),
-  (req, res, next) => {
-    (req as any).rawBody = req.body;
-    next();
-  },
-  createOrder
-);
-
 // 3️⃣ Other order routes
 app.use('/api', orderRoutes);
 
 // --- Error handling ---
 app.use(errorMiddleware);
+
+console.log(
+  'Starting order-service with Stripe key:',
+  process.env.STRIPE_SECRET_KEY
+);
 
 // --- Startup ---
 const port = process.env.PORT || 6004;

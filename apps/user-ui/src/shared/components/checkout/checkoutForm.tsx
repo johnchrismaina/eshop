@@ -108,7 +108,7 @@ const CheckoutForm = ({
         <button
           type="submit"
           disabled={!stripe || loading}
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+          className="w-full flex justify-center items-center gap-2 bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed"
         >
           {/* {loading && (
             <Loader2 className="animate-spin mr-2 h-5 w-5 inline-block" />

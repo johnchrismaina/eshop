@@ -39,7 +39,7 @@ const CartPage = () => {
     try {
       console.log(
         'Posting to:',
-        axiosInstance.defaults.baseURL + '/api/create-order'
+        axiosInstance.defaults.baseURL + '/order/create-checkout-session'
       );
 
       console.log(
@@ -52,7 +52,7 @@ const CartPage = () => {
       );
 
       const res = await axiosInstance.post(
-        '/order/create-order', // ✅ goes through gateway to order-service
+        '/order/create-checkout-session', // ✅ goes through gateway to order-service
         {
           cart,
           selectedAddressId,
@@ -108,7 +108,7 @@ const CartPage = () => {
   const { data: addresses = [] } = useQuery<any[], Error>({
     queryKey: ['shipping-addresses'],
     queryFn: async () => {
-      const res = await axiosInstance.get('/user/api/shipping-addresses');
+      const res = await axiosInstance.get('/api/shipping-addresses');
       return res.data.addresses;
     },
   });
@@ -275,7 +275,7 @@ const CartPage = () => {
                     className="w-full p-2 border border-gray-200 rounded-l-md focus:outline-none focus:border-blue-500"
                   />
                   <button
-                    className="bg-blue-500 cursor-pointer text-white px-4 rounded-r-md hover:bg-blue-600 transition-all"
+                    className="bg-blue-600 cursor-pointer text-white px-4 rounded-r-md hover:bg-blue-700 transition-all"
                     // onClick={() => couponCodeapply}
                   >
                     Apply
@@ -333,7 +333,7 @@ const CartPage = () => {
                   onClick={createPaymentSession}
                   // onClick={() => createPaymentSession()}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 bg-[#010f1c] text-white hover:bg-[#0989FF] transition-all rounded-lg"
+                  className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 bg-[#010f1c] text-white hover:bg-blue-700 transition-all rounded-lg"
                 >
                   {loading && <Loader2 className="animate-spin w-5 h-5" />}
                   {loading ? 'Redirecting...' : 'Proceed to Checkout'}

@@ -59,17 +59,17 @@ const Header = () => {
         </div>
 
         {/* Search input */}
-        <div className="w-[50%] relative">
+        <div className="w-[50%] relative flex items-center">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for products..."
-            className="w-full px-4 font-Poppins font-medium border-[2.5px] border-[#3489FF] outline-none h-[55px] "
+            className="w-full px-4 font-Poppins font-medium border-1 border-gray-500 outline-none h-[55px] rounded-lg"
           />
           <div
             onClick={handleSearchClick}
-            className="w-[60px] cursor-pointer flex items-center justify-center h-[55px] bg-[#3489FF] absolute top-0 right-0"
+            className="w-[60px] cursor-pointer flex items-center justify-center h-[55px] outline-none bg-orange-600 absolute top-0 right-0 rounded-r-lg"
           >
             <Search color="#fff" />
           </div>

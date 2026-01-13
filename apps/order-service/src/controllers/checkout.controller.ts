@@ -1,5 +1,3 @@
-// controllers/checkout.controller.ts
-
 // Import Express types for request/response handling
 import { Request, Response, NextFunction } from 'express';
 
@@ -9,19 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 // Import Redis client (your shared package @eshop/redis)
 import redis from '@eshop/redis';
 
-// Import Stripe SDK
-import Stripe from 'stripe';
-
-// Initialize Stripe client with secret key from environment variables
-// The apiVersion ensures compatibility with Stripe’s API schema
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-10-29.clover',
-});
-
-// Safety check: fail fast if Stripe key is missing
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set');
-}
+// Import lazy-loaded Stripe client
+import { getStripeClient } from '../utils/stripe-client';
 
 // Controller function: handles POST /api/create-order (via checkout.routes)
 export const createCheckoutSession = async (
@@ -47,22 +34,23 @@ export const createCheckoutSession = async (
     // 3️⃣ Convert amount to cents (Stripe expects smallest currency unit)
     const amountInCents = Math.round(Number(totalAmount) * 100);
 
+    // 3.5️⃣ Generate a unique sessionId FIRST (before creating PaymentIntent)
+    const sessionId = uuidv4();
+
     // 4️⃣ Create a PaymentIntent with Stripe
     // - amount: total in cents
     // - currency: USD
     // - automatic_payment_methods: lets Stripe decide best payment method (card, wallet, etc.)
-    // - metadata: attach userId for later reconciliation
+    // - metadata: attach userId AND sessionId for later reconciliation
+    const stripe = getStripeClient();
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents,
       currency: 'usd',
       automatic_payment_methods: { enabled: true },
-      metadata: { userId },
+      metadata: { userId, sessionId }, // ✅ Include sessionId in metadata
     });
 
-    // 5️⃣ Generate a unique sessionId for tracking in Redis
-    const sessionId = uuidv4();
-
-    // 6️⃣ Build payload to store in Redis
+    // 5️⃣ Build payload to store in Redis
     // Includes everything needed to resume/recover the checkout flow
     const payload = {
       sessionId,
@@ -73,7 +61,7 @@ export const createCheckoutSession = async (
       shippingAddressId: selectedAddressId,
     };
 
-    // 7️⃣ Save payload in Redis with TTL (30 minutes)
+    // 6️⃣ Save payload in Redis with TTL (30 minutes)
     // Key: payment-session:<sessionId>
     // Value: JSON string of payload
     // 'EX', 1800 → expire after 1800 seconds (30 minutes)
@@ -84,14 +72,14 @@ export const createCheckoutSession = async (
       1800
     );
 
-    // 8️⃣ Respond to frontend with sessionId + clientSecret
+    // 7️⃣ Respond to frontend with sessionId + clientSecret
     // Frontend uses sessionId to redirect and clientSecret to confirm payment
     return res.status(201).json({
       sessionId,
       clientSecret: paymentIntent.client_secret,
     });
   } catch (err) {
-    // 9️⃣ Error handling
+    // 8️⃣ Error handling
     // Log error for debugging and return generic 500 response
     console.error('Error creating checkout session:', err);
     return res.status(500).json({ message: 'Internal server error' });

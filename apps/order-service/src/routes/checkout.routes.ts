@@ -4,8 +4,8 @@ import { createCheckoutSession } from '../controllers/checkout.controller';
 
 const router = Router();
 
-// Receives forwarded path: POST http://localhost:6004/api/create-order
-router.post('/create-order', createCheckoutSession);
+// Receives forwarded path: POST http://localhost:6004/api/create-checkout-session
+router.post('/create-checkout-session', createCheckoutSession);
 
 // new GET route to fetch session
 router.get('/payment-session/:id', async (req, res) => {

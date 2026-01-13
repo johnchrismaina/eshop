@@ -24,7 +24,7 @@ module.exports = {
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
-      sourceMaps: true,
+      sourceMaps: false, // ✅ Disabled for faster builds
     }),
   ],
 };

@@ -7,6 +7,7 @@ import crypto from 'crypto';
 // import { Prisma } from '@prisma/client';
 import { sendEmail } from '../utils/send-email';
 import { getStripeClient } from '../utils/stripe-client';
+import { NotFoundError } from '@eshop/error-handler';
 // import { ReceiverType, NotificationStatus } from '@prisma/client';
 
 // Local type for embedded actions
@@ -349,5 +350,122 @@ export const createOrder = async (
   } catch (error) {
     console.error('❌ Webhook processing error:', error);
     return next(error);
+  }
+};
+
+// get sellers orders
+export const getSellerOrders = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // get shop information based on the logged in seller
+    const shop = await prisma.shops.findUnique({
+      where: {
+        sellerId: req.seller.id,
+      },
+    });
+
+    // fetch all orders for this shop
+    const orders = await prisma.order.findMany({
+      where: {
+        shopId: shop?.id,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {}
+};
+
+// get order details
+export const getOrderDetails = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const orderId = req.params.id;
+
+    const order = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+      include: {
+        items: true,
+      },
+    });
+
+    if (!order) {
+      return next(new NotFoundError('Order not found with the id!'));
+    }
+
+    const shippingAddress = order.shippingAddressId
+      ? await prisma.address.findUnique({
+          where: {
+            id: order?.shippingAddressId,
+          },
+        })
+      : null;
+
+    const coupon = order.couponCode
+      ? await prisma?.discount_codes.findUnique({
+          where: {
+            discountCode: order.couponCode,
+          },
+        })
+      : null;
+
+    // fetch all products details in one go
+    const productIds = order.items.map((item) => item.productId);
+
+    const products = await prisma.products.findMany({
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        images: true,
+      },
+    });
+
+    const productMap = new Map(products.map((p) => [p.id, p]));
+
+    const items = order.items.map((item) => ({
+      ...item,
+      selectedOptions: item.selectedOptions,
+      product: productMap.get(item.productId) || null,
+    }));
+
+    res.status(200).json({
+      success: true,
+      order: {
+        ...order,
+        items,
+        shippingAddress,
+        couponCode: coupon,
+      },
+    });
+  } catch (error) {
+    next(error);
   }
 };

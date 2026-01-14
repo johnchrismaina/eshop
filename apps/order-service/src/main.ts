@@ -56,10 +56,8 @@ console.log(
 
 // --- Startup ---
 const port = process.env.PORT || 6004;
-if (require.main === module) {
-  const server = app.listen(port, () => {
-    console.log(`Order service running on port ${port}`);
-    console.log(`Listening at http://localhost:${port}/api`);
-  });
-  server.on('error', console.error);
-}
+const server = app.listen(port, () => {
+  console.log(`Order service running on port ${port}`);
+  console.log(`Listening at http://localhost:${port}/api`);
+});
+server.on('error', console.error);

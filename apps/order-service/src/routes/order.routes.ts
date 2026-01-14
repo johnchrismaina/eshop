@@ -3,8 +3,11 @@ import express, { Router } from 'express';
 import {
   createPaymentIntent,
   createPaymentSession,
+  getOrderDetails,
+  getSellerOrders,
 } from '../controllers/order.controller';
 import { createOrder } from '../controllers/order.controller';
+import { isSeller } from '@packages/middleware/authorizeRoles';
 
 const router: Router = express.Router();
 
@@ -16,5 +19,7 @@ router.post('/stripe-webhook', createOrder);
 //   isAuthenticated,
 //   verifyingPaymentSession
 // );
+router.get('/get-seller-orders', isAuthenticated, isSeller, getSellerOrders);
+router.get('/get-order-details/:id', isAuthenticated, getOrderDetails);
 
 export default router;

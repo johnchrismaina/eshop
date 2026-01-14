@@ -1,4 +1,5 @@
 'use client';
+import Dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
@@ -22,7 +23,9 @@ interface UploadedImage {
   file_url: string;
 }
 
-const Page = () => {
+export const dynamic = 'force-dynamic';
+
+const CreateProductPage = () => {
   const {
     register,
     control,
@@ -33,7 +36,8 @@ const Page = () => {
   } = useForm();
 
   const [openImageModal, setOpenImageModal] = useState(false);
-  const [isChanged, setIsChanged] = useState(true);
+  // const [isChanged, setIsChanged] = useState(true);
+  const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
   const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
@@ -97,14 +101,14 @@ const Page = () => {
     }
   };
 
-  const convertFiletoBase64 = (file: File) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
+  // const convertFiletoBase64 = (file: File) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // };
 
   const handleImageChange = async (file: File | null, index: number) => {
     if (!file) return;
@@ -584,7 +588,10 @@ const Page = () => {
                   {...register('sale_price', {
                     required: 'Sale Price is required',
                     valueAsNumber: true,
-                    min: { value: 1, message: 'Sale Price must be at least 1' },
+                    min: {
+                      value: 1,
+                      message: 'Sale Price must be at least 1',
+                    },
                     validate: (value) => {
                       if (isNaN(value)) return 'Only numbers are allowed';
                       if (regularPrice && value >= regularPrice) {
@@ -746,5 +753,7 @@ const Page = () => {
     </form>
   );
 };
+
+const Page = Dynamic(() => Promise.resolve(CreateProductPage), { ssr: false });
 
 export default Page;

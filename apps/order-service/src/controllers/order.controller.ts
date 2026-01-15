@@ -7,7 +7,7 @@ import crypto from 'crypto';
 // import { Prisma } from '@prisma/client';
 import { sendEmail } from '../utils/send-email';
 import { getStripeClient } from '../utils/stripe-client';
-import { NotFoundError } from '@eshop/error-handler';
+import { NotFoundError, ValidationError } from '@eshop/error-handler';
 // import { ReceiverType, NotificationStatus } from '@prisma/client';
 
 // Local type for embedded actions
@@ -284,12 +284,13 @@ export const createOrder = async (
 
         try {
           // Create order in DB
-          const createdOrder = await prisma.order.create({
+          const createdOrder = await prisma.orders.create({
             data: {
               userId: userId,
               shopId: shopId,
               total: orderTotal, // ✅ per-shop total
               status: 'Paid',
+              deliveryStatus: 'Ordered',
               shippingAddressId: shippingAddressId || null,
               couponCode: coupon?.code || null,
               discountAmount: coupon?.discountAmount ?? 0,
@@ -368,7 +369,7 @@ export const getSellerOrders = async (
     });
 
     // fetch all orders for this shop
-    const orders = await prisma.order.findMany({
+    const orders = await prisma.orders.findMany({
       where: {
         shopId: shop?.id,
       },
@@ -403,7 +404,7 @@ export const getOrderDetails = async (
   try {
     const orderId = req.params.id;
 
-    const order = await prisma.order.findUnique({
+    const order = await prisma.orders.findUnique({
       where: {
         id: orderId,
       },
@@ -467,5 +468,59 @@ export const getOrderDetails = async (
     });
   } catch (error) {
     next(error);
+  }
+};
+
+// update order status
+export const updateDeliveryStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { orderId } = req.params;
+    const { deliveryStatus } = req.body;
+
+    if (!orderId || !deliveryStatus) {
+      return res
+        .status(400)
+        .json({ error: 'Order ID and delivery status are required.' });
+    }
+
+    const allowedStatuses = [
+      'Ordered',
+      'Packed',
+      'Shipped',
+      'Out for Delivery',
+      'Delivered',
+    ];
+
+    if (!allowedStatuses.includes(deliveryStatus)) {
+      return next(new ValidationError('Invalid delivery status provided.'));
+    }
+
+    const existingOrder = await prisma.orders.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!existingOrder) {
+      return next(new NotFoundError('Order not found with the provided ID.'));
+    }
+
+    const updatedOrder = await prisma.orders.update({
+      where: { id: orderId },
+      data: {
+        deliveryStatus,
+        updatedAt: new Date(),
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Delivery status updated successfully.',
+      order: updatedOrder,
+    });
+  } catch (error) {
+    return next(error);
   }
 };

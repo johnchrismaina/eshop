@@ -39,20 +39,20 @@ export const checkOtpRestrictions = async (
   email: string
 ): Promise<ValidationError | null> => {
   if (await redis.get(`otp_lock:${email}`)) {
-    return new ValidationError(
+    throw new ValidationError(
       'Account locked due to multiple failed attempts! Try again after 30 minutes.'
     );
   }
 
   if (await redis.get(`otp_spam_lock:${email}`)) {
-    return new ValidationError(
+    throw new ValidationError(
       'Too many OTP requests! Please wait 1 hour before requesting again.'
     );
   }
 
   if (await redis.get(`otp_cooldown:${email}`)) {
-    return new ValidationError(
-      'Please wait 1 minute before requesting another OTP.'
+    throw new ValidationError(
+      'Please wait 1 minute before requesting another OTP!'
     );
   }
 
@@ -69,7 +69,7 @@ export const trackOtpRequests = async (
   }
   if (spamCount > 5) {
     await redis.set(`otp_spam_lock:${email}`, '1', { ex: 3600 }); // lock for 1 hour
-    return new ValidationError(
+    throw new ValidationError(
       'Too many OTP requests! Please wait 1 hour before requesting again.'
     );
   }

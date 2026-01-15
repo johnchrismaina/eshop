@@ -45,7 +45,15 @@ app.use(
   })
 ); // Order Service
 app.use('/seller', proxy('http://localhost:6003')); // Seller Service
-app.use('/product', proxy('http://localhost:6002')); // Product Service
+
+app.use(
+  '/product',
+  proxy('http://localhost:6002', {
+    proxyReqPathResolver: (req) => `/api${req.url.replace('/product', '')}`,
+  })
+); // Product Service
+
+// app.use('/product', proxy('http://localhost:6002')); // Product Service
 app.use('/', proxy('http://localhost:6001')); // Auth Service
 
 const port = process.env.PORT || 8080;

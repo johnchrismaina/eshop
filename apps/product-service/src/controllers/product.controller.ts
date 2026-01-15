@@ -865,7 +865,7 @@ export const topShops = async (
     // console.log('orders sample:', orders);
 
     // Aggregate total sales per shop from orders
-    const topShopsData = await prisma.order.groupBy({
+    const topShopsData = await prisma.orders.groupBy({
       by: ['shopId'],
       _sum: {
         total: true,

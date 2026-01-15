@@ -26,9 +26,9 @@ model users {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   shopReviews   shopReviews[]     @relation("UserReview")
-  followedShops UserFollowsShop[]
-  addresses     Address[] // relation: one user can have many addresses
-  orders        Order[] // ✅ relation: one user has many orders
+  followedShops userFollowsShop[] // relation: one user can follow many shops
+  addresses     address[] // relation: one user can have many addresses
+  orders        orders[] // ✅ relation: one user has many orders
 }
 
 enum addressType {
@@ -37,7 +37,7 @@ enum addressType {
   Other
 }
 
-model Address {
+model address {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
   user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -65,7 +65,7 @@ model shopReviews {
   shops     shops?   @relation("ShopReview", fields: [shopsId], references: [id])
 }
 
-model UserFollowsShop {
+model userFollowsShop {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String
   shopId String
@@ -74,19 +74,21 @@ model UserFollowsShop {
   shop shops @relation(fields: [shopId], references: [id])
 }
 
-model Order {
+model orders {
   id                String      @id @default(auto()) @map("_id") @db.ObjectId
   userId            String
   user              users       @relation(fields: [userId], references: [id])
   shopId            String
   total             Float
-  status            String
-  shippingAddressId String?
   couponCode        String?
   discountAmount    Float?
+  status            String
+  deliveryStatus    String      @default("Ordered")
+  shippingAddressId String?
   shop              shops       @relation(fields: [shopId], references: [id])
-  items             OrderItem[] // ✅ relation: one order has many items
+  items             orderItem[] // ✅ relation: one order has many items
   createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 }
 
 model shops {
@@ -109,8 +111,8 @@ model shops {
   updatedAt     DateTime      @updatedAt
   products      products[]    @relation("ShopProducts") // one-to-many products
 
-  orders    Order[]
-  followers UserFollowsShop[]
+  orders    orders[]
+  followers userFollowsShop[]
 }
 
 model sellers {
@@ -196,7 +198,7 @@ type ActionEntry {
   timestamp DateTime
 }
 
-model UserAnalytics {
+model userAnalytics {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   userId      String        @unique @db.ObjectId // rename from userID to userId and make unique
   lastVisited DateTime?
@@ -208,7 +210,7 @@ model UserAnalytics {
   device  String?
 }
 
-model ProductAnalytics {
+model productAnalytics {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId
   productId    String    @unique @db.ObjectId // make this unique so upsert can use it
   shopId       String?   @db.ObjectId
@@ -232,17 +234,17 @@ enum NotificationStatus {
   READ
 }
 
-model OrderItem {
+model orderItem {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   orderId         String
-  order           Order  @relation(fields: [orderId], references: [id])
+  order           orders @relation(fields: [orderId], references: [id])
   productId       String
   quantity        Int
   price           Float
   selectedOptions Json? // ✅ store options as JSON (safe for arrays/objects)
 }
 
-model Notification {
+model notifications {
   id            String             @id @default(auto()) @map("_id") @db.ObjectId
   title         String
   message       String

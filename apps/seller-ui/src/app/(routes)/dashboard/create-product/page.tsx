@@ -1,5 +1,4 @@
 'use client';
-import Dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
@@ -23,9 +22,7 @@ interface UploadedImage {
   file_url: string;
 }
 
-export const dynamic = 'force-dynamic';
-
-const CreateProductPage = () => {
+const Page = () => {
   const {
     register,
     control,
@@ -588,10 +585,7 @@ const CreateProductPage = () => {
                   {...register('sale_price', {
                     required: 'Sale Price is required',
                     valueAsNumber: true,
-                    min: {
-                      value: 1,
-                      message: 'Sale Price must be at least 1',
-                    },
+                    min: { value: 1, message: 'Sale Price must be at least 1' },
                     validate: (value) => {
                       if (isNaN(value)) return 'Only numbers are allowed';
                       if (regularPrice && value >= regularPrice) {
@@ -753,7 +747,5 @@ const CreateProductPage = () => {
     </form>
   );
 };
-
-const Page = Dynamic(() => Promise.resolve(CreateProductPage), { ssr: false });
 
 export default Page;

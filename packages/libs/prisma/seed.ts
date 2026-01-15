@@ -78,30 +78,33 @@ async function main() {
   });
 
   // 3. Create orders linked to shops
-  await prisma.order.create({
+  await prisma.orders.create({
     data: {
       shop: { connect: { id: fashionHub.id } },
       user: { connect: { id: alice.id } },
       total: 5000,
       status: 'Paid',
+      deliveryStatus: 'Ordered',
     },
   });
 
-  await prisma.order.create({
+  await prisma.orders.create({
     data: {
       shop: { connect: { id: techWorld.id } },
       user: { connect: { id: bob.id } },
       total: 3000,
       status: 'Paid',
+      deliveryStatus: 'Ordered',
     },
   });
 
-  await prisma.order.create({
+  await prisma.orders.create({
     data: {
       shop: { connect: { id: fashionHub.id } },
       user: { connect: { id: alice.id } },
       total: 2000,
       status: 'Paid',
+      deliveryStatus: 'Ordered',
     },
   });
 

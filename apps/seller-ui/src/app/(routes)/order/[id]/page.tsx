@@ -42,7 +42,7 @@ const Page = () => {
     const newStatus = e.target.value;
     setUpdating(true);
     try {
-      await axiosInstance.put(`/order/update-order-status/${order.id}`, {
+      await axiosInstance.put(`/order/update-status/${order.id}`, {
         deliveryStatus: newStatus,
       });
       setOrder((prev: any) => ({

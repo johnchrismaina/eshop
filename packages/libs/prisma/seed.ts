@@ -1,8 +1,11 @@
+import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const hashedPassword = await bcrypt.hash('admin123', 10);
+
   console.log('🚀 Seed script starting...');
   // 1. Create sample users
   console.log('Creating users...');
@@ -16,7 +19,7 @@ async function main() {
       password: 'hashedpassword',
     },
   });
-  console.log('Alice created:', alice);
+  // console.log('Alice created:', alice);
 
   const bob = await prisma.users.upsert({
     where: { email: 'bob@example.com' },
@@ -29,12 +32,21 @@ async function main() {
   });
 
   const charlie = await prisma.users.upsert({
-    where: { email: 'bob@example.com' },
+    where: { email: 'charlie@example.com' },
     update: {},
     create: {
       name: 'Charlie',
       email: 'charlie@example.com',
       password: 'hashedpassword',
+    },
+  });
+
+  await prisma.users.create({
+    data: {
+      name: 'Admin',
+      email: 'admin@example.com',
+      password: hashedPassword,
+      role: 'admin',
     },
   });
 
@@ -78,8 +90,10 @@ async function main() {
   });
 
   // 3. Create orders linked to shops
-  await prisma.orders.create({
-    data: {
+  await prisma.orders.upsert({
+    where: { id: fashionHub.id },
+    update: {},
+    create: {
       shop: { connect: { id: fashionHub.id } },
       user: { connect: { id: alice.id } },
       total: 5000,
@@ -88,8 +102,10 @@ async function main() {
     },
   });
 
-  await prisma.orders.create({
-    data: {
+  await prisma.orders.upsert({
+    where: { id: techWorld.id },
+    update: {},
+    create: {
       shop: { connect: { id: techWorld.id } },
       user: { connect: { id: bob.id } },
       total: 3000,
@@ -98,8 +114,10 @@ async function main() {
     },
   });
 
-  await prisma.orders.create({
-    data: {
+  await prisma.orders.upsert({
+    where: { id: fashionHub.id },
+    update: {},
+    create: {
       shop: { connect: { id: fashionHub.id } },
       user: { connect: { id: alice.id } },
       total: 2000,

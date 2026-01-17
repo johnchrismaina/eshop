@@ -12,6 +12,7 @@ import { prisma } from '@eshop/libs/prisma';
 import {
   AuthError,
   NotFoundError,
+  sendLog,
   ValidationError,
 } from '../../../../packages/error-handler';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
@@ -359,6 +360,79 @@ export const updateUserPassword = async (
     res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
     next(error);
+  }
+};
+
+// Login admin
+export const loginAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new ValidationError('Email and password are required!'));
+    }
+
+    const user = await prisma.users.findUnique({ where: { email } });
+
+    if (!user) return next(new AuthError('User does not exist! '));
+
+    // verify password
+    const isMatch = await bcrypt.compare(password, user.password!);
+    if (!isMatch) {
+      return next(new AuthError('Invalid email or password'));
+    }
+
+    const isAdmin = user.role === 'admin';
+
+    if (!isAdmin) {
+      sendLog({
+        type: 'error',
+        message: `Admin login failed for ${email} - not an admin`,
+        source: 'auth-service',
+      });
+      return next(new AuthError('Invalid access!'));
+    }
+
+    sendLog({
+      type: 'success',
+      message: `Admin login successful: ${email}`,
+      source: 'auth-service',
+    });
+
+    res.clearCookie('seller-access-token');
+    res.clearCookie('seller-refresh-token');
+
+    // Generate access and refresh token
+    const accessToken = jwt.sign(
+      { id: user.id, role: 'admin' },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      {
+        expiresIn: '15m',
+      }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: user.id, role: 'admin' },
+      process.env.REFRESH_TOKEN_SECRET as string,
+      {
+        expiresIn: '7d',
+      }
+    );
+
+    // Store the refresh and access token in an httpOnly secure cookie
+    setCookie(res, 'refresh_token', refreshToken);
+    setCookie(res, 'access_token', accessToken);
+
+    res.status(200).json({
+      message: 'Login successful!',
+      user: { id: user.id, email: user.email, name: user.name },
+    });
+  } catch (error) {
+    return next(error);
   }
 };
 

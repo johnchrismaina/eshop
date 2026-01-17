@@ -28,7 +28,8 @@
       "@gateway/libs/*": ["apps/api-gateway/src/libs/*"],
       "@packages/*": ["packages/*"],
       "@prisma/client": ["node_modules/.prisma/client"],
-      "@shared/*": ["libs/shared/src/*"]
+      "@shared/*": ["libs/shared/src/*"],
+      "@components/*": ["packages/components/*"]
     }
   }
 }

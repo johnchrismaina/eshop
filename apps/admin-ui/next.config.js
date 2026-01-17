@@ -2,27 +2,15 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
-// const { composePlugins, withNx } = require('@nx/next');
+const { composePlugins, withNx } = require('@nx/next');
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
-
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   // Use this to set Nx-specific options
   // See: https://nx.dev/recipes/next/next-config-setup
-
-  // nx: {},
-  reactStrictMode: true,
-
-  images: {
-    remotePatterns: [
-      {
-        hostname: 'ik.imagekit.io',
-      },
-    ],
-  },
+  nx: {},
 
   webpack: (config, { isServer }) => {
     config.resolve.alias = {
@@ -35,9 +23,7 @@ const nextConfig = {
 
 const plugins = [
   // Add more Next.js plugins to this list if needed.
-  // withNx,
+  withNx,
 ];
 
-// module.exports = composePlugins(...plugins)(nextConfig);
-
-module.exports = nextConfig;
+module.exports = composePlugins(...plugins)(nextConfig);

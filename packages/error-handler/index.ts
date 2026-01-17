@@ -68,3 +68,15 @@ export class ExternalServiceError extends AppError {
 }
 
 // export * from './error-middleware.js'; // use .js if using NodeNext
+
+// sendLog
+export type LogType = 'error' | 'success' | 'info';
+export interface LogPayload {
+  type: LogType;
+  message: string;
+  source: string;
+}
+export function sendLog({ type, message, source }: LogPayload) {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] [${source}] ${type.toUpperCase()}: ${message}`);
+}

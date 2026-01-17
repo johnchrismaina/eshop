@@ -16,11 +16,17 @@ model images {
   product   products? @relation("ProductImages", fields: [productId], references: [id])
 }
 
+enum Role {
+  user
+  admin
+}
+
 model users {
   id            String            @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   email         String            @unique
   password      String?
+  role          Role              @default(user)
   following     String[]
   avatar        String? // just store avatar URL directly
   createdAt     DateTime          @default(now())

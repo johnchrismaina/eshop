@@ -7,30 +7,28 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     const token =
       req.cookies['access_token'] ||
       req.cookies['seller-access-token'] ||
+      req.cookies['admin-access-token'] ||
       req.headers.authorization?.split(' ')[1];
 
     if (!token) {
       return res.status(401).json({ message: 'Unauthorized! token missing.' });
     }
 
-    // verify token
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as {
       id: string;
-      role: 'user' | 'seller';
+      role: 'user' | 'seller' | 'admin';
     };
 
     if (!decoded) {
-      return res.status(401).json({
-        message: 'Unauthorized! Invalid token.',
-      });
+      return res.status(401).json({ message: 'Unauthorized! Invalid token.' });
     }
+
+    req.role = decoded.role; // ✅ set role immediately
 
     let account;
 
     if (decoded.role === 'user') {
-      account = await prisma.users.findUnique({
-        where: { id: decoded.id },
-      });
+      account = await prisma.users.findUnique({ where: { id: decoded.id } });
       req.user = account;
     } else if (decoded.role === 'seller') {
       account = await prisma.sellers.findUnique({
@@ -38,15 +36,15 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
         include: { shop: true },
       });
       req.seller = account;
+    } else if (decoded.role === 'admin') {
+      console.log('Decoded admin token, role:', req.role);
+      account = await prisma.admins.findUnique({ where: { id: decoded.id } });
+      req.admin = account;
     }
-
-    // console.log('Authenticated seller:', account);
 
     if (!account) {
       return res.status(401).json({ message: 'Account not found!' });
     }
-
-    req.role = decoded.role;
 
     return next();
   } catch (error) {

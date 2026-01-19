@@ -4,6 +4,7 @@ import {
   createShop,
   createStripeConnectLink,
   deleteUserAddress,
+  getAdmin,
   getSeller,
   getUser,
   getUserAddresses,
@@ -38,6 +39,8 @@ router.post('/change-password', isAuthenticated, updateUserPassword);
 router.post('/seller-registration', registerSeller);
 router.post('/verify-seller', verifySeller);
 router.post('/login-admin', loginAdmin);
+router.get('/logged-in-admin', isAuthenticated, getAdmin);
+// router.get('/logged-in-admin', isAuthenticated, isAdmin, getAdmin);
 // router.post('/logout-admin', isAuthenticated, logoutAdmin);
 router.post('/create-shop', createShop);
 router.post('/create-stripe-link', createStripeConnectLink);

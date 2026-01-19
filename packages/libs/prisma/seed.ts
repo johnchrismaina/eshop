@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const hashedPassword = await bcrypt.hash('admin123456789', 10);
 
   console.log('🚀 Seed script starting...');
   // 1. Create sample users
@@ -19,7 +19,6 @@ async function main() {
       password: 'hashedpassword',
     },
   });
-  // console.log('Alice created:', alice);
 
   const bob = await prisma.users.upsert({
     where: { email: 'bob@example.com' },
@@ -41,14 +40,15 @@ async function main() {
     },
   });
 
-  await prisma.users.create({
+  // Create an admin record
+  const admin = await prisma.admins.create({
     data: {
-      name: 'Admin',
       email: 'admin@example.com',
       password: hashedPassword,
-      role: 'admin',
+      role: 'admin', // matches your Role enum
     },
   });
+  console.log('Seeded admin:', admin);
 
   // 2. Create shops with sellers
   console.log('Creating shops...');

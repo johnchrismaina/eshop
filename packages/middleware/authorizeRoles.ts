@@ -1,6 +1,4 @@
-// import { AuthError } from '../error-handler';
 import { AuthError } from '@packages/error-handler/index.js';
-// import { AuthError } from '../../../../packages/error-handler';
 
 import { NextFunction, Response } from 'express';
 

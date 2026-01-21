@@ -97,7 +97,7 @@ model orders {
   total             Float
   couponCode        String?
   discountAmount    Float?
-  status            String
+  status            String      @default("Pending")
   deliveryStatus    String      @default("Ordered")
   shippingAddressId String?
   shop              shops       @relation(fields: [shopId], references: [id])
@@ -203,6 +203,9 @@ model products {
 
   // New field for sales tracking
   totalSales Int @default(0)
+
+  @@index([createdAt])
+  @@index([starting_date])
 }
 
 // Define an embedded type for actions

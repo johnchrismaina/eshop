@@ -43,10 +43,16 @@ app.get('/gateway-health', (req, res) => {
 });
 
 app.use('/admin', proxy('http://localhost:6005')); // Admin Service
+// app.use(
+//   '/order',
+//   proxy('http://localhost:6004', {
+//     proxyReqPathResolver: (req) => `/api${req.url}`,
+//   })
+// );
 app.use(
   '/order',
   proxy('http://localhost:6004', {
-    proxyReqPathResolver: (req) => `/api${req.url}`,
+    proxyReqPathResolver: (req) => `/api${req.url.replace('/order', '')}`,
   })
 ); // Order Service
 app.use('/seller', proxy('http://localhost:6003')); // Seller Service

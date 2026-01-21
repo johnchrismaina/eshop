@@ -10,14 +10,6 @@ import { getStripeClient } from '../utils/stripe-client';
 import { NotFoundError, ValidationError } from '@eshop/error-handler';
 // import { ReceiverType, NotificationStatus } from '@prisma/client';
 
-// Local type for embedded actions
-// type ActionEntry = {
-//   productId: string | null;
-//   shopId: string | null;
-//   action: string;
-//   timestamp: Date; // ✅ matches schema DateTime
-// };
-
 // Create payment intent
 export const createPaymentIntent = async (
   req: any,
@@ -613,5 +605,38 @@ export const getUserOrders = async (
     });
   } catch (error) {
     return next(error);
+  }
+};
+
+// get admin orders
+export const getAdminOrders = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log('getAdminOrders called');
+
+    // Fetch all orders
+    const orders = await prisma.orders.findMany({
+      include: {
+        user: true,
+        shop: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    console.log('orders', orders);
+
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    return next(error);
+    // console.error('getAdminOrders error:', error);
+    // return res.status(500).json({ success: false, message: 'Server error' });
   }
 };

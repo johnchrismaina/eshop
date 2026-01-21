@@ -9,20 +9,20 @@ import {
 } from '@tanstack/react-table';
 import { Search, EyeIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import axiosInstance from 'apps/seller-ui/src/utils/axiosInstance';
 import Link from 'next/link';
-import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
+import axiosInstance from 'apps/admin-ui/src/utils/axiosInstance';
+import Breadcrumbs from 'apps/admin-ui/src/shared/components/breadcrumbs';
 
 const fetchOrders = async () => {
-  const res = await axiosInstance.get('/order/get-seller-orders');
+  const res = await axiosInstance.get('/order/get-admin-orders');
   return res.data?.orders;
 };
 
-const SellerPayments = () => {
+const PaymentsTable = () => {
   const [globalFilter, setGlobalFilter] = useState('');
 
   const { data: orders = [], isLoading } = useQuery({
-    queryKey: ['seller-orders'],
+    queryKey: ['admin-orders'],
     queryFn: fetchOrders,
     staleTime: 1000 * 60 * 5,
   });
@@ -39,6 +39,15 @@ const SellerPayments = () => {
         ),
       },
       {
+        accessoryKey: 'shop.name',
+        header: 'Shop',
+        cell: ({ row }: any) => (
+          <span className="text-white">
+            {row.original.shop?.name || 'Unknown Shop'}
+          </span>
+        ),
+      },
+      {
         accessoryKey: 'user.name',
         header: 'Buyer',
         cell: ({ row }: any) => (
@@ -48,23 +57,23 @@ const SellerPayments = () => {
         ),
       },
       {
-        header: 'Seller Earnings',
+        header: 'Platform Fee (10%)',
         cell: ({ row }: any) => {
-          const sellerShare = row.original.total * 0.9; // 90% of the total
+          const platformFee = row.original.total * 0.1; // 10% of the total
           return (
             <span className="text-green-400 font-medium">
-              ${sellerShare.toFixed(2) || '0.00'}
+              ${platformFee.toFixed(2)}
             </span>
           );
         },
       },
       {
-        header: 'Platform Fee',
+        header: 'Seller Earnings',
         cell: ({ row }: any) => {
-          const platformFee = row.original.total * 0.1; // 10% fee
+          const sellerShare = row.original.total * 0.9; // 90% of the total
           return (
-            <span className="text-yellow-400 font-medium">
-              ${platformFee.toFixed(2) || '0.00'}
+            <span className="text-green-400 font-medium">
+              ${sellerShare.toFixed(2)}
             </span>
           );
         },
@@ -127,11 +136,11 @@ const SellerPayments = () => {
       <Breadcrumbs title="Payments" />
 
       {/* Search bar */}
-      <div className="my-4 flex items-center bg-gray-900 rounded-md flex-1">
+      <div className="my-4 flex items-center bg-gray-900 p-2 rounded-md flex-1 ">
         <Search className="text-gray-400 mr-2" size={18} />
         <input
           type="text"
-          placeholder="Search payments..."
+          placeholder="Search payments"
           className="w-full bg-transparent text-white placeholder-gray-400 focus:outline-none"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -180,4 +189,4 @@ const SellerPayments = () => {
     </div>
   );
 };
-export default SellerPayments;
+export default PaymentsTable;

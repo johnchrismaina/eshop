@@ -29,9 +29,20 @@ const onRefreshSuccess = () => {
 
 // Handle API requests
 axiosInstance.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    const token = localStorage.getItem('accessToken'); // or from context/store
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
   (error) => Promise.reject(error)
 );
+
+// axiosInstance.interceptors.request.use(
+//   (config) => config,
+//   (error) => Promise.reject(error)
+// );
 
 // Handle expired tokens and refresh logic
 axiosInstance.interceptors.response.use(

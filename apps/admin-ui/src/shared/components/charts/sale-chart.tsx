@@ -22,13 +22,22 @@ export const SalesChart = ({
 
   const chartOptions: Props['options'] = {
     chart: {
-      type: 'line',
+      type: 'area',
       toolbar: { show: false },
       zoom: { enabled: false },
     },
     stroke: {
       curve: 'smooth',
       width: 3,
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.9, // starting opacity of the fill
+        opacityTo: 0.1, // ending opacity
+        stops: [50, 90, 90],
+      },
     },
     markers: {
       size: 5,
@@ -77,7 +86,7 @@ export const SalesChart = ({
       <Chart
         options={chartOptions}
         series={chartSeries}
-        type="line"
+        type="area"
         height="100%"
       />
     </Box>

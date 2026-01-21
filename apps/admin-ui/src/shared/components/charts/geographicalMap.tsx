@@ -23,11 +23,11 @@ const getColor = (countryName: string) => {
   return '#1e293b';
 };
 
-const getTooltipPosition = (e: React.MouseEvent) => {
-  const x = e.pageX + 12;
-  const y = e.pageY - 20;
-  return { x, y };
-};
+// const getTooltipPosition = (e: React.MouseEvent) => {
+//   const x = e.pageX + 12;
+//   const y = e.pageY - 20;
+//   return { x, y };
+// };
 
 const Geographicalmap = () => {
   const [hovered, setHovered] = useState<{

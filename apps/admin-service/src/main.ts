@@ -18,6 +18,6 @@ app.use(errorMiddleware);
 
 const port = process.env.PORT || 6005;
 const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
+  console.log(`Admin service is running at http://localhost:${port}/api`);
 });
 server.on('error', console.error);

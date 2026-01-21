@@ -9,8 +9,8 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 
-import { DownloadIcon, EyeIcon, Search } from 'lucide-react';
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { DownloadIcon, Search } from 'lucide-react'; // remove eye
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { saveAs } from 'file-saver';
@@ -18,17 +18,17 @@ import axiosInstance from 'apps/admin-ui/src/utils/axiosInstance';
 import Breadcrumbs from 'apps/admin-ui/src/shared/components/breadcrumbs';
 import Spinner from 'packages/components/spinner';
 
-const AllProductsPage = () => {
+const EventsPage = () => {
   const [globalFilter, setGlobalFilter] = useState('');
-  const deferredFilter = useDeferredValue(globalFilter);
+  const deferredGlobalFilter = useDeferredValue(globalFilter);
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const { data, isLoading }: UseQueryResult<any> = useQuery({
-    queryKey: ['all-products', page],
+  const { data, isLoading } = useQuery({
+    queryKey: ['events-list', page],
     queryFn: async () => {
       const res = await axiosInstance.get(
-        `/admin/api/get-all-products?page=${page}&limit=${limit}`
+        `/admin/api/get-all-events?page=${page}&limit=${limit}`
       );
       return res.data;
     },
@@ -36,34 +36,30 @@ const AllProductsPage = () => {
     staleTime: 1000 * 60 * 5,
   });
 
-  const allProducts = data?.data || [];
-  const filteredProducts = useMemo(() => {
-    return allProducts.filter((product: any) =>
-      Object.values(product)
-        .join(' ')
-        .toLowerCase()
-        .includes(deferredFilter.toLowerCase())
-    );
-  }, [allProducts, deferredFilter]);
+  const allEvents = data?.data || [];
+  const totalPages = Math.ceil((data?.meta?.totalEvents ?? 0) / limit);
 
-  const totalPages = Math.ceil((data?.meta?.totalProducts ?? 0) / limit);
+  const filteredEvents = useMemo(() => {
+    return allEvents.filter((event: any) => {
+      const values = Object.values(event).join(' ').toLowerCase();
+      return values.includes(deferredGlobalFilter.toLowerCase());
+    });
+  }, [allEvents, deferredGlobalFilter]);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'image',
+        accessorKey: 'images',
         header: 'Image',
-        cell: ({ row }: any) => {
-          return (
-            <Image
-              src={row.original.images[0]?.url || '/placeholder.png'}
-              alt={row.original.title}
-              width={40}
-              height={40}
-              className="w-12 h-12 object-cover rounded-md"
-            />
-          );
-        },
+        cell: ({ row }: any) => (
+          <Image
+            src={row.original.images[0]?.url || '/placeholder.png'}
+            alt={row.original.title}
+            width={40}
+            height={40}
+            className="w-12 h-12 object-cover rounded-md"
+          />
+        ),
       },
       {
         accessorKey: 'title',
@@ -71,8 +67,7 @@ const AllProductsPage = () => {
         cell: ({ row }: any) => (
           <Link
             href={`${process.env.NEXT_PUBLIC_USER_UI_LINK}/product/${row.original.slug}`}
-            target="_blank"
-            className="text-blue-400 hover:underline"
+            className="hover:text-blue-500 hover:border-b"
           >
             {row.original.title}
           </Link>
@@ -86,52 +81,30 @@ const AllProductsPage = () => {
       {
         accessorKey: 'stock',
         header: 'Stock',
-        cell: ({ row }: any) => (
-          <span
-            className={row.original.stock < 10 ? 'text-red-500' : 'text-white'}
-          >
-            {row.original.stock} in stock
-          </span>
-        ),
       },
       {
-        accessorKey: 'category',
-        header: 'Category',
+        accessorKey: 'starting_date',
+        header: 'Start',
+        cell: ({ row }: any) =>
+          new Date(row.original.starting_date).toLocaleDateString(),
       },
       {
-        accessorKey: 'ratings',
-        header: 'Rating',
+        accessorKey: 'ending_date',
+        header: 'End',
+        cell: ({ row }: any) =>
+          new Date(row.original.ending_date).toLocaleDateString(),
       },
       {
         accessorKey: 'Shop.name',
         header: 'Shop',
-        cell: ({ row }: any) => (
-          <span className="text-purple-400">{row.original.Shop.name}</span>
-        ),
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created',
-        cell: ({ row }: any) =>
-          new Date(row.original.createdAt).toLocaleDateString(),
-      },
-      {
-        header: 'Actions',
-        cell: ({ row }: any) => (
-          <Link
-            href={`${process.env.NEXT_PUBLIC_USER_UI_LINK}/product/${row.original.slug}`}
-            className="text-blue-400 hover:text-blue-300 transition"
-          >
-            <EyeIcon size={18} />
-          </Link>
-        ),
+        cell: ({ row }) => row.original.Shop.name || '-',
       },
     ],
     []
   );
 
   const table = useReactTable({
-    data: filteredProducts,
+    data: filteredEvents,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -143,22 +116,22 @@ const AllProductsPage = () => {
   });
 
   const exportCSV = () => {
-    const csvData = filteredProducts.map(
-      (p: any) =>
-        `${p.title},${p.sale_price},${p.stock},${p.category},${p.ratings},${p.Shop.name}`
+    const csvData = filteredEvents.map(
+      (event: any) =>
+        `${event.title},${event.sale_price},${event.stock},${event.starting_date},${event.ending_date},${event.Shop.name}`
     );
     const blob = new Blob(
-      [`Title,Price,Stock,Category,Rating,Shop\n${csvData.join('\n')}`],
+      [`Title,Price,Stock,Start Date,End Date,Shop\n${csvData.join('\n')}`],
       { type: 'text/csv;charset=utf-8' }
     );
-    saveAs(blob, `products-page-${page}.csv`);
+    saveAs(blob, `events-page-${page}.csv`);
   };
 
   return (
-    <div className="w-full min-h-screen p-8 bg-black text-white ">
+    <div className="w-full min-h-screen p-8 bg-black text-white text-sm">
       {/* Header */}
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-xl font-bold tracking-wide">All Products</h2>
+        <h2 className="text-xl font-bold tracking-wide">All Events</h2>
         <button
           onClick={exportCSV}
           className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center justify-center gap-2"
@@ -169,14 +142,14 @@ const AllProductsPage = () => {
       </div>
 
       {/* Breadcrumbs */}
-      <Breadcrumbs title="All Products" />
+      <Breadcrumbs title="All Events" />
 
       {/* Search Bar */}
       <div className="my-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
-          placeholder="Search products"
+          placeholder="Search events"
           className="w-full bg-transparent text-white outline-none"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -188,7 +161,7 @@ const AllProductsPage = () => {
         {isLoading ? (
           <div className="flex items-center justify-center gap-4">
             <Spinner size={4} borderColor="border-gray-200" />
-            <p className="text-center text-white">Loading products...</p>
+            <p className="text-center text-white">Loading events...</p>
           </div>
         ) : (
           <table className="w-full text-white">
@@ -255,4 +228,4 @@ const AllProductsPage = () => {
   );
 };
 
-export default AllProductsPage;
+export default EventsPage;

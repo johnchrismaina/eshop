@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 const initializeSiteConfig = async () => {
   try {
     const existingConfig = await prisma.site_config.findFirst();
+
     if (!existingConfig) {
       await prisma.site_config.create({
         data: {
@@ -26,6 +27,8 @@ const initializeSiteConfig = async () => {
           },
         },
       });
+    } else {
+      console.log('Site config already exists. Skipping innitialization.');
     }
   } catch (error) {
     console.error('Error initializing site config:', error);

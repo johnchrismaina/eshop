@@ -5,6 +5,7 @@ import Input from 'packages/components/input';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
+import Spinner from 'packages/components/spinner';
 
 type FormData = {
   email: string;
@@ -74,10 +75,10 @@ const Page = () => {
           <button
             type="submit"
             disabled={loginMutation.isPending}
-            className="w-full mt-5 text-xl flex justify-center font-semibold font-Poppins cursor-pointer bg-blue-600 text-white py-2 rounded-lg"
+            className="w-full mt-5 h-10 text-xl flex items-center justify-center font-semibold font-Poppins cursor-pointer bg-blue-600 text-white py-2 rounded-lg"
           >
             {loginMutation.isPending ? (
-              <div className="h-6 w-6 border-2 border-gray-100 border-t-transparent rounded-full animate-spin" />
+              <Spinner size={20} borderColor="border-gray-200" />
             ) : (
               <>Login</>
             )}

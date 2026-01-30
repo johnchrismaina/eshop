@@ -1,4 +1,3 @@
-// components/Spinner
 import React from 'react';
 
 interface SpinnerProps {
@@ -13,7 +12,7 @@ const Spinner: React.FC<SpinnerProps> = ({
   return (
     <div
       className={`rounded-full animate-spin border-2 border-t-transparent ${borderColor}`}
-      style={{ width: size, height: size }}
+      style={{ width: `${size}px`, height: `${size}px` }}
     />
   );
 };

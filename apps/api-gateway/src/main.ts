@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
 import initializeSiteConfig from '@gateway/libs/initializeSiteConfig';
+import siteConfigRouter from './routes/siteConfig';
 
 const app = express();
 
@@ -63,6 +64,9 @@ app.use(
   })
 ); // Product Service
 app.use('/', proxy('http://localhost:6001')); // Auth Service
+
+// Register your siteConfig routes
+app.use('/api/site-config', siteConfigRouter);
 
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {

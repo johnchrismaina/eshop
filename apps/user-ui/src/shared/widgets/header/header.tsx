@@ -10,16 +10,13 @@ import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
 import Image from 'next/image';
-
-// const Header = () => {
-//   const { user } = useUser();
-//   console.log(user);
-// };
+import useLayout from 'apps/user-ui/src/hooks/useLayout';
 
 const Header = () => {
   const { user, isLoading } = useUser();
   const wishlist = useStore((state: any) => state.wishlist);
   const cart = useStore((state: any) => state.cart);
+  const { layout } = useLayout();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -47,6 +44,7 @@ const Header = () => {
           <Link href={'/'}>
             <Image
               src={
+                layout?.logo ||
                 'https://ik.imagekit.io/johnchrismaina/happy-basket.png?updatedAt=1764842031651'
               }
               alt=""

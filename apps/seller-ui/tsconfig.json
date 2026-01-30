@@ -27,7 +27,6 @@
   },
   "include": [
     "../../apps/seller-ui/.next/types/**/*.ts",
-    "../../packages/**/*.tsx",
     "../../dist/apps/seller-ui/.next/types/**/*.ts",
     "next-env.d.ts",
     "src/**/*.js",
@@ -35,6 +34,8 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     ".next/types/**/*.ts",
+    "../../packages/**/*.ts",
+    "../../packages/**/*.tsx",
     "../../packages/components/color-selector/index.tsx"
   ],
   "exclude": [

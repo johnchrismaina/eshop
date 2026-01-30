@@ -8,13 +8,13 @@ import {
   getFilteredRowModel,
   flexRender,
 } from '@tanstack/react-table';
-import { Ban, DownloadIcon, Search } from 'lucide-react'; // remove eye
 import {
   useMutation,
   useQuery,
   useQueryClient,
   UseQueryResult,
 } from '@tanstack/react-query';
+import { Ban, DownloadIcon, Search } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import axiosInstance from 'apps/admin-ui/src/utils/axiosInstance';
 import Breadcrumbs from 'apps/admin-ui/src/shared/components/breadcrumbs';
@@ -120,6 +120,20 @@ const UsersPage = () => {
           </span>
         ),
       },
+      {
+        header: 'Actions',
+        cell: ({ row }: any) => (
+          <button
+            onClick={() => {
+              setSelectedUser(row.original); // set the user you want to ban
+              setIsModalOpen(true); // open the modal
+            }}
+            className="text-red-500 hover:text-red-600 transition"
+          >
+            <Ban size={18} />
+          </button>
+        ),
+      },
     ],
     []
   );
@@ -192,7 +206,7 @@ const UsersPage = () => {
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
           <div className="flex items-center justify-center gap-4">
-            <Spinner size={4} borderColor="border-gray-200" />
+            <Spinner size={16} borderColor="border-gray-200" />
             <p className="text-center text-white">Loading events...</p>
           </div>
         ) : (
@@ -260,7 +274,7 @@ const UsersPage = () => {
       {/* Ban Confirmation Modal */}
       {isModalOpen && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
-          <div className="bg-[#1e293b] rounded-2xl shadow-lg w-[90%] max-w-md p-6 relative">
+          <div className="bg-[#1e293b] rounded-lg shadow-lg w-[90%] max-w-md p-6 relative">
             <div className="flex items-center gap-3 mb-4">
               <h3 className="text-white text-lg font-semibold">Ban User</h3>
             </div>
@@ -274,22 +288,22 @@ const UsersPage = () => {
                 <span className="text-red-400 font-medium">
                   {selectedUser.name}
                 </span>
-                ? This action can be reverted later.
+                ? This action can be reverted later!
               </p>
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-2">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-sm text-white"
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-sm text-white rounded-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={() => banUserMutation.mutate(selectedUser.id)}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-sm text-white"
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-sm text-white rounded-sm flex items-center justify-center gap-2"
               >
-                <Ban size={16} /> Confirm Ban
+                <Ban size={16} /> Confirm
               </button>
             </div>
           </div>

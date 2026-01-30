@@ -160,7 +160,7 @@ const EventsPage = () => {
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
           <div className="flex items-center justify-center gap-4">
-            <Spinner size={4} borderColor="border-gray-200" />
+            <Spinner size={16} borderColor="border-gray-200" />
             <p className="text-center text-white">Loading events...</p>
           </div>
         ) : (

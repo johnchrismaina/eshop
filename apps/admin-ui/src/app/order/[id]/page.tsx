@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import axiosInstance from 'apps/admin-ui/src/utils/axiosInstance';
+import Spinner from 'packages/components/spinner';
 
 const Page = () => {
   const params = useParams();
@@ -57,7 +58,7 @@ const Page = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[40vh]">
-        <Loader2 className="animate-spin w-6 h-6 text-gray-200" />
+        <Spinner size={16} borderColor="border-gray-200" />
       </div>
     );
   }

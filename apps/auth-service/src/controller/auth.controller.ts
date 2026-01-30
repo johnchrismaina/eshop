@@ -12,12 +12,12 @@ import { prisma } from '@eshop/libs/prisma';
 import {
   AuthError,
   NotFoundError,
-  sendLog,
   ValidationError,
 } from '../../../../packages/error-handler';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { setCookie } from '@auth/utils/cookies/setCookie';
 import Stripe from 'stripe';
+import { sendLog } from '@packages/utils/logs/send-logs';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover',
@@ -221,6 +221,13 @@ export const refreshToken = async (
 export const getUser = async (req: any, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
+    // send Log
+    await sendLog({
+      type: 'success',
+      message: `User data retrieved ${user?.email}`,
+      source: 'auth-service',
+    });
+
     res.status(201).json({
       success: true,
       user,
@@ -816,5 +823,23 @@ export const getUserAddresses = async (
     });
   } catch (error) {
     return next(error);
+  }
+};
+
+// fetch layout data
+export const getLayoutData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const layout = await prisma.site_config.findFirst();
+
+    res.status(200).json({
+      success: true,
+      layout,
+    });
+  } catch (error) {
+    next(error);
   }
 };

@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import { sendEmail } from '../utils/send-email';
 import { getStripeClient } from '../utils/stripe-client';
 import { NotFoundError, ValidationError } from '@eshop/error-handler';
+import { sendLog } from '@packages/utils/logs/send-logs';
 // import { ReceiverType, NotificationStatus } from '@prisma/client';
 
 // Create payment intent
@@ -276,7 +277,7 @@ export const createOrder = async (
 
         try {
           // Create order in DB
-          const createdOrder = await prisma.orders.create({
+          const order = await prisma.orders.create({
             data: {
               userId: userId,
               shopId: shopId,
@@ -297,7 +298,7 @@ export const createOrder = async (
             },
           });
 
-          console.log('✅ Order created:', createdOrder.id);
+          console.log('✅ Order created:', order.id);
         } catch (err: any) {
           console.error('❌ Error creating order:', err.message);
           console.error('Error details:', err);
@@ -318,7 +319,7 @@ export const createOrder = async (
               totalAmount: coupon?.discountAmount
                 ? stripeAmount - coupon?.discountAmount
                 : stripeAmount,
-              trackingUrl: `https://eshop.com/order/${sessionId}`,
+              trackingUrl: `https://eshop.com/order/${order.id}`,
             }
           );
           console.log('✅ Confirmation email sent');
@@ -587,6 +588,12 @@ export const getUserOrders = async (
   next: NextFunction
 ) => {
   try {
+    await sendLog({
+      type: 'success',
+      message: `User orders retrieved ${req.user?.email}`,
+      source: 'order-service',
+    });
+
     const orders = await prisma.orders.findMany({
       where: {
         userId: req.user.id,
@@ -628,7 +635,7 @@ export const getAdminOrders = async (
       },
     });
 
-    console.log('orders', orders);
+    // console.log('orders', orders);
 
     res.status(200).json({
       success: true,
@@ -636,7 +643,5 @@ export const getAdminOrders = async (
     });
   } catch (error) {
     return next(error);
-    // console.error('getAdminOrders error:', error);
-    // return res.status(500).json({ success: false, message: 'Server error' });
   }
 };

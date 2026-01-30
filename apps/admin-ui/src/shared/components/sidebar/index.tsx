@@ -11,7 +11,7 @@ import {
   BellRing,
   FileClock,
   Grid2X2Icon,
-  HomeIcon,
+  LayoutDashboard,
   ListOrdered,
   LogOut,
   PackageSearch,
@@ -70,7 +70,9 @@ const SidebarWrapper = () => {
         <Sidebar.Body className="body sidebar">
           <SidebarItem
             title="Dashboard"
-            icon={<HomeIcon size={22} fill={getIconColor('/dashboard')} />}
+            icon={
+              <LayoutDashboard size={22} color={getIconColor('/dashboard')} />
+            }
             isActive={activeSidebar === '/dashboard'}
             href="/dashboard"
           />
@@ -175,7 +177,7 @@ const SidebarWrapper = () => {
             <SidebarMenu title="Customization">
               <SidebarItem
                 isActive={activeSidebar === '/dashboard/customization'}
-                title="All Customization"
+                title="Customization"
                 href="/dashboard/customization"
                 icon={
                   <PencilRuler

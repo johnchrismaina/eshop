@@ -1,6 +1,7 @@
 'use client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import { Toaster } from 'sonner';
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(
@@ -16,7 +17,17 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <Toaster
+        position="bottom-right"
+        richColors
+        toastOptions={{
+          className: 'my-toast',
+          style: { background: '#333', color: '#fff' },
+        }}
+      />
+    </QueryClientProvider>
   );
 };
 

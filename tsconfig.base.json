@@ -20,6 +20,7 @@
     "target": "es2022",
     "paths": {
       "@auth/*": ["apps/auth-service/src/*"],
+      "@components/*": ["packages/components/*"],
       "@eshop/error-handler": ["packages/error-handler/index.ts"],
       "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"],
       "@eshop/prisma": ["packages/libs/prisma/index.ts"],
@@ -28,8 +29,7 @@
       "@gateway/libs/*": ["apps/api-gateway/src/libs/*"],
       "@packages/*": ["packages/*"],
       "@prisma/client": ["node_modules/.prisma/client"],
-      "@shared/*": ["libs/shared/src/*"],
-      "@components/*": ["packages/components/*"]
+      "@shared/*": ["libs/shared/src/*"]
     }
   }
 }

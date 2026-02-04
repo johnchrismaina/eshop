@@ -2,8 +2,7 @@ import { Kafka } from 'kafkajs';
 
 export const kafka = new Kafka({
   clientId: 'kafka-service',
-  // brokers: ['pkc-xrnwx.asia-south2.gcp.confluent.cloud:9092'],
-  brokers: [''],
+  brokers: ['pkc-619z3.us-east1.gcp.confluent.cloud:9092'],
   ssl: true,
   sasl: {
     mechanism: 'plain',

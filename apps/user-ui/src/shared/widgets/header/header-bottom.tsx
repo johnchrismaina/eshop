@@ -27,6 +27,8 @@ const HeaderBottom = () => {
     staleTime: 1000 * 60 * 30,
   });
 
+  console.log(user);
+
   // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
@@ -164,7 +166,7 @@ const HeaderBottom = () => {
                         Hello,
                       </span>
                       <span className="font-[600]">
-                        {user?.name?.split(' ')[0]}
+                        {/* {user?.name?.split(' ')[0]} */}
                       </span>
                     </Link>
                   </>

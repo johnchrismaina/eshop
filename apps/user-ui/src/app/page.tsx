@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Hero from '../shared/modules/hero';
 import SectionTitle from '../shared/components/section/section-title';
 import { useQuery } from '@tanstack/react-query';
@@ -7,14 +7,17 @@ import { useQuery } from '@tanstack/react-query';
 import ProductCard from '../shared/components/cards/product-card';
 import axiosProductService from '../utils/axiosProductService';
 import ShopCard from '../shared/components/cards/shop.card';
+import axiosInstance from '../utils/axiosInstance';
 
 const Page = () => {
+  const [user, setUser] = useState(null);
+
   // Fetch products from the API and display them
   const {
     data: products,
     isLoading,
     isError,
-    error,
+    // error,
   } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
@@ -25,6 +28,17 @@ const Page = () => {
     },
     staleTime: 1000 * 60 * 2,
   });
+
+  useEffect(() => {
+    // Try to fetch logged-in user, but don’t block rendering
+    axiosInstance
+      .get('/api/logged-in-user')
+      .then((res) => setUser(res.data))
+      .catch(() => {
+        // No user logged in → just render landing page
+        setUser(null);
+      });
+  }, []);
 
   // Fetch latest products from the API and display them
   const { data: latestProducts, isLoading: latestProductsLoading } = useQuery({

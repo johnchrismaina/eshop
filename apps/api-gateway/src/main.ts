@@ -16,7 +16,8 @@ app.use(
       'http://localhost:3001',
       'http://localhost:3002',
     ],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type'],
     credentials: true,
   })
 );
@@ -35,7 +36,13 @@ const limiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
-app.use(limiter);
+// app.use(limiter);
+// Apply limiter only to sensitive endpoints
+app.use('/api/auth', limiter);
+app.use('/api/signup', limiter);
+app.use('/api/login', limiter);
+app.use('/api/password-reset', limiter);
+// Leave bootstrap endpoints unrestricted // e.g. /api/logged-in-user, /api/get-layouts
 
 // app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
@@ -43,6 +50,7 @@ app.get('/gateway-health', (req, res) => {
   res.send({ message: 'Welcome to api-gateway!' });
 });
 
+app.use('/chatting', proxy('http://localhost:6006')); // Chatting Service
 app.use('/admin', proxy('http://localhost:6005')); // Admin Service
 // app.use(
 //   '/order',
@@ -63,7 +71,8 @@ app.use(
     proxyReqPathResolver: (req) => `/api${req.url.replace('/product', '')}`,
   })
 ); // Product Service
-app.use('/', proxy('http://localhost:6001')); // Auth Service
+// app.use('/', proxy('http://localhost:6001')); // Auth Service
+app.use('/api', proxy('http://localhost:6001')); // Auth Service
 
 // Register your siteConfig routes
 app.use('/api/site-config', siteConfigRouter);

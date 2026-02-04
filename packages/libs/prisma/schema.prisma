@@ -303,7 +303,7 @@ model message {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   conversationId String   @db.ObjectId
   senderId       String   @db.ObjectId
-  SenderType     String
+  senderType     String
   content        String?
   attachments    String[]
   status         String   @default("sent")

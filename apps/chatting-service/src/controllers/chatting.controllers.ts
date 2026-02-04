@@ -3,9 +3,13 @@ import {
   AuthError,
   NotFoundError,
   ValidationError,
-} from '../../packages/error-handler';
-import { prisma } from '../../packages/libs/prisma';
-import redis from '../../packages/libs/redis';
+} from '@packages/error-handler';
+import { prisma } from '@packages/libs/prisma';
+import redis from '@packages/libs/redis';
+import {
+  clearUnseenCount,
+  getUnseenCount,
+} from '@packages/libs/redis/message.redis';
 
 //  create a new conversation
 export const newConversation = async (
@@ -21,6 +25,7 @@ export const newConversation = async (
       return next(new ValidationError('Seller Id is required!'));
     }
 
+    // Directly check if a conversationGroup already exists for this user + seller
     const existingGroup = await prisma.conversationGroup.findFirst({
       where: {
         isGroup: false,
@@ -59,7 +64,9 @@ export const newConversation = async (
     });
 
     return res.status(201).json({ conversation: newGroup, isNew: true });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 // get user conversation
@@ -187,9 +194,10 @@ export const getSellerConversations = async (
             where: {
               id: userParticipant.userId,
             },
-            include: {
-              avatar: true,
-            },
+            // include: {
+            //   avatar: true,
+            // },
+            select: { id: true, name: true, avatar: true },
           });
         }
 
@@ -365,9 +373,10 @@ export const fetchSellerMessages = async (
     if (userParticipant?.userId) {
       user = await prisma.users.findUnique({
         where: { id: userParticipant.userId },
-        include: {
-          avatar: true,
-        },
+        // include: {
+        //   avatar: true,
+        // },
+        select: { id: true, name: true, avatar: true },
       });
 
       const redisKey = `online:user:user_${userParticipant.userId}`;

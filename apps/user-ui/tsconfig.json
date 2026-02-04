@@ -38,7 +38,8 @@
     "src/**/*.tsx",
     ".next/types/**/*.ts",
     "../../packages/**/*.ts",
-    "../../packages/**/*.tsx"
+    "../../packages/**/*.tsx",
+    "../../global.d.ts"
   ],
   "exclude": [
     "out-tsc",

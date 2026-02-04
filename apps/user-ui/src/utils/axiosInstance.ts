@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { runRedirectToLogin } from './redirect';
+// import { runRedirectToLogin } from './redirect';
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URI,
@@ -11,16 +11,14 @@ let refreshSubscribers: (() => void)[] = [];
 
 //  Handle logout and prevent infinite loops
 const handleLogout = () => {
-  const publicPaths = ['/login', '/signup', '/forgot-password'];
-  const currentPath = window.location.pathname;
-
-  if (!publicPaths.includes(currentPath)) {
-    runRedirectToLogin();
-  }
-
-  // if (window.location.pathname !== '/login') {
-  //   window.location.href = '/login';
+  // const publicPaths = ['/login', '/signup', '/forgot-password'];
+  // const currentPath = window.location.pathname;
+  // if (!publicPaths.includes(currentPath)) {
+  //   runRedirectToLogin();
   // }
+  if (window.location.pathname !== '/login') {
+    window.location.href = '/login';
+  }
 };
 
 // Handle adding a new access token to queud requests
@@ -45,6 +43,8 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    // Handle infinite retry loop
 
     const is401 = error?.response?.status === 401;
     const isRetry = originalRequest?._retry;

@@ -12,7 +12,8 @@ const app = express();
 app.use(
   cors({
     origin: ['http://localhost:3000'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type'],
     credentials: true,
   })
 );
@@ -31,7 +32,13 @@ app.get('/docs.json', (req, res) => {
 });
 
 // Routes
-app.use('/api', router);
+// app.use('/api', router);
+app.use('/', router);
+
+app.use((req, res, next) => {
+  console.log('Auth service received:', req.method, req.url);
+  next();
+});
 
 app.use(errorMiddleware);
 

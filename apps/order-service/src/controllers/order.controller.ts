@@ -276,12 +276,12 @@ export const createOrder = async (
         console.log('💵 Final order total:', orderTotal);
 
         try {
-          // Create order in DB
+          // ✅ Create order in DB
           const order = await prisma.orders.create({
             data: {
               userId: userId,
               shopId: shopId,
-              total: orderTotal, // ✅ per-shop total
+              total: orderTotal, // per-shop total
               status: 'Paid',
               deliveryStatus: 'Ordered',
               shippingAddressId: shippingAddressId || null,
@@ -299,16 +299,10 @@ export const createOrder = async (
           });
 
           console.log('✅ Order created:', order.id);
-        } catch (err: any) {
-          console.error('❌ Error creating order:', err.message);
-          console.error('Error details:', err);
-          throw err;
-        }
 
-        // … stock updates, analytics, notifications unchanged …
+          // … stock updates, analytics, notifications unchanged …
 
-        // ✅ Use stripeAmount for email total
-        try {
+          // ✅ Use stripeAmount for email total
           await sendEmail(
             email,
             '🛍 Your Eshop Order Confirmation',
@@ -319,12 +313,15 @@ export const createOrder = async (
               totalAmount: coupon?.discountAmount
                 ? stripeAmount - coupon?.discountAmount
                 : stripeAmount,
-              trackingUrl: `https://eshop.com/order/${order.id}`,
+              trackingUrl: `https://eshop.com/order/${order.id}`, // order.id is safe here
             }
           );
+
           console.log('✅ Confirmation email sent');
         } catch (err: any) {
-          console.error('❌ Error sending email:', err.message);
+          console.error('❌ Error in order flow:', err.message);
+          console.error('Error details:', err);
+          throw err; // rethrow if you want upstream handling
         }
 
         try {

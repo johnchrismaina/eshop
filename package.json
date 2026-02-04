@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "test-json": "ts-node src/test-json.ts",
-    "dev": "npx nx run-many --target=serve --projects=@eshop/auth-service,@eshop/admin-service,@eshop/product-service,@eshop/order-service,@eshop/api-gateway --parallel",
+    "dev": "npx nx run-many --target=serve --projects=@eshop/auth-service,@eshop/admin-service,@eshop/product-service,@eshop/order-service,@eshop/chatting-service,@eshop/api-gateway --parallel",
     "auth-docs": "node apps/auth-service/src/swagger.js",
     "product-docs": "node apps/product-service/src/swagger.js",
     "user-ui": "npx nx run-many --target=dev --all --projects=user-ui",

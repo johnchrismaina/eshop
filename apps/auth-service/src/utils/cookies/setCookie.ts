@@ -5,8 +5,11 @@ export const setCookie = (res: Response, name: string, value: string) => {
 
   res.cookie(name, value, {
     httpOnly: true,
-    secure: isProduction, // true in production, false in development
-    sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-site cookies in prod, 'lax' for dev
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    // secure: isProduction ? true : false, // must be false on localhost
+    secure: false,
+    sameSite: isProduction ? 'none' : 'lax',
+    // sameSite: 'lax', // lax for dev, none in prod
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    domain: 'localhost', // ensure cookie is valid for gateway domain
   });
 };

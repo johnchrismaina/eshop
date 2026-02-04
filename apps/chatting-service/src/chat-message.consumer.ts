@@ -1,6 +1,7 @@
 import { kafka } from '@packages/utils/kafka';
-import prisma from '@packages/libs/prisma';
+import { prisma } from '@packages/libs/prisma';
 import { Consumer, EachMessagePayload } from 'kafkajs';
+import { incrementUnseenCount } from '@packages/libs/redis/message.redis';
 // import incrementUnseenCount
 
 interface BufferedMessage {
@@ -11,7 +12,7 @@ interface BufferedMessage {
   createdAt: string;
 }
 
-const TOPIC = 'chat.new_messate';
+const TOPIC = 'chat.new_message';
 const GROUP_ID = 'chat-message-db-writer';
 const BATCH_INTERVAL_MS = 3000;
 

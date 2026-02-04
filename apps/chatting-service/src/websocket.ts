@@ -46,7 +46,7 @@ export async function createWebSocketServer(server: HttpServer) {
           return;
         }
 
-        //  procedd JSON message
+        //  process JSON message
         const data: IncomingMessage = JSON.parse(messageStr);
 
         // if its seen update

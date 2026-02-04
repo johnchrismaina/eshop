@@ -14,7 +14,8 @@ import {
   NotFoundError,
   ValidationError,
 } from '../../../../packages/error-handler';
-import jwt, { JsonWebTokenError } from 'jsonwebtoken';
+// import jwt, { JsonWebTokenError } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { setCookie } from '@auth/utils/cookies/setCookie';
 import Stripe from 'stripe';
 import { sendLog } from '@packages/utils/logs/send-logs';
@@ -97,53 +98,53 @@ export const loginUser = async (
   next: NextFunction
 ) => {
   try {
-    // const { email, password } = req.body;
     const email = String(req.body.email || '')
       .trim()
       .toLowerCase();
     const password = String(req.body.password || '').trim();
 
     if (!email || !password) {
-      return next(new ValidationError('Email and password are required!'));
+      return res
+        .status(400)
+        .json({ message: 'Email and password are required!' });
     }
-    // if email and password are present, check if user exists
+
+    // Check if user exists
     const user = await prisma.users.findUnique({ where: { email } });
-
     if (!user) {
-      return next(new AuthError("User doesn't exist!"));
+      return res.status(401).json({ message: "User doesn't exist!" });
     }
 
-    // verify password if the user is available in our database
+    // Verify password
     const isMatch = await bcrypt.compare(password, user.password!);
-
     if (!isMatch) {
-      return next(new AuthError('Invalid email or password!'));
+      return res.status(401).json({ message: 'Invalid email or password!' });
     }
 
+    // Clear any seller/admin cookies
     res.clearCookie('seller-access-token');
     res.clearCookie('seller-refresh-token');
-
     res.clearCookie('admin-access-token');
     res.clearCookie('admin-refresh-token');
 
-    // Generate access and refresh token
+    // Generate tokens
     const accessToken = jwt.sign(
       { id: user.id, role: 'user' },
-      process.env.ACCESS_TOKEN_SECRET as string,
+      process.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: '15m' }
     );
 
     const refreshToken = jwt.sign(
       { id: user.id, role: 'user' },
-      process.env.REFRESH_TOKEN_SECRET as string,
+      process.env.REFRESH_TOKEN_SECRET!,
       { expiresIn: '7d' }
     );
 
-    //  store the refresh and access token in httpOnly secure cookies
-    setCookie(res, 'refresh_token', refreshToken);
+    // Store tokens in httpOnly cookies
     setCookie(res, 'access_token', accessToken);
+    setCookie(res, 'refresh_token', refreshToken);
 
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Login successful!',
       user: { id: user.id, email: user.email, name: user.name },
     });
@@ -159,25 +160,34 @@ export const refreshToken = async (
   next: NextFunction
 ) => {
   try {
+    console.log('refresh token called');
+    console.log('Incoming cookies:', req.cookies);
+
     const refreshToken =
       req.cookies['refresh_token'] ||
       req.cookies['seller-refresh-token'] ||
-      req.cookies['admin-refresh-token'] ||
-      req.headers.authorization?.split(' ')[1];
+      req.cookies['admin-refresh-token'];
 
     if (!refreshToken) {
-      return new ValidationError('Unauthorized! No refresh token');
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized! No refresh token' });
     }
 
-    const decoded = jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string
-    ) as { id: string; role: string };
-
-    if (!decoded || !decoded.id || !decoded.role) {
-      return new JsonWebTokenError('Forbidden! Invalid refresh token.');
+    let decoded;
+    try {
+      decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as {
+        id: string;
+        role: 'user' | 'seller' | 'admin';
+      };
+    } catch (err) {
+      console.log('JWT refresh verification failed:', err);
+      return res
+        .status(403)
+        .json({ message: 'Forbidden! Invalid refresh token.' });
     }
 
+    // validate account exists
     let account;
     if (decoded.role === 'user') {
       account = await prisma.users.findUnique({ where: { id: decoded.id } });
@@ -191,16 +201,19 @@ export const refreshToken = async (
     }
 
     if (!account) {
-      // return new AuthError('Forbidden! Account not found.');
-      return next(new AuthError(`Unauthorized! ${req.role} not found.`));
+      return res
+        .status(401)
+        .json({ message: `Unauthorized! ${decoded.role} not found.` });
     }
 
+    // issue new access token
     const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },
-      process.env.ACCESS_TOKEN_SECRET as string,
+      process.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: '15m' }
     );
 
+    // set cookie
     if (decoded.role === 'user') {
       setCookie(res, 'access_token', newAccessToken);
     } else if (decoded.role === 'seller') {
@@ -209,9 +222,9 @@ export const refreshToken = async (
       setCookie(res, 'admin-access-token', newAccessToken);
     }
 
-    req.role = decoded.role;
+    console.log('Set-Cookie header:', res.getHeaders()['set-cookie']);
 
-    return res.status(201).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (error) {
     return next(error);
   }
@@ -220,13 +233,15 @@ export const refreshToken = async (
 // get logged in user
 export const getUser = async (req: any, res: Response, next: NextFunction) => {
   try {
+    console.log('Reached logged-in-user route');
+
     const user = req.user;
     // send Log
-    await sendLog({
-      type: 'success',
-      message: `User data retrieved ${user?.email}`,
-      source: 'auth-service',
-    });
+    // await sendLog({
+    //   type: 'success',
+    //   message: `User data retrieved ${user?.email}`,
+    //   source: 'auth-service',
+    // });
 
     res.status(201).json({
       success: true,

@@ -50,6 +50,6 @@ router.get('/logged-in-seller', isAuthenticated, isSeller, getSeller);
 router.get('/shipping-addresses', isAuthenticated, getUserAddresses);
 router.post('/add-address', isAuthenticated, addUserAddress);
 router.delete('/delete-address/:addressId', isAuthenticated, deleteUserAddress);
-router.post('/get-layouts', getLayoutData);
+router.get('/get-layouts', getLayoutData);
 
 export default router;

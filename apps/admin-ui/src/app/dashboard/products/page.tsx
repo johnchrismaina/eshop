@@ -16,7 +16,6 @@ import Link from 'next/link';
 import { saveAs } from 'file-saver';
 import axiosInstance from 'apps/admin-ui/src/utils/axiosInstance';
 import Breadcrumbs from 'apps/admin-ui/src/shared/components/breadcrumbs';
-import Spinner from 'packages/components/spinner';
 
 const AllProductsPage = () => {
   const [globalFilter, setGlobalFilter] = useState('');
@@ -68,15 +67,16 @@ const AllProductsPage = () => {
       {
         accessorKey: 'title',
         header: 'Title',
-        cell: ({ row }: any) => (
+        cell: ({ row }: any) => {
           <Link
             href={`${process.env.NEXT_PUBLIC_USER_UI_LINK}/product/${row.original.slug}`}
             target="_blank"
             className="text-blue-400 hover:underline"
           >
             {row.original.title}
-          </Link>
-        ),
+          </Link>;
+          //   );
+        },
       },
       {
         accessorKey: 'sale_price',
@@ -90,7 +90,7 @@ const AllProductsPage = () => {
           <span
             className={row.original.stock < 10 ? 'text-red-500' : 'text-white'}
           >
-            {row.original.stock} in stock
+            {row.original.stock} left
           </span>
         ),
       },
@@ -186,10 +186,7 @@ const AllProductsPage = () => {
       {/* Table */}
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
-          <div className="flex items-center justify-center gap-2">
-            <Spinner size={16} borderColor="border-gray-300" />
-            <p className="text-center text-white">Loading products...</p>
-          </div>
+          <p className="text-center text-white">Loading products...</p>
         ) : (
           <table className="w-full text-white">
             <thead>
@@ -228,7 +225,6 @@ const AllProductsPage = () => {
           </table>
         )}
 
-        {/* Pagination controls */}
         <div className="flex justify-between items-center mt-4">
           <button
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white"

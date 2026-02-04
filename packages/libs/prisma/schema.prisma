@@ -8,21 +8,12 @@ datasource db {
 }
 
 model images {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  file_id   String
-  url       String
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  file_id String
+  url     String
+
   productId String?   @db.ObjectId
   product   products? @relation("ProductImages", fields: [productId], references: [id])
-}
-
-model site_config {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  categories    String[]
-  subCategories Json
-  logo          String?
-  banner        String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 }
 
 enum Role {
@@ -150,6 +141,12 @@ model sellers {
   shop         shops?   @relation("SellerShop")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model site_config {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  categories    String[]
+  subCategories Json
 }
 
 model discount_codes {

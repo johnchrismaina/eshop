@@ -1,20 +1,22 @@
 import React from 'react';
 
-interface SpinnerProps {
-  size?: number; // size in pixels
-  borderColor?: string; // Tailwind border color class
-}
+type SpinnerProps = {
+  size?: number; // Tailwind size scale (e.g., 4 = 1rem)
+  color?: string; // base border color
+  highlight?: string; // top border color
+};
 
-const Spinner: React.FC<SpinnerProps> = ({
-  size = 16,
-  borderColor = 'border-gray-200',
+export const Spinner: React.FC<SpinnerProps> = ({
+  size = 6,
+  color = 'border-t-gray-100',
+  highlight = 'border-indigo-300',
 }) => {
+  const dimension = `${size * 0.25}rem`; // Tailwind scale: 4 = 1rem
+
   return (
     <div
-      className={`rounded-full animate-spin border-2 border-t-transparent ${borderColor}`}
-      style={{ width: `${size}px`, height: `${size}px` }}
+      className={`animate-spin rounded-full border-4 ${color} ${highlight}`}
+      style={{ width: dimension, height: dimension }}
     />
   );
 };
-
-export default Spinner;

@@ -12,7 +12,6 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import axiosInstance from 'apps/admin-ui/src/utils/axiosInstance';
 import Breadcrumbs from 'apps/admin-ui/src/shared/components/breadcrumbs';
-import Spinner from 'packages/components/spinner';
 
 const fetchOrders = async () => {
   const res = await axiosInstance.get('/order/get-admin-orders');
@@ -150,10 +149,7 @@ const PaymentsTable = () => {
 
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
-          <div className="flex items-center justify-center gap-2">
-            <Spinner size={16} borderColor="border-gray-300" />
-            <p className="text-center text-white">Loading payments...</p>
-          </div>
+          <p className="text-center text-white">Loading payments...</p>
         ) : (
           <table className="w-full text-white text-sm">
             <thead>

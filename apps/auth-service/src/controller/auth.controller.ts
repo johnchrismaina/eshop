@@ -235,17 +235,20 @@ export const getUser = async (req: any, res: Response, next: NextFunction) => {
   try {
     console.log('Reached logged-in-user route');
 
-    const user = req.user;
-    // send Log
-    // await sendLog({
-    //   type: 'success',
-    //   message: `User data retrieved ${user?.email}`,
-    //   source: 'auth-service',
-    // });
+    // role is always set by isAuthenticated middleware
+    const role = req.role || 'guest';
 
-    res.status(201).json({
+    // Only attach user account if role === 'user'
+    let user = null;
+    if (role === 'user') {
+      user = req.user;
+    }
+
+    // For guest, user stays null
+    res.status(200).json({
       success: true,
-      user,
+      role, // "user" or "guest"
+      user, // user object if logged in, null if guest
     });
   } catch (error) {
     next(error);
@@ -555,6 +558,100 @@ export const verifySeller = async (
   }
 };
 
+//  login seller
+export const loginSeller = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password)
+      return next(new ValidationError('Email and password as requried!'));
+
+    const seller = await prisma.sellers.findUnique({ where: { email } });
+    if (!seller)
+      return next(new ValidationError('Invalid email and password!'));
+
+    // Verify password
+    const isMatch = await bcrypt.compare(password, seller.password!);
+    if (!isMatch)
+      return next(new ValidationError('Invalid email and password!'));
+
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
+
+    res.clearCookie('admin-access-token');
+    res.clearCookie('admin-refresh-token');
+
+    // Generate access and refresh token
+    const accessToken = jwt.sign(
+      { id: seller.id, role: 'seller' },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: seller.id, role: 'seller' },
+      process.env.REFRESH_TOKEN_SECRET as string,
+      { expiresIn: '7d' }
+    );
+
+    //  store refresh and access token in http Only secure cookies
+    setCookie(res, 'seller-refresh-token', refreshToken);
+    setCookie(res, 'seller-access-token', accessToken);
+
+    res.status(200).json({
+      message: 'Login successful!',
+      seller: { id: seller.id, email: seller.email, name: seller.name },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get logged in seller
+export const getSeller = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const seller = req.seller;
+    res.status(201).json({
+      success: true,
+      seller,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// logout seller
+export const logoutSeller = async (req: Request, res: Response) => {
+  try {
+    // Clear seller cookies
+    res.clearCookie('seller-access-token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    res.clearCookie('seller-refresh-token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+
+    // Optional: invalidate refresh token in DB/Redis if you store them
+    // await redis.del(`seller-refresh:${req.seller?.id}`);
+
+    return res.status(200).json({ message: 'Seller logged out successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Logout failed', error });
+  }
+};
+
 // Create a new shop
 export const createShop = async (
   req: Request,
@@ -653,76 +750,6 @@ export const createStripeConnectLink = async (
     res.json({ url: accountLink.url });
   } catch (error) {
     return next(error);
-  }
-};
-
-//  login seller
-export const loginSeller = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password)
-      return next(new ValidationError('Email and password as requried!'));
-
-    const seller = await prisma.sellers.findUnique({ where: { email } });
-    if (!seller)
-      return next(new ValidationError('Invalid email and password!'));
-
-    // Verify password
-    const isMatch = await bcrypt.compare(password, seller.password!);
-    if (!isMatch)
-      return next(new ValidationError('Invalid email and password!'));
-
-    res.clearCookie('access_token');
-    res.clearCookie('refresh_token');
-
-    res.clearCookie('admin-access-token');
-    res.clearCookie('admin-refresh-token');
-
-    // Generate access and refresh token
-    const accessToken = jwt.sign(
-      { id: seller.id, role: 'seller' },
-      process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: '15m' }
-    );
-
-    const refreshToken = jwt.sign(
-      { id: seller.id, role: 'seller' },
-      process.env.REFRESH_TOKEN_SECRET as string,
-      { expiresIn: '7d' }
-    );
-
-    //  store refresh and access token in http Only secure cookies
-    setCookie(res, 'seller-refresh-token', refreshToken);
-    setCookie(res, 'seller-access-token', accessToken);
-
-    res.status(200).json({
-      message: 'Login successful!',
-      seller: { id: seller.id, email: seller.email, name: seller.name },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// get logged in seller
-export const getSeller = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const seller = req.seller;
-    res.status(201).json({
-      success: true,
-      seller,
-    });
-  } catch (error) {
-    next(error);
   }
 };
 

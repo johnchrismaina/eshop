@@ -5,6 +5,7 @@ import axios, { AxiosError } from 'axios';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Spinner from 'packages/components/spinner';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -36,7 +37,7 @@ const Login = () => {
     },
     onSuccess: (data) => {
       setServerError(null);
-      router.push('/');
+      router.push('/dashboard');
     },
     onError: (error: AxiosError) => {
       const errorMessage =
@@ -142,9 +143,23 @@ const Login = () => {
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full text-lg cursor-pointer bg-black text-white py-2 rounded-lg"
+              className="w-full text-lg cursor-pointer bg-black text-white py-2 rounded-lg relative flex items-center justify-center"
             >
-              {loginMutation?.isPending ? 'Loggin in... ' : 'Login'}
+              {/* Keep the text in DOM but hide it when loading */}
+              <span
+                className={
+                  loginMutation?.isPending ? 'opacity-0' : 'opacity-100'
+                }
+              >
+                Login
+              </span>
+
+              {/* Spinner centered absolutely */}
+              {loginMutation?.isPending && (
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <Spinner size={20} borderColor="border-gray-200" />
+                </span>
+              )}
             </button>
 
             {serverError && (

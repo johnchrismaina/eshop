@@ -3,7 +3,7 @@
 import useSeller from 'apps/seller-ui/src/hooks/useSeller';
 import useSidebar from 'apps/seller-ui/src/hooks/useSidebar';
 import { usePathname } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '../box';
 import { Sidebar } from './sidebar.styles';
 import Link from 'next/link';
@@ -24,11 +24,17 @@ import {
 } from 'lucide-react';
 import SidebarItem from './sidebar.item';
 import SidebarMenu from './sidebar.menu';
+import { useMutation } from '@tanstack/react-query';
+import axiosInstance from 'apps/seller-ui/src/utils/axiosInstance';
+import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 
 const SidebarWrapper = () => {
   const { activeSidebar, setActiveSidebar } = useSidebar();
+  const [serverError, setServerError] = useState<string | null>(null);
   const pathName = usePathname();
   const { seller } = useSeller();
+  const router = useRouter();
 
   useEffect(() => {
     setActiveSidebar(pathName);
@@ -38,6 +44,27 @@ const SidebarWrapper = () => {
     activeSidebar === route ? '#0085ff' : '#969696';
 
   // console.log('Sidebar seller:', seller);
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/api/logout-seller`,
+        {},
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      // Clear any local state if needed
+      router.push('/login'); // redirect to landing page
+    },
+    onError: (error: AxiosError) => {
+      const errorMessage =
+        (error.response?.data as { message?: string })?.message ||
+        'Logout failed!';
+      setServerError(errorMessage);
+    },
+  });
 
   return (
     <Box
@@ -206,10 +233,11 @@ const SidebarWrapper = () => {
               <SidebarItem
                 isActive={activeSidebar === '/dashboard/logout'}
                 title="Logout"
-                href="/"
+                href="#"
                 icon={
                   <LogOut size={22} color={getIconColor('/dashboard/logout')} />
                 }
+                onClick={() => logoutMutation.mutate()} // call mutation
               />
             </SidebarMenu>
           </div>

@@ -16,13 +16,16 @@
     "reset:cache": "rm -rf node_modules/.prisma && npx prisma generate --schema=packages/libs/prisma/schema.prisma",
     "start:product": "node --inspect=9230 dist/apps/product-service/main.js",
     "start:order": "node --inspect=9231 dist/apps/order-service/main.js",
-    "start:auth": "node --inspect=9232 dist/apps/auth-service/main.js"
+    "start:auth": "node --inspect=9232 dist/apps/auth-service/main.js",
+    "dev:user": "nx serve user-ui --port=3001",
+    "dev:seller": "nx serve seller-ui --port=3002"
   },
   "prisma": {
     "seed": "tsx packages/libs/prisma/seed.ts"
   },
   "private": true,
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@imagekit/nodejs": "^7.1.1",
     "@prisma/client": "^6.19.0",
     "@react-hook/resize-observer": "^2.0.2",
@@ -118,6 +121,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
     "autoprefixer": "10.4.13",
+    "cross-env": "^10.1.0",
     "esbuild": "^0.19.2",
     "hasown": "^2.0.2",
     "i": "^0.3.7",

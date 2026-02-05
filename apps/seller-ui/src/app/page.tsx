@@ -20,6 +20,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import useSeller from '../hooks/useSeller';
 import { useRouter } from 'next/navigation';
+import ProductCard from '../shared/components/cards/product-card';
 import Spinner from 'packages/components/spinner';
 
 const TABS = ['Products', 'Offers', 'Reviews'];
@@ -83,7 +84,10 @@ const SellerProfile = () => {
           {/* Cover Photo */}
           <div className="relative w-full flex justify-center bg-gray-800">
             <Image
-              src={seller?.shop?.coverBanner || ''}
+              src={
+                seller?.shop?.coverBanner ||
+                'https://ik.imagekit.io/johnchrismaina/fashion-banner.png?updatedAt=1767450141321'
+              }
               alt="Seller Cover"
               className="w-full h-[400px] object-cover"
               width={1200}
@@ -91,7 +95,7 @@ const SellerProfile = () => {
             />
             {seller?.id && (
               <button
-                className="absolute top-3 right-3 bg-gray-700 px-3 py-2 rounded-md flex items-center"
+                className="absolute top-3 right-3 bg-gray-700 px-3 py-2 rounded-md flex items-center gap-2 text-gray-200"
                 onClick={() => setEditType('cover')}
               >
                 <Pencil size={16} /> Edit Cover
@@ -105,7 +109,10 @@ const SellerProfile = () => {
               <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
                 <div className="relative w-[100px] h-[100px] rounded-full border-4 border-slate-700 overflow-hidden">
                   <Image
-                    src={seller?.shop?.avatar || ''}
+                    src={
+                      seller?.shop?.avatar ||
+                      'https://ik.imagekit.io/johnchrismaina/happy-basket.png?updatedAt=1764842031651'
+                    }
                     alt="Seller Avatar"
                     layout="fill"
                     objectFit="cover"
@@ -157,7 +164,7 @@ const SellerProfile = () => {
 
                 {seller?.id ? (
                   <button
-                    className="px-6 py-2 h-[40px] rounded-lg font-semibold flex items-center"
+                    className="px-6 py-2 h-[40px] rounded-lg font-semibold flex items-center gap-2 text-gray-200 bg-gray-600"
                     onClick={() => router.push('/edit-profile')}
                   >
                     <Pencil size={16} /> Edit Profile
@@ -235,15 +242,15 @@ const SellerProfile = () => {
           {/* Tabs Section */}
           <div className="w-[85%] lg:w-[70%] mx-auto mt-8">
             {/* Tabs */}
-            <div className="flex border-b border-gray-300">
+            <div className="flex">
               {TABS.map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`py-3 px-6 text-lg font-semibold ${
                     activeTab === tab
-                      ? 'text-slate-800 border-b-2 border-blue-600'
-                      : 'text-slate-600'
+                      ? 'text-slate-200 border-b-2 border-slate-200'
+                      : 'text-slate-400'
                   } transition`}
                 >
                   {tab}
@@ -278,7 +285,8 @@ const SellerProfile = () => {
               {/* Offers Tab */}
               {activeTab === 'Offers' && (
                 <div className="m-auto grid grid-cols-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  {isEventsLoading && (
+                  {/* isEventsLoading */}
+                  {isLoading && (
                     <>
                       {Array.from({ length: 10 }).map((_, index) => (
                         <div

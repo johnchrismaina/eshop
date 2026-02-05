@@ -12,6 +12,7 @@ import {
   loginAdmin,
   loginSeller,
   loginUser,
+  logoutSeller,
   refreshToken,
   registerSeller,
   resetUserPassword,
@@ -39,13 +40,14 @@ router.post('/reset-password-user', resetUserPassword);
 router.post('/change-password', isAuthenticated, updateUserPassword);
 router.post('/seller-registration', registerSeller);
 router.post('/verify-seller', verifySeller);
+router.post('/login-seller', loginSeller);
+router.get('/logged-in-seller', isAuthenticated, isSeller, getSeller);
+router.post('/logout-seller', logoutSeller);
+router.post('/create-shop', createShop);
+router.post('/create-stripe-link', createStripeConnectLink);
 router.post('/login-admin', loginAdmin);
 router.get('/logged-in-admin', isAuthenticated, isAdmin, getAdmin);
 // router.post('/logout-admin', isAuthenticated, logoutAdmin);
-router.post('/create-shop', createShop);
-router.post('/create-stripe-link', createStripeConnectLink);
-router.post('/login-seller', loginSeller);
-router.get('/logged-in-seller', isAuthenticated, isSeller, getSeller);
 
 router.get('/shipping-addresses', isAuthenticated, getUserAddresses);
 router.post('/add-address', isAuthenticated, addUserAddress);

@@ -5,20 +5,23 @@ import jwt from 'jsonwebtoken';
 const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
   try {
     console.log('Cookies:', req.cookies);
-    // console.log('Auth header:', req.headers.authorization);
-
     console.log('isAuthenticated middleware called');
 
     const token =
       req.cookies['access_token'] ||
       req.cookies['seller-access-token'] ||
       req.cookies['admin-access-token'];
-    // req.headers.authorization?.split(' ')[1];
 
+    // ✅ If no token, treat as guest
     if (!token) {
-      console.log('No token found in cookies');
-      return res.status(401).json({ message: 'Unauthorized! token missing.' });
+      console.log('No token found in cookies → guest');
+      req.role = 'guest';
+      req.user = null;
+      req.seller = null;
+      req.admin = null;
+      return next(); // allow request to continue as guest
     }
+
     // verify token
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as {
       id: string;
@@ -26,10 +29,12 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     };
 
     if (!decoded) {
-      return res.status(401).json({ message: 'Unauthorized! Invalid token.' });
+      console.log('Invalid token → guest');
+      req.role = 'guest';
+      return next();
     }
 
-    req.role = decoded.role; // ✅ set role immediately
+    req.role = decoded.role;
 
     let account;
 
@@ -43,13 +48,14 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       });
       req.seller = account;
     } else if (decoded.role === 'admin') {
-      console.log('Decoded admin token, role:', req.role);
       account = await prisma.admins.findUnique({ where: { id: decoded.id } });
       req.admin = account;
     }
 
     if (!account) {
-      return res.status(401).json({ message: 'Account not found!' });
+      console.log('Account not found → guest');
+      req.role = 'guest';
+      return next();
     }
 
     console.log('Decoded role:', req.role);
@@ -57,14 +63,15 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     console.log('Attached seller:', req.seller);
     console.log('Attached admin:', req.admin);
 
-    console.log('Decoded JWT:', decoded);
-
     return next();
   } catch (error) {
     console.log('JWT verification failed:', error);
-    return res
-      .status(401)
-      .json({ message: 'Unauthorized! Token expired or invalid.' });
+    // ✅ fallback to guest instead of 401
+    req.role = 'guest';
+    req.user = null;
+    req.seller = null;
+    req.admin = null;
+    return next();
   }
 };
 

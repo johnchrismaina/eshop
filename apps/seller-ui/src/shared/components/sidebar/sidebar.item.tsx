@@ -7,11 +7,16 @@ interface Props {
   icon: React.ReactNode;
   isActive?: boolean;
   href: string;
+  onClick?: () => void; // <-- add this
 }
 
-const SidebarItem = ({ icon, title, isActive, href }: Props) => {
+const SidebarItem = ({ icon, title, isActive, href, onClick }: Props) => {
   return (
-    <Link href={href} className="my-2 block">
+    <Link
+      href={href}
+      onClick={onClick} // <-- now TypeScript knows this is valid
+      className="my-2 block"
+    >
       <div
         className={`flex gap-2 w-full min-h-8 h-full items-center px-[13px] rounded-lg cursor-pointer transition hover:!bg-[#2b2f31] ${
           isActive &&

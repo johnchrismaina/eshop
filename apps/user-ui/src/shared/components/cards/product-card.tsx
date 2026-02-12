@@ -15,6 +15,12 @@ const ProductCard = ({
   product: any;
   isEvent?: boolean;
 }) => {
+  console.log(
+    'ProductCard render:',
+    typeof window === 'undefined' ? 'server' : 'client',
+    { productId: product?.id, isEvent }
+  );
+
   const [timeLeft, setTimeLeft] = useState('');
   const [open, setOpen] = useState(false);
   const { user } = useUser();

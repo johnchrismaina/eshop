@@ -1,4 +1,6 @@
 'use client';
+
+export const dynamic = 'force-dynamic';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import { useParams } from 'next/navigation';
 import Spinner from 'packages/components/spinner';

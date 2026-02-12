@@ -18,6 +18,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
+    "types": ["node", "next", "react", "react-dom"],
     "paths": {
       "@auth/*": ["apps/auth-service/src/*"],
       "@components/*": ["packages/components/*"],

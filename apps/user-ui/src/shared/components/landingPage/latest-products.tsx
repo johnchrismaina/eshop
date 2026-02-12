@@ -1,38 +1,63 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
+import { fetchLatestProducts } from 'apps/user-ui/src/lib/queries/latest-products';
 import SectionTitle from '../section/section-title';
 import ProductCard from '../cards/product-card';
 
 const LatestProducts = () => {
-  // Fetch latest products from the API and display them
-  const { data: latestProducts, isLoading: latestProductsLoading } = useQuery({
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const {
+    data: latestProducts = [],
+    isLoading,
+    isError,
+    isFetched,
+  } = useQuery({
     queryKey: ['latest-products'],
-    queryFn: async () => {
-      const res = await axiosProductService.get(
-        '/api/get-all-products?page=1&limit=10&type=latest'
-      );
-      return res.data.products;
-    },
-    staleTime: 1000 * 60 * 2,
+    queryFn: fetchLatestProducts,
+    staleTime: 30 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   return (
     <div className="bg-white px-4 pb-8">
-      {/* Latest Products title */}
       <div className="my-4 block">
         <SectionTitle title="Latest Products" />
       </div>
-      {/* Latest Products */}
-      {!latestProductsLoading && (
+
+      {isLoading && !isFetched && (
         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
-          {latestProducts?.map((product: any) => (
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-[250px] bg-gray-300 animate-pulse rounded-xl"
+            />
+          ))}
+        </div>
+      )}
+
+      {isFetched && latestProducts.length > 0 && isMounted && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
+          {latestProducts.map((product: any) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
-      {latestProducts?.length === 0 && (
+
+      {isFetched && latestProducts.length === 0 && !isError && (
         <p className="text-center">No Products available yet!</p>
+      )}
+
+      {isError && (
+        <p className="text-center text-red-500">
+          Failed to load latest products
+        </p>
       )}
     </div>
   );

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useQuery } from '@tanstack/react-query';
 import useDeviceTracking from 'apps/user-ui/src/hooks/useDeviceTracking';
 import useLocationTracking from 'apps/user-ui/src/hooks/useLocationTracking';

@@ -1,35 +1,61 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
-import React from 'react';
+import { fetchEvents } from 'apps/user-ui/src/lib/queries/events';
 import SectionTitle from '../section/section-title';
 import ProductCard from '../cards/product-card';
 
 const Offers = () => {
-  // Fetch Offers from the API and display them
-  const { data: offers, isLoading: offersLoading } = useQuery({
-    queryKey: ['offers'],
-    queryFn: async () => {
-      const res = await axiosProductService.get(
-        '/api/get-all-events?page=1&limit=10'
-      );
-      return res.data.events;
-    },
-    staleTime: 1000 * 60 * 2,
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const {
+    data: offers = [],
+    isLoading,
+    isError,
+    isFetched,
+  } = useQuery({
+    queryKey: ['events'],
+    queryFn: fetchEvents,
+    staleTime: 15 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   return (
     <div className="bg-white px-4 pb-8">
-      {/* Top Offers title */}
       <div className="my-4 block">
         <SectionTitle title="Top Offers" />
       </div>
-      {/* Top Offers */}
-      {!offersLoading && (
+
+      {isLoading && !isFetched && (
         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
-          {offers?.map((product: any) => (
-            <ProductCard key={product.id} product={product} isEvent={true} />
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-[250px] bg-gray-300 animate-pulse rounded-xl"
+            />
           ))}
         </div>
+      )}
+
+      {isFetched && offers.length > 0 && isMounted && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
+          {offers.map((offer: any) => (
+            <ProductCard key={offer.id} product={offer} isEvent={true} />
+          ))}
+        </div>
+      )}
+
+      {isFetched && offers.length === 0 && !isError && (
+        <p className="text-center">No Offers available yet!</p>
+      )}
+
+      {isError && (
+        <p className="text-center text-red-500">Failed to load offers</p>
       )}
     </div>
   );

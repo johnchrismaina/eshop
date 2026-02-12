@@ -1,4 +1,6 @@
 'use client';
+
+export const dynamic = 'force-dynamic';
 import { Appearance, loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
@@ -7,26 +9,12 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import CheckoutForm from 'apps/user-ui/src/shared/components/checkout/checkoutForm';
-// import { loadStripe } from '@stripe/stripe-js';
-
-// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-// Example: if you store it in localStorage
-const token = localStorage.getItem('token');
-
-type CartItem = {
-  productId: string;
-  quantity: number;
-  shopId: string;
-  sale_price: number;
-  selectedOptions?: Record<string, any>;
-};
-
-const Page = () => {
+const CheckoutContent = () => {
   const [clientSecret, setClientSecret] = useState('');
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [coupon, setCoupon] = useState();
@@ -35,17 +23,15 @@ const Page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
-    null
-  );
-
   const sessionId = searchParams.get('sessionId');
 
   console.log('Redirecting with sessionId:', sessionId);
 
   useEffect(() => {
     const fetchSession = async () => {
+      const token =
+        typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
       if (!sessionId) {
         setError('Invalid session. Please try again.');
         setLoading(false);
@@ -78,7 +64,7 @@ const Page = () => {
     };
 
     fetchSession();
-  }, [sessionId, token]);
+  }, [sessionId]);
 
   const appearance: Appearance = {
     theme: 'stripe',
@@ -129,6 +115,10 @@ const Page = () => {
       </Elements>
     )
   );
+};
+
+const Page = () => {
+  return <CheckoutContent />;
 };
 
 export default Page;

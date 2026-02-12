@@ -2,6 +2,12 @@ import React from 'react';
 // import TitleBorder from 'apps/user-ui/src/assets/svgs/title-border';
 
 const SectionTitle = ({ title }: { title: string }) => {
+  console.log(
+    'SectionTitle render:',
+    typeof window === 'undefined' ? 'server' : 'client',
+    { title }
+  );
+
   return (
     <div className="relative">
       <h1 className="md:text-2xl text-md relative z-10 text-gray-700 font-bold">

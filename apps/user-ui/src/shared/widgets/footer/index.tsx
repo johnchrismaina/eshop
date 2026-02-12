@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import {
-  Facebook,
-  Twitter,
-  Linkedin,
-  mail,
-  MapPin,
-  ArrowUp,
-} from 'lucide-react';
+// import Link from 'next/link';
+// import {
+//   Facebook,
+//   Twitter,
+//   Linkedin,
+//   mail,
+//   MapPin,
+//   ArrowUp,
+// } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const Footer = () => {

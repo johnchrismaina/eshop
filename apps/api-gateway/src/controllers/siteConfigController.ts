@@ -127,12 +127,7 @@ export const updateBanner = async (
 
     if (!config) {
       config = await prisma.site_config.create({
-        data: {
-          categories: [],
-          subCategories: {},
-          logo: null,
-          banner: bannerUrl,
-        },
+        data: { categories: [], subCategories: {}, banner: bannerUrl },
       });
     } else {
       config = await prisma.site_config.update({

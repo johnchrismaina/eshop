@@ -6,12 +6,13 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { errorMiddleware } from '@packages/error-handler/error-middleware';
+import { logInfo, logError } from '@packages/utils/logger';
 
 import checkoutRoutes from './routes/checkout.routes'; // frontend initializer
 import orderRoutes from './routes/order.routes'; // other order routes
 import { createOrder } from './controllers/order.controller'; // webhook finalizer
 
-console.log('Stripe key loaded:', !!process.env.STRIPE_SECRET_KEY);
+logInfo('Stripe key loaded:', !!process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
@@ -49,15 +50,12 @@ app.use('/api', orderRoutes);
 // --- Error handling ---
 app.use(errorMiddleware);
 
-console.log(
-  'Starting order-service with Stripe key:',
-  process.env.STRIPE_SECRET_KEY
-);
-
 // --- Startup ---
 const port = process.env.PORT || 6004;
 const server = app.listen(port, () => {
-  console.log(`Order service running on port ${port}`);
-  console.log(`Listening at http://localhost:${port}/api`);
+  logInfo(`Order service running on port ${port}`);
+  logInfo(`Listening at http://localhost:${port}/api`);
 });
-server.on('error', console.error);
+server.on('error', (error) => {
+  logError('Server error:', error);
+});

@@ -26,7 +26,8 @@ import { useRouter } from 'next/navigation';
 // import { userAgent } from 'next/server';
 
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
-  const { user, isLoading } = useUser();
+  // const { user, isLoading } = useUser();
+  const { user } = useUser();
   const location = useLocationTracking();
   const deviceInfo = useDeviceTracking();
 
@@ -40,14 +41,16 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const [isSelected, setIsSelected] = useState(
     productDetails?.colors?.[0] || ''
   );
-  const [isSizeSelected, setIsSizeSelected] = useState(
-    productDetails?.sizes?.[0] || ''
-  );
+  // const [isSizeSelected, setIsSizeSelected] = useState(
+  //   productDetails?.sizes?.[0] || ''
+  // );
+  const [isSizeSelected] = useState(productDetails?.sizes?.[0] || '');
   const [quantity, setQuantity] = useState(1);
-  const [priceRange, setPriceRange] = useState([
-    productDetails?.sale_price,
-    1199,
-  ]);
+  // const [priceRange, setPriceRange] = useState([
+  //   productDetails?.sale_price,
+  //   1199,
+  // ]);
+  const [priceRange] = useState([productDetails?.sale_price, 1199]);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   const addToCart = useStore((state: any) => state.addToCart);

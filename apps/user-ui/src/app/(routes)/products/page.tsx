@@ -1,4 +1,6 @@
 'use client';
+
+export const dynamic = 'force-dynamic';
 import { useQuery } from '@tanstack/react-query';
 import ProductCard from 'apps/user-ui/src/shared/components/cards/product-card';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
@@ -36,7 +38,7 @@ const Page = () => {
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
   const updateURL = () => {
-    const params = new URLSearchParams(',');
+    const params = new URLSearchParams();
     params.set('priceRange', priceRange.join(','));
     if (selectedCategories.length > 0)
       params.set('categories', selectedCategories.join(','));
@@ -61,13 +63,20 @@ const Page = () => {
       query.set('page', page.toString());
       query.set('limit', '12');
 
+      console.log('Fetching products with query:', query.toString());
       const res = await axiosProductService.get(
         `/api/get-filtered-products?${query.toString()}`
       );
+      console.log('Products response:', res.data);
       setProducts(res.data.products);
       setTotalPages(res.data.pagination.totalPages);
-    } catch (error) {
-      console.error('Failed to fetch filtered products:', error);
+    } catch (error: any) {
+      console.error(
+        'Failed to fetch filtered products:',
+        error.message,
+        error.response?.data
+      );
+      setProducts([]); // Clear products on error
     } finally {
       setIsProductLoading(false);
     }
@@ -86,7 +95,8 @@ const Page = () => {
       const res = await axiosProductService.get('/api/get-categories');
       return res.data;
     },
-    staleTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 0,
+    gcTime: 0,
   });
 
   // console.log('This is categories data', data);

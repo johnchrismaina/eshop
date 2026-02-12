@@ -1,12 +1,14 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useStore } from 'apps/user-ui/src/store';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { CheckCircle, Truck } from 'lucide-react';
 
-const PaymentSuccessPage = () => {
+const PaymentSuccessContent = () => {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('sessionId');
   const router = useRouter();
@@ -50,6 +52,10 @@ const PaymentSuccessPage = () => {
       </div>
     </div>
   );
+};
+
+const PaymentSuccessPage = () => {
+  return <PaymentSuccessContent />;
 };
 
 export default PaymentSuccessPage;

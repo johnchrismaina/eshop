@@ -1,36 +1,37 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
+import { fetchProducts } from 'apps/user-ui/src/lib/queries/products';
 import SectionTitle from '../section/section-title';
 import ProductCard from '../cards/product-card';
 
 const Products = () => {
-  // Fetch products from the API and display them
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const {
-    data: products,
+    data: products = [],
     isLoading,
     isError,
-    // error,
+    isFetched,
   } = useQuery({
     queryKey: ['products'],
-    queryFn: async () => {
-      const res = await axiosProductService.get(
-        '/api/get-all-products?page=1&limit=10'
-      );
-      return res.data.products;
-    },
-    staleTime: 1000 * 60 * 2,
+    queryFn: fetchProducts,
+    staleTime: 30 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   return (
     <div className="bg-white px-4 pb-8">
-      {/* Suggested Products title */}
       <div className="my-4">
         <SectionTitle title="Suggested Products" />
       </div>
 
-      {/* Suggested Products Loader */}
-      {isLoading && (
+      {isLoading && !isFetched && (
         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
           {Array.from({ length: 5 }).map((_, index) => (
             <div
@@ -40,16 +41,21 @@ const Products = () => {
           ))}
         </div>
       )}
-      {/* Suggested Products */}
-      {!isLoading && !isError && (
+
+      {isFetched && products.length > 0 && isMounted && (
         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
           {products.map((product: any) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
-      {products?.length === 0 && (
+
+      {isFetched && products.length === 0 && !isError && (
         <p className="text-center">No Products available yet!</p>
+      )}
+
+      {isError && (
+        <p className="text-center text-red-500">Failed to load products</p>
       )}
     </div>
   );

@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
 import initializeSiteConfig from '@gateway/libs/initializeSiteConfig';
 import siteConfigRouter from './routes/siteConfig';
+import { logInfo, logError } from '@packages/utils/logger';
 
 const app = express();
 
@@ -79,13 +80,15 @@ app.use('/api/site-config', siteConfigRouter);
 
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
+  logInfo(`Listening at http://localhost:${port}/api`);
 
   try {
     initializeSiteConfig();
-    console.log('Site config initialized successfully!');
+    logInfo('Site config initialized successfully!');
   } catch (error) {
-    console.log('Failed to initialize site config:', error);
+    logError('Failed to initialize site config:', error);
   }
 });
-server.on('error', console.error);
+server.on('error', (error) => {
+  logError('Server error:', error);
+});

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useRequireAuth from 'apps/user-ui/src/hooks/useRequiredAuth';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
@@ -11,9 +13,10 @@ import Image from 'next/image';
 import ChatInput from 'apps/user-ui/src/shared/components/chats/chatinput';
 import { useWebSocket } from 'apps/user-ui/src/context/web-socket-context';
 
-const Page = () => {
+const InboxContent = () => {
   const searchParams = useSearchParams();
-  const { user, isLoading: userLoading } = useRequireAuth();
+  // const { user, isLoading: userLoading } = useRequireAuth();
+  const { user } = useRequireAuth();
   const router = useRouter();
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollAnchorRef = useRef<HTMLDivElement | null>(null);
@@ -350,6 +353,10 @@ const Page = () => {
       </div>
     </div>
   );
+};
+
+const Page = () => {
+  return <InboxContent />;
 };
 
 export default Page;

@@ -1,4 +1,6 @@
 'use client';
+
+export const dynamic = 'force-dynamic';
 import ReactImageMagnify from 'react-image-magnify';
 
 export default function MagnifyTestPage() {

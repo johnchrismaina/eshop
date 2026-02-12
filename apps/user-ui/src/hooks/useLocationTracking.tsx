@@ -20,7 +20,7 @@ const getStoredLocation = (): StoredLocation | null => {
 
   try {
     const parsedData: StoredLocation = JSON.parse(storedData);
-    const expiryTime = LOCATION_EXPIRY_DAYS * 24 * 60 * 60 * 1000; // days → ms
+    const expiryTime = LOCATION_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
     const isExpired = Date.now() - parsedData.timestamp > expiryTime;
 
     return isExpired ? null : parsedData;
@@ -31,14 +31,25 @@ const getStoredLocation = (): StoredLocation | null => {
 };
 
 const useLocationTracking = () => {
-  // ✅ Safe to call getStoredLocation here because of the SSR guard
-  const [location, setLocation] = useState<StoredLocation | null>(
-    getStoredLocation()
+  console.log(
+    'useLocationTracking:',
+    typeof window === 'undefined' ? 'server' : 'client'
   );
 
-  useEffect(() => {
-    if (location) return;
+  // ✅ Initialize with null, only read from localStorage in useEffect
+  const [location, setLocation] = useState<StoredLocation | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
+  useEffect(() => {
+    setIsMounted(true);
+    // Now safely read localStorage
+    const stored = getStoredLocation();
+    if (stored) {
+      setLocation(stored);
+      return;
+    }
+
+    // Fetch location if not stored
     fetch('http://ip-api.com/json/')
       .then((res) => res.json())
       .then((data) => {
@@ -52,7 +63,6 @@ const useLocationTracking = () => {
         setLocation(newLocation);
       })
       .catch((error) => console.log('Failed to get location', error));
-    // }, [location]);
   }, []);
 
   return location;

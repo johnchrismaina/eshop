@@ -12,11 +12,16 @@ export const WebSocketProvider = ({
   seller: any;
 }) => {
   const [wsReady, setWsReady] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    if (!seller?.id) return;
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!seller?.id || !isMounted) return;
 
     const ws = new WebSocket(process.env.NEXT_PUBLIC_CHATTING_WEBSOCKET_URI!);
     wsRef.current = ws;
@@ -38,9 +43,11 @@ export const WebSocketProvider = ({
     return () => {
       ws.close();
     };
-  }, [seller?.id]);
+  }, [seller?.id, isMounted]);
 
-  if (!wsReady) return null;
+  if (!isMounted) {
+    return <>{children}</>;
+  }
 
   return (
     <WebSocketContext.Provider value={{ ws: wsRef.current, unreadCounts }}>

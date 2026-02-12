@@ -1,6 +1,6 @@
-import { prisma } from '@eshop/libs/prisma';
+import { prisma } from '../libs/prisma/index.js';
 import { Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 
 const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
   try {
@@ -19,14 +19,34 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       req.user = null;
       req.seller = null;
       req.admin = null;
-      return next(); // allow request to continue as guest
+      return next();
     }
 
-    // verify token
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as {
-      id: string;
-      role: 'user' | 'seller' | 'admin';
-    };
+    let decoded: { id: string; role: 'user' | 'seller' | 'admin' } | null =
+      null;
+
+    try {
+      decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as {
+        id: string;
+        role: 'user' | 'seller' | 'admin';
+      };
+    } catch (err) {
+      if (err instanceof TokenExpiredError) {
+        console.log('Token expired → clearing cookie and guest fallback');
+        // Clear whichever cookie was set
+        res.clearCookie('access_token');
+        res.clearCookie('seller-access-token');
+        res.clearCookie('admin-access-token');
+      } else {
+        console.log('JWT verification failed:', err);
+      }
+
+      req.role = 'guest';
+      req.user = null;
+      req.seller = null;
+      req.admin = null;
+      return next();
+    }
 
     if (!decoded) {
       console.log('Invalid token → guest');
@@ -65,8 +85,7 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
 
     return next();
   } catch (error) {
-    console.log('JWT verification failed:', error);
-    // ✅ fallback to guest instead of 401
+    console.log('Unexpected error in isAuthenticated:', error);
     req.role = 'guest';
     req.user = null;
     req.seller = null;

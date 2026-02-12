@@ -9,13 +9,10 @@ const axiosInstance = axios.create({
 let isRefreshing = false;
 let refreshSubscribers: (() => void)[] = [];
 
-//  Handle logout and prevent infinite loops
+// Handle logout - only on client
 const handleLogout = () => {
-  // const publicPaths = ['/login', '/signup', '/forgot-password'];
-  // const currentPath = window.location.pathname;
-  // if (!publicPaths.includes(currentPath)) {
-  //   runRedirectToLogin();
-  // }
+  if (typeof window === 'undefined') return; // Skip on server
+
   if (window.location.pathname !== '/login') {
     window.location.href = '/login';
   }

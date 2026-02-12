@@ -10,6 +10,12 @@ type Props = {
 };
 
 const Ratings: FC<Props> = ({ rating }) => {
+  console.log(
+    'Ratings render:',
+    typeof window === 'undefined' ? 'server' : 'client',
+    { rating }
+  );
+
   const stars = [];
 
   // Loop through 1–5 stars

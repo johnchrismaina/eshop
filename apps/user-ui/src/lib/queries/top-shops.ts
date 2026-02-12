@@ -2,6 +2,6 @@
 import axiosProductService from '../../utils/axiosProductService';
 
 export const fetchTopShops = async () => {
-  const res = await axiosProductService.get('/api/top-shops');
+  const res = await axiosProductService.get('/product/top-shops');
   return res.data.shops;
 };

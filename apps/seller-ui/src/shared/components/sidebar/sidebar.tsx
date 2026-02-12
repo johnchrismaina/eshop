@@ -32,6 +32,7 @@ import { useRouter } from 'next/navigation';
 const SidebarWrapper = () => {
   const { activeSidebar, setActiveSidebar } = useSidebar();
   const [serverError, setServerError] = useState<string | null>(null);
+  // const [setServerError] = useState<string | null>(null);
   const pathName = usePathname();
   const { seller } = useSeller();
   const router = useRouter();

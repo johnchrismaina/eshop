@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { errorMiddleware } from '@packages/error-handler/error-middleware';
 import router from './routes/admin.route';
+import { logInfo, logError } from '@packages/utils/logger';
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,8 @@ app.use(errorMiddleware);
 
 const port = process.env.PORT || 6005;
 const server = app.listen(port, () => {
-  console.log(`Admin service is running at http://localhost:${port}/api`);
+  logInfo(`Admin service is running at http://localhost:${port}/api`);
 });
-server.on('error', console.error);
+server.on('error', (error) => {
+  logError('Server error:', error);
+});

@@ -16,6 +16,11 @@
       "import": "./utils/kafka/index.ts",
       "default": "./utils/kafka/index.ts"
     },
+    "./error-handler": {
+      "types": "./error-handler/index.ts",
+      "import": "./error-handler/index.ts",
+      "default": "./error-handler/index.ts"
+    },
     "./package.json": "./package.json"
   },
   "dependencies": {}

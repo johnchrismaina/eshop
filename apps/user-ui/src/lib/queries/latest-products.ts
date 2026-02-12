@@ -3,7 +3,7 @@ import axiosProductService from '../../utils/axiosProductService';
 
 export const fetchLatestProducts = async () => {
   const res = await axiosProductService.get(
-    '/api/get-all-products?page=1&limit=10&type=latest'
+    '/product/get-all-products?page=1&limit=10&type=latest'
   );
   return res.data.products;
 };

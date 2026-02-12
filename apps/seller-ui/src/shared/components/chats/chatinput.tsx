@@ -1,5 +1,5 @@
 import { PickerProps } from 'emoji-picker-react';
-import dynamic from '/next/dynamic';
+import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 import { Send, ImageIcon, Smile } from 'lucide-react';
 

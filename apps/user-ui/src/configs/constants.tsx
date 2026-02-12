@@ -1,6 +1,6 @@
 export const navItems: NavItemsTypes[] = [
   {
-    title: 'Home',
+    title: "Today's Deals",
     href: '/',
   },
   {

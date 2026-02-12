@@ -1,49 +1,35 @@
-//@ts-check
-
 const path = require('path');
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
-
-/**
- * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
- **/
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Use this to set Nx-specific options
-  // See: https://nx.dev/recipes/next/next-config-setup
-  // nx: {},
-
   reactStrictMode: true,
-
   images: {
     remotePatterns: [
-      {
-        hostname: 'ik.imagekit.io',
-      },
-      {
-        hostname: 'images.unsplash.com',
-      },
-      {
-        hostname: 'localhost',
-      },
+      { hostname: 'ik.imagekit.io' },
+      { hostname: 'images.unsplash.com' },
+      { hostname: 'localhost' },
     ],
   },
-
-  webpack: (config, { isServer }) => {
+  transpilePackages: ['@eshop/utils'],
+  webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      packages: path.resolve(__dirname, '../../packages'),
+      '@eshop/utils/kafka': path.resolve(
+        __dirname,
+        '../../packages/utils/kafka/index.ts'
+      ),
+      '@eshop/utils': path.resolve(__dirname, '../../packages/utils'),
     };
     return config;
   },
 };
 
-const plugins = [
-  // Add more Next.js plugins to this list if needed.
-  // withNx,
-];
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
 
-// module.exports = composePlugins(...plugins)(nextConfig);
-module.exports = nextConfig;
+module.exports = composePlugins(withNx, withPWA)(nextConfig);

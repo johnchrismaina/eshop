@@ -14,6 +14,8 @@ type Product = {
 type Store = {
   cart: Product[];
   wishlist: Product[];
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
 
   addToCart: (
     product: Product,
@@ -49,6 +51,8 @@ export const useStore = create<Store>()(
     (set, get) => ({
       cart: [],
       wishlist: [],
+      _hasHydrated: false,
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
 
       //Add to cart
       addToCart: (product, user, location, deviceInfo) => {
@@ -84,14 +88,12 @@ export const useStore = create<Store>()(
 
       // remove from cart
       removeFromCart: (id, user, location, deviceInfo) => {
-        // find the product before calling set
         const removeProduct = get().cart.find((item) => item.id === id);
 
         set((state) => ({
           cart: state.cart?.filter((item) => item.id !== id),
         }));
 
-        // Send kafka event
         if (user?.id && location && deviceInfo && removeProduct) {
           sendKafkaEvent({
             userId: user?.id,
@@ -113,7 +115,6 @@ export const useStore = create<Store>()(
           return { wishlist: [...state.wishlist, product] };
         });
 
-        // Send kafka event
         if (user?.id && location && deviceInfo) {
           sendKafkaEvent({
             userId: user?.id,
@@ -129,14 +130,12 @@ export const useStore = create<Store>()(
 
       // remove from wishlist
       removeFromWishlist: (id, user, location, deviceInfo) => {
-        // Find the product before calling 'set'
         const removeProduct = get().wishlist.find((item) => item.id === id);
 
         set((state) => ({
           wishlist: state.wishlist?.filter((item) => item.id !== id),
         }));
 
-        // Send kafka event
         if (user?.id && location && deviceInfo && removeProduct) {
           sendKafkaEvent({
             userId: user?.id,
@@ -150,6 +149,12 @@ export const useStore = create<Store>()(
         }
       },
     }),
-    { name: 'store-storage' }
+    {
+      name: 'store-storage',
+      skipHydration: true, // ✅ This prevents automatic hydration on SSR
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
+    }
   )
 );

@@ -1,4 +1,6 @@
 'use client';
+
+export const dynamic = 'force-dynamic';
 import { categories } from 'apps/user-ui/src/configs/categories';
 import ShopCard from 'apps/user-ui/src/shared/components/cards/shop.card';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';

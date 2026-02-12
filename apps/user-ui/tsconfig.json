@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["node", "next"],
+    "types": ["node", "next", "react", "react-dom"],
     "jsx": "preserve",
     "noEmit": true,
     "emitDeclarationOnly": false,
@@ -22,7 +22,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@eshop/utils": ["../../packages/utils"],
-      "@eshop/utils/*": ["../../packages/utils/*"]
+      "@eshop/utils/*": ["../../packages/utils/*"],
+      "@packages/*": ["../../packages/*"]
     },
     "outDir": "dist",
     "rootDir": "../../",

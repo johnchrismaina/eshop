@@ -1,9 +1,9 @@
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import useUser from './useUser';
 // import { useEffect } from 'react';
 
 const useRequireAuth = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const { user, isLoading } = useUser();
 
   // useEffect(() => {

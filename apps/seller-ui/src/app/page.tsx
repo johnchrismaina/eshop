@@ -111,7 +111,7 @@ const SellerProfile = () => {
                   <Image
                     src={
                       seller?.shop?.avatar ||
-                      'https://ik.imagekit.io/johnchrismaina/happy-basket.png?updatedAt=1764842031651'
+                      'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg'
                     }
                     alt="Seller Avatar"
                     layout="fill"

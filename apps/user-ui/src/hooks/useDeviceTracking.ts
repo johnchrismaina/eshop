@@ -4,13 +4,19 @@ import { useEffect, useState } from 'react';
 import { UAParser } from 'ua-parser-js';
 
 const useDeviceTracking = () => {
+  console.log(
+    'useDeviceTracking:',
+    typeof window === 'undefined' ? 'server' : 'client'
+  );
+
   const [deviceInfo, setDeviceInfo] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const parser = new UAParser();
     const result = parser.getResult();
 
-    // Set device info only once when component mounts
     setDeviceInfo(
       `${result.device.type || 'Desktop'} - ${result.os.name} ${
         result.os.version
@@ -18,7 +24,7 @@ const useDeviceTracking = () => {
     );
   }, []);
 
-  return deviceInfo;
+  return isMounted ? deviceInfo : '';
 };
 
 export default useDeviceTracking;

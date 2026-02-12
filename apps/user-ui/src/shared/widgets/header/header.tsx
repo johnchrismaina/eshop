@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { HeartIcon, Search } from 'lucide-react';
+import { ChevronDown, Search, Triangle } from 'lucide-react';
 // import ProfileIcon from '../../../assets/svgs/profile-icon';
-// import { BsBag } from 'react-icons/bs';
 import HeaderBottom from './header-bottom';
 import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
@@ -12,10 +11,12 @@ import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
 // import Image from 'next/image';
 import useLayout from 'apps/user-ui/src/hooks/useLayout';
 import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
+// import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
+import Image from 'next/image';
 
 const Header = () => {
   const { user, role, isLoading } = useUser();
-  const wishlist = useStore((state: any) => state.wishlist);
+  // const wishlist = useStore((state: any) => state.wishlist);
   const cart = useStore((state: any) => state.cart);
   const { layout } = useLayout();
 
@@ -40,39 +41,42 @@ const Header = () => {
 
   return (
     <div className="w-full bg-white">
-      <div className="w-[95%] py-4 m-auto flex items-center justify-between">
+      <div className="w-[80%] pt-4 pb-4 m-auto flex items-center justify-between gap-8">
         {/* logo */}
         <div>
           <Link href={'/'}>
-            {/* <Image
+            <Image
               src={
                 layout?.logo ||
-                'https://ik.imagekit.io/johnchrismaina/Assets/sokonis-logo1.png'
+                'https://ik.imagekit.io/johnchrismaina/Assets/logo.svg'
               }
               alt=""
-              width={300}
-              height={100}
+              // width={300}
+              width={150}
+              // height={100}
+              height={50}
               className="object-cover"
-            /> */}
-            <span className="text-3xl font-bold ">Sokonis</span>
+            />
+            {/* <span className="text-3xl font-semibold text-[#333] ">sokonis</span> */}
           </Link>
         </div>
 
         {/* Search input */}
-        <div className="w-[60%] relative flex items-center">
+        <div className="w-[70%] relative flex items-center">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for products"
-            className="w-full px-6 font-Poppins font-semibold text-sm text-gray-900 tracking-wide border-1 border-gray-300 bg-[#f5f5f5] h-[45px] rounded-full 
-             outline-none focus:outline-none focus:bg-[#ebedf0] focus:border-[#ebedf0] focus:ring-0 focus:shadow-none"
+            className="w-full px-6 font-Poppins font-normal text-sm text-gray-900 tracking-wide border-1 border-[#f3f3f6] bg-[#f3f3f6] h-[50px] rounded-md 
+             outline-none focus:outline-none focus:border-[#ebedf0] focus:ring-0 focus:shadow-none"
           />
           <div
             onClick={handleSearchClick}
-            className="w-[45px] h-[45px] cursor-pointer flex items-center justify-center outline-none bg-orange-300 absolute top-0 right-0 rounded-full"
+            // className="w-[35px] h-[35px] cursor-pointer flex items-center justify-center outline-none bg-[#ffc220] absolute right-0 mr-1 rounded-full"
+            className="w-[35px] h-[35px] cursor-pointer flex items-center justify-center outline-none absolute right-0 mr-1 rounded-full"
           >
-            <Search color="#474747" />
+            <Search color="#333" size={18} />
           </div>
 
           {/* Suggestions dropdown */}
@@ -101,28 +105,30 @@ const Header = () => {
         </div>
 
         {/* Profile icons */}
-        <div className="flex items-center gap-6 ">
-          <div className="flex items-center gap-2 text-gray-800">
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-2 text-gray-600 p-2">
             {!isLoading && role === 'user' ? (
               <>
                 <Link
                   href={'/profile'}
-                  className="flex items-center gap-x-[2px]"
+                  className="flex items-center justify-center gap-[2px]"
                 >
-                  <span className="block font-medium text-md">Hello,</span>
-                  <span className="font-medium text-md">
-                    {/* {user?.name?.split(' ')[0]} */}{' '}
+                  <span className="block font-medium text-sm">Hello,</span>
+                  <span className="font-medium text-sm">
                     {user?.name?.split(' ')[0]}
                   </span>
                 </Link>
               </>
             ) : (
               <>
-                <Link href={'/login'} className="flex items-center gap-x-[2px]">
-                  <span className="block font-medium text-md">Hello,</span>
-                  <span className="font-medium text-md">
-                    {' '}
-                    {isLoading ? '...' : 'sign in'}
+                <Link
+                  href={'/login'}
+                  className="flex flex-col items-start gap-0.5"
+                >
+                  <span className="block font-medium text-sm">Log in</span>
+                  <span className="flex items-center font-bold text-sm gap-1 -mt-1.5">
+                    Account
+                    <ChevronDown className="mt-1" size={12} color="#555" />
                   </span>
                 </Link>
               </>
@@ -139,8 +145,9 @@ const Header = () => {
                 </span>
               </div>
             </Link> */}
-            <Link href={'/cart'} className="relative">
-              <CartIcon />
+            <Link href={'/cart'} className="relative ">
+              <CartIcon className="bg-[#333]" />
+              {/* <ShoppingCart color="#333" strokeWidth={1.5} /> */}
               {cart?.length > 0 && (
                 <div className="w-6 h-6 border-2 border-white bg-red-500 rounded-full flex items-center justify-center absolute top-[-10px] right-[-10px]">
                   <span className="text-white font-medium text-sm">
@@ -148,6 +155,7 @@ const Header = () => {
                   </span>
                 </div>
               )}
+              {/* <span className="font-medium text-sm">Cart</span> */}
             </Link>
           </div>
         </div>

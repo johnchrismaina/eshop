@@ -633,7 +633,7 @@ export const getAllEvents = async (
     const skip = (page - 1) * limit;
 
     const baseFilter = {
-      AND: [{ starting_data: { not: null } }, { ending_date: { not: null } }],
+      AND: [{ starting_date: { not: null } }, { ending_date: { not: null } }],
     };
 
     const [events, total, top10BySales] = await Promise.all([
@@ -661,14 +661,15 @@ export const getAllEvents = async (
     ]);
 
     res.status(200).json({
-      events,
-      top10BySales,
+      events: events || [],
+      top10BySales: top10BySales || [],
       total,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch events' });
+    console.error('getAllEvents error:', error);
+    res.status(500).json({ message: 'Failed to fetch events', events: [] });
   }
 };
 

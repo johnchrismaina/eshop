@@ -32,7 +32,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const Page = () => {
+const ProfileContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -293,6 +293,10 @@ const Page = () => {
       </div>
     </div>
   );
+};
+
+const Page = () => {
+  return <ProfileContent />;
 };
 
 export default Page;

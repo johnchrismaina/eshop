@@ -1,4 +1,6 @@
 'use client';
+
+export const dynamic = 'force-dynamic';
 import { useQuery } from '@tanstack/react-query';
 import ProductCard from 'apps/user-ui/src/shared/components/cards/product-card';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';

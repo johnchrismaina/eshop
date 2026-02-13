@@ -6,6 +6,8 @@ import Products from './products';
 import LatestProducts from './latest-products';
 import TopShops from './top-shops';
 import Offers from './offers';
+import CategoriesGrid from './CategoriesGrid';
+import Footer from '../footer/Footer';
 
 export default function LandingPage() {
   const { role } = useUser();
@@ -13,7 +15,8 @@ export default function LandingPage() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
       <Hero />
-      <div className="md:w-[80%] w-[90%] my-10 m-auto flex flex-col gap-6">
+      <div className="w-full px-4 my-0 m-auto flex flex-col gap-4">
+        <CategoriesGrid />
         <Products />
         <LatestProducts />
         <TopShops />
@@ -25,6 +28,7 @@ export default function LandingPage() {
           </p>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

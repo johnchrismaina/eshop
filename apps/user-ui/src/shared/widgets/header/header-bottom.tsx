@@ -58,7 +58,7 @@ const HeaderBottom = () => {
   // }, []);
 
   return (
-    <div className="w-full transition-all duration-300 flex items-center justify-center h-[50px] ">
+    <div className="w-full transition-all duration-300 flex items-center justify-center h-[45px] ">
       <div className="w-[80%] relative mx-auto flex items-center justify-start gap-6 ">
         {/* All Dropdowns */}
         <div>
@@ -69,7 +69,7 @@ const HeaderBottom = () => {
           >
             <TextAlignJustify color="#000" className="size-4" />
             {/* <EqualIcon color="#333" /> */}
-            <span className="text-gray-700 hover:text-gray-800 font-medium">
+            <span className="text-gray-600 hover:text-gray-800 font-medium">
               Categories
             </span>
           </button>
@@ -82,10 +82,10 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-4">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
-              className="px-3 py-2 font-medium text-sm text-gray-700 hover:text-gray-800 transition flex items-center"
+              className="px-3 py-2 font-medium text-sm text-gray-600 hover:text-gray-800 transition flex items-center"
               href={i.href}
               key={index}
             >

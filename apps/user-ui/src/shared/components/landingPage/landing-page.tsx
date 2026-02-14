@@ -15,7 +15,7 @@ export default function LandingPage() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
       <Hero />
-      <div className="w-full px-4 my-0 m-auto flex flex-col gap-4">
+      <div className="w-full my-0 px-5 m-auto flex flex-col gap-4 rounded-lg">
         <CategoriesGrid />
         <Products />
         <LatestProducts />

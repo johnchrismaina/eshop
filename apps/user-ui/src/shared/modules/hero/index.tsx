@@ -13,7 +13,7 @@ const Hero = () => {
       <Image
         src={
           layout?.banner ||
-          'https://ik.imagekit.io/johnchrismaina/products/61Yx5-N155L._SX3000_.jpg'
+          'https://ik.imagekit.io/johnchrismaina/products/61Yx5-N155L._SX3000_.jpg?updatedAt=1770993746101'
         }
         alt="Banner"
         onClick={() => router.push('/products')}

@@ -59,7 +59,7 @@ const HeaderBottom = () => {
 
   return (
     <div className="w-full transition-all duration-300 flex items-center justify-center h-[45px] ">
-      <div className="w-[80%] relative mx-auto flex items-center justify-start gap-6 ">
+      <div className="w-[95%] relative mx-auto flex items-center justify-start gap-6 ">
         {/* All Dropdowns */}
         <div>
           {/* Bottom header button */}

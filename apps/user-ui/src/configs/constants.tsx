@@ -1,7 +1,7 @@
 export const navItems: NavItemsTypes[] = [
   {
     title: "Today's Deals",
-    href: '/',
+    href: '/offers',
   },
   {
     title: 'Products',
@@ -11,12 +11,12 @@ export const navItems: NavItemsTypes[] = [
     title: 'Shops',
     href: '/shops',
   },
-  {
-    title: 'Offers',
-    href: '/offers',
-  },
-  {
-    title: 'Become a Seller',
-    href: `${process.env.NEXT_PUBLIC_SELLER_SERVER_URI}/signup`,
-  },
+  // {
+  //   title: 'Offers',
+  //   href: '/offers',
+  // },
+  // {
+  //   title: 'Become a Seller',
+  //   href: `${process.env.NEXT_PUBLIC_SELLER_SERVER_URI}/signup`,
+  // },
 ];

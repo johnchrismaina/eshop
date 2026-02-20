@@ -5,13 +5,7 @@ import { navItems } from 'apps/user-ui/src/configs/constants';
 import useUser from 'apps/user-ui/src/hooks/useUser';
 // import { useStore } from 'apps/user-ui/src/store';
 // import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
-import {
-  // EqualIcon,
-  // ChevronDown,
-  // ChevronRight,
-  // HeartIcon,
-  TextAlignJustify,
-} from 'lucide-react';
+import { TextAlignJustify } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 // import { BsBag } from 'react-icons/bs';
@@ -19,43 +13,11 @@ import SidebarMenu from '../../components/sidebar-menu';
 // import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 
 const HeaderBottom = () => {
-  // const [show, setShow] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-  // const [isSticky, setIsSticky] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [isSticky, setIsSticky] = useState(false);
-  // const [expandedCategory, setExpandedCategory] = useState<string | null>();
-  // const wishlist = useStore((state: any) => state.wishlist);
-  // const cart = useStore((state: any) => state.cart);
-
-  // const { user, role, isLoading } = useUser();
   const { user } = useUser();
 
-  // const { data } = useQuery({
-  //   queryKey: ['categories'],
-  //   queryFn: async () => {
-  //     const res = await axiosProductService.get('/product/api/get-categories');
-  //     return res.data;
-  //   },
-  //   staleTime: 1000 * 60 * 30,
-  // });
-
   console.log(user);
-
-  // Track scroll position
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 100) {
-  //       setIsSticky(true);
-  //     } else {
-  //       setIsSticky(false);
-  //     }
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, []);
 
   return (
     <div className="w-full transition-all duration-300 flex items-center justify-center h-[45px] ">
@@ -82,10 +44,10 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
-              className="px-3 py-2 font-medium text-sm text-gray-600 hover:text-gray-800 transition flex items-center"
+              className="px-3 py-2 font-semibold text-sm text-gray-600 hover:text-gray-900 transition flex items-center"
               href={i.href}
               key={index}
             >

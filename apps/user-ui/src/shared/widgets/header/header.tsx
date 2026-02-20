@@ -16,6 +16,8 @@ const Header = () => {
   const cart = useStore((state: any) => state.cart);
   const { layout } = useLayout();
 
+  const [open, setOpen] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
@@ -105,48 +107,87 @@ const Header = () => {
 
           {/* Profile icons */}
           <div className="flex items-center gap-4 shrink-0">
-            <div className="relative group flex items-center gap-2 text-gray-600 p-2">
+            {/* Account */}
+            <div className="relative flex items-center gap-2 text-gray-600 p-2">
+              {/* Trigger */}
               <Link
                 href={role === 'user' ? '/profile' : '/login'}
                 className="flex flex-col items-start gap-0.5"
+                onMouseEnter={() => setOpen(true)} // open when hovering trigger
               >
-                {/* Top line changes depending on login state */}
                 {!isLoading && role === 'user' ? (
                   <span className="block font-normal text-xs">
-                    Hello, {user?.name?.split(' ')[0]}
+                    Hi, {user?.name?.split(' ')[0]}
                   </span>
                 ) : (
                   <span className="block font-normal text-xs text-gray-500">
                     Log in
                   </span>
                 )}
-                {/* Bottom line stays constant */}
                 <span className="flex items-center font-bold text-sm gap-1 -mt-1.5">
                   Account
                   <ChevronDown className="mt-1" size={12} color="#555" />
                 </span>
               </Link>
-              {/* Floating panel */}
-              <div className="absolute top-full right-0 mt-0 hidden w-64 rounded-md border border-gray-200 bg-white shadow-lg group-hover:block z-[110]">
-                <div className="p-4">
-                  <p className="font-semibold">Welcome back!</p>
-                  <p className="text-sm text-gray-600">
-                    Access your orders, wishlist, and more.
-                  </p>
-                  <Link
-                    href="/login"
-                    className="mt-3 block rounded bg-yellow-400 px-4 py-2 text-center font-medium no-underline hover:underline"
-                  >
-                    Sign in
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="mt-2 block text-center text-sm text-blue-600 hover:underline"
-                  >
-                    New customer? Start here
-                  </Link>
+
+              {/* Backdrop */}
+              {open && (
+                <div
+                  className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-[100]"
+                  // onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
+                />
+              )}
+
+              {/* Floating Panel */}
+              {open && (
+                <div
+                  className="absolute top-full right-0 mt-0 w-64 rounded-md border border-gray-200 bg-white shadow-lg z-[110]"
+                  onMouseLeave={() => setOpen(false)} // leaving panel closes it
+                >
+                  <div className="p-6 text-gray-800">
+                    <p className="font-semibold">Welcome back!</p>
+                    <Link
+                      href="/login"
+                      className="mt-3 block rounded-md text-gray-700 bg-yellow-400 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
+                    >
+                      Sign in
+                    </Link>
+                    <div className="flex items-center mt-3 gap-1">
+                      <span className="text-xs">New customer?</span>
+                      <Link
+                        href="/register"
+                        className="text-xs text-blue-600 hover:underline"
+                      >
+                        Start here
+                      </Link>
+                    </div>
+                    <div className="w-full h-[0.5px] bg-gray-300 my-4"></div>
+                    <div className="flex flex-col text-[13px] mt-2 gap-2">
+                      <Link href="/sign-in" className="hover:underline">
+                        Account
+                      </Link>
+                      <Link href="/sign-in" className="hover:underline">
+                        Orders
+                      </Link>
+                      <Link href="/sign-in" className="hover:underline">
+                        Recommendations
+                      </Link>
+                      <Link href="/sign-in" className="hover:underline">
+                        Watchlist
+                      </Link>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_SELLER_SERVER_URI}/signup`}
+                        className="hover:underline"
+                      >
+                        Start a Selling Account
+                      </Link>
+                      <Link href="/sign-in" className="hover:underline">
+                        Customer Service
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Cart */}

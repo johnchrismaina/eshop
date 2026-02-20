@@ -4,7 +4,7 @@ import useUser from 'apps/user-ui/src/hooks/useUser';
 import Hero from '../../modules/hero';
 import Products from './products';
 import LatestProducts from './latest-products';
-import TopShops from './top-shops';
+// import TopShops from './top-shops';
 import Offers from './offers';
 import Footer from '../footer/Footer';
 import PromoGrid from './PromoGrid';
@@ -19,7 +19,7 @@ export default function LandingPage() {
         <PromoGrid />
         <Products />
         <LatestProducts />
-        <TopShops />
+        {/* <TopShops /> */}
         <Offers />
 
         {role === 'user' && (

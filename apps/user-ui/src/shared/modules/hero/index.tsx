@@ -9,11 +9,11 @@ const Hero = () => {
   const { layout } = useLayout();
 
   return (
-    <div className="relative w-full m-auto h-64 z-0 overflow-visible ">
+    <div className="relative w-full m-auto h-[40vh] z-0 overflow-visible ">
       <Image
         src={
           layout?.banner ||
-          'https://ik.imagekit.io/johnchrismaina/products/61Yx5-N155L._SX3000_.jpg?updatedAt=1770993746101'
+          'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61uMN8JVocL._SX3000_.jpg'
         }
         alt="Banner"
         onClick={() => router.push('/products')}

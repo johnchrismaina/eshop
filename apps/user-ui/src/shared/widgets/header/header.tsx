@@ -40,7 +40,7 @@ const Header = () => {
     <>
       {/* Top header - fixed */}
       <div className="fixed top-0 left-0 w-full bg-white z-[100] ">
-        <div className="w-[95%] py-1 m-auto flex items-center justify-between gap-8">
+        <div className="w-[95%] py-1 m-auto flex items-center justify-between gap-6">
           {/* logo */}
           <div>
             <Link href="/">
@@ -57,8 +57,13 @@ const Header = () => {
             </Link>
           </div>
 
+          <div className="flex flex-col items-start shrink-0">
+            <span className="text-xs font-normal">Deliver to: </span>
+            <span className=" font-bold -mt-1.5">Nairobi, Kenya</span>
+          </div>
+
           {/* Search input */}
-          <div className="w-[70%] relative flex items-center">
+          <div className="w-[65%] relative flex items-center">
             <input
               type="text"
               value={searchQuery}
@@ -68,7 +73,7 @@ const Header = () => {
             />
             <div
               onClick={handleSearchClick}
-              className="w-[35px] h-[35px] cursor-pointer flex items-center justify-center outline-none bg-amber-400 absolute right-0 mr-1 rounded-full"
+              className="w-[35px] h-[35px] cursor-pointer flex items-center justify-center outline-none absolute right-0 mr-1 rounded-full"
             >
               <Search color="#333" size={18} />
             </div>
@@ -101,30 +106,26 @@ const Header = () => {
           {/* Profile icons */}
           <div className="flex items-center gap-4 shrink-0">
             <div className="relative group flex items-center gap-2 text-gray-600 p-2">
-              {!isLoading && role === 'user' ? (
-                <Link
-                  href="/profile"
-                  className="flex items-center justify-center gap-[2px]"
-                >
-                  <span className="block font-medium text-sm">Hello,</span>
-                  <span className="font-medium text-sm">
-                    {user?.name?.split(' ')[0]}
+              <Link
+                href={role === 'user' ? '/profile' : '/login'}
+                className="flex flex-col items-start gap-0.5"
+              >
+                {/* Top line changes depending on login state */}
+                {!isLoading && role === 'user' ? (
+                  <span className="block font-normal text-xs">
+                    Hello, {user?.name?.split(' ')[0]}
                   </span>
-                </Link>
-              ) : (
-                <Link
-                  href="/login"
-                  className="flex flex-col items-start gap-0.5"
-                >
+                ) : (
                   <span className="block font-normal text-xs text-gray-500">
                     Log in
                   </span>
-                  <span className="flex items-center font-bold text-sm gap-1 -mt-1.5">
-                    Account
-                    <ChevronDown className="mt-1" size={12} color="#555" />
-                  </span>
-                </Link>
-              )}
+                )}
+                {/* Bottom line stays constant */}
+                <span className="flex items-center font-bold text-sm gap-1 -mt-1.5">
+                  Account
+                  <ChevronDown className="mt-1" size={12} color="#555" />
+                </span>
+              </Link>
               {/* Floating panel */}
               <div className="absolute top-full right-0 mt-0 hidden w-64 rounded-md border border-gray-200 bg-white shadow-lg group-hover:block z-[110]">
                 <div className="p-4">

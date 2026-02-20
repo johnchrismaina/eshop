@@ -6,17 +6,17 @@ import Products from './products';
 import LatestProducts from './latest-products';
 import TopShops from './top-shops';
 import Offers from './offers';
-import CategoriesGrid from './CategoriesGrid';
 import Footer from '../footer/Footer';
+import PromoGrid from './PromoGrid';
 
 export default function LandingPage() {
   const { role } = useUser();
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[#f3f3f6] min-h-screen">
       <Hero />
-      <div className="w-full my-0 px-5 m-auto flex flex-col gap-4 rounded-lg">
-        <CategoriesGrid />
+      <div className="w-full my-0 px-4 m-auto flex flex-col gap-4 ">
+        <PromoGrid />
         <Products />
         <LatestProducts />
         <TopShops />

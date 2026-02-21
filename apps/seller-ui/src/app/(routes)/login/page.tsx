@@ -143,7 +143,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full text-lg cursor-pointer bg-black text-white py-2 rounded-lg relative flex items-center justify-center"
+              className="w-full text-lg cursor-pointer bg-blue-800 hover:bg-blue-900 transition-colors text-white py-2 rounded-lg relative flex items-center justify-center"
             >
               {/* Keep the text in DOM but hide it when loading */}
               <span

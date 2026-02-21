@@ -144,11 +144,11 @@ const Header = () => {
               {/* Floating Panel */}
               {open && (
                 <div className="absolute top-full right-0 mt-0 w-64 rounded-sm border border-gray-200 bg-white shadow-lg z-[110]">
-                  <div className="p-6 text-gray-800">
+                  <div className="p-6 text-gray-900">
                     <p className="font-semibold">Welcome back!</p>
                     <Link
                       href="/login"
-                      className="mt-3 block rounded-md text-gray-700 bg-yellow-400 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
+                      className="mt-3 block rounded-md text-gray-800 bg-amber-300 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
                     >
                       Sign in
                     </Link>

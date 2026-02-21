@@ -147,9 +147,23 @@ const Login = () => {
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full text-lg cursor-pointer bg-black text-white py-2 rounded-lg"
+              className="w-full text-base font-semibold cursor-pointer bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg"
             >
-              {loginMutation?.isPending ? 'Loggin in... ' : 'Login'}
+              {/* Keep the text in DOM but hide it when loading */}
+              <span
+                className={
+                  loginMutation?.isPending ? 'opacity-0' : 'opacity-100'
+                }
+              >
+                Login
+              </span>
+
+              {/* Spinner centered absolutely */}
+              {loginMutation?.isPending && (
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <Spinner size={20} borderColor="border-gray-200" />
+                </span>
+              )}
             </button>
 
             {serverError && (

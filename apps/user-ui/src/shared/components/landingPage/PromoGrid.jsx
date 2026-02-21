@@ -2,79 +2,95 @@ import React from 'react';
 
 const PromoGrid = () => {
   return (
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-10">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-8">
       {/* Card 1  */}
-      <div class="bg-blue-300 rounded-lg overflow-hidden">
-        <div class="h-[250px]">
-          <img
-            src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed%20(2).png?updatedAt=1771515836912"
-            alt="Pharmacy"
-            class="object-contain w-full h-full"
-          />
+      <div className="flex flex-col items-start cursor-pointer">
+        <div className="bg-blue-300 rounded-lg overflow-hidden">
+          <div className="aspect-[16/10]">
+            <img
+              src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed%20(2).png?updatedAt=1771515836912"
+              alt="Computers & Gaming"
+              className="object-contain w-full h-full"
+            />
+          </div>
         </div>
-        {/* <div class="p-4 text-center">
-          <h3 class="text-lg font-semibold">Pharmacy at your doorstep!</h3>
-          <p class="text-gray-600 text-sm mt-2">
+        <div className="pt-3 text-center">
+          <h3 className="text-base font-bold tracking-tight">
+            Computers & Gaming - 10% OFF
+          </h3>
+          {/* <p className="text-gray-600 text-sm mt-2">
             Cough syrups, pain relief sprays & more
           </p>
-          <button class="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
+          <button className="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
             Order Now
-          </button>
-        </div> */}
+          </button> */}
+        </div>
       </div>
 
       {/* Card 2  */}
-      <div class="bg-slate-300 rounded-lg overflow-hidden">
-        <div class="h-[250px]">
-          <img
-            src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed.png?updatedAt=1771515836923"
-            alt="Pet Care"
-            class="object-contain w-full h-full"
-          />
+      <div className="flex flex-col items-start cursor-pointer">
+        <div className="bg-slate-300 rounded-lg overflow-hidden">
+          <div className="aspect-[16/10]">
+            <img
+              src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed.png?updatedAt=1771515836923"
+              alt="Smartphones & Accessories"
+              className="object-contain w-full h-full"
+            />
+          </div>
         </div>
-        {/* <div class="p-4 text-center">
-          <h3 class="text-lg font-semibold">Pet care supplies at your door</h3>
-          <p class="text-gray-600 text-sm mt-2">Food, treats, toys & more</p>
-          <button class="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
+        <div className="pt-3 text-center">
+          <h3 className="text-base font-bold tracking-tight">
+            Smartphones & Accessories - 15% OFF
+          </h3>
+          {/* <p className="text-gray-600 text-sm mt-2">Food, treats, toys & more</p>
+          <button className="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
             Order Now
-          </button>
-        </div> */}
+          </button> */}
+        </div>
       </div>
 
       {/* Card 3 */}
-      <div class="bg-blue-300 rounded-lg overflow-hidden">
-        <div class="h-[250px]">
-          <img
-            src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed%20(2).png?updatedAt=1771515836912"
-            alt="Baby Care"
-            class="object-contain w-full h-full"
-          />
+      <div className="flex flex-col items-start cursor-pointer">
+        <div className="bg-blue-300 rounded-lg overflow-hidden">
+          <div className="aspect-[16/10]">
+            <img
+              src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed%20(2).png?updatedAt=1771515836912"
+              alt="Beauty & Personal Care"
+              className="object-contain w-full h-full"
+            />
+          </div>
         </div>
-        {/* <div class="p-4 text-center">
-          <h3 class="text-lg font-semibold">No time for a diaper run?</h3>
-          <p class="text-gray-600 text-sm mt-2">Get baby care essentials</p>
-          <button class="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
+        <div className="pt-3 text-center">
+          <h3 className="text-base font-bold tracking-tight">
+            Beauty & Personal Care - 30% OFF
+          </h3>
+          {/* <p className="text-gray-600 text-sm mt-2">Get baby care essentials</p>
+          <button className="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
             Order Now
-          </button>
-        </div> */}
+          </button> */}
+        </div>
       </div>
 
       {/* Card 4 */}
-      <div class="bg-slate-300 rounded-lg overflow-hidden">
-        <div class="h-[250px]">
-          <img
-            src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed.png?updatedAt=1771515836923"
-            alt="Extra Category"
-            class="object-contain w-full h-full"
-          />
+      <div className="flex flex-col items-start cursor-pointer">
+        <div className="bg-slate-300 rounded-lg overflow-hidden">
+          <div className="aspect-[16/10]">
+            <img
+              src="https://ik.imagekit.io/johnchrismaina/Card%20categories/unnamed.png?updatedAt=1771515836923"
+              alt="Home & Kitchen"
+              className="object-contain w-full h-full"
+            />
+          </div>
         </div>
-        {/* <div class="p-4 text-center">
-          <h3 class="text-lg font-semibold">Fourth Column</h3>
-          <p class="text-gray-600 text-sm mt-2">Optional extra promo</p>
-          <button class="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
+        <div className="pt-3 text-center">
+          <h3 className="text-base font-bold tracking-tight">
+            Home & Kitchen - 20% OFF
+          </h3>
+          {/* <p className="text-gray-600 text-sm mt-2">Optional extra promo</p>
+          <button className="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded">
             Order Now
-          </button>
-        </div> */}
+          </button> */}
+        </div>
       </div>
     </div>
   );

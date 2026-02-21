@@ -210,9 +210,23 @@ const Signup = () => {
               <button
                 type="submit"
                 disabled={signupMutation.isPending}
-                className="w-full text-lg cursor-pointer mt-4 bg-black text-white py-2 rounded-lg"
+                className="w-full text-base font-semibold cursor-pointer mt-4 bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg"
               >
-                {signupMutation.isPending ? 'Signing up... ' : 'Sign up'}
+                {/* Keep the text in DOM but hide it when loading */}
+                <span
+                  className={
+                    signupMutation?.isPending ? 'opacity-0' : 'opacity-100'
+                  }
+                >
+                  Sign Up
+                </span>
+
+                {/* Spinner centered absolutely */}
+                {signupMutation?.isPending && (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <Spinner size={20} borderColor="border-gray-200" />
+                  </span>
+                )}
               </button>
             </form>
           ) : (

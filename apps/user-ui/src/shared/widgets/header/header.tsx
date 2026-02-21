@@ -75,7 +75,7 @@ const Header = () => {
             />
             <div
               onClick={handleSearchClick}
-              className="w-[35px] h-[35px] cursor-pointer flex items-center justify-center outline-none absolute right-0 mr-1 rounded-full"
+              className="w-[35px] h-[35px] cursor-pointer flex items-center justify-center hover:bg-gray-200 transition outline-none absolute right-0 mr-1 rounded-full"
             >
               <Search color="#333" size={18} />
             </div>
@@ -108,12 +108,15 @@ const Header = () => {
           {/* Profile icons */}
           <div className="flex items-center gap-4 shrink-0">
             {/* Account */}
-            <div className="relative flex items-center gap-2 text-gray-600 p-2">
+            <div
+              className="relative flex items-center gap-2 text-gray-600 p-2"
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+            >
               {/* Trigger */}
               <Link
                 href={role === 'user' ? '/profile' : '/login'}
                 className="flex flex-col items-start gap-0.5"
-                onMouseEnter={() => setOpen(true)} // open when hovering trigger
               >
                 {!isLoading && role === 'user' ? (
                   <span className="block font-normal text-xs">
@@ -133,17 +136,14 @@ const Header = () => {
               {/* Backdrop */}
               {open && (
                 <div
-                  className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-[100]"
-                  // onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
+                  className="fixed top-[55px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
+                  onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
                 />
               )}
 
               {/* Floating Panel */}
               {open && (
-                <div
-                  className="absolute top-full right-0 mt-0 w-64 rounded-md border border-gray-200 bg-white shadow-lg z-[110]"
-                  onMouseLeave={() => setOpen(false)} // leaving panel closes it
-                >
+                <div className="absolute top-full right-0 mt-0 w-64 rounded-sm border border-gray-200 bg-white shadow-lg z-[110]">
                   <div className="p-6 text-gray-800">
                     <p className="font-semibold">Welcome back!</p>
                     <Link

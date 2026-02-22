@@ -1,12 +1,11 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
 import { useMutation } from '@tanstack/react-query';
-import GoogleButton from 'apps/user-ui/src/shared/components/google-button';
 import axios, { AxiosError } from 'axios';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Spinner from 'packages/components/spinner';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -28,17 +27,17 @@ const Login = () => {
   } = useForm<FormData>();
 
   const loginMutation = useMutation({
-    mutationFn: async (data: { email: string; password: string }) => {
+    mutationFn: async (data: FormData) => {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/api/login-user`,
-        data, // plain JSON object, not FormData
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/api/login-seller`,
+        data,
         { withCredentials: true }
       );
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setServerError(null);
-      router.push('/');
+      router.push('/dashboard');
     },
     onError: (error: AxiosError) => {
       const errorMessage =
@@ -48,14 +47,12 @@ const Login = () => {
     },
   });
 
-  // console.log('login data', response.data);
-
   const onSubmit = (data: FormData) => {
     loginMutation.mutate(data);
   };
 
   return (
-    <div className="w-full py-10 min-h-[85vh] bg-[#f1f1f1]">
+    <div className="w-full py-10 min-h-screen bg-[#f1f1f1]">
       <h1 className="text-4xl font-Poppins font-semibold text-black text-center">
         Login
       </h1>
@@ -74,7 +71,6 @@ const Login = () => {
               Sign up
             </Link>
           </p>
-          <GoogleButton />
           <div className="flex items-center my-5 text-gray-400 text-sm">
             <div className="flex-1 border-t border-gray-300" />
             <span className="px-3">or Sign in with Email</span>
@@ -147,7 +143,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full text-base font-semibold cursor-pointer bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg"
+              className="w-full text-lg cursor-pointer bg-blue-800 hover:bg-blue-900 transition-colors text-white py-2 rounded-lg relative flex items-center justify-center"
             >
               {/* Keep the text in DOM but hide it when loading */}
               <span
@@ -161,7 +157,7 @@ const Login = () => {
               {/* Spinner centered absolutely */}
               {loginMutation?.isPending && (
                 <span className="absolute inset-0 flex items-center justify-center">
-                  <Spinner size={20} borderColor="border-gray-200" />
+                  <Spinner size={16} borderColor="border-gray-200" />
                 </span>
               )}
             </button>

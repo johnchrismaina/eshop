@@ -24,7 +24,13 @@ const fetchUser = async (isLoggedIn: boolean): Promise<SessionResponse> => {
 };
 
 const useUser = () => {
-  const { setLoggedIn, isLoggedIn } = useAuthStore();
+  const {
+    setLoggedIn,
+    setUser,
+    isLoggedIn,
+    user: cachedUser,
+    hasHydrated,
+  } = useAuthStore();
 
   const { data, isPending, isError, isSuccess } = useQuery<
     SessionResponse,
@@ -32,7 +38,7 @@ const useUser = () => {
   >({
     queryKey: ['user'],
     queryFn: () => fetchUser(isLoggedIn),
-    enabled: isLoggedIn,
+    enabled: isLoggedIn && hasHydrated,
     staleTime: 1000 * 60 * 5, // cache for 5 minutes
     gcTime: 1000 * 60 * 30, // garbage collect after 30 minutes
     refetchOnMount: true,
@@ -42,18 +48,40 @@ const useUser = () => {
 
   // ✅ useEffect is the correct place to update external store
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data?.user) {
       setLoggedIn(true);
+      setUser(data.user);
     }
     if (isError) {
       setLoggedIn(false);
+      setUser(null);
     }
-  }, [isSuccess, isError, setLoggedIn]);
+  }, [isSuccess, isError, data?.user, setLoggedIn, setUser]);
+
+  // If not hydrated yet, show loading state
+  if (!hasHydrated) {
+    return {
+      user: null,
+      role: 'guest' as const,
+      isLoading: true,
+      isError: false,
+    };
+  }
+
+  // If not logged in, return guest state
+  if (!isLoggedIn) {
+    return {
+      user: null,
+      role: 'guest' as const,
+      isLoading: false,
+      isError: false,
+    };
+  }
 
   return {
-    user: data?.user ?? null,
-    role: data?.role ?? 'guest',
-    isLoading: isPending,
+    user: data?.user ?? cachedUser ?? null,
+    role: data?.role ?? (cachedUser ? 'user' : 'guest'),
+    isLoading: isPending && !cachedUser,
     isError,
   };
 };

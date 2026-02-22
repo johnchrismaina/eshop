@@ -10,8 +10,11 @@ const nextConfig = {
       { hostname: 'images.unsplash.com' },
       { hostname: 'localhost' },
     ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  transpilePackages: ['@eshop/utils'],
+  transpilePackages: ['@eshop/utils', '@packages'],
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -20,6 +23,7 @@ const nextConfig = {
         '../../packages/utils/kafka/index.ts'
       ),
       '@eshop/utils': path.resolve(__dirname, '../../packages/utils'),
+      '@packages': path.resolve(__dirname, '../../packages'),
     };
     return config;
   },

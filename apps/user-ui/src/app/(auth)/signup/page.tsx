@@ -10,6 +10,8 @@ import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
+import Image from 'next/image';
+import useLayout from 'apps/user-ui/src/hooks/useLayout';
 
 type FormData = {
   name: 'string';
@@ -27,6 +29,8 @@ const Signup = () => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const router = useRouter();
+
+  const layout = useLayout();
 
   const {
     register,
@@ -113,57 +117,63 @@ const Signup = () => {
   };
 
   return (
-    <div className="w-full py-10 min-h-[85vh] bg-[#f1f1f1]">
-      <h1 className="text-4xl font-Poppins font-semibold text-black text-center">
-        Sign up
-      </h1>
-      <p className="text-center text-lg font-medium py-3 text-[#00000099]">
-        Home . Sign up
-      </p>
+    <div className="w-full py-2 min-h-[85vh] bg-white flex flex-col items-center gap-4">
+      {/* logo */}
+      <div>
+        <Link href="/">
+          <Image
+            src={
+              layout?.logo ||
+              'https://ik.imagekit.io/johnchrismaina/Assets/logo.svg?updatedAt=1770627783400'
+            }
+            alt=""
+            width={150}
+            height={50}
+            className="object-cover"
+            unoptimized
+          />
+        </Link>
+      </div>
 
       <div className="w-full flex justify-center">
-        <div className="md:w-[480px] p-8 bg-white shadow rounded-lg">
-          <h3 className="text-3xl font-semibold text-center mb-2">
-            Sign up to Eshop
-          </h3>
-          <p className="text-center text-gray-500 mb-4">
-            Already have an account?{' '}
-            <Link href={'/login'} className="text-blue-500">
-              Login
-            </Link>
-          </p>
+        <div className="md:w-[380px] px-8 py-6 bg-[#f1f1f1] rounded-lg flex flex-col justify-start">
+          <h3 className="text-2xl font-semibold mb-4">Sign up</h3>
 
-          <GoogleButton />
+          {/* <GoogleButton />
           <div className="flex items-center my-5 text-gray-400 text-sm">
             <div className="flex-1 border-t border-gray-300" />
             <span className="px-3">or Sign in with Email</span>
             <div className="flex-1 border-t border-gray-300" />
-          </div>
+          </div> */}
 
           {!showOtp ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* Name label */}
-              <label className="block text-gray-700 mb-1">Name</label>
+              <label className="block text-sm font-bold text-gray-700 mb-1">
+                Name
+              </label>
               <input
                 type="text"
-                placeholder="john"
-                className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
+                // placeholder="john"
+                className="w-full px-3 py-1 pr-10 text-base font-medium border border-gray-300 outline-0 !rounded mb-1"
                 {...register('name', {
                   required: 'Name is required',
                 })}
               />
-              {errors.email && (
+              {errors.name && (
                 <p className="text-red-500 text-sm">
-                  {String(errors.email.message)}
+                  {String(errors.name.message)}
                 </p>
               )}
 
-              {/* Password label */}
-              <label className="block text-gray-700 mb-1">Email</label>
+              {/* Email label */}
+              <label className="block text-sm font-bold text-gray-700 mb-1">
+                Email
+              </label>
               <input
                 type="email"
-                placeholder="john@gmail.com"
-                className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
+                // placeholder="john@gmail.com"
+                className="w-full px-3 py-1 text-base font-medium border border-gray-300 outline-0 !rounded mb-1"
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
@@ -178,12 +188,14 @@ const Signup = () => {
                 </p>
               )}
 
-              <label className="block text-gray-700 mb-1">Password</label>
-              <div className="relative">
+              <label className="block text-sm font-bold text-gray-700 mb-1">
+                Password
+              </label>
+              <div className="relative ">
                 <input
                   type={passwordVisible ? 'text' : 'password'}
-                  placeholder="Min. 6 characters"
-                  className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
+                  // placeholder="Min. 6 characters"
+                  className="w-full px-3 py-1 pr-10 text-base font-medium border border-gray-300 outline-0 !rounded mb-1"
                   {...register('password', {
                     required: 'Password is required',
                     minLength: {
@@ -196,16 +208,17 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={() => setPasswordVisible(!passwordVisible)}
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-400"
+                  // className="absolute inset-y-0 right-3 flex items-center text-gray-400"
+                  className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center text-gray-400"
                 >
-                  {passwordVisible ? <Eye /> : <EyeOff />}
+                  {passwordVisible ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
-                {errors.password && (
-                  <p className="text-red-500 text-sm">
-                    {String(errors.password.message)}
-                  </p>
-                )}
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {String(errors.password.message)}
+                </p>
+              )}
 
               <button
                 type="submit"
@@ -224,7 +237,7 @@ const Signup = () => {
                 {/* Spinner centered absolutely */}
                 {signupMutation?.isPending && (
                   <span className="absolute inset-0 flex items-center justify-center">
-                    <Spinner size={20} borderColor="border-gray-200" />
+                    <Spinner size={16} borderColor="border-gray-200" />
                   </span>
                 )}
               </button>
@@ -278,6 +291,17 @@ const Signup = () => {
                 )}
             </div>
           )}
+
+          <div className="flex-1 border-t border-gray-300 mt-6 mb-5" />
+          <p className="text-gray-600 ">
+            Already have an account?{' '}
+            <Link
+              href={'/login'}
+              className="text-blue-600 no-underline hover:underline"
+            >
+              Login
+            </Link>
+          </p>
         </div>
       </div>
     </div>

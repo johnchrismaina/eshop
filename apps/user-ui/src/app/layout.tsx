@@ -1,4 +1,3 @@
-import Header from '../shared/widgets/header';
 import '../../../../packages/theme/fonts.css';
 import './global.css';
 import Providers from './providers';
@@ -17,7 +16,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-sans">
         <Providers>
-          <Header />
           <main className="relative z-0">{children}</main>
         </Providers>
       </body>

@@ -286,7 +286,7 @@ const Signup = () => {
                   {/* Spinner centered absolutely */}
                   {signupMutation?.isPending && (
                     <span className="absolute inset-0 flex items-center justify-center">
-                      <Spinner size={20} borderColor="border-gray-200" />
+                      <Spinner size={16} borderColor="border-gray-200" />
                     </span>
                   )}
                 </button>

@@ -7,6 +7,7 @@ import ChangePassword from 'apps/user-ui/src/shared/components/change-password';
 import ShippingAddressSection from 'apps/user-ui/src/shared/components/shippingAddress';
 import OrdersTable from 'apps/user-ui/src/shared/components/tables/orders-table';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
+import { useAuthStore } from 'apps/user-ui/src/store/authStore';
 import {
   BadgeCheck,
   Bell,
@@ -36,6 +37,7 @@ const ProfileContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { logout } = useAuthStore();
 
   const { user, isLoading } = useRequireAuth();
   const { data: orders = [] } = useQuery({
@@ -67,11 +69,14 @@ const ProfileContent = () => {
   }, [activeTab]);
 
   const logOutHandler = async () => {
-    await axiosInstance.get('/api/logout-user').then((res) => {
+    try {
+      await axiosInstance.post('/api/logout-user');
+      logout();
       queryClient.invalidateQueries({ queryKey: ['user'] });
-
-      router.push('/login');
-    });
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   const { data: notifications, isLoading: notificationsLoading } = useQuery({

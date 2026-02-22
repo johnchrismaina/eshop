@@ -255,6 +255,30 @@ export const getUser = async (req: any, res: Response, next: NextFunction) => {
   }
 };
 
+// logout user
+export const logoutUser = async (req: Request, res: Response) => {
+  try {
+    // Clear user cookies
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+
+    // Optional: invalidate refresh token in DB/Redis if you store them
+    // await redis.del(`user-refresh:${req.user?.id}`);
+
+    return res.status(200).json({ message: 'User logged out successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Logout failed', error });
+  }
+};
+
 // user forgot password
 export const userForgotPassword = async (
   req: Request,

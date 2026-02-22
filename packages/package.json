@@ -21,6 +21,11 @@
       "import": "./error-handler/index.ts",
       "default": "./error-handler/index.ts"
     },
+    "./components/spinner": {
+      "types": "./components/spinner/index.tsx",
+      "import": "./components/spinner/index.tsx",
+      "default": "./components/spinner/index.tsx"
+    },
     "./package.json": "./package.json"
   },
   "dependencies": {}

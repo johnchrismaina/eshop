@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import HeaderBottom from './header-bottom';
 import useUser from 'apps/user-ui/src/hooks/useUser';
@@ -10,13 +10,26 @@ import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
 import useLayout from 'apps/user-ui/src/hooks/useLayout';
 import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from 'apps/user-ui/src/store/authStore';
+import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 
 const Header = () => {
   const { user, role, isLoading } = useUser();
   const cart = useStore((state: any) => state.cart);
   const { layout } = useLayout();
 
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { logout } = useAuthStore();
+
   const [open, setOpen] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -38,6 +51,25 @@ const Header = () => {
     }
   };
 
+  const logOutHandler = async () => {
+    try {
+      await axiosInstance.post('/api/logout-user');
+      logout();
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const capitalizeWords = (str) => {
+    if (!str) return '';
+    return str
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   return (
     <>
       {/* Top header - fixed */}
@@ -49,19 +81,20 @@ const Header = () => {
               <Image
                 src={
                   layout?.logo ||
-                  'https://ik.imagekit.io/johnchrismaina/Assets/logo.svg'
+                  'https://ik.imagekit.io/johnchrismaina/Assets/logo.svg?updatedAt=1770627783400'
                 }
                 alt=""
                 width={150}
                 height={50}
                 className="object-cover"
+                unoptimized
               />
             </Link>
           </div>
 
           <div className="flex flex-col items-start shrink-0">
             <span className="text-xs font-normal">Deliver to: </span>
-            <span className=" font-bold -mt-1.5">Nairobi, Kenya</span>
+            <span className=" font-bold -mt-1.5">Naivasha</span>
           </div>
 
           {/* Search input */}
@@ -115,18 +148,20 @@ const Header = () => {
             >
               {/* Trigger */}
               <Link
-                href={role === 'user' ? '/profile' : '/login'}
+                href={hasMounted && user?.name ? '/profile' : '/login'}
                 className="flex flex-col items-start gap-0.5"
               >
-                {!isLoading && role === 'user' ? (
-                  <span className="block font-normal text-xs">
-                    Hi, {user?.name?.split(' ')[0]}
-                  </span>
-                ) : (
-                  <span className="block font-normal text-xs text-gray-500">
-                    Log in
-                  </span>
-                )}
+                <span className="block text-xs h-[16px]">
+                  {!hasMounted || isLoading ? (
+                    <span className="text-transparent">&nbsp;</span>
+                  ) : user?.name ? (
+                    <span className="font-medium">{`Hi, ${capitalizeWords(
+                      user?.name?.split(' ')[0]
+                    )}`}</span>
+                  ) : (
+                    <span className="font-medium text-gray-500">Log in</span>
+                  )}
+                </span>
                 <span className="flex items-center font-bold text-sm gap-1 -mt-1.5">
                   Account
                   <ChevronDown className="mt-1" size={12} color="#555" />
@@ -143,24 +178,51 @@ const Header = () => {
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full right-0 mt-0 w-64 rounded-sm border border-gray-200 bg-white shadow-lg z-[110]">
+                <div className="absolute top-full right-0 mt-0 w-72 rounded-sm border border-gray-200 bg-white shadow-lg z-[110]">
                   <div className="p-6 text-gray-900">
-                    <p className="font-semibold">Welcome back!</p>
-                    <Link
-                      href="/login"
-                      className="mt-3 block rounded-md text-gray-800 bg-amber-300 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
-                    >
-                      Sign in
-                    </Link>
-                    <div className="flex items-center mt-3 gap-1">
-                      <span className="text-xs">New customer?</span>
-                      <Link
-                        href="/register"
-                        className="text-xs text-blue-600 hover:underline"
-                      >
-                        Start here
-                      </Link>
-                    </div>
+                    {hasMounted && !isLoading && user?.name ? (
+                      <div className="flex flex-col items-start rounded-md bg-gray-100 px-6 py-2">
+                        <span className="block font-semibold text-base">
+                          {/* {user?.name?.split(' ')[0]} */}
+                          {/* {capitalizeWords(user?.name?.split(' ')[0])} */}
+                          {capitalizeWords(user?.name)}
+                        </span>
+                        <span className="block font-normal text-sm text-gray-600 mb-1 ">
+                          {user?.email?.split(' ')[0]}
+                        </span>
+                        <Link
+                          href="#"
+                          className=" text-blue-800 text-sm font-medium no-underline hover:underline"
+                          onClick={() => {
+                            logOutHandler();
+                            setOpen(false);
+                          }}
+                        >
+                          Sign Out
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-start ">
+                        <Link
+                          href="/login"
+                          className="block w-full rounded-md text-gray-800 bg-amber-300 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
+                          onClick={() => setOpen(false)}
+                        >
+                          Log in
+                        </Link>
+                        <div className="flex items-center mt-3 gap-1">
+                          <span className="text-xs">New customer?</span>
+                          <Link
+                            href="/register"
+                            className="text-xs text-blue-600 hover:underline"
+                            onClick={() => setOpen(false)}
+                          >
+                            Sign up
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="w-full h-[0.5px] bg-gray-300 my-4"></div>
                     <div className="flex flex-col text-[13px] mt-2 gap-2">
                       <Link href="/sign-in" className="hover:underline">

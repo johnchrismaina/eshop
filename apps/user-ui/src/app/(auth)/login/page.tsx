@@ -2,17 +2,18 @@
 
 export const dynamic = 'force-dynamic';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import GoogleButton from 'apps/user-ui/src/shared/components/google-button';
+// import GoogleButton from 'apps/user-ui/src/shared/components/google-button';
 import axios, { AxiosError } from 'axios';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Spinner from '@packages/components/spinner';
+// import Spinner from '@packages/components/spinner';
 import { useAuthStore } from 'apps/user-ui/src/store/authStore';
 import Image from 'next/image';
 import useLayout from 'apps/user-ui/src/hooks/useLayout';
+import Spinner from 'packages/components/spinner';
 
 type FormData = {
   email: 'string';
@@ -22,11 +23,11 @@ type FormData = {
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { setUser } = useAuthStore();
-  const layout = useLayout();
+  // const { setUser } = useAuthStore();
+  const { layout } = useLayout();
 
   const {
     register,
@@ -38,14 +39,15 @@ const Login = () => {
     mutationFn: async (data: { email: string; password: string }) => {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URI}/api/login-user`,
-        data, // plain JSON object, not FormData
+        data,
         { withCredentials: true }
       );
       return response.data;
     },
     onSuccess: (data) => {
       setServerError(null);
-      setUser(data.user);
+      useAuthStore.getState().setUser(data.user);
+      useAuthStore.getState().setLoggedIn(true);
       queryClient.invalidateQueries({ queryKey: ['user'] });
       router.push('/');
     },
@@ -54,6 +56,8 @@ const Login = () => {
         (error.response?.data as { message?: string })?.message ||
         'Invalid credentials!';
       setServerError(errorMessage);
+      useAuthStore.getState().setUser(null);
+      useAuthStore.getState().setLoggedIn(false);
     },
   });
 
@@ -71,7 +75,7 @@ const Login = () => {
           <Image
             src={
               layout?.logo ||
-              'https://ik.imagekit.io/johnchrismaina/Assets/logo.svg?updatedAt=1770627783400'
+              'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo.svg'
             }
             alt=""
             width={150}
@@ -125,6 +129,7 @@ const Login = () => {
                 Forgot Password?
               </Link>
             </div>
+
             <div className="relative mb-6">
               <input
                 type={passwordVisible ? 'text' : 'password'}
@@ -138,6 +143,7 @@ const Login = () => {
                   },
                 })}
               />
+
               <button
                 type="button"
                 onClick={() => setPasswordVisible(!passwordVisible)}
@@ -167,7 +173,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full text-base font-semibold cursor-pointer bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg"
+              className="w-full text-base font-semibold cursor-pointer bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg flex items-center justify-center relative"
             >
               {/* Keep the text in DOM but hide it when loading */}
               <span
@@ -181,7 +187,7 @@ const Login = () => {
               {/* Spinner centered absolutely */}
               {loginMutation?.isPending && (
                 <span className="absolute inset-0 flex items-center justify-center">
-                  <Spinner size={16} borderColor="border-gray-200" />
+                  <Spinner size={16} borderColor="border-gray-800" />
                 </span>
               )}
             </button>

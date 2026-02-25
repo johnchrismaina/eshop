@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import HeaderBottom from './header-bottom';
-import useUser from 'apps/user-ui/src/hooks/useUser';
+// import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
 import useLayout from 'apps/user-ui/src/hooks/useLayout';
@@ -12,23 +12,31 @@ import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from 'apps/user-ui/src/store/authStore';
+import {
+  useAuthStore,
+  hadPreviousSession,
+} from 'apps/user-ui/src/store/authStore';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 
 const Header = () => {
-  const { user, role, isLoading } = useUser();
+  // const { user, isLoading } = useUser();
   const cart = useStore((state: any) => state.cart);
   const { layout } = useLayout();
 
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { logout } = useAuthStore();
+  const { logout, user, hydrated } = useAuthStore();
 
   const [open, setOpen] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
 
-  useEffect(() => {
-    setHasMounted(true);
+  // Track if we've mounted and what the initial session state was
+  const [mounted, setMounted] = useState(false);
+  const [hadSession, setHadSession] = useState(false);
+
+  // useLayoutEffect runs synchronously before paint on client
+  useLayoutEffect(() => {
+    setHadSession(hadPreviousSession());
+    setMounted(true);
   }, []);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,7 +70,7 @@ const Header = () => {
     }
   };
 
-  const capitalizeWords = (str) => {
+  const capitalizeWords = (str: string) => {
     if (!str) return '';
     return str
       .split(' ')
@@ -81,7 +89,7 @@ const Header = () => {
               <Image
                 src={
                   layout?.logo ||
-                  'https://ik.imagekit.io/johnchrismaina/Assets/logo.svg?updatedAt=1770627783400'
+                  'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo.svg'
                 }
                 alt=""
                 width={150}
@@ -148,20 +156,27 @@ const Header = () => {
             >
               {/* Trigger */}
               <Link
-                href={hasMounted && user?.name ? '/profile' : '/login'}
+                href={user?.name ? '/profile' : '/login'}
                 className="flex flex-col items-start gap-0.5"
               >
                 <span className="block text-xs h-[16px]">
-                  {!hasMounted || isLoading ? (
-                    <span className="text-transparent">&nbsp;</span>
+                  {!mounted ? (
+                    // SSR + first client render: invisible placeholder to prevent hydration mismatch
+                    <span className="font-medium ">...</span>
+                  ) : hadSession && !hydrated ? (
+                    // Had previous session, still hydrating: show skeleton
+                    <span className="block w-12 h-3 bg-gray-300 rounded animate-pulse"></span>
                   ) : user?.name ? (
-                    <span className="font-medium">{`Hi, ${capitalizeWords(
-                      user?.name?.split(' ')[0]
-                    )}`}</span>
+                    // Hydrated with user: show username
+                    <span className="font-medium">
+                      {`Hi, ${capitalizeWords(user.name.split(' ')[0])}`}
+                    </span>
                   ) : (
+                    // No user or no previous session: show Log in
                     <span className="font-medium text-gray-500">Log in</span>
                   )}
                 </span>
+
                 <span className="flex items-center font-bold text-sm gap-1 -mt-1.5">
                   Account
                   <ChevronDown className="mt-1" size={12} color="#555" />
@@ -180,7 +195,7 @@ const Header = () => {
               {open && (
                 <div className="absolute top-full right-0 mt-0 w-72 rounded-sm border border-gray-200 bg-white shadow-lg z-[110]">
                   <div className="p-6 text-gray-900">
-                    {hasMounted && !isLoading && user?.name ? (
+                    {user?.name ? (
                       <div className="flex flex-col items-start rounded-md bg-gray-100 px-6 py-2">
                         <span className="block font-semibold text-base">
                           {/* {user?.name?.split(' ')[0]} */}

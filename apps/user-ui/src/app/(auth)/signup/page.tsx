@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useMutation } from '@tanstack/react-query';
-import GoogleButton from 'apps/user-ui/src/shared/components/google-button';
+// import GoogleButton from 'apps/user-ui/src/shared/components/google-button';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
 import Image from 'next/image';
 import useLayout from 'apps/user-ui/src/hooks/useLayout';
+import Spinner from 'packages/components/spinner';
 
 type FormData = {
   name: 'string';
@@ -30,7 +31,8 @@ const Signup = () => {
 
   const router = useRouter();
 
-  const layout = useLayout();
+  // const layout = useLayout();
+  const { layout } = useLayout();
 
   const {
     register,
@@ -124,7 +126,7 @@ const Signup = () => {
           <Image
             src={
               layout?.logo ||
-              'https://ik.imagekit.io/johnchrismaina/Assets/logo.svg?updatedAt=1770627783400'
+              'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo.svg'
             }
             alt=""
             width={150}
@@ -223,7 +225,7 @@ const Signup = () => {
               <button
                 type="submit"
                 disabled={signupMutation.isPending}
-                className="w-full text-base font-semibold cursor-pointer mt-4 bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg"
+                className="w-full text-base font-semibold cursor-pointer mt-4 bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg flex items-center justify-center relative"
               >
                 {/* Keep the text in DOM but hide it when loading */}
                 <span
@@ -237,7 +239,7 @@ const Signup = () => {
                 {/* Spinner centered absolutely */}
                 {signupMutation?.isPending && (
                   <span className="absolute inset-0 flex items-center justify-center">
-                    <Spinner size={16} borderColor="border-gray-200" />
+                    <Spinner size={16} borderColor="border-gray-800" />
                   </span>
                 )}
               </button>
@@ -268,13 +270,13 @@ const Signup = () => {
                 disabled={verifyOtpMutation.isPending}
                 onClick={() => verifyOtpMutation.mutate()}
               >
-                {verifyOtpMutation.isPending ? 'Verifying... ' : 'Verify OTP'}
+                {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
               </button>
               <p className="text-center text-sm mt-4">
                 {canResend ? (
                   <button
                     onClick={resendOtp}
-                    className="text-blue-500 cursor-pointer"
+                    className="bg-blue-700 hover:bg-blue-800 transition-colors text-white cursor-pointer"
                   >
                     Resend OTP
                   </button>

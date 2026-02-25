@@ -8,6 +8,7 @@ import axios, { AxiosError } from 'axios';
 import { countries } from '../../../utils/countries';
 import Link from 'next/link';
 import CreateShop from 'apps/seller-ui/src/shared/modules/auth/create-shop';
+import Spinner from 'packages/components/spinner';
 
 const Signup = () => {
   const [activeStep, setActiveStep] = useState(1);
@@ -122,32 +123,33 @@ const Signup = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center pt-10 min-h-screen">
+    <div className="w-full flex flex-col items-center pt-8 min-h-screen ">
       {/* Stepper */}
-      <div className="relative flex items-center justify-between md:w-[50%] mb-8">
-        <div className="absolute top-[25%] left-0 w-[80%] md:w-[95%] h-1 bg-gray-300 -z-10" />
+      <div className="relative flex items-center justify-center gap-10 md:w-[50%] mb-4">
         {[1, 2, 3].map((step) => (
-          <div key={step}>
+          <div key={step} className="flex items-center gap-2 text-sm">
+            {/* Circle */}
             <div
-              className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${
+              className={`w-8 h-8 flex items-center justify-center rounded-full text-white font-bold ${
                 step <= activeStep ? 'bg-blue-600' : 'bg-gray-300'
               }`}
             >
               {step}
             </div>
-            <span className="ml-[-15px]">
+            {/* Label */}
+            <span className="text-sm font-bold tracking-tight">
               {step === 1
-                ? 'Create Account'
+                ? 'CREATE ACCOUNT'
                 : step === 2
-                ? 'Setup Shop'
-                : 'Connect Bank'}
+                ? 'SETUP SHOP'
+                : 'CONNECT BANK'}
             </span>
           </div>
         ))}
       </div>
 
       {/* Steps content */}
-      <div className="md:w-[480px] p-8 bg-white shadow rounded-lg">
+      <div className="md:w-[380px] px-8 py-6 bg-[#f1f1f1] rounded-lg">
         {activeStep === 1 && (
           <>
             {!showOtp ? (
@@ -156,27 +158,31 @@ const Signup = () => {
                   Create Account
                 </h3>
                 {/* Name label */}
-                <label className="block text-gray-700 mb-1">Name</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Name
+                </label>
                 <input
                   type="text"
-                  placeholder="john"
-                  className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
+                  // placeholder="john"
+                  className="w-full px-3 py-1 pr-10 text-base font-medium border border-gray-300 outline-0 !rounded mb-1"
                   {...register('name', {
                     required: 'Name is required',
                   })}
                 />
-                {errors.email && (
+                {errors.name && (
                   <p className="text-red-500 text-sm">
-                    {String(errors.email.message)}
+                    {String(errors.name.message)}
                   </p>
                 )}
 
                 {/* Email label */}
-                <label className="block text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Email
+                </label>
                 <input
                   type="email"
-                  placeholder="john@gmail.com"
-                  className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
+                  // placeholder="john@gmail.com"
+                  className="w-full px-3 py-1 text-base font-medium border border-gray-300 outline-0 !rounded mb-1"
                   {...register('email', {
                     required: 'Email is required',
                     pattern: {
@@ -192,11 +198,13 @@ const Signup = () => {
                   </p>
                 )}
 
-                <label className="block text-gray-700 mb-1">Phone Number</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Phone Number
+                </label>
                 <input
                   type="tel"
                   placeholder="+254700123456"
-                  className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
+                  className="w-full px-3 py-1 text-sm font-medium border border-gray-300 outline-0 !rounded mb-1"
                   {...register('phone_number', {
                     required: 'Phone number is required',
                     pattern: {
@@ -220,9 +228,11 @@ const Signup = () => {
                   </p>
                 )}
 
-                <label className="block text-gray-700 mb-1">Country</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Country
+                </label>
                 <select
-                  className="w-full p-2 border border-gray-300 outline-0 rounded-[4px]"
+                  className="w-full px-3 py-1 mb-1 text-sm font-medium border border-gray-300 outline-0 rounded-[4px]"
                   {...register('country', { required: 'Country is required' })}
                 >
                   <option value="">Select your country</option>
@@ -240,12 +250,14 @@ const Signup = () => {
                 )}
 
                 {/* Password label */}
-                <label className="block text-gray-700 mb-1">Password</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Password
+                </label>
                 <div className="relative">
                   <input
                     type={passwordVisible ? 'text' : 'password'}
-                    placeholder="Min. 6 characters"
-                    className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
+                    // placeholder="Min. 6 characters"
+                    className="w-full px-3 py-1 text-base font-medium border border-gray-300 outline-0 !rounded mb-1"
                     {...register('password', {
                       required: 'Password is required',
                       minLength: {
@@ -258,9 +270,9 @@ const Signup = () => {
                   <button
                     type="button"
                     onClick={() => setPasswordVisible(!passwordVisible)}
-                    className="absolute inset-y-0 right-3 flex items-center text-gray-400"
+                    className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center text-gray-400"
                   >
-                    {passwordVisible ? <Eye /> : <EyeOff />}
+                    {passwordVisible ? <Eye size={18} /> : <EyeOff size={18} />}
                   </button>
                   {errors.password && (
                     <p className="text-red-500 text-sm">
@@ -272,7 +284,7 @@ const Signup = () => {
                 <button
                   type="submit"
                   disabled={signupMutation.isPending}
-                  className="w-full text-base font-semibold cursor-pointer mt-4 bg-blue-800 hover:bg-blue-900 transition-colors text-white py-2 rounded-lg"
+                  className="w-full text-base font-semibold cursor-pointer mt-4 bg-blue-700 hover:bg-blue-800 transition-colors text-white py-2 rounded-lg flex items-center justify-center relative"
                 >
                   {/* Keep the text in DOM but hide it when loading */}
                   <span
@@ -299,9 +311,13 @@ const Signup = () => {
                     </p>
                   )}
 
-                <p className="pt-3 text-center">
+                <div className="flex-1 border-t border-gray-300 mt-6 mb-4" />
+                <p className="text-gray-600">
                   Already have an account?{' '}
-                  <Link href={'/login'} className="text-blue-500">
+                  <Link
+                    href={'/login'}
+                    className="text-blue-600 no-underline hover:underline"
+                  >
                     Login
                   </Link>
                 </p>
@@ -328,7 +344,7 @@ const Signup = () => {
                   ))}
                 </div>
                 <button
-                  className="w-full mt-4 text-lg font-medium cursor-pointer bg-blue-500 text-white py-2 rounded-lg"
+                  className="w-full mt-4 text-lg font-medium cursor-pointer bg-blue-700 hover:bg-blue-800 transition-colors text-white py-2 rounded-lg"
                   disabled={verifyOtpMutation.isPending}
                   onClick={() => verifyOtpMutation.mutate()}
                 >

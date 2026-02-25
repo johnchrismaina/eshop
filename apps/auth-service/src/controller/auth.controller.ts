@@ -144,9 +144,14 @@ export const loginUser = async (
     setCookie(res, 'access_token', accessToken);
     setCookie(res, 'refresh_token', refreshToken);
 
+    // Return user object for frontend persistence
     return res.status(200).json({
       message: 'Login successful!',
-      user: { id: user.id, email: user.email, name: user.name },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
     });
   } catch (error) {
     return next(error);
@@ -276,6 +281,43 @@ export const logoutUser = async (req: Request, res: Response) => {
     return res.status(200).json({ message: 'User logged out successfully' });
   } catch (error) {
     return res.status(500).json({ message: 'Logout failed', error });
+  }
+};
+
+// Check current user session
+export const getSession = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Read access token from cookies
+    const token = req.cookies['access_token'];
+    if (!token) {
+      return res.status(401).json({ message: 'No access token found' });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as {
+      id: string;
+      role: string;
+    };
+
+    // Fetch user from DB
+    const user = await prisma.users.findUnique({
+      where: { id: decoded.id },
+      select: { id: true, email: true, name: true },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid session' });
+    }
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    // If token expired, you could optionally check refresh_token here
+    console.error('Session error:', error);
+    return res.status(401).json({ message: 'Session invalid or expired' });
   }
 };
 

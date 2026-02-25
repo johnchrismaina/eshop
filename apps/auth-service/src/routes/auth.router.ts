@@ -24,6 +24,7 @@ import {
   verifySeller,
   verifyUser,
   verifyUserForgotPassword,
+  getSession,
 } from '../controller/auth.controller';
 import isAuthenticated from '@packages/middleware/isAuthenticated';
 import { isAdmin, isSeller } from '@packages/middleware/authorizeRoles';
@@ -35,6 +36,8 @@ router.post('/verify-user', verifyUser);
 router.post('/login-user', loginUser);
 router.post('/refresh-token', refreshToken);
 router.get('/logged-in-user', isAuthenticated, getUser);
+// GET /api/session
+router.get('/session', getSession);
 router.post('/logout-user', logoutUser);
 router.post('/forgot-password-user', userForgotPassword);
 router.post('/verify-forgot-password-user', verifyUserForgotPassword);

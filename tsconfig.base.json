@@ -23,6 +23,7 @@
       "@auth/*": ["apps/auth-service/src/*"],
       "@components/*": ["packages/components/*"],
       "@eshop/error-handler": ["packages/error-handler/index.ts"],
+      "@eshop/hooks": ["packages/hooks/index.ts"],
       "@eshop/libs/prisma": ["packages/libs/prisma/index.ts"],
       "@eshop/prisma": ["packages/libs/prisma/index.ts"],
       "@eshop/redis": ["packages/libs/redis/index.ts"],

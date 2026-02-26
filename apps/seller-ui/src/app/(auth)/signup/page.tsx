@@ -123,29 +123,38 @@ const Signup = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center pt-8 min-h-screen ">
-      {/* Stepper */}
-      <div className="relative flex items-center justify-center gap-10 md:w-[50%] mb-4">
-        {[1, 2, 3].map((step) => (
-          <div key={step} className="flex items-center gap-2 text-sm">
-            {/* Circle */}
+    <div className="w-full flex flex-col items-center min-h-screen ">
+      <div className="flex items-center justify-between border border-b-1 border-gray-100 w-full mx-auto py-0 px-6 mb-6">
+        <span className="text-2xl font-extrabold text-gray-800 tracking-tight">
+          Sell with Sokonis
+        </span>
+
+        {/* Stepper */}
+        <div className="relative flex items-center justify-center p-3 gap-8 md:w-[50%] ">
+          {[1, 2, 3].map((step) => (
             <div
-              className={`w-8 h-8 flex items-center justify-center rounded-full text-white font-bold ${
-                step <= activeStep ? 'bg-blue-600' : 'bg-gray-300'
-              }`}
+              key={step}
+              className="flex items-center gap-2 text-sm shrink-0"
             >
-              {step}
+              {/* Circle */}
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full text-white font-bold ${
+                  step <= activeStep ? 'bg-blue-600' : 'bg-gray-300'
+                }`}
+              >
+                {step}
+              </div>
+              {/* Label */}
+              <span className="text-sm font-bold tracking-tight">
+                {step === 1
+                  ? 'CREATE ACCOUNT'
+                  : step === 2
+                  ? 'SETUP SHOP'
+                  : 'CONNECT BANK'}
+              </span>
             </div>
-            {/* Label */}
-            <span className="text-sm font-bold tracking-tight">
-              {step === 1
-                ? 'CREATE ACCOUNT'
-                : step === 2
-                ? 'SETUP SHOP'
-                : 'CONNECT BANK'}
-            </span>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Steps content */}
@@ -154,7 +163,7 @@ const Signup = () => {
           <>
             {!showOtp ? (
               <form onSubmit={handleSubmit(onSubmit)}>
-                <h3 className="text-2xl font-semibold text-center mb-4">
+                <h3 className="text-2xl font-semibold text-start mb-4">
                   Create Account
                 </h3>
                 {/* Name label */}
@@ -284,7 +293,7 @@ const Signup = () => {
                 <button
                   type="submit"
                   disabled={signupMutation.isPending}
-                  className="w-full text-base font-semibold cursor-pointer mt-4 bg-blue-700 hover:bg-blue-800 transition-colors text-white py-2 rounded-lg flex items-center justify-center relative"
+                  className="w-full text-base font-semibold cursor-pointer mt-4 bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 py-2 rounded-lg flex items-center justify-center relative"
                 >
                   {/* Keep the text in DOM but hide it when loading */}
                   <span
@@ -298,7 +307,7 @@ const Signup = () => {
                   {/* Spinner centered absolutely */}
                   {signupMutation?.isPending && (
                     <span className="absolute inset-0 flex items-center justify-center">
-                      <Spinner size={16} borderColor="border-gray-200" />
+                      <Spinner size={16} borderColor="border-gray-800" />
                     </span>
                   )}
                 </button>
@@ -344,7 +353,7 @@ const Signup = () => {
                   ))}
                 </div>
                 <button
-                  className="w-full mt-4 text-lg font-medium cursor-pointer bg-blue-700 hover:bg-blue-800 transition-colors text-white py-2 rounded-lg"
+                  className="w-full mt-4 text-lg font-medium cursor-pointer bg-amber-300 hover:bg-amber-400 transition-colors text-white py-2 rounded-lg"
                   disabled={verifyOtpMutation.isPending}
                   onClick={() => verifyOtpMutation.mutate()}
                 >

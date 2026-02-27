@@ -124,6 +124,7 @@ const Signup = () => {
 
   return (
     <div className="w-full flex flex-col items-center min-h-screen ">
+      {/* <div className="flex items-center justify-between w-full mx-auto py-0 px-6 mb-6"> */}
       <div className="flex items-center justify-between border border-b-1 border-gray-100 w-full mx-auto py-0 px-6 mb-6">
         <span className="text-2xl font-extrabold text-gray-800 tracking-tight">
           Sell with Sokonis

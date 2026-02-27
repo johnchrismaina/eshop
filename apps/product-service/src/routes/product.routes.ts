@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import {
   createDiscountCodes,
+  createEvent,
   createProduct,
   deleteDiscountCode,
   deleteProduct,
@@ -41,6 +42,7 @@ router.post(
 );
 router.delete('/delete-product-image', isAuthenticated, deleteProductImage);
 router.post('/create-product', isAuthenticated, createProduct);
+router.post('/create-event', isAuthenticated, createEvent);
 router.get('/get-shop-products', isAuthenticated, getShopProducts);
 router.delete('/delete-product/:productId', isAuthenticated, deleteProduct);
 router.put('/restore-product/:productId', isAuthenticated, restoreProduct);

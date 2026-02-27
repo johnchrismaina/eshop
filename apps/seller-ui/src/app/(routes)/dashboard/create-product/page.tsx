@@ -227,9 +227,7 @@ const Page = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
-      <h2 className="text-2xl py-2 font-semibold font-poppins text-white">
-        Create Product
-      </h2>
+      <h2 className="text-2xl py-2 font-semibold text-white">Create Product</h2>
       <div className="flex items-center">
         <span className="text-[#80Deea] cursor-pointer">Dashboard</span>
         <ChevronRight size={20} className="opacity-[.8]" />

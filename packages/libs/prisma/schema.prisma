@@ -12,8 +12,13 @@ model images {
   file_id String
   url     String
 
+  // 🔹 Product relation
   productId String?   @db.ObjectId
   product   products? @relation("ProductImages", fields: [productId], references: [id])
+
+  // 🔹 Event relation (NEW)
+  eventId String? @db.ObjectId
+  event   events? @relation("EventImages", fields: [eventId], references: [id])
 }
 
 enum Role {
@@ -125,6 +130,7 @@ model shops {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   products      products[]    @relation("ShopProducts") // one-to-many products
+  events        events[]      @relation("ShopEvents") // one-to-many events
 
   orders    orders[]
   followers userFollowsShop[]
@@ -208,6 +214,33 @@ model products {
 
   @@index([createdAt])
   @@index([starting_date])
+}
+
+model events {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  title                String
+  slug                 String   @unique
+  category             String
+  short_description    String
+  detailed_description String?
+  location             String
+  start_date           DateTime
+  end_date             DateTime
+  ticket_price         Float?
+  total_tickets        Int
+  available_tickets    Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // 🔹 Shop relation (RECOMMENDED)
+  shopId String @db.ObjectId
+  Shop   shops  @relation("ShopEvents", fields: [shopId], references: [id])
+
+  // 🔹 Images relation
+  images images[] @relation("EventImages")
+
+  @@index([shopId])
+  @@index([start_date])
 }
 
 // Define an embedded type for actions

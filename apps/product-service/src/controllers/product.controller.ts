@@ -301,6 +301,152 @@ export const createProduct = async (
   }
 };
 
+// Create event
+export const createEvent = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log('➡️ Entered createEvent controller');
+
+  try {
+    const {
+      title,
+      slug,
+      category,
+      short_description,
+      detailed_description,
+      location,
+      start_date,
+      end_date,
+      ticket_price,
+      total_tickets,
+      images = [],
+    } = req.body;
+
+    console.log('📦 Incoming body:', req.body);
+
+    // ✅ Required field validation
+    if (
+      !title ||
+      !slug ||
+      !category ||
+      !short_description ||
+      !location ||
+      !start_date ||
+      !end_date ||
+      !total_tickets
+    ) {
+      return next(new ValidationError('Missing required fields'));
+    }
+
+    // ✅ Seller + Shop validation
+    if (!req.seller?.id || !req.seller?.shop?.id) {
+      return next(
+        new AuthError(
+          'Only authenticated sellers with a shop can create events!'
+        )
+      );
+    }
+
+    // ✅ Date validation
+    const startDate = new Date(start_date);
+    const endDate = new Date(end_date);
+    const now = new Date();
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return next(new ValidationError('Invalid date format'));
+    }
+
+    if (startDate < now) {
+      return next(new ValidationError('Event cannot start in the past'));
+    }
+
+    if (startDate > endDate) {
+      return next(new ValidationError('Start date cannot be after end date'));
+    }
+
+    // ✅ Ticket validation
+    const parsedTotalTickets = parseInt(total_tickets);
+
+    if (isNaN(parsedTotalTickets) || parsedTotalTickets <= 0) {
+      return next(new ValidationError('Invalid total tickets value'));
+    }
+
+    let parsedTicketPrice: number | null = null;
+
+    if (ticket_price !== undefined && ticket_price !== null) {
+      parsedTicketPrice = parseFloat(ticket_price);
+
+      if (isNaN(parsedTicketPrice) || parsedTicketPrice < 0) {
+        return next(new ValidationError('Invalid ticket price'));
+      }
+    }
+
+    // ✅ Slug uniqueness check
+    const existingSlug = await prisma.events.findUnique({
+      where: { slug: slug.trim() },
+    });
+
+    if (existingSlug) {
+      return next(
+        new ValidationError('Slug already exists! Please use a different slug!')
+      );
+    }
+
+    console.log('🛠 Creating event in DB...');
+
+    const newEvent = await prisma.events.create({
+      data: {
+        title: title.trim(),
+        slug: slug.trim(),
+        category: category.trim(),
+        short_description: short_description.trim(),
+        detailed_description: detailed_description?.trim(),
+        location: location.trim(),
+        start_date: startDate,
+        end_date: endDate,
+        ticket_price: parsedTicketPrice,
+        total_tickets: parsedTotalTickets,
+        available_tickets: parsedTotalTickets,
+        shopId: req.seller.shop.id,
+        images: {
+          create: images
+            .filter(
+              (img: any) =>
+                img &&
+                typeof img.fileId === 'string' &&
+                typeof img.file_url === 'string'
+            )
+            .map((img: any) => ({
+              file_id: img.fileId,
+              url: img.file_url,
+            })),
+        },
+      },
+      include: {
+        images: true,
+        Shop: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    console.log('✅ Event created successfully:', newEvent.id);
+
+    return res.status(201).json({
+      success: true,
+      newEvent,
+    });
+  } catch (error) {
+    console.error('💥 Error in createEvent:', error);
+    next(error);
+  }
+};
+
 // Get logged in seller products
 export const getShopProducts = async (
   req: any,

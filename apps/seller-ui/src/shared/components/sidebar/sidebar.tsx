@@ -28,6 +28,7 @@ import { useMutation } from '@tanstack/react-query';
 import axiosInstance from 'apps/seller-ui/src/utils/axiosInstance';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const SidebarWrapper = () => {
   const { activeSidebar, setActiveSidebar } = useSidebar();
@@ -80,17 +81,31 @@ const SidebarWrapper = () => {
       }}
       className="sidebar-wrapper"
     >
-      <Sidebar.Header>
+      <Sidebar.Header className="flex items-center justify-center ">
         <Box>
-          <Link href={'/'} className="flex justify-center text-center gap-2">
-            <Grid2X2Icon />
+          <Link
+            href={'/'}
+            className="flex flex-col items-center justify-center text-center gap-2"
+          >
+            {/* <Grid2X2Icon /> */}
+            <div className="relative w-[80px] h-[80px] rounded-full border-4 border-slate-700 overflow-hidden">
+              <Image
+                src={
+                  seller?.shop?.avatar ||
+                  'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg'
+                }
+                alt="Seller Avatar"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
             <Box>
               <h3 className="text-xl font-medium text-[#ecedee]">
                 {seller?.shop?.name
                   ? seller.shop.name
                   : 'No shop name available'}
               </h3>
-              <h5 className="font-medium pl-2 text-xs text-[#ecedeecf] whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
+              <h5 className="font-medium text-xs text-[#ecedeecf] whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
                 {seller?.shop?.address
                   ? seller.shop.address
                   : 'No address available'}

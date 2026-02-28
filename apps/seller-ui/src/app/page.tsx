@@ -71,13 +71,13 @@ const SellerProfile = () => {
       ) : (
         <div className="w-full bg-gray-900 min-h-screen">
           {/* Back to Dashboard Button */}
-          <div className="w-full px-3 pt-2">
+          <div className="w-full px-3 py-2">
             <button
               onClick={() => router.push('/dashboard')}
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition"
+              className="flex items-center gap-1 text-gray-300 bg-gray-800 hover:bg-gray-700 transition px-4 py-2 rounded-full text-sm"
             >
               <ArrowLeft size={20} />
-              <span className="font-medium">back to Dashboard</span>
+              <span className="font-medium ">Dashboard</span>
             </button>
           </div>
 
@@ -89,7 +89,7 @@ const SellerProfile = () => {
                 'https://ik.imagekit.io/johnchrismaina/fashion-banner.png?updatedAt=1767450141321'
               }
               alt="Seller Cover"
-              className="w-full h-[400px] object-cover"
+              className="w-full h-[200px] object-cover"
               width={1200}
               height={300}
             />

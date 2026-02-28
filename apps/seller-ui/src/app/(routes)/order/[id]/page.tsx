@@ -80,7 +80,7 @@ const Page = () => {
           onClick={() => router.push('/dashboard/orders')}
         >
           <ArrowLeft />
-          Go Back to Dashboard
+          <span className="font-medium">Dashboard</span>
         </span>
       </div>
       <h1 className="text-2xl font-bold text-gray-200 mb-4">

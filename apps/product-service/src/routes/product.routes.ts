@@ -4,6 +4,7 @@ import {
   createEvent,
   createProduct,
   deleteDiscountCode,
+  deleteEvent,
   deleteProduct,
   deleteProductImage,
   getAllEvents,
@@ -14,8 +15,10 @@ import {
   getFilteredProducts,
   getFilteredShops,
   getProductDetails,
+  getShopEvents,
   getShopProducts,
   getStripeAccount,
+  restoreEvent,
   // getStripeAccount,
   restoreProduct,
   searchProducts,
@@ -44,8 +47,11 @@ router.delete('/delete-product-image', isAuthenticated, deleteProductImage);
 router.post('/create-product', isAuthenticated, createProduct);
 router.post('/create-event', isAuthenticated, createEvent);
 router.get('/get-shop-products', isAuthenticated, getShopProducts);
+router.get('/get-shop-events', isAuthenticated, getShopEvents);
 router.delete('/delete-product/:productId', isAuthenticated, deleteProduct);
 router.put('/restore-product/:productId', isAuthenticated, restoreProduct);
+router.delete('/delete-event/:eventId', isAuthenticated, deleteEvent);
+router.put('/restore-event/:eventId', isAuthenticated, restoreEvent);
 router.get('/get-stripe-account', isAuthenticated, isSeller, getStripeAccount);
 router.get('/get-all-products', getAllProducts);
 router.get('/get-all-events', getAllEvents);

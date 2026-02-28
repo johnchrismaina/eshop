@@ -76,7 +76,7 @@ const CustomProperties = ({ control, errors }: any) => {
                         />
                         <button
                           type="button"
-                          className="px-3 py-1 bg-blue-500 text-white rounded-md"
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
                           onClick={() => addValue(index)}
                         >
                           Add
@@ -106,7 +106,7 @@ const CustomProperties = ({ control, errors }: any) => {
                     />
                     <button
                       type="button"
-                      className="px-3 py-2 bg-blue-500 text-white rounded-md flex items-center justify-center gap-1"
+                      className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center justify-center gap-1"
                       onClick={addProperty}
                     >
                       <Plus size={16} /> Add

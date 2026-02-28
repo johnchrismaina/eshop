@@ -190,8 +190,8 @@ model products {
   starting_date         DateTime?
   ending_date           DateTime?
   stock                 Int
-  sale_price            Float
   regular_price         Float
+  sale_price            Float
   ratings               Float         @default(5)
   warranty              String?
   custom_specifications Json?
@@ -217,20 +217,23 @@ model products {
 }
 
 model events {
-  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
   title                String
-  slug                 String   @unique
+  slug                 String    @unique
   category             String
   short_description    String
   detailed_description String?
   location             String
   start_date           DateTime
   end_date             DateTime
-  ticket_price         Float?
+  regular_price        Float
+  sale_price           Float
   total_tickets        Int
   available_tickets    Int
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  isDeleted            Boolean?  @default(false)
+  deletedAt            DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   // 🔹 Shop relation (RECOMMENDED)
   shopId String @db.ObjectId

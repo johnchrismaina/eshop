@@ -206,8 +206,8 @@ export const createProduct = async (
       sizes = [],
       discountCodes,
       stock,
-      sale_price,
       regular_price,
+      sale_price,
       subCategory,
       customProperties = {},
       custom_specifications,
@@ -222,11 +222,11 @@ export const createProduct = async (
       !short_description ||
       !category ||
       !subCategory ||
+      !regular_price ||
       !sale_price ||
       !images ||
       !tags ||
-      !stock ||
-      !regular_price
+      !stock
     ) {
       console.log('❌ Validation failed: missing required fields');
       return next(new ValidationError('Missing required fields'));
@@ -272,8 +272,8 @@ export const createProduct = async (
         discount_codes: discountCodes ?? [],
         sizes: sizes || [],
         stock: parseInt(stock),
-        sale_price: parseFloat(sale_price),
         regular_price: parseFloat(regular_price),
+        sale_price: parseFloat(sale_price),
         customProperties: customProperties || {},
         custom_specifications: custom_specifications || {},
         images: {
@@ -319,7 +319,8 @@ export const createEvent = async (
       location,
       start_date,
       end_date,
-      ticket_price,
+      regular_price = 0,
+      sale_price,
       total_tickets,
       images = [],
     } = req.body;
@@ -335,6 +336,7 @@ export const createEvent = async (
       !location ||
       !start_date ||
       !end_date ||
+      !sale_price ||
       !total_tickets
     ) {
       return next(new ValidationError('Missing required fields'));
@@ -373,12 +375,12 @@ export const createEvent = async (
       return next(new ValidationError('Invalid total tickets value'));
     }
 
-    let parsedTicketPrice: number | null = null;
+    let parsedSalePrice: number | null = null;
 
-    if (ticket_price !== undefined && ticket_price !== null) {
-      parsedTicketPrice = parseFloat(ticket_price);
+    if (sale_price !== undefined && sale_price !== null) {
+      parsedSalePrice = parseFloat(sale_price);
 
-      if (isNaN(parsedTicketPrice) || parsedTicketPrice < 0) {
+      if (isNaN(parsedSalePrice) || parsedSalePrice < 0) {
         return next(new ValidationError('Invalid ticket price'));
       }
     }
@@ -406,18 +408,14 @@ export const createEvent = async (
         location: location.trim(),
         start_date: startDate,
         end_date: endDate,
-        ticket_price: parsedTicketPrice,
+        regular_price: parseFloat(regular_price),
+        sale_price: parseFloat(sale_price),
         total_tickets: parsedTotalTickets,
         available_tickets: parsedTotalTickets,
-        shopId: req.seller.shop.id,
+        shopId: req.seller?.shop?.id!,
         images: {
           create: images
-            .filter(
-              (img: any) =>
-                img &&
-                typeof img.fileId === 'string' &&
-                typeof img.file_url === 'string'
-            )
+            .filter((img: any) => img && img.fileId && img.file_url)
             .map((img: any) => ({
               file_id: img.fileId,
               url: img.file_url,
@@ -426,12 +424,12 @@ export const createEvent = async (
       },
       include: {
         images: true,
-        Shop: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+        // Shop: {
+        //   select: {
+        //     id: true,
+        //     name: true,
+        //   },
+        // },
       },
     });
 
@@ -466,6 +464,31 @@ export const getShopProducts = async (
     res.status(201).json({
       success: true,
       products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get logged in seller events
+export const getShopEvents = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const events = await prisma.events.findMany({
+      where: {
+        shopId: req?.seller?.shop?.id,
+      },
+      include: {
+        images: true,
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      events,
     });
   } catch (error) {
     next(error);
@@ -517,6 +540,51 @@ export const deleteProduct = async (
   }
 };
 
+// Delete event
+export const deleteEvent = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { eventId } = req.params;
+    const sellerId = req.seller?.shop?.id;
+
+    const event = await prisma.events.findUnique({
+      where: { id: eventId },
+      select: { id: true, shopId: true, isDeleted: true },
+    });
+
+    if (!event) {
+      return next(new ValidationError('Event not found'));
+    }
+
+    if (event.shopId !== sellerId) {
+      return next(new ValidationError('Unauthorized action'));
+    }
+
+    if (event.isDeleted) {
+      return next(new ValidationError('Event is already deleted'));
+    }
+
+    const deleteEvent = await prisma.events.update({
+      where: { id: eventId },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return res.status(200).json({
+      message:
+        'Event is scheduled for deletion in 2 hours. You can restore it within this time',
+      deletedAt: deleteEvent.deletedAt,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 // Restore product
 export const restoreProduct = async (
   req: any,
@@ -554,6 +622,44 @@ export const restoreProduct = async (
     return res.status(200).json({ message: 'Product successfully restored!' });
   } catch (error) {
     return res.status(500).json({ message: 'Error restoring product', error });
+  }
+};
+
+// Restore event
+export const restoreEvent = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { eventId } = req.params;
+    const sellerId = req.seller?.shop?.id;
+
+    const event = await prisma.events.findUnique({
+      where: { id: eventId },
+      select: { id: true, shopId: true, isDeleted: true },
+    });
+
+    if (!event) {
+      return next(new ValidationError('Event not found'));
+    }
+
+    if (event.shopId !== sellerId) {
+      return next(new ValidationError('Unauthorized action'));
+    }
+
+    if (!event.isDeleted) {
+      return res.status(400).json({ message: 'Event is not in deleted state' });
+    }
+
+    await prisma.events.update({
+      where: { id: eventId },
+      data: { isDeleted: false, deletedAt: null },
+    });
+
+    return res.status(200).json({ message: 'Event successfully restored!' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error restoring event', error });
   }
 };
 

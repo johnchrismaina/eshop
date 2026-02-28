@@ -5,6 +5,7 @@ import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import { ChevronRight, Wand, X } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ColorSelector from 'packages/components/color-selector';
 import CustomProperties from 'packages/components/custom-properties';
@@ -12,6 +13,7 @@ import CustomSpecifications from 'packages/components/custom-specifications';
 import Input from 'packages/components/input';
 import RichTextEditor from 'packages/components/rich-text-editor';
 import SizeSelector from 'packages/components/size-selector';
+import Spinner from 'packages/components/spinner';
 // import { Spinner } from 'packages/components/spinner';
 import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -229,10 +231,13 @@ const Page = () => {
       {/* Heading & Breadcrumbs */}
       <h2 className="text-2xl py-2 font-semibold text-white">Create Product</h2>
       <div className="flex items-center">
-        <span className="text-[#80Deea] cursor-pointer">Dashboard</span>
+        <Link href={'/dashboard'} className=" text-blue-400 cursor-pointer">
+          Dashboard
+        </Link>
         <ChevronRight size={20} className="opacity-[.8]" />
         <span>Create Product</span>
       </div>
+
       {/* Content layout */}
       <div className="py-4 w-full flex gap-6">
         {/* Left side - Image upload section */}
@@ -268,6 +273,7 @@ const Page = () => {
             ))}
           </div>
         </div>
+
         {/* Right side - form inputs */}
         <div className="md:w-[65%]">
           <div className="w-full flex gap-6">
@@ -675,6 +681,7 @@ const Page = () => {
           </div>
         </div>
       </div>
+
       {/* Image transformation modal */}
       {openImageModal && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 z-50">
@@ -729,17 +736,32 @@ const Page = () => {
           <button
             type="button"
             onClick={handleSaveDraft}
-            className="px-4 py-2 bg-gray-700 text-white rounded-md"
+            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
           >
             Save Draft
           </button>
         )}
-        <button
+        {/* <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
           disabled={loading}
         >
           {loading ? 'Creating...' : 'Create'}
+        </button> */}
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+          disabled={loading}
+        >
+          {/* Keep the text in DOM but hide it when loading */}
+          <span className={loading ? 'opacity-0' : 'opacity-100'}>Create</span>
+
+          {/* Spinner centered absolutely */}
+          {loading && (
+            <span className="absolute inset-0 flex items-center justify-center">
+              <Spinner size={16} borderColor="border-gray-200" />
+            </span>
+          )}
         </button>
       </div>
     </form>

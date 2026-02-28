@@ -25,47 +25,47 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import DeleteConfirmationModal from 'apps/seller-ui/src/shared/components/modals/delete.confirmation.modal';
 
-const fetchProducts = async () => {
-  const res = await axiosProduct.get('/get-shop-products');
-  return res?.data?.products;
+const fetchEvents = async () => {
+  const res = await axiosProduct.get('/get-shop-events');
+  return res?.data?.events;
 };
 
-const deleteProduct = async (productId: string) => {
-  await axiosProduct.delete(`/delete-product/${productId}`);
+const deleteEvent = async (eventId: string) => {
+  await axiosProduct.delete(`/delete-event/${eventId}`);
 };
 
-const restoreProduct = async (productId: string) => {
-  await axiosProduct.put(`/restore-product/${productId}`);
+const restoreEvent = async (eventId: string) => {
+  await axiosProduct.put(`/restore-event/${eventId}`);
 };
 
-const ProductList = () => {
+const EventList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
   // const [analyticsData, setAnalyticsData] = useState(null);
   // const [showAnalytics, setShowAnalytics] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>();
+  const [selectedEvent, setSelectedEvent] = useState<any>();
   const queryClient = useQueryClient();
 
-  const { data: products = [], isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: fetchProducts,
+  const { data: events = [], isLoading } = useQuery({
+    queryKey: ['events'],
+    queryFn: fetchEvents,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  //   Delete Product Mutation
+  //   Delete Event Mutation
   const deleteMutation = useMutation({
-    mutationFn: deleteProduct,
+    mutationFn: deleteEvent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-products'] });
+      queryClient.invalidateQueries({ queryKey: ['shop-events'] });
       setShowDeleteModal(false);
     },
   });
 
-  //   Restore Product Mutation
+  //   Restore Event Mutation
   const restoreMutation = useMutation({
-    mutationFn: restoreProduct,
+    mutationFn: restoreEvent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-products'] });
+      queryClient.invalidateQueries({ queryKey: ['shop-events'] });
       setShowDeleteModal(false);
     },
   });
@@ -115,8 +115,13 @@ const ProductList = () => {
         },
       },
       {
-        accessorKey: 'price',
-        header: 'Price',
+        accessorKey: 'regular_price',
+        header: 'Regular Price',
+        cell: ({ row }: any) => <span>${row.original.regular_price}</span>,
+      },
+      {
+        accessorKey: 'sale_price',
+        header: 'Sale Price',
         cell: ({ row }: any) => <span>${row.original.sale_price}</span>,
       },
       {
@@ -124,9 +129,13 @@ const ProductList = () => {
         header: 'Stock',
         cell: ({ row }: any) => (
           <span
-            className={row.original.stock < 10 ? 'text-red-500' : 'text-white'}
+            className={
+              row.original.available_tickets < 10
+                ? 'text-red-500'
+                : 'text-white'
+            }
           >
-            {row.original.stock} left
+            {row.original.available_tickets} left
           </span>
         ),
       },
@@ -180,7 +189,7 @@ const ProductList = () => {
   );
 
   const table = useReactTable({
-    data: products,
+    data: events,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -191,8 +200,8 @@ const ProductList = () => {
     onGlobalFilterChange: setGlobalFilter,
   });
 
-  const openDeleteModal = (product: any) => {
-    setSelectedProduct(product);
+  const openDeleteModal = (event: any) => {
+    setSelectedEvent(event);
     setShowDeleteModal(true);
   };
 
@@ -200,12 +209,12 @@ const ProductList = () => {
     <div className="w-full min-h-screen p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2l text-white font-semibold">All Products</h2>
+        <h2 className="text-2l text-white font-semibold">All Events</h2>
         <Link
-          href="/dashboard/create-product"
+          href="/dashboard/create-event"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
         >
-          <Plus size={18} /> Add Product
+          <Plus size={18} /> Add Event
         </Link>
       </div>
 
@@ -215,7 +224,7 @@ const ProductList = () => {
           Dashboard
         </Link>
         <ChevronRight size={20} className="text-gray-200" />
-        <span className="text-white">All Products</span>
+        <span className="text-white">All Events</span>
       </div>
 
       {/* Search Bar */}
@@ -223,7 +232,7 @@ const ProductList = () => {
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
-          placeholder="Search products"
+          placeholder="Search events"
           className="w-full bg-transparent text-white outline-none"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -233,7 +242,7 @@ const ProductList = () => {
       {/* Table */}
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
-          <p className="text-center text-white">Loading products...</p>
+          <p className="text-center text-white">Loading events...</p>
         ) : (
           <table className="w-full text-white">
             <thead>
@@ -274,10 +283,10 @@ const ProductList = () => {
 
         {showDeleteModal && (
           <DeleteConfirmationModal
-            product={selectedProduct}
+            event={selectedEvent}
             onClose={() => setShowDeleteModal(false)}
-            onConfirm={() => deleteMutation.mutate(selectedProduct?.id)}
-            onRestore={() => restoreMutation.mutate(selectedProduct?.id)}
+            onConfirm={() => deleteMutation.mutate(selectedEvent?.id)}
+            onRestore={() => restoreMutation.mutate(selectedEvent?.id)}
           />
         )}
       </div>
@@ -285,4 +294,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default EventList;

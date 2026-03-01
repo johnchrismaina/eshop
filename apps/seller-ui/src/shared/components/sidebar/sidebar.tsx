@@ -11,8 +11,9 @@ import {
   BellPlus,
   BellRing,
   CalendarPlus,
-  Grid2X2Icon,
-  HomeIcon,
+  LayoutDashboard,
+  // Grid2X2Icon,
+  // HomeIcon,
   ListOrdered,
   LogOut,
   Mail,
@@ -37,6 +38,8 @@ const SidebarWrapper = () => {
   const pathName = usePathname();
   const { seller } = useSeller();
   const router = useRouter();
+
+  const [selectedShop, setSelectedShop] = useState(seller?.shops?.[0]);
 
   useEffect(() => {
     setActiveSidebar(pathName);
@@ -68,6 +71,14 @@ const SidebarWrapper = () => {
     },
   });
 
+  const capitalizeWords = (str: string) => {
+    if (!str) return '';
+    return str
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   return (
     <Box
       $css={{
@@ -81,17 +92,14 @@ const SidebarWrapper = () => {
       }}
       className="sidebar-wrapper"
     >
-      <Sidebar.Header className="flex items-center justify-center ">
+      <Sidebar.Header className="flex items-center justify-start mb-6">
         <Box>
-          <Link
-            href={'/'}
-            className="flex flex-col items-center justify-center text-center gap-2"
-          >
+          <Link href={'/'} className="flex text-start gap-4">
             {/* <Grid2X2Icon /> */}
-            <div className="relative w-[80px] h-[80px] rounded-full border-4 border-slate-700 overflow-hidden">
+            <div className="relative w-[50px] h-[50px] rounded-full overflow-hidden">
               <Image
                 src={
-                  seller?.shop?.avatar ||
+                  selectedShop?.avatar ||
                   'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg'
                 }
                 alt="Seller Avatar"
@@ -100,25 +108,25 @@ const SidebarWrapper = () => {
               />
             </div>
             <Box>
-              <h3 className="text-xl font-medium text-[#ecedee]">
-                {seller?.shop?.name
-                  ? seller.shop.name
+              <h3 className="text-lg font-medium text-[#ecedee]">
+                {selectedShop?.name
+                  ? capitalizeWords(selectedShop.name)
                   : 'No shop name available'}
               </h3>
+
               <h5 className="font-medium text-xs text-[#ecedeecf] whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
-                {seller?.shop?.address
-                  ? seller.shop.address
+                {selectedShop?.address
+                  ? selectedShop.address
                   : 'No address available'}
               </h5>
-
-              {/* <h3 className="text-xl font-medium text-[#ecedee]">
-                {seller?.shop?.name}
-              </h3>
-              <h5 className="font-medium pl-2 text-xs text-[#ecedeecf] whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
-                {seller?.shop?.address}
-              </h5> */}
             </Box>
           </Link>
+          <button
+            onClick={() => router.push('/')}
+            className="flex w-full items-center justify-center gap-1 text-gray-300 bg-gray-800 hover:bg-gray-700 transition mt-4 px-4 py-2 rounded-lg text-sm"
+          >
+            <span className="font-normal ">View profile</span>
+          </button>
         </Box>
       </Sidebar.Header>
       <div className="block my-3 h-full">
@@ -127,7 +135,9 @@ const SidebarWrapper = () => {
             isActive={activeSidebar === '/dashboard'}
             title="Dashboard"
             href="/dashboard"
-            icon={<HomeIcon size={22} color={getIconColor('/dashboard')} />}
+            icon={
+              <LayoutDashboard size={22} color={getIconColor('/dashboard')} />
+            }
           />
           <div className="mt-2 block">
             <SidebarMenu title="Main Menu">
@@ -178,26 +188,26 @@ const SidebarWrapper = () => {
                 }
               />
             </SidebarMenu>
-            <SidebarMenu title="Events">
+            <SidebarMenu title="Deals">
               <SidebarItem
-                isActive={activeSidebar === '/dashboard/create-event'}
-                title="Create Event"
-                href="/dashboard/create-event"
+                isActive={activeSidebar === '/dashboard/create-deal'}
+                title="Create Deal"
+                href="/dashboard/create-deal"
                 icon={
                   <CalendarPlus
                     size={22}
-                    color={getIconColor('/dashboard/create-event')}
+                    color={getIconColor('/dashboard/create-deal')}
                   />
                 }
               />
               <SidebarItem
-                isActive={activeSidebar === '/dashboard/all-events'}
-                title="All Events"
-                href="/dashboard/all-events"
+                isActive={activeSidebar === '/dashboard/all-deals'}
+                title="All Deals"
+                href="/dashboard/all-deals"
                 icon={
                   <BellPlus
                     size={22}
-                    color={getIconColor('/dashboard/all-events')}
+                    color={getIconColor('/dashboard/all-deals')}
                   />
                 }
               />

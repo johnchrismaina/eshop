@@ -127,7 +127,7 @@ const SellerPayments = () => {
       <Breadcrumbs title="Payments" />
 
       {/* Search bar */}
-      <div className="my-4 flex items-center bg-gray-900 rounded-md flex-1">
+      <div className="my-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
         <Search className="text-gray-400 mr-2" size={18} />
         <input
           type="text"

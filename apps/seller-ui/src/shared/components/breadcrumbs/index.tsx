@@ -1,3 +1,6 @@
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+
 interface BreadcrumbsProps {
   title: string; // e.g. "All Orders"
 }
@@ -5,9 +8,18 @@ interface BreadcrumbsProps {
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ title }) => {
   return (
     <nav aria-label="breadcrumb" className="mb-4">
-      <ol className="flex items-center space-x-2 text-sm text-blue-400">
-        <li className="mx-2">Dashboard</li>
-        <li className="mx-2 text-gray-200">{'>'}</li>
+      <ol className="flex items-center text-base text-blue-400">
+        <li>
+          <Link
+            href="/dashboard"
+            className="hover:underline hover:text-blue-500 transition-colors"
+          >
+            Dashboard
+          </Link>
+        </li>
+
+        <ChevronRight size={20} className="opacity-[.8] text-gray-200 " />
+
         <li className="text-gray-200 font-medium">{title}</li>
       </ol>
     </nav>

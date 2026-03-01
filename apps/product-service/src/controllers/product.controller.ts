@@ -1174,3 +1174,46 @@ export const topShops = async (
     return next(error);
   }
 };
+
+// Update shop details
+export const updateShopDetails = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {
+      shopId, // the specific shop the seller wants to update
+      bio,
+      address,
+      opening_hours,
+      coverBanner,
+      avatar,
+      website,
+      socialLinks, // JSON object for social links
+    } = req.body;
+
+    // Update the specific shop
+    const shop = await prisma.shops.update({
+      where: {
+        id: shopId,
+      },
+      data: {
+        bio,
+        address,
+        opening_hours,
+        coverBanner,
+        avatar,
+        website,
+        socialLinks,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      shop,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};

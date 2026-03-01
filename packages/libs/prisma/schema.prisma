@@ -122,11 +122,11 @@ model shops {
   address       String
   opening_hours String?
   website       String?
-  socialLinks   Json[]
+  socialLinks   Json?
   ratings       Float         @default(0)
   reviews       shopReviews[] @relation("ShopReview")
-  sellerId      String        @unique @db.ObjectId
-  seller        sellers       @relation("SellerShop", fields: [sellerId], references: [id])
+  sellerId      String        @db.ObjectId
+  seller        sellers       @relation("SellerShops", fields: [sellerId], references: [id])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   products      products[]    @relation("ShopProducts") // one-to-many products
@@ -144,7 +144,7 @@ model sellers {
   country      String
   password     String
   stripeId     String?
-  shop         shops?   @relation("SellerShop")
+  shops        shops[]  @relation("SellerShops")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

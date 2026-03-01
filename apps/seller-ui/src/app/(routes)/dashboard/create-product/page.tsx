@@ -1,5 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
+import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
@@ -230,13 +231,9 @@ const Page = () => {
     >
       {/* Heading & Breadcrumbs */}
       <h2 className="text-2xl py-2 font-semibold text-white">Create Product</h2>
-      <div className="flex items-center">
-        <Link href={'/dashboard'} className=" text-blue-400 cursor-pointer">
-          Dashboard
-        </Link>
-        <ChevronRight size={20} className="opacity-[.8]" />
-        <span>Create Product</span>
-      </div>
+
+      {/* Breadcrumbs */}
+      <Breadcrumbs title="Create Product" />
 
       {/* Content layout */}
       <div className="py-4 w-full flex gap-6">

@@ -14,6 +14,7 @@ import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeho
 import Image from 'next/image';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import Link from 'next/link';
+import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 
 interface UploadedImage {
   fileId: string;
@@ -63,8 +64,8 @@ const Page = () => {
 
       await axiosProduct.post('/create-event', payload);
 
-      toast.success('Event created successfully!');
-      router.push('/dashboard/all-events');
+      toast.success('Deal created successfully!');
+      router.push('/dashboard/all-deals');
     } catch (error: any) {
       toast.error(error?.response?.data?.message ?? 'Something went wrong');
     } finally {
@@ -194,13 +195,8 @@ const Page = () => {
       {/* Heading */}
       <h2 className="text-2xl py-2 font-semibold font-poppins">Create Event</h2>
 
-      <div className="flex items-center mb-6">
-        <Link href={'/dashboard'} className=" text-blue-400 cursor-pointer">
-          Dashboard
-        </Link>
-        <ChevronRight size={20} className="opacity-[.8]" />
-        <span>Create Event</span>
-      </div>
+      {/* Breadcrumbs */}
+      <Breadcrumbs title="Create Event" />
 
       {/* Content layout */}
       {/* <div className="grid grid-cols-2 gap-6"> */}

@@ -15,12 +15,12 @@ const SidebarItem = ({ icon, title, isActive, href, onClick }: Props) => {
     <Link
       href={href}
       onClick={onClick} // <-- now TypeScript knows this is valid
-      className="my-2 block"
+      className="my-1 block"
     >
       <div
-        className={`flex gap-5 w-full min-h-8 h-full items-center px-[13px] rounded-lg cursor-pointer transition hover:!bg-[#2b2f31] ${
+        className={`flex gap-5 w-full min-h-9 h-full items-center px-[13px] rounded-lg cursor-pointer transition hover:!bg-[#2b2f31] ${
           isActive &&
-          'scale-[.98] bg-[#0f3158] fill-blue-200 hover:bg-[#0f3158d6]'
+          'scale-[.98] bg-gray-800 fill-blue-200 hover:bg-[#0f3158d6]'
         }`}
       >
         {icon}

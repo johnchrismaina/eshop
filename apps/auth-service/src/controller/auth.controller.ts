@@ -199,7 +199,7 @@ export const refreshToken = async (
     } else if (decoded.role === 'seller') {
       account = await prisma.sellers.findUnique({
         where: { id: decoded.id },
-        include: { shop: true },
+        include: { shops: true },
       });
     } else if (decoded.role === 'admin') {
       account = await prisma.admins.findUnique({ where: { id: decoded.id } });

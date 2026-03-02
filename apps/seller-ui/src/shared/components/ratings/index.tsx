@@ -1,8 +1,8 @@
 // Example imports (adjust paths to your icon exports)
 import { FC } from 'react';
 import { Star } from 'lucide-react';
-import { StarFilled } from 'apps/user-ui/src/assets/svgs/star-filled';
-import { HalfStar } from 'apps/user-ui/src/assets/svgs/half-star';
+import { StarFilled } from 'packages/assets/svgs/star-filled';
+import { HalfStar } from 'packages/assets/svgs/half-star';
 // import StarOutline from './StarOutline';
 
 type Props = {
@@ -16,17 +16,17 @@ const Ratings: FC<Props> = ({ rating }) => {
   for (let i = 1; i <= 5; i++) {
     if (rating >= i) {
       // full star
-      stars.push(<StarFilled key={`star-${i}`} />);
+      stars.push(<StarFilled key={`star-${i}`} size={14} />);
     } else if (rating >= i - 0.5) {
       // half star
-      stars.push(<HalfStar key={`star-${i}`} />);
+      stars.push(<HalfStar key={`star-${i}`} size={14} />);
     } else {
       // empty star
-      stars.push(<Star key={`star-${i}`} />);
+      stars.push(<Star key={`star-${i}`} size={14} color="#c8c8c8" />);
     }
   }
 
-  return <div className="flex items-center gap-1">{stars}</div>;
+  return <div className="flex items-center gap-1 ">{stars}</div>;
 };
 
 export default Ratings;

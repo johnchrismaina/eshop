@@ -358,10 +358,10 @@ const SellerProfile = () => {
             </div>
 
             {/* Content */}
-            <div className="bg-gray-200 rounded-lg my-4 text-slate-700">
+            <div className="bg-white my-4 text-slate-700">
               {/* Products Tab */}
               {activeTab === 'Products' && (
-                <div className="m-auto grid grid-cols-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                <div className="m-auto grid grid-cols-1 gap-4 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                   {productsLoading && (
                     <>
                       {Array.from({ length: 10 }).map((_, index) => (
@@ -383,7 +383,7 @@ const SellerProfile = () => {
 
               {/* Deals Tab */}
               {activeTab === 'Deals' && (
-                <div className="m-auto grid grid-cols-1 gap-3 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                <div className="m-auto grid grid-cols-1 gap-4 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                   {/* isEventsLoading */}
                   {eventsLoading && (
                     <>
@@ -399,7 +399,7 @@ const SellerProfile = () => {
                     <ProductCard
                       isEvent={true}
                       key={event.id}
-                      product={{ ...event, ratings: event.ratings ?? 5 }}
+                      product={{ ...event, ratings: event.ratings ?? 4 }}
                     />
                   ))}
                   {events?.length === 0 && (

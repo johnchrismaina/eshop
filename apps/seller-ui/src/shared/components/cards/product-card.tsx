@@ -51,23 +51,24 @@ const ProductCard = ({
     return;
   }, [isEvent, product?.ending_date]);
 
+  // const capitalizeWords = (str: string) => {
+  //   if (!str) return '';
+  //   return str
+  //     .split(' ')
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  //     .join(' ');
+  // }
+
   return (
-    <div className="w-full min-h-[350px] h-max bg-white rounded-lg relative">
+    <div className="w-full min-h-[350px] h-max bg-white rounded-lg relative min-w-0 cursor-pointer ">
       {isEvent && (
         <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-semibold px-2 py-1 rounded-sm shadow-md">
           OFFER
         </div>
       )}
-
-      {product?.stock <= 5 && (
-        <div className="absolute top-2 right-2 bg-yellow-400 text-slate-700 text-[10px] font-semibold px-2 py-1 rounded-sm shadow-md">
-          Limited Stock
-        </div>
-      )}
-
       <Link
         href={`/product/${product?.slug}`}
-        className="block relative w-full h-[200px] overflow-hidden rounded-t-md bg-gray-200"
+        className="block relative w-full h-[200px] overflow-hidden bg-gray-200"
       >
         <img
           src={
@@ -75,8 +76,8 @@ const ProductCard = ({
             'https://ik.imagekit.io/johnchrismaina/products/slider-img-1.webp?updatedAt=1763137176151'
           }
           alt={product?.title || 'product'}
-          style={{ width: 'auto', height: 'auto' }}
           className="w-full h-full object-cover"
+          style={{ display: 'block' }}
         />
       </Link>
 
@@ -89,29 +90,29 @@ const ProductCard = ({
 
       {/* product title */}
       <Link href={`/product/${product?.slug}`}>
-        <h3 className="text-base font-semibold px-2 text-gray-800">
+        <h3 className="text-base tracking-tight font-medium px-0 text-gray-900">
           {product?.title}
         </h3>
       </Link>
 
-      {/* product ratings */}
-      <div className="mt-2 px-2 ">
-        <Ratings rating={product?.ratings} />
-      </div>
-
       {/* product price */}
-      <div className="mt-3 flex justify-between items-center px-2">
+      <div className="mt-2 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-gray-900">
-            ${product?.sale_price}
+          <span className="text-xl font-extrabold text-gray-700">
+            KSh {product?.sale_price}
           </span>
-          <span className="text-sm line-through text-gray-400">
-            ${product?.regular_price}
+          <span className="text-xs line-through text-gray-400">
+            KSh {product?.regular_price}
           </span>
         </div>
-        <span className="text-green-500 text-sm font-medium">
+        {/* <span className="text-green-500 text-sm font-medium">
           {product.totalSales} sold
-        </span>
+        </span> */}
+      </div>
+
+      {/* product ratings */}
+      <div className="mt-2">
+        <Ratings rating={product?.ratings ?? 4} />
       </div>
 
       {isEvent && timeLeft && (

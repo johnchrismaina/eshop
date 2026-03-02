@@ -150,7 +150,7 @@ const EventList = () => {
         cell: ({ row }: any) => (
           <div className="flex items-center gap-1 text-yellow-400">
             <Star size={18} fill="#fde047" />{' '}
-            <span className="text-white">{row.original.ratings || 5}</span>
+            <span className="text-white">{row.original.ratings || 4}</span>
           </div>
         ),
       },

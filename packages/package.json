@@ -26,6 +26,31 @@
       "import": "./components/spinner/index.tsx",
       "default": "./components/spinner/index.tsx"
     },
+    "./components/ProductCard": {
+      "types": "./components/ProductCard/index.tsx",
+      "import": "./components/ProductCard/index.tsx",
+      "default": "./components/ProductCard/index.tsx"
+    },
+    "./components/ProductDetails": {
+      "types": "./components/ProductDetails/index.tsx",
+      "import": "./components/ProductDetails/index.tsx",
+      "default": "./components/ProductDetails/index.tsx"
+    },
+    "./components/ratings": {
+      "types": "./components/ratings/index.tsx",
+      "import": "./components/ratings/index.tsx",
+      "default": "./components/ratings/index.tsx"
+    },
+    "./assets/svgs/star-filled": {
+      "types": "./assets/svgs/star-filled.tsx",
+      "import": "./assets/svgs/star-filled.tsx",
+      "default": "./assets/svgs/star-filled.tsx"
+    },
+    "./assets/svgs/half-star": {
+      "types": "./assets/svgs/half-star.tsx",
+      "import": "./assets/svgs/half-star.tsx",
+      "default": "./assets/svgs/half-star.tsx"
+    },
     "./package.json": "./package.json"
   },
   "dependencies": {}

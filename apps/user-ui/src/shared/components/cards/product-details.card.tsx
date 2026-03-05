@@ -85,7 +85,10 @@ const ProductDetailsCard = ({
             {validImages.length > 0 ? (
               <>
                 <Image
-                  src={validImages[activeImage]?.url}
+                  src={
+                    validImages[activeImage]?.url ||
+                    'https://ik.imagekit.io/johnchrismaina/products/product-1772305241139_PuMmdS6tj.jpg?updatedAt=1772305245680'
+                  }
                   alt={validImages[activeImage]?.url || 'Product image'}
                   width={400}
                   height={400}
@@ -104,7 +107,10 @@ const ProductDetailsCard = ({
                       onClick={() => setActiveImage(index)}
                     >
                       <Image
-                        src={img?.url}
+                        src={
+                          img?.url ||
+                          'https://ik.imagekit.io/johnchrismaina/products/product-1772305241139_PuMmdS6tj.jpg?updatedAt=1772305245680'
+                        }
                         alt={`Thumbnail ${index}`}
                         width={80}
                         height={80}
@@ -127,7 +133,10 @@ const ProductDetailsCard = ({
               <div className="flex items-start gap-3">
                 {/* Shop logo */}
                 <Image
-                  src={data?.Shop?.avatar}
+                  src={
+                    data?.Shop?.avatar ||
+                    'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg?updatedAt=1767361896968'
+                  }
                   alt="Shop Logo"
                   width={60}
                   height={60}

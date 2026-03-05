@@ -1,8 +1,9 @@
-import ProductDetails from 'apps/user-ui/src/shared/modules/product/product-details';
+// import ProductDetails from 'apps/user-ui/src/shared/modules/product/product-details';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
 import { Metadata } from 'next';
 import React from 'react';
 import { notFound } from 'next/navigation';
+import ProductDetails from 'packages/components/ProductDetails';
 
 // ✅ Corrected fetch function
 async function fetchProductDetails(slug: string) {
@@ -11,19 +12,27 @@ async function fetchProductDetails(slug: string) {
   if (!slug) throw new Error('Slug is undefined');
 
   try {
-    console.log('Requesting:', `http://localhost:6002/api/get-product/${slug}`);
+    const url = `/product/get-product/${slug}`;
+    console.log('Requesting:', url);
     console.log('Base URL:', axiosProductService.defaults.baseURL);
 
-    const response = await axiosProductService.get(`/api/get-product/${slug}`);
-    const product = response.data?.product;
+    const response = await axiosProductService.get(url);
+    console.log('Response:', response.data);
+
+    const product = response.data?.product || response.data;
 
     if (!product) {
+      console.log('Product not found for slug:', slug);
       notFound();
     }
 
     return product;
   } catch (err: any) {
+    console.error('Error fetching product:', err.message);
+    console.error('Full error:', err);
+
     if (err?.response?.status === 404) {
+      console.log('API returned 404 for slug:', slug);
       notFound();
     }
     throw err;

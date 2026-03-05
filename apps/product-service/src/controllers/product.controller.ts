@@ -884,12 +884,27 @@ export const getAllEvents = async (
     const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
 
+    // Base filter: only events with valid dates and not deleted
     const baseFilter = {
-      AND: [{ starting_date: { not: null } }, { ending_date: { not: null } }],
+      AND: [
+        { start_date: { not: undefined } },
+        { end_date: { not: undefined } },
+        { isDeleted: false },
+      ],
     };
 
-    const [events, total, top10BySales] = await Promise.all([
-      prisma.products.findMany({
+    // Count total events
+    const total = await prisma.events.count({ where: baseFilter });
+
+    // ✅ Default ordering: use eventRankScore if we have enough events
+    let orderLogic: any = { createdAt: 'desc' };
+
+    if (total >= 10) {
+      orderLogic = { eventRankScore: 'desc' }; // rank by score
+    }
+
+    const [events, top10Upcoming] = await Promise.all([
+      prisma.events.findMany({
         skip,
         take: limit,
         where: baseFilter,
@@ -897,24 +912,19 @@ export const getAllEvents = async (
           images: true,
           Shop: true,
         },
-        orderBy: {
-          totalSales: 'desc',
-        },
+        orderBy: orderLogic,
       }),
 
-      prisma.products.count({ where: baseFilter }),
-      prisma.products.findMany({
+      prisma.events.findMany({
         where: baseFilter,
         take: 10,
-        orderBy: {
-          totalSales: 'desc',
-        },
+        orderBy: { start_date: 'asc' }, // upcoming events list
       }),
     ]);
 
     res.status(200).json({
       events: events || [],
-      top10BySales: top10BySales || [],
+      top10Upcoming: top10Upcoming || [],
       total,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
@@ -956,7 +966,7 @@ export const getFilteredEvents = async (
         gte: parsedPriceRange[0],
         lte: parsedPriceRange[1],
       },
-      NOT: { starting_date: null },
+      NOT: { start_date: null },
     };
 
     if (categories && (categories as string[]).length > 0) {

@@ -15,12 +15,12 @@ export default function LandingPage() {
   return (
     <div className="bg-white min-h-screen">
       <Hero />
-      <div className="w-full my-0 px-6 m-auto flex flex-col gap-4 ">
+      <div className="w-full my-0 px-6 m-auto flex flex-col gap-6 ">
         <PromoGrid />
-        <Products />
-        <LatestProducts />
-        {/* <TopShops /> */}
         <Offers />
+        <LatestProducts />
+        <Products />
+        {/* <TopShops /> */}
 
         {role === 'user' && (
           <p className="text-center mt-4">

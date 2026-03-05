@@ -210,24 +210,24 @@ const EventList = () => {
     <div className="w-full min-h-screen p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2l text-white font-semibold">All Events</h2>
+        <h2 className="text-2l text-white font-semibold">All Offers</h2>
         <Link
           href="/dashboard/create-event"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
         >
-          <Plus size={18} /> Add Event
+          <Plus size={18} /> Add Offer
         </Link>
       </div>
 
       {/* Breadcrumbs */}
-      <Breadcrumbs title="All Events" />
+      <Breadcrumbs title="All Offers" />
 
       {/* Search Bar */}
       <div className="mb-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
-          placeholder="Search events"
+          placeholder="Search offers"
           className="w-full bg-transparent text-white outline-none"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -237,7 +237,7 @@ const EventList = () => {
       {/* Table */}
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
-          <p className="text-center text-white">Loading events...</p>
+          <p className="text-center text-white">Loading offers...</p>
         ) : (
           <table className="w-full text-white">
             <thead>

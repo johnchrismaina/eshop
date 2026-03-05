@@ -5,6 +5,7 @@ import { errorMiddleware } from '@packages/error-handler/error-middleware';
 import cookieParser from 'cookie-parser';
 import router from './routes/product.routes';
 import { logInfo, logError } from '@packages/utils/logger';
+import './jobs/eventRankJob';
 
 const path = require('path');
 import swaggerUi from 'swagger-ui-express';

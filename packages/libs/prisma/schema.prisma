@@ -209,6 +209,8 @@ model products {
   Shop   shops    @relation("ShopProducts", fields: [shopId], references: [id])
   images images[] @relation("ProductImages") // one-to-many gallery
 
+  dealScore Float @default(0)
+
   // New field for sales tracking
   totalSales Int @default(0)
 
@@ -242,8 +244,27 @@ model events {
   // 🔹 Images relation
   images images[] @relation("EventImages")
 
+  eventRankScore Float @default(0)
+
   @@index([shopId])
   @@index([start_date])
+}
+
+model Deal {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  price         Float
+  originalPrice Float
+  createdAt     DateTime @default(now())
+
+  totalSales     Int   @default(0)
+  totalRevenue   Float @default(0)
+  totalViews     Int   @default(0)
+  totalAddToCart Int   @default(0)
+
+  dealScore Float @default(0)
+
+  category String
 }
 
 // Define an embedded type for actions

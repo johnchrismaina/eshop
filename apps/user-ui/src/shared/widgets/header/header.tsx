@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useLayoutEffect } from 'react';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Search, ShoppingCart } from 'lucide-react';
 import HeaderBottom from './header-bottom';
 // import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
@@ -101,8 +101,10 @@ const Header = () => {
           </div>
 
           <div className="flex flex-col items-start shrink-0">
-            <span className="text-xs font-normal">Deliver to: </span>
-            <span className=" font-bold -mt-1.5">Naivasha</span>
+            <span className="text-xs font-normal text-gray-500">
+              Deliver to:{' '}
+            </span>
+            <span className=" font-bold text-gray-900 -mt-1.5">Naivasha</span>
           </div>
 
           {/* Search input */}
@@ -173,11 +175,11 @@ const Header = () => {
                     </span>
                   ) : (
                     // No user or no previous session: show Log in
-                    <span className="font-medium text-gray-500">Log in</span>
+                    <span className="font-normal text-gray-500">Log in</span>
                   )}
                 </span>
 
-                <span className="flex items-center font-bold text-sm gap-1 -mt-1.5">
+                <span className="flex items-center font-bold text-gray-900 text-base tracking-tight gap-1 -mt-1.5">
                   Account
                   <ChevronDown className="mt-1" size={12} color="#555" />
                 </span>
@@ -271,13 +273,12 @@ const Header = () => {
             <div className="flex items-center gap-5">
               <Link href="/cart" className="relative">
                 <CartIcon className="bg-[#333]" />
-                {cart?.length > 0 && (
-                  <div className="w-6 h-6 border-2 border-white bg-red-500 rounded-full flex items-center justify-center absolute top-[-10px] right-[-10px]">
-                    <span className="text-white font-medium text-sm">
-                      {cart.length}
-                    </span>
-                  </div>
-                )}
+                {/* <ShoppingCart /> */}
+                <div className="w-6 h-6 border-2 border-white bg-[#fab528] rounded-full flex items-center justify-center absolute top-[-10px] right-[-10px]">
+                  <span className="text-black font-medium text-sm">
+                    {cart.length}
+                  </span>
+                </div>
               </Link>
             </div>
           </div>

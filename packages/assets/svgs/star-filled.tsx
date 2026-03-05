@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 export const StarFilled: FC<{ size?: number; color?: string }> = ({
   size = 24,
-  color = '#f9be00',
+  color = '#ff6200',
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

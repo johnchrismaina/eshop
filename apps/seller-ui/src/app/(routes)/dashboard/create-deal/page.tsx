@@ -2,18 +2,16 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
-// import { useRouter } from 'next/router';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import toast from 'react-hot-toast';
 import RichTextEditor from 'packages/components/rich-text-editor';
-import { ChevronRight, Wand, X } from 'lucide-react';
+import { Wand, X } from 'lucide-react';
 import Input from 'packages/components/input';
 import { useRouter } from 'next/navigation';
 import Spinner from 'packages/components/spinner';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import Image from 'next/image';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
-import Link from 'next/link';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 
 interface UploadedImage {

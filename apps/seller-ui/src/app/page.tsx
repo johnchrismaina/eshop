@@ -21,9 +21,10 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import useSeller from '../hooks/useSeller';
 import { useRouter } from 'next/navigation';
-import ProductCard from '../shared/components/cards/product-card';
+// import ProductCard from '../shared/components/cards/product-card';
 import Spinner from 'packages/components/spinner';
 import axiosProduct from '../utils/axiosProduct';
+import ProductCard from 'packages/components/ProductCard';
 
 const TABS = ['Products', 'Deals', 'Reviews'];
 
@@ -195,10 +196,11 @@ const SellerProfile = () => {
           </div>
 
           {/* Seller Info Section */}
-          <div className="w-[85%] lg:w-[70%] mt-2 mx-auto relative z-20 flex flex-col lg:flex-row gap-6">
+          <div className="w-[85%] lg:w-[80%] mt-2 mx-auto relative z-20 flex flex-col lg:flex-row gap-6">
             <div className="bg-[#111827] p-4 rounded-lg shadow-lg flex-1">
               <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
                 <div className="relative w-[160px] h-[160px] rounded-full overflow-hidden">
+                  {/* avatar */}
                   <Image
                     src={
                       selectedShop?.avatar ||
@@ -339,7 +341,7 @@ const SellerProfile = () => {
           </div>
 
           {/* Tabs Section */}
-          <div className="w-[85%] lg:w-[70%] mx-auto">
+          <div className="w-[85%] lg:w-[80%] mx-auto">
             {/* Tabs */}
             <div className="flex border-b border-gray-700 rounded-lg overflow-hidden">
               {TABS.map((tab) => (
@@ -361,7 +363,7 @@ const SellerProfile = () => {
             <div className="bg-white my-4 text-slate-700">
               {/* Products Tab */}
               {activeTab === 'Products' && (
-                <div className="m-auto grid grid-cols-1 gap-4 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                <div className="m-auto grid grid-cols-1 gap-3 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                   {productsLoading && (
                     <>
                       {Array.from({ length: 10 }).map((_, index) => (
@@ -383,7 +385,7 @@ const SellerProfile = () => {
 
               {/* Deals Tab */}
               {activeTab === 'Deals' && (
-                <div className="m-auto grid grid-cols-1 gap-4 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                <div className="m-auto grid grid-cols-1 gap-3 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                   {/* isEventsLoading */}
                   {eventsLoading && (
                     <>

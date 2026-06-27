@@ -5,10 +5,10 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 mt-12">
       {/* Top section with columns */}
-      <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 ">
         <div>
           <h3 className="text-white font-semibold mb-3">Get to Know Us</h3>
-          <ul className="space-y-2">
+          <ul className="space-y-2 text-sm">
             <li>
               <Link href="/about" className="hover:underline">
                 About Us
@@ -34,7 +34,7 @@ export default function Footer() {
 
         <div>
           <h3 className="text-white font-semibold mb-3">Make Money with Us</h3>
-          <ul className="space-y-2">
+          <ul className="space-y-2 text-sm">
             <li>
               <Link href="/sell" className="hover:underline">
                 Sell on Our Platform
@@ -60,7 +60,7 @@ export default function Footer() {
 
         <div>
           <h3 className="text-white font-semibold mb-3">Payment Products</h3>
-          <ul className="space-y-2">
+          <ul className="space-y-2 text-sm">
             <li>
               <Link href="/cards" className="hover:underline">
                 Credit Cards
@@ -86,7 +86,7 @@ export default function Footer() {
 
         <div>
           <h3 className="text-white font-semibold mb-3">Let Us Help You</h3>
-          <ul className="space-y-2">
+          <ul className="space-y-2 text-sm">
             <li>
               <Link href="/account" className="hover:underline">
                 Your Account

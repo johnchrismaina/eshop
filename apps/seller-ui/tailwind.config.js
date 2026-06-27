@@ -11,8 +11,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        // poppins: ['var(--font-poppins)'],
-        sans: ['Mulish', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
       },
     },
   },

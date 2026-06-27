@@ -60,22 +60,25 @@ const Login = () => {
     <div className="w-full py-2 min-h-screen bg-white flex flex-col items-center gap-4">
       {/* logo */}
       <div>
-        {/* <Link href="/">
+        <Link href="/">
           <Image
-            src={layout?.logo || ''}
+            src={
+              layout?.logo ||
+              'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo1.svg?updatedAt=1782386876690'
+            }
             alt=""
             width={150}
             height={50}
             className="object-cover"
             unoptimized
           />
-        </Link> */}
+        </Link>
       </div>
 
       <div className="w-full flex flex-col items-center justify-center">
-        <div className="flex flex-col justify-start gap-4">
-          <span className="text-2xl font-extrabold text-gray-800 tracking-tight">
-            Sokonis seller account
+        <div className="flex flex-col justify-start gap-1">
+          <span className="text-xl font-semibold text-gray-800 tracking-tight ">
+            Seller account
           </span>
           <div className="md:w-[380px] px-8 py-6 bg-[#f1f1f1] rounded-lg flex flex-col justify-start">
             <h3 className="text-2xl font-semibold text-start mb-4">Login</h3>
@@ -114,7 +117,7 @@ const Login = () => {
                 </label>
                 <Link
                   href={'/forgot-password'}
-                  className="text-blue-500 text-sm font-semibold no-underline hover:underline"
+                  className="text-blue-500 text-sm font-medium no-underline hover:underline"
                 >
                   Forgot Password?
                 </Link>
@@ -124,7 +127,7 @@ const Login = () => {
                 <input
                   type={passwordVisible ? 'text' : 'password'}
                   placeholder="Min. 6 characters"
-                  className="w-full px-3 py-1 pr-10 text-base font-medium border border-gray-300 outline-0 !rounded"
+                  className="w-full px-3 py-1 pr-10 text-base font-normal border border-gray-300 outline-0 !rounded"
                   {...register('password', {
                     required: 'Password is required',
                     minLength: {
@@ -187,7 +190,7 @@ const Login = () => {
               )}
 
               <div className="flex-1 border-t border-gray-300 mt-6 mb-4" />
-              <p className=" text-gray-600">
+              <p className=" text-gray-700 text-sm tracking-tight">
                 Don't have an account?{' '}
                 <Link
                   href={'/signup'}

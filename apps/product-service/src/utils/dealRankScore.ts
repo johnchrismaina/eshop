@@ -1,5 +1,5 @@
-// utils/eventRankScore.ts
-export function calculateEventRankScore(event: any): number {
+// utils/dealRankScore.ts
+export function calculateDealRankScore(event: any): number {
   const dealScore = event.Deal?.dealScore ?? 0;
 
   const ticketAvailabilityFactor =

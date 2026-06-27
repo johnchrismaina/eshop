@@ -18,7 +18,7 @@ model images {
 
   // 🔹 Event relation (NEW)
   eventId String? @db.ObjectId
-  event   events? @relation("EventImages", fields: [eventId], references: [id])
+  deal    deals?  @relation("EventImages", fields: [eventId], references: [id])
 }
 
 enum Role {
@@ -130,7 +130,7 @@ model shops {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   products      products[]    @relation("ShopProducts") // one-to-many products
-  events        events[]      @relation("ShopEvents") // one-to-many events
+  deal          deals[]       @relation("ShopDeals") // one-to-many events
 
   orders    orders[]
   followers userFollowsShop[]
@@ -218,7 +218,7 @@ model products {
   @@index([starting_date])
 }
 
-model events {
+model deals {
   id                   String    @id @default(auto()) @map("_id") @db.ObjectId
   title                String
   slug                 String    @unique
@@ -226,8 +226,8 @@ model events {
   short_description    String
   detailed_description String?
   location             String
-  start_date           DateTime
-  end_date             DateTime
+  deal_start           DateTime
+  deal_end             DateTime
   regular_price        Float
   sale_price           Float
   total_tickets        Int
@@ -239,15 +239,15 @@ model events {
 
   // 🔹 Shop relation (RECOMMENDED)
   shopId String @db.ObjectId
-  Shop   shops  @relation("ShopEvents", fields: [shopId], references: [id])
+  Shop   shops  @relation("ShopDeals", fields: [shopId], references: [id])
 
   // 🔹 Images relation
   images images[] @relation("EventImages")
 
-  eventRankScore Float @default(0)
+  dealRankScore Float @default(0)
 
   @@index([shopId])
-  @@index([start_date])
+  @@index([deal_start])
 }
 
 model Deal {

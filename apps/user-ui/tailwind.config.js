@@ -11,9 +11,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        // Roboto: ['var(--font-roboto)'],
-        // Poppins: ['var(--font-poppins)'],
-        sans: ['Mulish', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
+      screens: {
+        lg: '900px', // redefine lg to start at 900px
       },
     },
   },

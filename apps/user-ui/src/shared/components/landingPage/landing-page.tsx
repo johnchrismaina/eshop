@@ -2,12 +2,12 @@
 
 import useUser from 'apps/user-ui/src/hooks/useUser';
 import Hero from '../../modules/hero';
+import Deals from './deals';
+import PromoGrid from './PromoGrid';
 import Products from './products';
 import LatestProducts from './latest-products';
 // import TopShops from './top-shops';
-import Offers from './offers';
 import Footer from '../footer/Footer';
-import PromoGrid from './PromoGrid';
 
 export default function LandingPage() {
   const { role } = useUser();
@@ -15,9 +15,9 @@ export default function LandingPage() {
   return (
     <div className="bg-white min-h-screen">
       <Hero />
-      <div className="w-full my-0 px-6 m-auto flex flex-col gap-6 ">
+      <div className="w-full px-10 py-5 m-auto flex flex-col bg-white">
+        <Deals />
         <PromoGrid />
-        <Offers />
         <LatestProducts />
         <Products />
         {/* <TopShops /> */}

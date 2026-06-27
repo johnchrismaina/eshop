@@ -75,7 +75,7 @@ const Login = () => {
           <Image
             src={
               layout?.logo ||
-              'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo.svg'
+              'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo1.svg?updatedAt=1782386876690'
             }
             alt=""
             width={150}

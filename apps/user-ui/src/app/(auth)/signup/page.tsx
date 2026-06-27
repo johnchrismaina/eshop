@@ -126,7 +126,7 @@ const Signup = () => {
           <Image
             src={
               layout?.logo ||
-              'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo.svg'
+              'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo1.svg'
             }
             alt=""
             width={150}

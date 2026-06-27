@@ -3,7 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { fetchProducts } from '../queries/products';
 import { fetchLatestProducts } from '../queries/latest-products';
 import { fetchTopShops } from '../queries/top-shops';
-import { fetchEvents } from '../queries/events';
+import { fetchEvents } from '../queries/deals';
 import { fetchHello } from '../../hooks/fakeQuery';
 
 export async function prefetchLandingPageData(queryClient: QueryClient) {

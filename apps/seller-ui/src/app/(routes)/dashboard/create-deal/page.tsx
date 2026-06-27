@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import toast from 'react-hot-toast';
 import RichTextEditor from 'packages/components/rich-text-editor';
@@ -13,6 +13,9 @@ import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeho
 import Image from 'next/image';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
+import DatePicker from 'react-datepicker';
+import axiosInstance from 'apps/seller-ui/src/utils/axiosInstance';
+// import 'react-datepicker/dist/react-datepicker.css';
 
 interface UploadedImage {
   fileId: string;
@@ -42,6 +45,26 @@ const Page = () => {
 
   const regularPrice = watch('regular_price');
 
+  type ProductState = {
+    deal_start: Date | null;
+    deal_end: Date | null;
+  };
+
+  const [product, setProduct] = useState<ProductState>({
+    deal_start: null,
+    deal_end: null,
+  });
+
+  // const [seller, setSeller] = useState<any>(null);
+
+  // useEffect(() => {
+  //   const fetchSeller = async () => {
+  //     const res = await axiosInstance.get('/api/logged-in-seller');
+  //     setSeller(res.data);
+  //   };
+  //   fetchSeller();
+  // }, []);
+
   const generateSlug = (text: string) =>
     text
       .toLowerCase()
@@ -51,6 +74,7 @@ const Page = () => {
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
+      console.log('➡️ onSubmit triggered with data:', data);
 
       // ✅ Clean up images before sending
       const payload = {
@@ -58,15 +82,40 @@ const Page = () => {
         images: (data.images || []).filter(
           (img: any) => img && img.file_url && img.fileId
         ),
+        deal_start: product.deal_start
+          ? product.deal_start.toISOString()
+          : null,
+        deal_end: product.deal_end ? product.deal_end.toISOString() : null,
+        // shopId: seller.shops[0].id,
       };
 
-      await axiosProduct.post('/create-event', payload);
+      console.log('📦 Payload prepared:', payload);
 
+      // 🔹 Validation: enforce both dates if one is set
+      if (payload.deal_start && !payload.deal_end) {
+        console.warn('⚠️ Validation failed: missing end date');
+        toast.error('End date is required when a start date is selected.');
+        setLoading(false);
+        return;
+      }
+      if (payload.deal_end && !payload.deal_start) {
+        console.warn('⚠️ Validation failed: missing start date');
+        toast.error('Start date is required when an end date is selected.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('🚀 Sending POST /create-deal with payload...');
+      const response = await axiosProduct.post('/create-deal', payload);
+
+      console.log('✅ Deal created successfully:', response.data);
       toast.success('Deal created successfully!');
       router.push('/dashboard/all-deals');
     } catch (error: any) {
+      console.error('💥 Error in onSubmit:', error);
       toast.error(error?.response?.data?.message ?? 'Something went wrong');
     } finally {
+      console.log('🔚 onSubmit finished, resetting loading state');
       setLoading(false);
     }
   };
@@ -191,10 +240,10 @@ const Page = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading */}
-      <h2 className="text-2xl py-2 font-semibold font-poppins">Create Event</h2>
+      <h2 className="text-2xl py-2 font-semibold font-poppins">Create Deal</h2>
 
       {/* Breadcrumbs */}
-      <Breadcrumbs title="Create Event" />
+      <Breadcrumbs title="Create Deal" />
 
       {/* Content layout */}
       {/* <div className="grid grid-cols-2 gap-6"> */}
@@ -236,11 +285,11 @@ const Page = () => {
         {/* Right side - form inputs */}
         <div className="md:w-[65%]">
           <div className="w-full flex gap-6">
-            {/* Event Title */}
+            {/* Deal Title */}
             <div className="w-2/4">
               <Input
-                label="Event Title *"
-                placeholder="Enter event title"
+                label="Deal Title *"
+                placeholder="Enter deal title"
                 {...register('title', { required: 'Title is required' })}
               />
               {errors.title && (
@@ -295,7 +344,7 @@ const Page = () => {
                 type="textarea"
                 rows={5}
                 label="Short Description *"
-                placeholder="Quick summary of the event"
+                placeholder="Quick summary of the deal"
                 {...register('short_description', { required: true })}
               />
             </div>
@@ -314,12 +363,12 @@ const Page = () => {
                 )}
               />
 
-              <div className="mt-2">
+              {/* <div className="mt-2 ">
                 <Input
                   type="text"
                   label="Start Date *"
                   placeholder="YYYY-MM-DD"
-                  {...register('start_date', {
+                  {...register('deal_start', {
                     required: true,
                     pattern: {
                       value: /^\d{4}-\d{2}-\d{2}$/,
@@ -327,19 +376,19 @@ const Page = () => {
                     },
                   })}
                 />
-                {errors.start_date && (
+                {errors.deal_start && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.start_date.message as string}
+                    {errors.deal_start.message as string}
                   </p>
                 )}
-              </div>
+              </div> */}
 
-              <div className="mt-2">
+              {/* <div className="mt-2 ">
                 <Input
                   type="text"
                   label="End Date *"
                   placeholder="YYYY-MM-DD"
-                  {...register('end_date', {
+                  {...register('deal_end', {
                     required: true,
                     pattern: {
                       value: /^\d{4}-\d{2}-\d{2}$/,
@@ -347,11 +396,37 @@ const Page = () => {
                     },
                   })}
                 />
-                {errors.end_date && (
+                {errors.deal_end && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.end_date.message as string}
+                    {errors.deal_end.message as string}
                   </p>
                 )}
+              </div> */}
+
+              <div className="flex flex-col gap-2 mt-2 ">
+                <label className="text-base font-medium text-gray-300 mt-1">
+                  Deal Start Date
+                </label>
+                <DatePicker
+                  selected={product.deal_start}
+                  onChange={(date: Date | null) =>
+                    setProduct({ ...product, deal_start: date })
+                  }
+                  className="border rounded-md px-2 py-1 text-sm font-semibold text-gray-700 w-full"
+                  dateFormat="yyyy-MM-dd"
+                />
+
+                <label className="text-base font-medium text-gray-300 mt-1">
+                  Deal End Date
+                </label>
+                <DatePicker
+                  selected={product.deal_end}
+                  onChange={(date: Date | null) =>
+                    setProduct({ ...product, deal_end: date })
+                  }
+                  className="border rounded-md px-2 py-1 text-sm font-semibold text-gray-700 w-full"
+                  dateFormat="yyyy-MM-dd"
+                />
               </div>
 
               {/* Regular Price */}
@@ -458,7 +533,7 @@ const Page = () => {
         </div>
       )}
 
-      {/* Create Event */}
+      {/* Create Deal */}
       <div className="mt-6 flex justify-end gap-3">
         {isChanged && (
           <button
@@ -478,13 +553,11 @@ const Page = () => {
         </button> */}
         <button
           type="submit"
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md relative"
           disabled={loading}
+          onClick={() => console.log('🖱️ Create button clicked')}
         >
-          {/* Keep the text in DOM but hide it when loading */}
           <span className={loading ? 'opacity-0' : 'opacity-100'}>Create</span>
-
-          {/* Spinner centered absolutely */}
           {loading && (
             <span className="absolute inset-0 flex items-center justify-center">
               <Spinner size={16} borderColor="border-gray-200" />

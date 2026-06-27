@@ -26,13 +26,13 @@ const Products = () => {
   });
 
   return (
-    <div className="bg-white px-4 py-0">
-      <div className="my-6 block">
+    <div className="bg-white pb-6">
+      <div className="pb-4 block">
         <SectionTitle title="Suggested Products" />
       </div>
 
       {isLoading && !isFetched && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 2xl:grid-cols-6 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 2xl:grid-cols-6 gap-3 pb-2">
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}

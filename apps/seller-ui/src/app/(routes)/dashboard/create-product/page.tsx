@@ -4,9 +4,9 @@ import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-import { ChevronRight, Wand, X } from 'lucide-react';
+import { Wand, X } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ColorSelector from 'packages/components/color-selector';
 import CustomProperties from 'packages/components/custom-properties';
@@ -515,12 +515,20 @@ const Page = () => {
                   rules={{
                     required: 'Detailed description is required!',
                     validate: (value) => {
-                      const wordCount = value
+                      // Remove HTML tags
+                      const plainText = value
+                        .replace(/<[^>]+>/g, '') // remove tags
+                        .replace(/&nbsp;/g, ' ') // replace non-breaking spaces
+                        .trim();
+
+                      // Count words
+                      const wordCount = plainText
                         ?.split(/\s+/)
                         .filter((word: string) => word).length;
+
                       return (
-                        wordCount >= 100 ||
-                        'Secription must be at least 100 words!'
+                        wordCount >= 50 ||
+                        'Description must be at least 50 words!'
                       );
                     },
                   }}

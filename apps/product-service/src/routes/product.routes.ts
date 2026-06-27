@@ -1,30 +1,30 @@
 import express, { Router } from 'express';
 import {
   createDiscountCodes,
-  createEvent,
+  createDeal,
   createProduct,
+  deleteDeal,
   deleteDiscountCode,
-  deleteEvent,
   deleteProduct,
   deleteProductImage,
-  getAllEvents,
+  getAllDeals,
   getAllProducts,
   getCategories,
   getDiscountCodes,
-  getFilteredEvents,
   getFilteredProducts,
   getFilteredShops,
   getProductDetails,
-  getShopEvents,
+  getShopDeals,
   getShopProducts,
   getStripeAccount,
-  restoreEvent,
+  restoreDeal,
   // getStripeAccount,
   restoreProduct,
   searchProducts,
   topShops,
   updateShopDetails,
   uploadProductImage,
+  getFilteredDeals,
 } from '../controllers/product.controller';
 import isAuthenticated from '@packages/middleware/isAuthenticated';
 import { upload } from '@packages/middleware/multer';
@@ -46,19 +46,19 @@ router.post(
 );
 router.delete('/delete-product-image', isAuthenticated, deleteProductImage);
 router.post('/create-product', isAuthenticated, createProduct);
-router.post('/create-event', isAuthenticated, createEvent);
+router.post('/create-deal', isAuthenticated, createDeal);
 router.get('/get-shop-products', isAuthenticated, getShopProducts);
-router.get('/get-shop-events', isAuthenticated, getShopEvents);
+router.get('/get-shop-deals', isAuthenticated, getShopDeals);
 router.delete('/delete-product/:productId', isAuthenticated, deleteProduct);
 router.put('/restore-product/:productId', isAuthenticated, restoreProduct);
-router.delete('/delete-event/:eventId', isAuthenticated, deleteEvent);
-router.put('/restore-event/:eventId', isAuthenticated, restoreEvent);
+router.delete('/delete-deal/:dealId', isAuthenticated, deleteDeal);
+router.put('/restore-deal/:dealId', isAuthenticated, restoreDeal);
 router.get('/get-stripe-account', isAuthenticated, isSeller, getStripeAccount);
 router.get('/get-all-products', getAllProducts);
-router.get('/get-all-events', getAllEvents);
+router.get('/get-all-deals', getAllDeals);
 router.get('/get-product/:slug', getProductDetails);
 router.get('/get-filtered-products', getFilteredProducts);
-router.get('/get-filtered-offers', getFilteredEvents);
+router.get('/get-filtered-deals', getFilteredDeals);
 router.get('/get-filtered-shops', getFilteredShops);
 router.get('/search-products', searchProducts);
 router.get('/top-shops', topShops);

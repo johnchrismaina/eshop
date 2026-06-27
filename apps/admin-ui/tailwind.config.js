@@ -12,7 +12,8 @@ module.exports = {
     extend: {
       fontFamily: {
         // Poppins: ['var(--font-poppins)'],
-        sans: ['Mulish', 'sans-serif'],
+        // sans: ['Mulish', 'sans-serif'],
+        sans: ['Work Sans', 'sans-serif'],
       },
     },
   },

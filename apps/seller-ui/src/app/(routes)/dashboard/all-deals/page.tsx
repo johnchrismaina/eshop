@@ -26,47 +26,47 @@ import Image from 'next/image';
 import DeleteConfirmationModal from 'apps/seller-ui/src/shared/components/modals/delete.confirmation.modal';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 
-const fetchEvents = async () => {
-  const res = await axiosProduct.get('/get-shop-events');
-  return res?.data?.events;
+const fetchDeals = async () => {
+  const res = await axiosProduct.get('/get-shop-deals');
+  return res?.data?.deals;
 };
 
-const deleteEvent = async (eventId: string) => {
-  await axiosProduct.delete(`/delete-event/${eventId}`);
+const deleteDeal = async (dealId: string) => {
+  await axiosProduct.delete(`/delete-deal/${dealId}`);
 };
 
-const restoreEvent = async (eventId: string) => {
-  await axiosProduct.put(`/restore-event/${eventId}`);
+const restoreDeal = async (dealId: string) => {
+  await axiosProduct.put(`/restore-deal/${dealId}`);
 };
 
-const EventList = () => {
+const DealList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
   // const [analyticsData, setAnalyticsData] = useState(null);
   // const [showAnalytics, setShowAnalytics] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>();
+  const [selectedDeal, setSelectedDeal] = useState<any>();
   const queryClient = useQueryClient();
 
-  const { data: events = [], isLoading } = useQuery({
-    queryKey: ['events'],
-    queryFn: fetchEvents,
+  const { data: deals = [], isLoading } = useQuery({
+    queryKey: ['deals'],
+    queryFn: fetchDeals,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  //   Delete Event Mutation
+  //   Delete Deal Mutation
   const deleteMutation = useMutation({
-    mutationFn: deleteEvent,
+    mutationFn: deleteDeal,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-events'] });
+      queryClient.invalidateQueries({ queryKey: ['shop-deals'] });
       setShowDeleteModal(false);
     },
   });
 
-  //   Restore Event Mutation
+  //   Restore Deal Mutation
   const restoreMutation = useMutation({
-    mutationFn: restoreEvent,
+    mutationFn: restoreDeal,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-events'] });
+      queryClient.invalidateQueries({ queryKey: ['shop-deals'] });
       setShowDeleteModal(false);
     },
   });
@@ -190,7 +190,7 @@ const EventList = () => {
   );
 
   const table = useReactTable({
-    data: events,
+    data: deals,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -201,8 +201,8 @@ const EventList = () => {
     onGlobalFilterChange: setGlobalFilter,
   });
 
-  const openDeleteModal = (event: any) => {
-    setSelectedEvent(event);
+  const openDeleteModal = (deal: any) => {
+    setSelectedDeal(deal);
     setShowDeleteModal(true);
   };
 
@@ -210,17 +210,17 @@ const EventList = () => {
     <div className="w-full min-h-screen p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2l text-white font-semibold">All Offers</h2>
+        <h2 className="text-2l text-white font-semibold">All Deals</h2>
         <Link
-          href="/dashboard/create-event"
+          href="/dashboard/create-deal"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
         >
-          <Plus size={18} /> Add Offer
+          <Plus size={18} /> New Deal
         </Link>
       </div>
 
       {/* Breadcrumbs */}
-      <Breadcrumbs title="All Offers" />
+      <Breadcrumbs title="All Deals" />
 
       {/* Search Bar */}
       <div className="mb-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
@@ -278,10 +278,10 @@ const EventList = () => {
 
         {showDeleteModal && (
           <DeleteConfirmationModal
-            event={selectedEvent}
+            deal={selectedDeal}
             onClose={() => setShowDeleteModal(false)}
-            onConfirm={() => deleteMutation.mutate(selectedEvent?.id)}
-            onRestore={() => restoreMutation.mutate(selectedEvent?.id)}
+            onConfirm={() => deleteMutation.mutate(selectedDeal?.id)}
+            onRestore={() => restoreMutation.mutate(selectedDeal?.id)}
           />
         )}
       </div>
@@ -289,4 +289,4 @@ const EventList = () => {
   );
 };
 
-export default EventList;
+export default DealList;

@@ -33,9 +33,9 @@ const fetchProducts = async () => {
   return res?.data?.products;
 };
 
-const fetchEvents = async () => {
-  const res = await axiosProduct.get('/get-shop-events');
-  return res?.data?.events;
+const fetchDeals = async () => {
+  const res = await axiosProduct.get('/get-shop-deals');
+  return res?.data?.deals;
 };
 
 const SellerProfile = () => {
@@ -114,9 +114,9 @@ const SellerProfile = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const { data: events = [], isLoading: eventsLoading } = useQuery({
-    queryKey: ['events'],
-    queryFn: fetchEvents,
+  const { data: deals = [], isLoading: dealsLoading } = useQuery({
+    queryKey: ['deals'],
+    queryFn: fetchDeals,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
@@ -128,9 +128,9 @@ const SellerProfile = () => {
       .join(' ');
   };
 
-  // Debug: log products and events to verify data
+  // Debug: log products and deals to verify data
   console.log('SellerProfile products:', products);
-  console.log('SellerProfile events:', events);
+  console.log('SellerProfile deals:', deals);
 
   const joinedDate = selectedShop?.createdAt
     ? new Date(selectedShop.createdAt).toLocaleDateString('en-US', {
@@ -196,7 +196,7 @@ const SellerProfile = () => {
           </div>
 
           {/* Seller Info Section */}
-          <div className="w-[85%] lg:w-[80%] mt-2 mx-auto relative z-20 flex flex-col lg:flex-row gap-6">
+          <div className="w-full lg:w-full mt-2 mx-auto relative z-20 flex flex-col lg:flex-row gap-6">
             <div className="bg-[#111827] p-4 rounded-lg shadow-lg flex-1">
               <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
                 <div className="relative w-[160px] h-[160px] rounded-full overflow-hidden">
@@ -341,7 +341,7 @@ const SellerProfile = () => {
           </div>
 
           {/* Tabs Section */}
-          <div className="w-[85%] lg:w-[80%] mx-auto">
+          <div className="w-full lg:w-full mx-auto">
             {/* Tabs */}
             <div className="flex border-b border-gray-700 rounded-lg overflow-hidden">
               {TABS.map((tab) => (
@@ -363,7 +363,7 @@ const SellerProfile = () => {
             <div className="bg-white my-4 text-slate-700">
               {/* Products Tab */}
               {activeTab === 'Products' && (
-                <div className="m-auto grid grid-cols-1 gap-3 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                <div className="m-auto items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 p-5">
                   {productsLoading && (
                     <>
                       {Array.from({ length: 10 }).map((_, index) => (
@@ -385,9 +385,9 @@ const SellerProfile = () => {
 
               {/* Deals Tab */}
               {activeTab === 'Deals' && (
-                <div className="m-auto grid grid-cols-1 gap-3 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  {/* isEventsLoading */}
-                  {eventsLoading && (
+                <div className="m-auto items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 p-5">
+                  {/* isDealsLoading */}
+                  {dealsLoading && (
                     <>
                       {Array.from({ length: 10 }).map((_, index) => (
                         <div
@@ -397,14 +397,14 @@ const SellerProfile = () => {
                       ))}
                     </>
                   )}
-                  {events?.map((event: any) => (
+                  {deals?.map((deal: any) => (
                     <ProductCard
-                      isEvent={true}
-                      key={event.id}
-                      product={{ ...event, ratings: event.ratings ?? 4 }}
+                      isDeal={true}
+                      key={deal.id}
+                      product={{ ...deal, ratings: deal.ratings ?? 4 }}
                     />
                   ))}
-                  {events?.length === 0 && (
+                  {deals?.length === 0 && (
                     <p className="py-2">No offers available yet!</p>
                   )}
                 </div>

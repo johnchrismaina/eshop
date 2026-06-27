@@ -262,7 +262,8 @@ export const createProduct = async (
         warranty,
         cashOnDelivery: cash_on_delivery,
         slug,
-        shopId: req.seller?.shop?.id!,
+        // shopId: req.seller?.shop?.id!,
+        shopId: req.seller.shops[0].id,
         tags: Array.isArray(tags) ? tags : tags.split(','),
         brand,
         video_url,
@@ -301,13 +302,13 @@ export const createProduct = async (
   }
 };
 
-// Create event
-export const createEvent = async (
+// Create deal
+export const createDeal = async (
   req: any,
   res: Response,
   next: NextFunction
 ) => {
-  console.log('➡️ Entered createEvent controller');
+  console.log('➡️ Entered createDeal controller');
 
   try {
     const {
@@ -317,8 +318,8 @@ export const createEvent = async (
       short_description,
       detailed_description,
       location,
-      start_date,
-      end_date,
+      deal_start,
+      deal_end,
       regular_price = 0,
       sale_price,
       total_tickets,
@@ -334,8 +335,8 @@ export const createEvent = async (
       !category ||
       !short_description ||
       !location ||
-      !start_date ||
-      !end_date ||
+      !deal_start ||
+      !deal_end ||
       !sale_price ||
       !total_tickets
     ) {
@@ -343,17 +344,17 @@ export const createEvent = async (
     }
 
     // ✅ Seller + Shop validation
-    if (!req.seller?.id || !req.seller?.shop?.id) {
+    if (!req.seller?.id || !req.seller?.shops?.length) {
       return next(
         new AuthError(
-          'Only authenticated sellers with a shop can create events!'
+          'Only authenticated sellers with a shop can create deals!'
         )
       );
     }
 
     // ✅ Date validation
-    const startDate = new Date(start_date);
-    const endDate = new Date(end_date);
+    const startDate = new Date(deal_start);
+    const endDate = new Date(deal_end);
     const now = new Date();
 
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
@@ -361,7 +362,7 @@ export const createEvent = async (
     }
 
     if (startDate < now) {
-      return next(new ValidationError('Event cannot start in the past'));
+      return next(new ValidationError('Deal cannot start in the past'));
     }
 
     if (startDate > endDate) {
@@ -386,7 +387,7 @@ export const createEvent = async (
     }
 
     // ✅ Slug uniqueness check
-    const existingSlug = await prisma.events.findUnique({
+    const existingSlug = await prisma.deals.findUnique({
       where: { slug: slug.trim() },
     });
 
@@ -396,9 +397,9 @@ export const createEvent = async (
       );
     }
 
-    console.log('🛠 Creating event in DB...');
+    console.log('🛠 Creating deal in DB...');
 
-    const newEvent = await prisma.events.create({
+    const newDeal = await prisma.deals.create({
       data: {
         title: title.trim(),
         slug: slug.trim(),
@@ -406,13 +407,14 @@ export const createEvent = async (
         short_description: short_description.trim(),
         detailed_description: detailed_description?.trim(),
         location: location.trim(),
-        start_date: startDate,
-        end_date: endDate,
+        deal_start: startDate,
+        deal_end: endDate,
         regular_price: parseFloat(regular_price),
         sale_price: parseFloat(sale_price),
         total_tickets: parsedTotalTickets,
         available_tickets: parsedTotalTickets,
-        shopId: req.seller?.shop?.id!,
+        // shopId: req.seller?.shop?.id!,
+        shopId: req.seller.shops[0].id,
         images: {
           create: images
             .filter((img: any) => img && img.fileId && img.file_url)
@@ -433,14 +435,14 @@ export const createEvent = async (
       },
     });
 
-    console.log('✅ Event created successfully:', newEvent.id);
+    console.log('✅ Deal created successfully:', newDeal.id);
 
     return res.status(201).json({
       success: true,
-      newEvent,
+      newDeal,
     });
   } catch (error) {
-    console.error('💥 Error in createEvent:', error);
+    console.error('💥 Error in createDeal:', error);
     next(error);
   }
 };
@@ -470,14 +472,14 @@ export const getShopProducts = async (
   }
 };
 
-// Get logged in seller events
-export const getShopEvents = async (
+// Get logged in seller deals
+export const getShopDeals = async (
   req: any,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const events = await prisma.events.findMany({
+    const deals = await prisma.deals.findMany({
       where: {
         shopId: req?.seller?.shop?.id,
       },
@@ -488,7 +490,7 @@ export const getShopEvents = async (
 
     res.status(201).json({
       success: true,
-      events,
+      deals,
     });
   } catch (error) {
     next(error);
@@ -540,35 +542,35 @@ export const deleteProduct = async (
   }
 };
 
-// Delete event
-export const deleteEvent = async (
+// Delete deal
+export const deleteDeal = async (
   req: any,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { eventId } = req.params;
+    const { dealId } = req.params;
     const sellerId = req.seller?.shop?.id;
 
-    const event = await prisma.events.findUnique({
-      where: { id: eventId },
+    const deal = await prisma.deals.findUnique({
+      where: { id: dealId },
       select: { id: true, shopId: true, isDeleted: true },
     });
 
-    if (!event) {
-      return next(new ValidationError('Event not found'));
+    if (!deal) {
+      return next(new ValidationError('Deal not found'));
     }
 
-    if (event.shopId !== sellerId) {
+    if (deal.shopId !== sellerId) {
       return next(new ValidationError('Unauthorized action'));
     }
 
-    if (event.isDeleted) {
-      return next(new ValidationError('Event is already deleted'));
+    if (deal.isDeleted) {
+      return next(new ValidationError('Deal is already deleted'));
     }
 
-    const deleteEvent = await prisma.events.update({
-      where: { id: eventId },
+    const deleteDeal = await prisma.deals.update({
+      where: { id: dealId },
       data: {
         isDeleted: true,
         deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -577,8 +579,8 @@ export const deleteEvent = async (
 
     return res.status(200).json({
       message:
-        'Event is scheduled for deletion in 2 hours. You can restore it within this time',
-      deletedAt: deleteEvent.deletedAt,
+        'Deal is scheduled for deletion in 2 hours. You can restore it within this time',
+      deletedAt: deleteDeal.deletedAt,
     });
   } catch (error) {
     return next(error);
@@ -625,41 +627,41 @@ export const restoreProduct = async (
   }
 };
 
-// Restore event
-export const restoreEvent = async (
+// Restore deal
+export const restoreDeal = async (
   req: any,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { eventId } = req.params;
+    const { dealId } = req.params;
     const sellerId = req.seller?.shop?.id;
 
-    const event = await prisma.events.findUnique({
-      where: { id: eventId },
+    const deal = await prisma.deals.findUnique({
+      where: { id: dealId },
       select: { id: true, shopId: true, isDeleted: true },
     });
 
-    if (!event) {
-      return next(new ValidationError('Event not found'));
+    if (!deal) {
+      return next(new ValidationError('Deal not found'));
     }
 
-    if (event.shopId !== sellerId) {
+    if (deal.shopId !== sellerId) {
       return next(new ValidationError('Unauthorized action'));
     }
 
-    if (!event.isDeleted) {
-      return res.status(400).json({ message: 'Event is not in deleted state' });
+    if (!deal.isDeleted) {
+      return res.status(400).json({ message: 'Deal is not in deleted state' });
     }
 
-    await prisma.events.update({
-      where: { id: eventId },
+    await prisma.deals.update({
+      where: { id: dealId },
       data: { isDeleted: false, deletedAt: null },
     });
 
-    return res.status(200).json({ message: 'Event successfully restored!' });
+    return res.status(200).json({ message: 'Deal successfully restored!' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error restoring event', error });
+    return res.status(500).json({ message: 'Error restoring deal', error });
   }
 };
 
@@ -873,8 +875,8 @@ export const getFilteredProducts = async (
   }
 };
 
-// Get all events
-export const getAllEvents = async (
+// Get all deals
+export const getAllDeals = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -884,27 +886,27 @@ export const getAllEvents = async (
     const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
 
-    // Base filter: only events with valid dates and not deleted
+    // Base filter: only deals with valid dates and not deleted
     const baseFilter = {
       AND: [
-        { start_date: { not: undefined } },
-        { end_date: { not: undefined } },
+        { deal_start: { not: undefined } },
+        { deal_end: { not: undefined } },
         { isDeleted: false },
       ],
     };
 
-    // Count total events
-    const total = await prisma.events.count({ where: baseFilter });
+    // Count total deals
+    const total = await prisma.deals.count({ where: baseFilter });
 
-    // ✅ Default ordering: use eventRankScore if we have enough events
+    // ✅ Default ordering: use dealtRankScore if we have enough deals
     let orderLogic: any = { createdAt: 'desc' };
 
     if (total >= 10) {
-      orderLogic = { eventRankScore: 'desc' }; // rank by score
+      orderLogic = { dealRankScore: 'desc' }; // rank by score
     }
 
-    const [events, top10Upcoming] = await Promise.all([
-      prisma.events.findMany({
+    const [deals, top10Upcoming] = await Promise.all([
+      prisma.deals.findMany({
         skip,
         take: limit,
         where: baseFilter,
@@ -915,28 +917,28 @@ export const getAllEvents = async (
         orderBy: orderLogic,
       }),
 
-      prisma.events.findMany({
+      prisma.deals.findMany({
         where: baseFilter,
         take: 10,
-        orderBy: { start_date: 'asc' }, // upcoming events list
+        orderBy: { deal_start: 'asc' }, // upcoming deals list
       }),
     ]);
 
     res.status(200).json({
-      events: events || [],
+      deals: deals || [],
       top10Upcoming: top10Upcoming || [],
       total,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error('getAllEvents error:', error);
-    res.status(500).json({ message: 'Failed to fetch events', events: [] });
+    console.error('getAllDeals error:', error);
+    res.status(500).json({ message: 'Failed to fetch deals', deals: [] });
   }
 };
 
 // Get filtered offers
-export const getFilteredEvents = async (
+export const getFilteredDeals = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -966,7 +968,7 @@ export const getFilteredEvents = async (
         gte: parsedPriceRange[0],
         lte: parsedPriceRange[1],
       },
-      NOT: { start_date: null },
+      NOT: { deal_start: null },
     };
 
     if (categories && (categories as string[]).length > 0) {

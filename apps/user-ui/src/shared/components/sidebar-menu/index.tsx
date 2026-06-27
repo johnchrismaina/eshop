@@ -1,104 +1,103 @@
-// SidebarMenu.tsx
-import React from 'react';
-import { menuData } from './menuData';
-import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+import { ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-type SidebarMenuProps = {
-  isOpen: boolean;
-  onClose: () => void;
+const categories: Record<string, string[]> = {
+  Sneakers: ['Running', 'Basketball', 'Lifestyle', 'Skateboarding'],
+  Shoes: ['Boots', 'Sandals', 'Formal', 'Casual'],
+  Apparel: ['T-Shirts', 'Jackets', 'Hoodies', 'Pants'],
 };
 
-const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, onClose }) => {
-  const [openSection, setOpenSection] = React.useState<number | null>(null);
-  const [openItem, setOpenItem] = React.useState<number | null>(null);
+const brands: Record<string, string[]> = {
+  Nike: ['Air Max', 'Jordan', 'Dunk'],
+  Adidas: ['Samba', 'Yeezy', 'Ultraboost'],
+  Converse: ['Chuck Taylor', 'One Star'],
+};
 
-  const toggleSection = (index: number) => {
-    setOpenSection(openSection === index ? null : index);
-    setOpenItem(null);
-  };
+interface SidebarMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const toggleItem = (index: number) => {
-    setOpenItem(openItem === index ? null : index);
-  };
+export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  // 👇 Lock body scroll when sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   return (
     <>
       {/* Backdrop */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-[100]"
-          onClick={onClose}
-        />
-      )}
-
-      {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-[100] 
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className="fixed inset-0 bg-black/40 mt-[96px] z-40"
+        onMouseEnter={() => {
+          onClose();
+          setHovered(null);
+        }}
+      />
+
+      {/* Dropdown container */}
+      <div
+        className="absolute left-0 h-[500px] top-full mt-0 py-4 ml-[-20] flex bg-white rounded-br-lg rounded-bl-lg z-50"
+        onMouseLeave={() => setHovered(null)} // 👈 attach here, not on the first panel
       >
-        <div className="p-4 flex justify-between items-center">
-          <h2 className="text-lg font-bold">Hello!</h2>
-          <button className="text-gray-600 hover:text-black" onClick={onClose}>
-            ✕
-          </button>
-        </div>
-
-        <div className="p-4">
-          {menuData.map((section, sIndex: number) => (
-            <div key={sIndex} className="mb-4">
-              <div
-                className="font-bold text-lg text-[#333] mb-2 cursor-pointer flex justify-between items-center"
-                onClick={() => toggleSection(sIndex)}
+        {/* First window */}
+        <div className="w-52 overflow-y-auto ">
+          <h3 className="font-semibold mb-2 px-6">Categories</h3>
+          <ul className="text-sm text-gray-600">
+            {Object.keys(categories).map((cat) => (
+              <li
+                key={cat}
+                onMouseEnter={() => setHovered(cat)}
+                className="flex items-center justify-between cursor-pointer hover:text-black px-6 py-1 hover:bg-slate-200"
               >
-                {section.title}
-                {openSection === sIndex ? (
-                  <ChevronDownIcon className="h-5 w-5 text-gray-600" />
-                ) : (
-                  <ChevronRightIcon className="h-5 w-5 text-gray-600" />
-                )}
-              </div>
+                <span>{cat}</span>
+                <ChevronRight className="w-4 h-4 text-gray-600" />
+              </li>
+            ))}
+          </ul>
 
-              {openSection === sIndex && (
-                <ul className="space-y-1 pl-2">
-                  {section.items.map((item, iIndex: number) => (
-                    <li key={iIndex}>
-                      <div
-                        className="cursor-pointer text-gray-700 hover:text-blue-600 flex justify-between items-center"
-                        onClick={() =>
-                          item.subItems ? toggleItem(iIndex) : null
-                        }
-                      >
-                        {item.name}
-                        {item.subItems &&
-                          (openItem === iIndex ? (
-                            <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-                          ) : (
-                            <ChevronRightIcon className="h-4 w-4 text-gray-500" />
-                          ))}
-                      </div>
-
-                      {item.subItems && openItem === iIndex && (
-                        <ul className="pl-4 mt-1 space-y-1 text-sm text-gray-700">
-                          {item.subItems.map((sub, subIndex) => (
-                            <li
-                              key={subIndex}
-                              className="cursor-pointer hover:text-blue-600"
-                            >
-                              {sub}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
+          <h3 className="font-semibold mt-4 mb-2 px-6">Brands</h3>
+          <ul className="text-sm text-gray-600">
+            {Object.keys(brands).map((brand) => (
+              <li
+                key={brand}
+                onMouseEnter={() => setHovered(brand)}
+                className="cursor-pointer hover:text-black px-6 py-1 hover:bg-gray-200"
+              >
+                {brand}
+              </li>
+            ))}
+          </ul>
         </div>
+
+        {/* Second window */}
+        {hovered && (
+          <div className="w-52 h-[500px] overflow-y-auto ">
+            <h3 className="font-semibold mb-2 px-4 ">{hovered}</h3>
+            <ul className="text-sm text-gray-600">
+              {(categories[hovered] || brands[hovered] || []).map((sub) => (
+                <li
+                  key={sub}
+                  className="cursor-pointer hover:text-black px-4 py-1 hover:underline"
+                >
+                  {sub}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </>
   );
-};
-
-export default SidebarMenu;
+}

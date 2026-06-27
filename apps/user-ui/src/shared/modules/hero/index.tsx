@@ -9,11 +9,14 @@ const Hero = () => {
   const { layout } = useLayout();
 
   return (
-    <div className="relative w-full m-auto h-[40vh] z-0 overflow-visible ">
+    <div className="relative w-full m-auto h-[36vh] z-0 overflow-visible ">
       <Image
         src={
           layout?.banner ||
-          'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61uMN8JVocL._SX3000_.jpg'
+          'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61mRzX3wg9L._SX3000_.jpg?updatedAt=1771419784274' //creme
+          // 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/71spMfddxoL._SX3000_.jpg?updatedAt=1771419784535' //pink
+          // 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61Yx5-N155L._SX3000_.jpg?updatedAt=1771419784553' //green
+          // 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61uMN8JVocL._SX3000_.jpg' //purple
         }
         alt="Banner"
         onClick={() => router.push('/products')}

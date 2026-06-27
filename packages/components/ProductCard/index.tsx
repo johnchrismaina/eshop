@@ -10,10 +10,10 @@ import Ratings from '../ratings';
 
 const ProductCard = ({
   product,
-  isEvent,
+  isDeal,
 }: {
   product: any;
-  isEvent?: boolean;
+  isDeal?: boolean;
 }) => {
   const [timeLeft, setTimeLeft] = useState('');
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ const ProductCard = ({
   //   const isInCart = cart.some((item: any) => item.id === product.id);
 
   useEffect(() => {
-    if (isEvent && product?.ending_date) {
+    if (isDeal && product?.ending_date) {
       const interval = setInterval(() => {
         const endTime = new Date(product.ending_date).getTime();
         const now = Date.now();
@@ -49,7 +49,7 @@ const ProductCard = ({
       return () => clearInterval(interval);
     }
     return;
-  }, [isEvent, product?.ending_date]);
+  }, [isDeal, product?.ending_date]);
 
   const capitalizeWords = (str: string) => {
     if (!str) return '';
@@ -61,17 +61,18 @@ const ProductCard = ({
 
   return (
     <div
-      className="w-full h-max bg-white rounded-lg relative min-w-0 cursor-pointer p-2"
-      //   onClick={() => setOpen(true)}
+      className="w-full h-max bg-white rounded-lg relative min-w-0 cursor-pointer py-2 "
+      onClick={() => setOpen(true)}
     >
-      {isEvent && (
+      {isDeal && (
         <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-semibold px-2 py-1 rounded-sm shadow-md">
           OFFER
         </div>
       )}
+
       <Link
         href={`/product/${product?.slug}`}
-        className="block relative w-full h-[200px] overflow-hidden bg-white"
+        className="block relative max-w-[270px] h-[200px] overflow-hidden bg-white "
       >
         <img
           src={
@@ -84,6 +85,44 @@ const ProductCard = ({
         />
       </Link>
 
+      {/* percentage badge */}
+      <div className="mt-2">
+        {product?.regular_price && product?.sale_price && (
+          <span className=" bg-[#ffece9] text-rose-600 text-xs font-semibold px-2 py-[6px] rounded-md ">
+            {Math.round(
+              ((product.regular_price - product.sale_price) /
+                product.regular_price) *
+                100
+            )}
+            % off
+          </span>
+        )}
+      </div>
+
+      {/* product price */}
+      <div className="mt-1 flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <span className="text-sm font-bold text-gray-900">KSh</span>
+          <span className="text-xl font-bold text-gray-900 tracking-tight">
+            {product?.sale_price}
+          </span>
+        </div>
+        <span className="text-xs font-normal line-through text-gray-500">
+          KSh {product?.regular_price}
+        </span>
+
+        {/* <span className="text-green-500 text-sm font-medium">
+          {product.totalSales} sold
+        </span> */}
+      </div>
+
+      {/* product title */}
+      <Link href={`/product/${product?.slug}`}>
+        <h3 className="text-[15px] tracking-tight font-normal !text-gray-900">
+          {capitalizeWords(product?.title)}
+        </h3>
+      </Link>
+
       {/* <Link
         href={`/shop/${product?.Shop?.id}`}
         className="block text-blue-500 text-sm font-medium my-2 px-2"
@@ -91,34 +130,12 @@ const ProductCard = ({
         {capitalizeWords(product?.Shop?.name)}
       </Link> */}
 
-      {/* product title */}
-      <Link href={`/product/${product?.slug}`}>
-        <h3 className="text-base tracking-tight font-medium px-0 pt-4 !text-gray-900">
-          {capitalizeWords(product?.title)}
-        </h3>
-      </Link>
-
-      {/* product price */}
-      <div className="mt-1 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-gray-900">
-            KSh {product?.sale_price}
-          </span>
-          <span className="text-xs line-through text-gray-400">
-            KSh {product?.regular_price}
-          </span>
-        </div>
-        {/* <span className="text-green-500 text-sm font-medium">
-          {product.totalSales} sold
-        </span> */}
-      </div>
-
       {/* product ratings */}
-      <div className="mt-1">
+      <div className="mt-1 hidden">
         <Ratings rating={product?.ratings ?? 4} />
       </div>
 
-      {isEvent && timeLeft && (
+      {isDeal && timeLeft && (
         <div className="mt-2">
           <span className="inline-block text-sm bg-orange-100 text-orange-700">
             {timeLeft}

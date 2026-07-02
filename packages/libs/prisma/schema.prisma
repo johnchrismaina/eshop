@@ -184,7 +184,6 @@ model products {
   detailed_description  String
   video_url             String?
   tags                  String[]
-  brand                 String?
   colors                String[]
   sizes                 String[]
   starting_date         DateTime?
@@ -193,11 +192,9 @@ model products {
   regular_price         Float
   sale_price            Float
   ratings               Float         @default(5)
-  warranty              String?
   custom_specifications Json?
   customProperties      Json
   isDeleted             Boolean?      @default(false)
-  cashOnDelivery        String?
   discount_codes        String[]      @db.ObjectId
   status                productStatus @default(Active)
   deletedAt             DateTime?

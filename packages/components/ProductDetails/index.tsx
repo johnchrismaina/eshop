@@ -240,25 +240,23 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
-          {/* price */}
           <div className="mt-3">
-            <div className="pt-4 border-t border-slate-200 flex gap-2 items-end">
-              {/* <span className="text-sm">Ksh</span> */}
-              <span className="text-2xl font-medium tracking-tight text-gray-800">
-                Ksh {productDetails?.sale_price}
-              </span>
-              <span className="text-gray-400 text-sm font-normal line-through">
-                Ksh {productDetails?.regular_price}
-              </span>
-            </div>
+            {/* Product price */}
+            <div className="flex flex-col gap-2">
+              <div className="pt-4 border-t border-slate-200 ">
+                <span className="text-2xl font-medium tracking-tight text-gray-800">
+                  Ksh {productDetails?.sale_price}
+                </span>
+              </div>
 
-            <div className="flex gap-2 pb-2 text-lg ">
-              <span className="text-red-600 font-medium">
-                {discountPercentage}% off
-              </span>
-              {/* <span className="text-sm font-semibold text-gray-600">
-                Save Ksh {save}
-              </span> */}
+              <div className="flex gap-2 pb-2 text-base ">
+                <span className="text-gray-400 font-normal line-through">
+                  Ksh {productDetails?.regular_price}
+                </span>
+                <span className="text-red-600 font-medium">
+                  ({discountPercentage}% off)
+                </span>
+              </div>
             </div>
 
             {/* Custom Specifications */}

@@ -12,13 +12,20 @@ import ColorSelector from 'packages/components/color-selector';
 import CustomProperties from 'packages/components/custom-properties';
 import CustomSpecifications from 'packages/components/custom-specifications';
 import Input from 'packages/components/input';
-import RichTextEditor from 'packages/components/rich-text-editor';
+// import RichTextEditor from 'packages/components/rich-text-editor';
 import SizeSelector from 'packages/components/size-selector';
 import Spinner from 'packages/components/spinner';
 // import { Spinner } from 'packages/components/spinner';
 import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import dynamic from 'next/dynamic';
+import Select from 'react-select';
+
+const RichTextEditor = dynamic(
+  () => import('packages/components/rich-text-editor'),
+  { ssr: false }
+);
 
 interface UploadedImage {
   fileId: string;
@@ -316,12 +323,77 @@ const Page = () => {
 
               {/* Tags */}
               <div className="mt-2">
-                <Input
-                  label="Tags *"
-                  placeholder="Apple, flagship"
-                  {...register('tags', {
+                <label className="block text-sm font-medium text-gray-200 mb-1">
+                  Tags *
+                </label>
+                <Controller
+                  name="tags"
+                  control={control}
+                  rules={{
                     required: 'Separate related product tags with a comma',
-                  })}
+                  }}
+                  render={({ field }) => (
+                    <Select
+                      isMulti
+                      options={[
+                        { value: 'sauce', label: 'Sauce' },
+                        { value: 'apple', label: 'Apple' },
+                        { value: 'flagship', label: 'Flagship' },
+                        // ✅ Add more options or fetch dynamically
+                      ]}
+                      value={(field.value || []).map((tag: string) => ({
+                        value: tag,
+                        label: tag,
+                      }))}
+                      onChange={(selected) =>
+                        field.onChange(selected.map((s: any) => s.value))
+                      }
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          backgroundColor: 'rgb(31 41 55)', // Tailwind bg-gray-800
+                          borderColor: 'rgb(75 85 99)', // border-gray-600
+                          color: 'white',
+                          borderRadius: '0.375rem', // rounded-md
+                          padding: '2px',
+                          boxShadow: 'none',
+                          '&:hover': { borderColor: 'rgb(107 114 128)' }, // gray-500
+                        }),
+                        menu: (base) => ({
+                          ...base,
+                          backgroundColor: 'rgb(31 41 55)', // bg-gray-800
+                          border: '1px solid rgb(75 85 99)', // border-gray-600
+                        }),
+                        option: (base, { isFocused, isSelected }) => ({
+                          ...base,
+                          backgroundColor: isSelected
+                            ? 'rgb(55 65 81)' // bg-gray-700
+                            : isFocused
+                            ? 'rgb(75 85 99)' // bg-gray-600
+                            : 'rgb(31 41 55)', // bg-gray-800
+                          color: 'white',
+                          cursor: 'pointer',
+                        }),
+                        multiValue: (base) => ({
+                          ...base,
+                          backgroundColor: 'rgb(55 65 81)', // bg-gray-700
+                          borderRadius: '0.375rem',
+                        }),
+                        multiValueLabel: (base) => ({
+                          ...base,
+                          color: 'rgb(229 231 235)', // text-gray-200
+                        }),
+                        multiValueRemove: (base) => ({
+                          ...base,
+                          color: 'rgb(156 163 175)', // text-gray-400
+                          ':hover': {
+                            backgroundColor: 'rgb(239 68 68)', // red-500
+                            color: 'white',
+                          },
+                        }),
+                      }}
+                    />
+                  )}
                 />
                 {errors.tags && (
                   <p className="text-red-500 text-xs mt-1">
@@ -360,8 +432,13 @@ const Page = () => {
                 )}
               </div>
 
-              <div className="mt-2">
+              <div className="mt-2 pb-6 border-b border-gray-600">
                 <ColorSelector control={control} errors={errors} />
+              </div>
+
+              {/* Size selecting */}
+              <div className="mt-2 pb-6 border-b border-gray-600">
+                <SizeSelector control={control} errors={errors} />
               </div>
 
               <div className="mt-2">
@@ -370,36 +447,6 @@ const Page = () => {
 
               <div className="mt-2">
                 <CustomProperties control={control} errors={errors} />
-              </div>
-
-              <div className="mt-2 ">
-                <label className="block font-semibold text-gray-300 mb-1">
-                  Cash On Delivery *
-                </label>
-                <div className="relative">
-                  <select
-                    {...register('cash_on_delivery', {
-                      required: 'Cash on Delivery is required',
-                    })}
-                    defaultValue="yes"
-                    className="w-full border p-2 rounded-md outline-none border-gray-700 bg-transparent appearance-none"
-                  >
-                    <option value="yes" className="bg-black">
-                      Yes
-                    </option>
-                    <option value="no" className="bg-black">
-                      No
-                    </option>
-                  </select>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                    <ChevronDown />
-                  </div>
-                </div>
-                {errors.cash_on_delivery && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.cash_on_delivery.message as string}
-                  </p>
-                )}
               </div>
             </div>
 
@@ -626,11 +673,6 @@ const Page = () => {
                     {errors.stock.message as string}
                   </p>
                 )}
-              </div>
-
-              {/* Size selecting */}
-              <div className="mt-2">
-                <SizeSelector control={control} errors={errors} />
               </div>
 
               {/* Discount codes */}

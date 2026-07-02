@@ -103,8 +103,9 @@ const SidebarWrapper = () => {
                   'https://ik.imagekit.io/johnchrismaina/3d-portrait-businessman-min.jpg'
                 }
                 alt="Seller Avatar"
-                layout="fill"
-                objectFit="cover"
+                fill // ✅ Next 13+ replaces layout="fill"
+                sizes="50px" // ✅ tell browser the rendered size
+                style={{ objectFit: 'cover' }} // ✅ replaces objectFit prop
               />
             </div>
             <Box>

@@ -35,9 +35,16 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const router = useRouter();
   const [isChatLoading, setIsChatLoading] = useState(false);
 
+  const fallbackImage =
+    'https://ik.imagekit.io/johnchrismaina/products/product-1764947748099_PpFh77hy3.jpg?updatedAt=1764947756039';
+
+  // const [currentImage, setCurrentImage] = useState(
+  //   productDetails?.images[0]?.url
+  // );
   const [currentImage, setCurrentImage] = useState(
-    productDetails?.images[0]?.url
+    productDetails?.images?.[0]?.url || fallbackImage
   );
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSelected, setIsSelected] = useState(
     productDetails?.colors?.[0] || ''
@@ -46,7 +53,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   //   productDetails?.sizes?.[0] || ''
   // );
   const [isSizeSelected] = useState(productDetails?.sizes?.[0] || '');
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
+
+  const [quantity, setQuantity] = useState<number | ''>('');
   // const [priceRange, setPriceRange] = useState([
   //   productDetails?.sale_price,
   //   1199,
@@ -85,6 +94,10 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
     ((productDetails?.regular_price - productDetails?.sale_price) /
       productDetails?.regular_price) *
       100
+  );
+
+  const save = Math.round(
+    productDetails?.regular_price - productDetails?.sale_price
   );
 
   const fetchFilteredProducts = async () => {
@@ -129,27 +142,24 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   };
 
   return (
-    <div className="w-full bg-[#f5f5f5] py-5">
-      <div className="w-[90%] bg-white lg:w-[90%] mx-auto pt-6 grid grid-cols-1 lg:grid-cols-[28%_44%_28%] gap-6 overflow-hidden">
+    <div className="w-full bg-white px-8">
+      <div className="w-full bg-white pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-1">
+        {' '}
         {/* left column - product images */}
-        <div className="p-4">
-          <div className="relative mx-auto [&_img]:max-w-none [&_img]:inline-block">
+        <div className="px-0">
+          <div className="relative mx-auto flex justify-center items-start h-[500px]">
             <ReactImageMagnify
               {...{
                 smallImage: {
                   alt: 'Product Image',
-                  isFluidWidth: true,
                   src: currentImage || '',
+                  isFluidWidth: true, // required
                 },
                 largeImage: {
                   src: currentImage || '',
-                  width: 600,
-                  height: 600,
+                  width: 1200,
+                  height: 1200,
                 },
-                // enlargedImageContainerDimensions: {
-                //   width: '150%',
-                //   height: '150%',
-                // },
                 enlargedImageStyle: {
                   border: 'none',
                   boxShadow: 'none',
@@ -160,8 +170,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               }}
             />
           </div>
+
           {/* Thumbnail images array */}
-          <div className="relative flex items-center gap-2 mt-4 overflow-hidden">
+          <div className="relative flex items-center gap-2 mt-1 overflow-hidden">
             {productDetails?.images?.length > 4 && (
               <button
                 className="absolute left-0 bg-white p-2 rounded-full shadow-md z-10"
@@ -192,7 +203,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 />
               ))}
             </div>
-            {productDetails?.images.length > 4 && (
+            {(productDetails?.images?.length ?? 0) > 4 && (
               <button
                 className="absolute right-0 bg-white p-2 rounded-full shadow-md z-10"
                 onClick={nextImage}
@@ -203,69 +214,73 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             )}
           </div>
         </div>
-
         {/* Middle column - product details */}
-        <div className="p-4">
-          <h1 className="text-xl mb-2 font-medium">{productDetails?.title}</h1>
-          <div className="w-full flex items-center justify-between">
-            <div className="flex gap-2 mt-2 text-yellow-500">
-              <Ratings rating={productDetails?.rating} />
-              <Link href={'#reviews'} className="text-blue-600 hover:underline">
-                (0 Reviews)
+        <div className="px-4 py-1 prose prose-sm max-w-none">
+          <h1 className="text-2xl font-medium">{productDetails?.title}</h1>
+          <div className="w-full flex flex-col items-start ">
+            {/* Go to Store */}
+            <div className="text-center ">
+              <Link
+                href={`/shop/${productDetails?.Shop?.id}`}
+                className="text-blue-500 font-medium text-sm hover:underline"
+              >
+                {/* <Store size={18} /> */}
+                Go to store
               </Link>
             </div>
 
-            <div>
-              <Heart
-                size={25}
-                fill={isWishlisted ? 'red' : 'transparent'}
-                className="cursor-pointer"
-                color={isWishlisted ? 'transparent' : '#777'}
-                onClick={() =>
-                  isWishlisted
-                    ? removeFromWishlist(
-                        productDetails.id,
-                        user,
-                        location,
-                        deviceInfo
-                      )
-                    : addToWishlist(
-                        {
-                          ...productDetails,
-                          quantity,
-                          selectedOptions: {
-                            color: isSelected,
-                            size: isSizeSelected,
-                          },
-                        },
-                        user,
-                        location,
-                        deviceInfo
-                      )
-                }
-              />
+            <div className="flex gap-2 text-yellow-500">
+              <Ratings rating={productDetails?.rating} />
+              <Link
+                href={'#reviews'}
+                className="text-blue-600 text-sm hover:underline"
+              >
+                (0 Reviews)
+              </Link>
             </div>
           </div>
 
-          <div className="py-2 border-b border-gray-200">
-            <span className="text-gray-500">
-              Brand:{' '}
-              <span className="text-blue-500 font-medium">
-                {productDetails?.brand || 'No brand'}
-              </span>
-            </span>
-          </div>
-
+          {/* price */}
           <div className="mt-3">
-            <span className="text-3xl font-bold text-orange-500">
-              ${productDetails?.sale_price}
-            </span>
-            <div className="flex gap-2 pb-2 text-lg border-b border-b-slate-200">
-              <span className="text-gray-400 line-through">
-                ${productDetails?.regular_price}
+            <div className="pt-4 border-t border-slate-200 flex gap-2 items-end">
+              {/* <span className="text-sm">Ksh</span> */}
+              <span className="text-2xl font-medium tracking-tight text-gray-800">
+                Ksh {productDetails?.sale_price}
               </span>
-              <span className="text-gray-500">-{discountPercentage}</span>
+              <span className="text-gray-400 text-sm font-normal line-through">
+                Ksh {productDetails?.regular_price}
+              </span>
             </div>
+
+            <div className="flex gap-2 pb-2 text-lg ">
+              <span className="text-red-600 font-medium">
+                {discountPercentage}% off
+              </span>
+              {/* <span className="text-sm font-semibold text-gray-600">
+                Save Ksh {save}
+              </span> */}
+            </div>
+
+            {/* Custom Specifications */}
+            {productDetails?.custom_specifications?.length > 0 && (
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm pb-4">
+                {productDetails.custom_specifications.map(
+                  (spec: { name: string; value: string }, index: number) => (
+                    <>
+                      <dt
+                        key={`name-${index}`}
+                        className="font-medium text-gray-700"
+                      >
+                        {spec.name}
+                      </dt>
+                      <dd key={`value-${index}`} className="text-gray-900">
+                        {spec.value}
+                      </dd>
+                    </>
+                  )
+                )}
+              </dl>
+            )}
 
             <div className="mt-2">
               <div className="flex flex-col md:flex-row items-start gap-5 mt-4">
@@ -291,7 +306,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                     </div>
                   </div>
                 )}
-                Size
+
                 {/* Size options */}
                 {productDetails?.sizes?.length > 0 && (
                   <div>
@@ -317,41 +332,101 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 )}
               </div>
             </div>
+          </div>
 
-            <div className="mt-6">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center rounded-md">
-                  <button
-                    className="px-3 cursor-pointer py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-l-md"
-                    onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-                  >
-                    -
-                  </button>
-                  <span className="px-4 bg-gray-100 py-1">{quantity}</span>
-                  <button
-                    className="px-3 cursor-pointer py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-l-md"
-                    onClick={() => setQuantity((prev) => prev + 1)}
-                  >
-                    +
-                  </button>
-                </div>
+          {/* Product description */}
+          {/* <div className="w-[90%] lg:w-[90%] mx-auto mt-5"> */}
+          <div className="bg-white py-4 border-t border-gray-200">
+            <h3 className="text-xl font-bold pb-1">
+              {/* About this item {productDetails?.title} */}
+              About this item
+            </h3>
+            <div
+              className="prose prose-sm text-slate-800 max-w-none break-words "
+              dangerouslySetInnerHTML={{
+                __html: productDetails?.detailed_description,
+              }}
+            />
+          </div>
+          {/* </div> */}
+        </div>
+        {/* Right column - Seller information */}
+        <div className="bg-gray-100 w-[244px] px-5 py-4 rounded-md">
+          <div className="flex gap-2 items-end pb-2">
+            {/* <span className="text-sm">Ksh</span> */}
+            <span className="text-2xl font-medium tracking-tight text-gray-800">
+              Ksh {productDetails?.sale_price}
+            </span>
+          </div>
 
-                {productDetails?.stock > 0 ? (
-                  <span className="text-green-600 font-semibold">
-                    In Stock{' '}
-                    <span className="text-gray-500 font-medium">
-                      (Stock {productDetails?.stock})
-                    </span>
+          {/* Delivery options */}
+          <div className="flex flex-col gap-3 py-1 ">
+            {/* Instande delivery */}
+            <div className="flex flex-col gap-0">
+              <span className="text-[15px] text-gray-800 font-medium ">
+                Instant delivery
+              </span>
+              <p className="text-sm text-gray-800 font-normal ">
+                Kshs 400 delivery{' '}
+                <span className="font-semibold">Tuesday, July 7</span>
+              </p>
+            </div>
+            {/* Pickup location */}
+            <div className="flex flex-col gap-0">
+              <span className="text-[15px] text-gray-800 font-medium ">
+                Pickup location
+              </span>
+              <p className="text-sm text-gray-800 font-normal ">
+                Kshs 70 delivery{' '}
+                <span className="font-semibold">Tuesday, July 7</span>. Order
+                within 3hrs 18mins
+              </p>
+            </div>
+            <div className="flex items-center text-blue-700 pt-2 gap-1">
+              <MapPin size={18} className="ml-[-5px]" />
+              <span className="text-sm font-normal">
+                {' '}
+                Deliver to
+                {' ' + location?.city + ', ' + location?.country}
+              </span>
+            </div>
+          </div>
+
+          {/* Quantity */}
+          <div className="py-3">
+            <div className="flex flex-col items-start gap-2 mb-4">
+              {/* In stock and out of stock */}
+              {productDetails?.stock > 0 ? (
+                <span className="text-green-600 font-medium">
+                  In Stock{' '}
+                  <span className="text-gray-500 font-medium">
+                    (Stock {productDetails?.stock})
                   </span>
-                ) : (
-                  <span className="text-red-600 font-semibold">
-                    Out of Stock
-                  </span>
-                )}
-              </div>
+                </span>
+              ) : (
+                <span className="text-red-600 font-medium">Out of Stock</span>
+              )}
+              {/* Quantity dropdown with placeholder */}
+              <select
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                className="w-full border bg-gray-100 border-gray-400 font-semibold rounded-lg px-3 py-[6px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" disabled>
+                  Quantity
+                </option>
+                {[1, 2, 3, 5, 10, 20, 50, 100].map((q) => (
+                  <option key={q} value={q}>
+                    {q}
+                  </option>
+                ))}
+              </select>
+            </div>
 
+            {/* Add to cart button */}
+            <div className="flex flex-col gap-2 w-full">
               <button
-                className={`flex mt-6 items-center gap-2 px-5 py-[10px] bg-[#ff5722] hover:bg-[#e64a19] text-white font-medium rounded-lg transition ${
+                className={`flex items-center justify-center p-[8px] bg-orange-400 hover:bg-orange-500 text-sm text-gray-800 font-medium rounded-full transition ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -371,122 +446,89 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   )
                 }
               >
-                <ShoppingCartIcon size={18} />
-                Add to Cart
+                Add to cart
+              </button>
+
+              {/* Buy Now button */}
+              <button className="flex items-center justify-center p-[8px] bg-rose-600 hover:bg-rose-500 text-sm text-gray-800 font-medium rounded-full transition">
+                Buy Now
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Right column - Seller information */}
-        <div className="bg-[#fafafa] -mt-6">
-          <div className="mb-1 p-3 border-b border-b-gray-100">
-            <span className="text-sm text-gray-600">Delivery Option</span>
-            <div className="flex items-center text-gray-600 gap-1">
-              <MapPin size={18} className="ml-[-5px]" />
-              <span className="text-lg font-normal">
-                {location?.city + ', ' + location?.country}
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-1 px-3 pb-1 border-b border-b-gray-100">
-            <span className="text-sm text-gray-600">Return & Warranty</span>
-            <div className="flex items-center text-gray-600 gap-1">
-              <Package size={18} className="ml-[-5px]" />
-              <span className="text-base font-normal">7 Day Returns</span>
-            </div>
-            <div className="flex items-center py-2 text-gray-600 gap-1">
-              <WalletMinimal size={18} className="ml-[-5px]" />
-              <span className="text-base font-normal">
-                Warrant not available
-              </span>
-            </div>
-          </div>
-
-          <div className="px-3 py-1">
-            <div className="w-[85%] rounded-lg">
+          <div className="py-1">
+            <div className="w-full rounded-lg">
               {/* Sold by section */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-sm text-gray-600 font-light">
-                    Sold by
-                  </span>
-                  <span className="block max-w-[150px] trucate font-medium text-lg">
-                    {productDetails?.Shop?.name}
-                  </span>
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm pb-4">
+                <dt className="font-medium text-gray-700">Sold by</dt>
+                <dd className="text-gray-900">{productDetails?.Shop?.name}</dd>
+
+                <dt className="font-medium text-gray-700">Returns</dt>
+                <dd className="text-gray-900">7 Day Returns</dd>
+              </dl>
+
+              {/* Seller performance stats */}
+              <div className="flex flex-col gap-2 py-3 border-t border-gray-200">
+                {/* Seller score */}
+                <div className="flex gap-1 text-sm">
+                  <span className="">88%</span>
+
+                  <span className="">Seller score</span>
                 </div>
+
+                {/* Chat with seller */}
                 <Link
                   href={'#'}
                   onClick={() => handleChat()}
-                  className="text-blue-500 text-sm flex items-center gap-1"
+                  className="text-blue-500 text-sm flex items-center gap-2"
                 >
-                  <MessageSquareText />
-                  Chat Now
+                  <MessageSquareText size={18} />
+                  Chat
                 </Link>
               </div>
 
-              {/* Seller performance stats */}
-              <div className="grid grid-cols-3 gap-2 border-t border-t-gray-200 mt-3 pt-3">
-                <div>
-                  <p className="text-[12px] text-gray-500">
-                    Positive Seller Ratings
-                  </p>
-                  <p className="text-lg font-semibold">88%</p>
+              {/* Add to wishlist */}
+              <div className="border-t border-gray-200 pt-4 cursor-pointer">
+                <div className="flex items-center justify-center gap-2 p-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg ">
+                  <Heart
+                    size={20}
+                    fill={isWishlisted ? 'red' : 'transparent'}
+                    className="cursor-pointer"
+                    color={isWishlisted ? 'transparent' : '#777'}
+                    onClick={() =>
+                      isWishlisted
+                        ? removeFromWishlist(
+                            productDetails.id,
+                            user,
+                            location,
+                            deviceInfo
+                          )
+                        : addToWishlist(
+                            {
+                              ...productDetails,
+                              quantity,
+                              selectedOptions: {
+                                color: isSelected,
+                                size: isSizeSelected,
+                              },
+                            },
+                            user,
+                            location,
+                            deviceInfo
+                          )
+                    }
+                  />
+                  <span className="text-sm">Add to Wishlist</span>
                 </div>
-                <div>
-                  <p className="text-[12px] text-gray-500">Ship on Time</p>
-                  <p className="text-lg font-semibold">100%</p>
-                </div>
-                <div>
-                  <p className="text-[12px] text-gray-500">
-                    Chat Response Rate
-                  </p>
-                  <p className="text-lg font-semibold">100%</p>
-                </div>
-              </div>
-
-              {/* Go to Store */}
-              <div className="text-center mt-4 border-t border-t-gray-200 pt-3">
-                <Link
-                  href={`/shop/${productDetails?.Shop?.id}`}
-                  className="text-blue-500 font-medium text-sm hover:underline"
-                >
-                  {/* <Store size={18} /> */}
-                  GO TO STORE
-                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="w-[90%] lg:w-[90%] mx-auto mt-5">
-        <div className="bg-white min-h-[60vh] h-full p-5">
-          <h3 className="text-lg font-semibold pb-4">
-            Product details of {productDetails?.title}
-          </h3>
-          <div
-            className="prose prose-sm text-slate-800 max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: productDetails?.detailed_description,
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="w-[90%] lg:w-[90%] mx-auto">
-        <div className="bg-white min-h-[50vh] h-full mt-5 p-5">
-          <h3 className="text-lg font-semibold mb-3">
-            Ratings & Reviews of {productDetails?.title}
-          </h3>
-          <p className="text-center pt-14">No reviews available yet!</p>
-        </div>
-      </div>
-
-      <div className="w-[90%] lg:w-[90%] mx-auto">
-        <div className="w-full h-full my-5 p-5">
-          <h3 className="text-xl font-semibold mb-2">
+      <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
+        <div className="w-full h-full ">
+          <h3 className="text-xl font-semibold pt-3 pb-2">
             {/* You may also like these products from our store */}
             You may also like
           </h3>
@@ -495,6 +537,24 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               <ProductCard key={i.id} product={i} />
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="w-full lg:w-full mx-auto mt-5 border-t border-y-gray-200">
+        <div className="bg-white min-h-[60vh] h-full ">
+          <h3 className="text-xl font-bold pt-3 pb-2">
+            {/* About this item {productDetails?.title} */}
+            From the manufacturer
+          </h3>
+        </div>
+      </div>
+
+      <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
+        <div className="bg-white min-h-[50vh] h-full ">
+          <h3 className="text-lg font-semibold pt-2 pb-2">
+            Ratings & Reviews of {productDetails?.title}
+          </h3>
+          <p className="text-center pt-14">No reviews available yet!</p>
         </div>
       </div>
     </div>

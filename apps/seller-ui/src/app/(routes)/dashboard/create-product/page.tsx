@@ -4,7 +4,7 @@ import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-import { Wand, X } from 'lucide-react';
+import { ChevronDown, Wand, X } from 'lucide-react';
 import Image from 'next/image';
 // import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -274,8 +274,9 @@ const Page = () => {
         {/* Right side - form inputs */}
         <div className="md:w-[65%]">
           <div className="w-full flex gap-6">
-            {/* Product Title */}
             <div className="w-2/4">
+              {/* Product Title */}
+
               <Input
                 label="Product Title *"
                 placeholder="Enter product title"
@@ -329,26 +330,10 @@ const Page = () => {
                 )}
               </div>
 
-              {/* Warranty */}
-              <div className="mt-2">
-                <Input
-                  label="Warranty *"
-                  placeholder="1 Year / No Warranty"
-                  {...register('warranty', {
-                    required: 'Warranty is required',
-                  })}
-                />
-                {errors.warranty && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.warranty.message as string}
-                  </p>
-                )}
-              </div>
-
               {/* Slug */}
               <div className="mt-2">
                 <Input
-                  label="Slug"
+                  label="Slug *"
                   placeholder="product_slug"
                   {...register('slug', {
                     required: 'Slug is required!',
@@ -375,20 +360,6 @@ const Page = () => {
                 )}
               </div>
 
-              {/* Brand */}
-              <div className="mt-2">
-                <Input
-                  label="Brand"
-                  placeholder="Apple"
-                  {...register('brand')}
-                />
-                {errors.brand && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.brand.message as string}
-                  </p>
-                )}
-              </div>
-
               <div className="mt-2">
                 <ColorSelector control={control} errors={errors} />
               </div>
@@ -401,24 +372,29 @@ const Page = () => {
                 <CustomProperties control={control} errors={errors} />
               </div>
 
-              <div className="mt-2">
+              <div className="mt-2 ">
                 <label className="block font-semibold text-gray-300 mb-1">
                   Cash On Delivery *
                 </label>
-                <select
-                  {...register('cash_on_delivery', {
-                    required: 'Cash on Delivery is required',
-                  })}
-                  defaultValue="yes"
-                  className="w-full border outline-none border-gray-700 bg-transparent"
-                >
-                  <option value="yes" className="bg-black">
-                    Yes
-                  </option>
-                  <option value="no" className="bg-black">
-                    No
-                  </option>
-                </select>
+                <div className="relative">
+                  <select
+                    {...register('cash_on_delivery', {
+                      required: 'Cash on Delivery is required',
+                    })}
+                    defaultValue="yes"
+                    className="w-full border p-2 rounded-md outline-none border-gray-700 bg-transparent appearance-none"
+                  >
+                    <option value="yes" className="bg-black">
+                      Yes
+                    </option>
+                    <option value="no" className="bg-black">
+                      No
+                    </option>
+                  </select>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                    <ChevronDown />
+                  </div>
+                </div>
                 {errors.cash_on_delivery && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.cash_on_delivery.message as string}
@@ -432,36 +408,42 @@ const Page = () => {
               <label className="block font-semibold text-gray-300 mb-1">
                 Category *
               </label>
-              {isLoading ? (
-                <p className="text-gray-400">Loading Categories...</p>
-              ) : isError ? (
-                <p className="text-red-500">Failed to load categories</p>
-              ) : (
-                <Controller
-                  name="category"
-                  control={control}
-                  rules={{ required: 'Categories is required' }}
-                  render={({ field }) => (
-                    <select
-                      {...field}
-                      className="w-full border outline-none border-gray-700 bg-transparent"
-                    >
-                      <option value="" className="bg-black">
-                        Select Category
-                      </option>
-                      {categories?.map((category: string) => (
-                        <option
-                          value={category}
-                          key={category}
-                          className="bg-black"
-                        >
-                          {category}
+              <div className="relative">
+                {isLoading ? (
+                  <p className="text-gray-400">Loading Categories...</p>
+                ) : isError ? (
+                  <p className="text-red-500">Failed to load categories</p>
+                ) : (
+                  <Controller
+                    name="category"
+                    control={control}
+                    rules={{ required: 'Categories is required' }}
+                    render={({ field }) => (
+                      <select
+                        {...field}
+                        className="w-full p-2 rounded-md border outline-none border-gray-700 bg-transparent appearance-none"
+                      >
+                        <option value="" className="bg-black">
+                          Select Category
                         </option>
-                      ))}
-                    </select>
-                  )}
-                />
-              )}
+                        {categories?.map((category: string) => (
+                          <option
+                            value={category}
+                            key={category}
+                            className="bg-black"
+                          >
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  />
+                )}
+                {/* Custom arrow */}
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                  <ChevronDown />
+                </div>
+              </div>
               {errors.category && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.category.message as string}
@@ -473,33 +455,40 @@ const Page = () => {
                 <label className="block font-semibold text-gray-300 mb-1">
                   Subcategory *
                 </label>
-                <Controller
-                  name="subCategory"
-                  control={control}
-                  rules={{ required: 'Subcategories is required' }}
-                  render={({ field }) => (
-                    <select
-                      {...field}
-                      className="w-full border outline-none border-gray-700 bg-transparent"
-                    >
-                      <option value="" className="bg-black">
-                        Select Subcategory
-                      </option>
-                      {subcategories?.map((subcategory: string) => (
-                        <option
-                          value={subcategory}
-                          key={subcategory}
-                          className="bg-black"
-                        >
-                          {subcategory}
+                <div className="relative">
+                  <Controller
+                    name="subCategory"
+                    control={control}
+                    rules={{ required: 'Subcategories is required' }}
+                    render={({ field }) => (
+                      <select
+                        {...field}
+                        className="w-full p-2 rounded-md border outline-none border-gray-700 bg-transparent appearance-none"
+                      >
+                        <option value="" className="bg-black">
+                          Select Subcategory
                         </option>
-                      ))}
-                    </select>
-                  )}
-                />
-                {errors.subcategory && (
+                        {subcategories?.map((subcategory: string) => (
+                          <option
+                            value={subcategory}
+                            key={subcategory}
+                            className="bg-black"
+                          >
+                            {subcategory}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  />
+                  {/* Custom arrow */}
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                    <ChevronDown />
+                  </div>
+                </div>
+
+                {errors.subCategory && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.subcategory.message as string}
+                    {errors.subCategory.message as string}
                   </p>
                 )}
               </div>

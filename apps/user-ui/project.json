@@ -1,0 +1,26 @@
+{
+  "name": "user-ui",
+  "root": "apps/user-ui",
+  "sourceRoot": "apps/user-ui/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "options": {
+        "root": "apps/user-ui"
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "root": "apps/user-ui"
+      }
+    },
+    "server": {
+      "executor": "@nx/next:server",
+      "options": {
+        "root": "apps/user-ui"
+      }
+    }
+  }
+}

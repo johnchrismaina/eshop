@@ -75,7 +75,7 @@ const ImagePlaceholder = ({
       ) : (
         <label
           htmlFor={`image-upload-${index}`}
-          className="absolute top-3 right-3 p-2 !rounded bg-slate-700 shadow-lg cursor-pointer"
+          className="absolute top-3 right-3 p-2 !rounded bg-slate-700 text-gray-200 shadow-lg cursor-pointer"
         >
           <Pencil size={16} />
         </label>
@@ -99,7 +99,7 @@ const ImagePlaceholder = ({
             {size}
           </p>
           <p
-            className={`text-gray ${
+            className={`text-gray-300 ${
               small ? 'text-sm' : 'text-lg'
             } pt-2 text-center`}
           >

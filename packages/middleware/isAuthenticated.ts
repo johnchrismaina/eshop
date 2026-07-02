@@ -67,6 +67,14 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
         include: { shops: true },
       });
       req.seller = account;
+
+      // ✅ Normalize: attach first shop as req.seller.shop
+      if (account?.shops && account.shops.length > 0) {
+        req.seller.shop = account.shops[0];
+      }
+
+      // Optional: also attach all shop IDs for multi-shop checks
+      req.seller.shopIds = account?.shops.map((s) => s.id) || [];
     } else if (decoded.role === 'admin') {
       account = await prisma.admins.findUnique({ where: { id: decoded.id } });
       req.admin = account;

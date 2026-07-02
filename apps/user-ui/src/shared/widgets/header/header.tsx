@@ -310,7 +310,7 @@ const Header = () => {
                   </div>
                 )}
               </Link>
-              <span className="font-semibold text-sm text-gray-900">Cart</span>
+              {/* <span className="font-semibold text-sm text-gray-900">Cart</span> */}
             </div>
           </div>
         </div>

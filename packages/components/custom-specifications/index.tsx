@@ -8,26 +8,33 @@ const CustomSpecifications = ({ control, errors }: any) => {
     control,
     name: 'custom_specifications',
   });
+
   return (
     <div>
-      <label className="block font-semibold text-gray-300 mb-1">
+      <label className="block font-semibold text-gray-300 mb-4 ">
         Custom Specifications
       </label>
       <div className="flex flex-col gap-4 mt-2">
-        {fields?.map((item, index) => (
-          <div key={index} className="flex gap-2 items-center">
+        {fields.map((item, index) => (
+          <div key={item.id} className="flex gap-2 pb-4 items-center ">
             <Controller
               name={`custom_specifications.${index}.name`}
               control={control}
               rules={{ required: 'Specification name is required' }}
               render={({ field }) => (
                 <Input
-                  label="Specification Name"
-                  placeholder="e.g. Battery Life, Weight, Material"
+                  label="Name"
+                  placeholder="e.g. Brand, Material, Battery Life, Weight"
                   {...field}
                 />
               )}
             />
+            {errors?.custom_specifications?.[index]?.name && (
+              <p className="text-red-500 text-xs">
+                {errors.custom_specifications[index].name.message}
+              </p>
+            )}
+
             <Controller
               name={`custom_specifications.${index}.value`}
               control={control}
@@ -35,11 +42,17 @@ const CustomSpecifications = ({ control, errors }: any) => {
               render={({ field }) => (
                 <Input
                   label="Value"
-                  placeholder="e.g. 4000mAh 1.5kg, Plastic"
+                  placeholder="e.g. Apple, Aluminium, 4000mAh, 1.5kg"
                   {...field}
                 />
               )}
             />
+            {errors?.custom_specifications?.[index]?.value && (
+              <p className="text-red-500 text-xs">
+                {errors.custom_specifications[index].value.message}
+              </p>
+            )}
+
             <button
               type="button"
               className="text-red-500 hover:text-red-700"
@@ -51,17 +64,13 @@ const CustomSpecifications = ({ control, errors }: any) => {
         ))}
 
         <button
-          className="flex items-center gap-2 text-blue-500 hover:text-blue-600"
+          type="button"
+          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 pb-6 border-b border-gray-600"
           onClick={() => append({ name: '', value: '' })}
         >
           <PlusCircle size={20} /> Add Specification
         </button>
       </div>
-      {errors?.custom_specifications && (
-        <p className="text-red-500 text-xs mt-1">
-          {errors.custom_specifications.message as string}
-        </p>
-      )}
     </div>
   );
 };

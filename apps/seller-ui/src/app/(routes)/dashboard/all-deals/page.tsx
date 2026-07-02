@@ -157,7 +157,7 @@ const DealList = () => {
       {
         header: 'Actions',
         cell: ({ row }: any) => (
-          <div className="flex gap-3 ">
+          <div className="flex gap-4 ">
             <Link
               href={`/product/${row.original.id}`}
               className="text-blue-400 hover:text-blue-300 transition"

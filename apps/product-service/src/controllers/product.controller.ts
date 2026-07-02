@@ -9,6 +9,7 @@ import { imagekit } from '@packages/libs/imagekit';
 import { Prisma } from '@packages/libs/prisma/generated/client';
 import { NextFunction, Request, Response } from 'express';
 import Stripe from 'stripe';
+import { products, deals } from '@prisma/client';
 // import { parse } from 'path';
 // import { ApiVersion } from 'stripe/types/apiVersion';
 
@@ -472,6 +473,32 @@ export const getShopProducts = async (
   }
 };
 
+// Get single product by slug
+export const getProductBySlug = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const product = await prisma.products.findUnique({
+      where: { slug: req.params.slug },
+      include: { images: true },
+    });
+
+    if (!product) {
+      // Always send a response here
+      res.status(404).json({ success: false, message: 'Product not found' });
+      return; // exit early so TS knows this path is covered
+    }
+
+    // Success path
+    res.status(200).json({ success: true, product });
+  } catch (error) {
+    // Error path
+    next(error);
+  }
+};
+
 // Get logged in seller deals
 export const getShopDeals = async (
   req: any,
@@ -505,7 +532,13 @@ export const deleteProduct = async (
 ) => {
   try {
     const { productId } = req.params;
-    const sellerId = req.seller?.shop?.id;
+
+    console.log('DeleteProduct controller hit, productId:', productId);
+
+    if (!req.seller) {
+      console.log('No seller attached → Unauthorized');
+      return next(new ValidationError('Unauthorized action'));
+    }
 
     const product = await prisma.products.findUnique({
       where: { id: productId },
@@ -513,18 +546,24 @@ export const deleteProduct = async (
     });
 
     if (!product) {
+      console.log('Product not found in DB');
       return next(new ValidationError('Product not found'));
     }
 
-    if (product.shopId !== sellerId) {
+    console.log('Product shopId:', product.shopId);
+    console.log('Seller shopIds:', req.seller.shopIds);
+
+    if (!req.seller.shopIds.includes(product.shopId)) {
+      console.log('Shop mismatch → Unauthorized');
       return next(new ValidationError('Unauthorized action'));
     }
 
     if (product.isDeleted) {
+      console.log('Product already deleted');
       return next(new ValidationError('Product is already deleted'));
     }
 
-    const deleteProduct = await prisma.products.update({
+    const deletedProduct = await prisma.products.update({
       where: { id: productId },
       data: {
         isDeleted: true,
@@ -532,10 +571,16 @@ export const deleteProduct = async (
       },
     });
 
+    console.log('req.seller.shopIds:', req.seller.shopIds);
+    console.log('product.shopId:', product.shopId);
+    console.log('product.isDeleted:', product.isDeleted);
+
+    console.log('Delete response sent');
+
     return res.status(200).json({
       message:
-        'Product is scheduled for deletion in 2 hours. You can restore it within this time',
-      deletedAt: deleteProduct.deletedAt,
+        'Product is scheduled for deletion in 24 hours. You can restore it within this time',
+      deletedAt: deletedProduct.deletedAt,
     });
   } catch (error) {
     return next(error);
@@ -595,7 +640,10 @@ export const restoreProduct = async (
 ) => {
   try {
     const { productId } = req.params;
-    const sellerId = req.seller?.shop?.id;
+
+    // const sellerId = req.seller?.shop?.id;
+    // ✅ Use all shop IDs attached in middleware
+    const sellerShopIds = req.seller?.shopIds || [];
 
     const product = await prisma.products.findUnique({
       where: { id: productId },
@@ -606,7 +654,11 @@ export const restoreProduct = async (
       return next(new ValidationError('Product not found'));
     }
 
-    if (product.shopId !== sellerId) {
+    // if (product.shopId !== sellerId) {
+    //   return next(new ValidationError('Unauthorized action'));
+    // }
+    // ✅ Check against all shop IDs
+    if (!sellerShopIds.includes(product.shopId)) {
       return next(new ValidationError('Unauthorized action'));
     }
 
@@ -775,21 +827,29 @@ export const getProductDetails = async (
   next: NextFunction
 ) => {
   try {
-    const product = await prisma.products.findUnique({
-      where: {
-        slug: req.params.slug!,
-      },
-      include: {
-        images: true,
-        Shop: true,
-      },
+    let product: ((products | deals) & { images: any; Shop: any }) | null =
+      null;
+
+    product = await prisma.products.findUnique({
+      where: { slug: req.params.slug! },
+      include: { images: true, Shop: true },
     });
-    res.status(201).json({
-      success: true,
-      product,
-    });
+
+    if (!product) {
+      product = await prisma.deals.findUnique({
+        where: { slug: req.params.slug! },
+        include: { images: true, Shop: true },
+      });
+    }
+
+    if (!product) {
+      res.status(404).json({ success: false, message: 'Product not found' });
+      return;
+    }
+
+    res.status(200).json({ success: true, product });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 };
 

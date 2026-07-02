@@ -22,8 +22,17 @@ const fetchProducts = async () => {
   return res?.data?.products;
 };
 
-const deleteProduct = async (productId: string) => {
-  await axiosProduct.delete(`/delete-product/${productId}`);
+// frontend deleteProduct function
+const deleteProduct = async (id: string) => {
+  const res = await fetch(`/api/delete-product/${id}`, {
+    method: 'DELETE',
+    credentials: 'include', // critical for auth
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to delete');
+  }
+  return res.json();
 };
 
 const restoreProduct = async (productId: string) => {
@@ -35,7 +44,8 @@ const ProductList = () => {
   // const [analyticsData, setAnalyticsData] = useState(null);
   // const [showAnalytics, setShowAnalytics] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>();
+  // const [selectedProduct, setSelectedProduct] = useState<any>();
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const queryClient = useQueryClient();
 
   const { data: products = [], isLoading } = useQuery({
@@ -44,12 +54,15 @@ const ProductList = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  //   Delete Product Mutation
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['shop-products'] });
       setShowDeleteModal(false);
+    },
+    onError: (err) => {
+      console.error(err);
+      alert('Delete failed');
     },
   });
 
@@ -61,6 +74,12 @@ const ProductList = () => {
       setShowDeleteModal(false);
     },
   });
+
+  const USER_UI_BASE_URL =
+    process.env.NEXT_PUBLIC_USER_UI_BASE_URL || 'http://localhost:3001';
+
+  const SELLER_UI_BASE_URL =
+    process.env.NEXT_PUBLIC_SELLER_UI_BASE_URL || 'http://localhost:3000';
 
   const columns = useMemo(
     () => [
@@ -139,15 +158,16 @@ const ProductList = () => {
       {
         header: 'Actions',
         cell: ({ row }: any) => (
-          <div className="flex gap-3 ">
+          <div className="flex gap-4 ">
             <Link
-              href={`/product/${row.original.id}`}
+              href={`${USER_UI_BASE_URL}/product/${row.original.slug}`}
               className="text-blue-400 hover:text-blue-300 transition"
+              target="_blank"
             >
               <Eye size={18} />
             </Link>
             <Link
-              href={`/product/edit/${row.original.id}`}
+              href={`${SELLER_UI_BASE_URL}/dashboard/product/edit/${row.original.slug}`}
               className="text-yellow-400 hover:text-yellow-30 transtion "
             >
               <Pencil size={18} />
@@ -183,7 +203,20 @@ const ProductList = () => {
     onGlobalFilterChange: setGlobalFilter,
   });
 
-  const openDeleteModal = (product: any) => {
+  // Define the shape of your product
+  type Product = {
+    id: string;
+    title: string;
+    isDeleted?: boolean;
+  };
+
+  // const openDeleteModal = (product: any) => {
+  //   setSelectedProduct(product);
+  //   setShowDeleteModal(true);
+  // };
+
+  const openDeleteModal = (product: Product) => {
+    console.log('Opening delete modal for:', product.id);
     setSelectedProduct(product);
     setShowDeleteModal(true);
   };
@@ -259,11 +292,18 @@ const ProductList = () => {
         )}
 
         {showDeleteModal && (
+          // <DeleteConfirmationModal
+          //   product={selectedProduct}
+          //   onClose={() => setShowDeleteModal(false)}
+          //   onConfirm={() => deleteMutation.mutate(selectedProduct?.id)}
+          //   onRestore={() => restoreMutation.mutate(selectedProduct?.id)}
+          // />
+
           <DeleteConfirmationModal
             product={selectedProduct}
             onClose={() => setShowDeleteModal(false)}
-            onConfirm={() => deleteMutation.mutate(selectedProduct?.id)}
-            onRestore={() => restoreMutation.mutate(selectedProduct?.id)}
+            onConfirm={(id: string) => deleteMutation.mutate(id)}
+            onRestore={(id: string) => restoreMutation.mutate(id)}
           />
         )}
       </div>

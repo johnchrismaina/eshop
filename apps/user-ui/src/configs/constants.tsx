@@ -11,6 +11,22 @@ export const navItems: NavItemsTypes[] = [
     title: 'Shops',
     href: '/shops',
   },
+  {
+    title: 'Fashion',
+    href: '/fashion',
+  },
+  {
+    title: 'Home Favorites',
+    href: '/home',
+  },
+  {
+    title: 'Trending',
+    href: '/trending',
+  },
+  {
+    title: 'Customer Service',
+    href: '/customer-service',
+  },
   // {
   //   title: 'Offers',
   //   href: '/offers',

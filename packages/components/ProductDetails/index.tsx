@@ -216,7 +216,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         </div>
         {/* Middle column - product details */}
         <div className="px-4 pb-1 prose prose-sm max-w-none">
-          <h1 className="text-3xl text-gray-900 font-semibold">
+          <h1 className="text-3xl text-gray-950 font-medium">
             {productDetails?.title}
           </h1>
           <div className="w-full flex flex-col items-start ">
@@ -374,7 +374,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className="bg-white border border-gray-200 w-[244px] px-5 py-4 ">
+        <div className="bg-white border border-gray-200 w-[244px] px-5 py-4 rounded-md ">
           <div className="flex gap-2 items-end pb-2">
             {/* <span className="text-sm">Ksh</span> */}
             <span className="text-2xl font-medium tracking-tight text-gray-800">

@@ -20,7 +20,7 @@ const HeaderBottom = () => {
   console.log(user);
 
   return (
-    <div className="w-full transition-all duration-300 flex items-center justify-center h-[40px] bg-white border-b border-gray-200 ">
+    <div className="w-full transition-all duration-300 flex items-center justify-center h-[40px] bg-[#fff] border-b border-gray-200 ">
       <div className="w-[95%] relative mx-auto flex items-center justify-start gap-4 ">
         {/* All Dropdowns */}
         <div>
@@ -31,7 +31,7 @@ const HeaderBottom = () => {
           >
             <TextAlignJustify color="#000" className="size-4" />
             {/* <EqualIcon color="#333" /> */}
-            <span className="font-medium text-[14px] text-gray-800 hover:text-gray-900 ">
+            <span className="font-medium text-[13px] text-gray-900 hover:text-gray-900 ">
               Categories
             </span>
           </button>
@@ -47,7 +47,7 @@ const HeaderBottom = () => {
         <div className="flex items-center gap-3">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
-              className="px-3 py-0 font-medium text-[14px] text-gray-800 hover:text-gray-900 transition flex items-center"
+              className="px-3 py-0 font-medium text-[13px] text-gray-900 hover:text-gray-900 transition flex items-center"
               href={i.href}
               key={index}
             >

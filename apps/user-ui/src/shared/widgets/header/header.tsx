@@ -25,6 +25,7 @@ import {
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import CartFilledIcon from 'apps/user-ui/src/assets/svgs/cart-filled';
 import PinFilledIcon from 'apps/user-ui/src/assets/svgs/pin-filled';
+import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 
 const Header = () => {
   // const { user, isLoading } = useUser();
@@ -92,8 +93,8 @@ const Header = () => {
   return (
     <>
       {/* Top header - fixed */}
-      <div className="fixed top-0 left-0 w-full bg-white z-[100] ">
-        <div className="w-[95%] h-[56px] m-auto flex items-center justify-between gap-6 ">
+      <div className="fixed top-0 left-0 w-full bg-[#fff] z-[100] border-b border-white">
+        <div className="w-[95%] h-[56px] m-auto flex items-center justify-between gap-6 bg-[#fff] ">
           {/* logo */}
           <div>
             <Link href="/">
@@ -115,10 +116,10 @@ const Header = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="w-[70%] relative flex items-center">
-            {/* Search All dropdown */}
+          <div className="w-[50%] relative flex items-center">
+            {/* All categories dropdown */}
             {/* <div className="h-[40px] pl-4 pr-3 cursor-pointer flex items-center justify-center absolute border-r border-gray-200 hover:bg-gray-200 transition left-0 rounded-l-md "> */}
-            <div className="h-[40px] pl-4 pr-3 cursor-pointer flex items-center justify-center absolute hover:bg-gray-200 transition left-0 rounded-l-md ">
+            <div className="h-[40px] pl-4 pr-3 cursor-pointer flex items-center justify-center absolute hover:bg-gray-200 transition left-0 rounded-l-lg ">
               <span className="text-sm text-[#333]">All</span>
               <ChevronDownIcon color="#333" size={18} className="pl-[6px]" />
             </div>
@@ -129,8 +130,8 @@ const Header = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClick={() => setOpenSearchBackdrop(true)}
-              placeholder="Search for anything"
-              className="w-full pl-[75px] pr-10 py-1 font-Poppins font-normal text-sm tracking-normal text-gray-600 border-r border-gray-200 bg-gray-100 h-[40px] rounded-md outline-none focus:outline-none focus:border-[#ebedf0] focus:ring-0 focus:shadow-none"
+              placeholder="Search "
+              className="w-full pl-[75px] pr-10 py-1 font-Poppins font-normal text-sm tracking-normal bg-gray-100 text-gray-600 border-r border-gray-100 h-[40px] rounded-lg outline-none focus:outline-none focus:border-[#ebedf0] focus:ring-0 focus:shadow-none"
             />
             {/* bg-[#f3f3f6] */}
             {/* border-[#ebedf0]  */}
@@ -145,8 +146,9 @@ const Header = () => {
             {/* Search icon */}
             <div
               onClick={handleSearchClick}
-              className="w-[40px] h-[40px] cursor-pointer flex items-center justify-center bg-orange-300 hover:bg-orange-400 border-r border-orange-300 transition outline-none absolute right-0 rounded-r-md"
+              className="w-[38px] h-[38px] cursor-pointer flex items-center justify-center hover:bg-orange-300 text-white transition outline-none absolute right-0 rounded-r-lg"
             >
+              {/* <Search color="#333" size={20} /> */}
               <Search color="#333" size={20} />
             </div>
 
@@ -177,7 +179,7 @@ const Header = () => {
 
           {/* Profile icons */}
           {/* Account */}
-          <div className="flex items-center gap-2 shrink-0 h-full ">
+          <div className="flex items-center gap-3 shrink-0 h-full ">
             {/* Trigger */}
             <div
               className="relative flex items-center gap-2 text-gray-600 px-2 h-full "
@@ -186,7 +188,7 @@ const Header = () => {
             >
               <Link
                 href={user?.name ? '/profile' : '/login'}
-                className="flex flex-col items-start gap-0.5 "
+                className="flex items-center justify-center "
               >
                 {/* <span className="block text-xs h-[16px]"> */}
                 <span className="block text-xs ">
@@ -203,27 +205,29 @@ const Header = () => {
                     </span>
                   ) : (
                     // No user or no previous session: show Log in
-                    <span className="font-normal text-gray-500">Sign in</span>
+                    <span className="font-semibold text-gray-900 text-sm tracking-tight">
+                      Sign in
+                    </span>
                   )}
                 </span>
 
-                <span className="flex items-center font-semibold text-gray-900 text-sm tracking-tight gap-1 -mt-1.5">
+                {/* <span className="flex items-center font-semibold text-gray-900 text-sm tracking-tight gap-1 -mt-1.5">
                   Account
                   <ChevronDown className="mt-1" size={12} color="#555" />
-                </span>
+                </span> */}
               </Link>
 
               {/* Backdrop */}
               {open && (
                 <div
-                  className="fixed top-[56px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
+                  className="fixed top-[96px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
                   onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
                 />
               )}
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full right-0 mt-[0px] w-64 bg-white z-[110] rounded-br-lg rounded-bl-lg">
+                <div className="absolute top-full right-0 mt-[0px] w-64 bg-white z-[110] shadow-md rounded-br-lg rounded-bl-lg">
                   <div className="p-6 ">
                     {user?.name ? (
                       <div className="flex flex-col items-start rounded-md bg-gray-100 px-6 py-2">
@@ -297,11 +301,11 @@ const Header = () => {
             </div>
 
             {/* Cart */}
-            <div className="flex items-end mt-2 gap-1">
+            <div className="flex items-center mt-0 gap-1">
               <Link href="/cart" className="relative ">
-                {/* <CartIcon className="bg-[#333] " /> */}
+                <CartIcon className="bg-[#333] " />
                 {/* <ShoppingCart /> */}
-                <CartFilledIcon color="#555" />
+                {/* <CartFilledIcon color="#555" /> */}
                 {cart?.length > 0 && (
                   <div className="w-5 h-5 border-2 border-white bg-orange-500 rounded-full flex items-center justify-center absolute top-[-10px] right-[-10px]">
                     <span className="text-white font-medium text-sm">

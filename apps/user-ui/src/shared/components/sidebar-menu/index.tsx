@@ -40,7 +40,8 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/40 mt-[96px] z-40"
-        onMouseEnter={() => {
+        // onMouseEnter
+        onClick={() => {
           onClose();
           setHovered(null);
         }}
@@ -49,7 +50,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
       {/* Dropdown container */}
       <div
         className="absolute left-0 h-[500px] top-full mt-0 py-4 ml-[-20] flex bg-white rounded-br-lg rounded-bl-lg z-50"
-        onMouseLeave={() => setHovered(null)} // 👈 attach here, not on the first panel
+        onClick={() => setHovered(null)} // 👈 attach here, not on the first panel (onMouseEnter - other option)
       >
         {/* First window */}
         <div className="w-52 overflow-y-auto ">

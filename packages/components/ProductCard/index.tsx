@@ -74,7 +74,7 @@ const ProductCard = ({
       </Link>
 
       {/* discount percentage badge */}
-      <div className="mt-2">
+      {/* <div className="mt-2">
         {product?.regular_price && product?.sale_price && (
           <span className=" bg-[#ffece9] text-rose-600 text-xs font-semibold px-2 py-[6px] rounded-md ">
             {Math.round(
@@ -85,10 +85,10 @@ const ProductCard = ({
             % off
           </span>
         )}
-      </div>
+      </div> */}
 
       {/* product price */}
-      <div className="mt-1 flex items-center gap-2">
+      <div className="mt-2 flex items-center gap-2">
         <div className="flex items-center gap-1">
           <span className="text-sm font-bold text-gray-900">KSh</span>
           <span className="text-xl font-bold text-gray-900 tracking-tight">

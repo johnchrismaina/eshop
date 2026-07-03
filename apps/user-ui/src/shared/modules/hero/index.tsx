@@ -17,12 +17,13 @@ const Hero = () => {
           // 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/71spMfddxoL._SX3000_.jpg?updatedAt=1771419784535' //pink
           // 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61Yx5-N155L._SX3000_.jpg?updatedAt=1771419784553' //green
           // 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61uMN8JVocL._SX3000_.jpg' //purple
+          // 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/s-l1600.webp'
         }
         alt="Banner"
         onClick={() => router.push('/products')}
         fill
         unoptimized
-        className="object-top object-cover cursor-pointer"
+        className="object-top object-cover cursor-pointer "
       />
     </div>
   );

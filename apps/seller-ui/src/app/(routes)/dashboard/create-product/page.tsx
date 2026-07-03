@@ -297,22 +297,38 @@ const Page = () => {
 
               {/* Description */}
               <div className="mt-2">
-                <Input
-                  type="textarea"
-                  rows={7}
-                  cols={10}
-                  label="Short description * (Max 150 words)"
-                  placeholder="Enter product description for quick view"
-                  {...register('short_description', {
-                    required: 'Description is required',
+                <label className="block font-semibold text-gray-300 mb-1">
+                  Short description * (Min 100 words)
+                </label>
+                <Controller
+                  name="short_description"
+                  control={control}
+                  rules={{
+                    required: 'Description is required!',
                     validate: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
+                      // Remove HTML tags
+                      const plainText = value
+                        .replace(/<[^>]+>/g, '') // remove tags
+                        .replace(/&nbsp;/g, ' ') // replace non-breaking spaces
+                        .trim();
+
+                      // Count words
+                      const wordCount = plainText
+                        ?.split(/\s+/)
+                        .filter((word: string) => word).length;
+
                       return (
-                        wordCount <= 150 ||
-                        `Description cannot exceed 150 words (Current: ${wordCount})`
+                        wordCount >= 50 ||
+                        'Description must be at least 50 words!'
                       );
                     },
-                  })}
+                  }}
+                  render={({ field }) => (
+                    <RichTextEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
                 {errors.description && (
                   <p className="text-red-500 text-xs mt-1">

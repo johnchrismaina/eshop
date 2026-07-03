@@ -143,7 +143,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
   return (
     <div className="w-full bg-white px-8">
-      <div className="w-full bg-white pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-1">
+      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {' '}
         {/* left column - product images */}
         <div className="px-0">
@@ -215,21 +215,23 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Middle column - product details */}
-        <div className="px-4 py-1 prose prose-sm max-w-none">
-          <h1 className="text-2xl font-medium">{productDetails?.title}</h1>
+        <div className="px-4 pb-1 prose prose-sm max-w-none">
+          <h1 className="text-3xl text-gray-900 font-semibold">
+            {productDetails?.title}
+          </h1>
           <div className="w-full flex flex-col items-start ">
             {/* Go to Store */}
             <div className="text-center ">
               <Link
                 href={`/shop/${productDetails?.Shop?.id}`}
-                className="text-blue-500 font-medium text-sm hover:underline"
+                className="text-blue-600 font-medium text-sm hover:underline"
               >
                 {/* <Store size={18} /> */}
                 Go to store
               </Link>
             </div>
 
-            <div className="flex gap-2 text-yellow-500">
+            <div className="flex gap-2 text-yellow-500 mb-1">
               <Ratings rating={productDetails?.rating} />
               <Link
                 href={'#reviews'}
@@ -240,45 +242,26 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
-          <div className="mt-3">
+          <hr className="border-t border-slate-300 " />
+
+          <div className="mt-1">
             {/* Product price */}
-            <div className="flex flex-col gap-2">
-              <div className="pt-4 border-t border-slate-200 ">
-                <span className="text-2xl font-medium tracking-tight text-gray-800">
+            <div className="flex flex-col ">
+              <div className="pt-4 ">
+                <span className="text-2xl font-semibold tracking-tight text-gray-900">
                   Ksh {productDetails?.sale_price}
                 </span>
               </div>
 
-              <div className="flex gap-2 pb-2 text-base ">
-                <span className="text-gray-400 font-normal line-through">
+              <div className="flex items-center gap-2 ">
+                <span className="text-slate-500 text-sm font-normal line-through tracking-tight">
                   Ksh {productDetails?.regular_price}
                 </span>
-                <span className="text-red-600 font-medium">
-                  ({discountPercentage}% off)
+                <span className="text-rose-600 text-sm font-semibold tracking-tight">
+                  {discountPercentage}% off
                 </span>
               </div>
             </div>
-
-            {/* Custom Specifications */}
-            {productDetails?.custom_specifications?.length > 0 && (
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm pb-4">
-                {productDetails.custom_specifications.map(
-                  (spec: { name: string; value: string }, index: number) => (
-                    <>
-                      <dt
-                        key={`name-${index}`}
-                        className="font-medium text-gray-700"
-                      >
-                        {spec.name}
-                      </dt>
-                      <dd key={`value-${index}`} className="text-gray-900">
-                        {spec.value}
-                      </dd>
-                    </>
-                  )
-                )}
-              </dl>
-            )}
 
             <div className="mt-2">
               <div className="flex flex-col md:flex-row items-start gap-5 mt-4">
@@ -330,26 +313,68 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Product description */}
-          {/* <div className="w-[90%] lg:w-[90%] mx-auto mt-5"> */}
-          <div className="bg-white py-4 border-t border-gray-200">
-            <h3 className="text-xl font-bold pb-1">
-              {/* About this item {productDetails?.title} */}
-              About this item
-            </h3>
-            <div
-              className="prose prose-sm text-slate-800 max-w-none break-words "
-              dangerouslySetInnerHTML={{
-                __html: productDetails?.detailed_description,
-              }}
-            />
+            {/* Product description */}
+            {/* <div className="w-full lg:w-full mx-auto mt-5"> */}
+            <div className="bg-white py-4 ">
+              <span className="text-lg font-bold text-gray-800 ">
+                {/* About this item {productDetails?.title} */}
+                Product details
+              </span>
+
+              {/* Divider */}
+              <hr className="border-t border-slate-300 my-2" />
+
+              {/* Custom Specifications */}
+              {productDetails?.custom_specifications?.length > 0 && (
+                <div className="flex flex-col gap-3 mb-2">
+                  <span className="text-lg font-semibold text-gray-800 ">
+                    {/* About this item {productDetails?.title} */}
+                    Highlights
+                  </span>
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm ">
+                    {productDetails.custom_specifications.map(
+                      (
+                        spec: { name: string; value: string },
+                        index: number
+                      ) => (
+                        <>
+                          <dt
+                            key={`name-${index}`}
+                            className="font-medium text-gray-700"
+                          >
+                            {spec.name}
+                          </dt>
+                          <dd key={`value-${index}`} className="text-gray-900">
+                            {spec.value}
+                          </dd>
+                        </>
+                      )
+                    )}
+                  </dl>
+                  <hr className="border-t border-slate-300 py-4" />
+                </div>
+              )}
+
+              <div className="flex flex-col gap-2">
+                <span className="text-base font-semibold text-gray-800 ">
+                  {/* About this item {productDetails?.title} */}
+                  About this item
+                </span>
+
+                {/* Description */}
+                <div
+                  className="prose prose-sm text-slate-800 text-[15px] max-w-none break-words "
+                  dangerouslySetInnerHTML={{
+                    __html: productDetails?.short_description,
+                  }}
+                />
+              </div>
+            </div>
           </div>
-          {/* </div> */}
         </div>
         {/* Right column - Seller information */}
-        <div className="bg-gray-100 w-[244px] px-5 py-4 rounded-md">
+        <div className="bg-white border border-gray-200 w-[244px] px-5 py-4 ">
           <div className="flex gap-2 items-end pb-2">
             {/* <span className="text-sm">Ksh</span> */}
             <span className="text-2xl font-medium tracking-tight text-gray-800">
@@ -359,28 +384,35 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
           {/* Delivery options */}
           <div className="flex flex-col gap-3 py-1 ">
-            {/* Instande delivery */}
+            {/* Instant delivery */}
             <div className="flex flex-col gap-0">
-              <span className="text-[15px] text-gray-800 font-medium ">
-                Instant delivery
+              <span className="text-[15px] text-gray-800 font-semibold ">
+                Delivery:
               </span>
               <p className="text-sm text-gray-800 font-normal ">
-                Kshs 400 delivery{' '}
-                <span className="font-semibold">Tuesday, July 7</span>
+                Ships from <span className="font-semibold">Nairobi, Kenya</span>
               </p>
             </div>
             {/* Pickup location */}
             <div className="flex flex-col gap-0">
-              <span className="text-[15px] text-gray-800 font-medium ">
-                Pickup location
+              <span className="text-[15px] text-gray-800 font-semibold ">
+                Pickup:
               </span>
-              <p className="text-sm text-gray-800 font-normal ">
-                Kshs 70 delivery{' '}
-                <span className="font-semibold">Tuesday, July 7</span>. Order
-                within 3hrs 18mins
-              </p>
+              <div className="flex flex-col gap-1">
+                <p className="text-sm text-gray-800 font-normal ">
+                  Kshs 70 delivery
+                </p>
+                <p className="text-sm text-gray-800 font-normal ">
+                  Order within{' '}
+                  <span className="text-green-700 font-medium">
+                    3 hrs 18 mins{' '}
+                  </span>{' '}
+                  to get by{' '}
+                  <span className="font-semibold">Tuesday, July 7</span>
+                </p>
+              </div>
             </div>
-            <div className="flex items-center text-blue-700 pt-2 gap-1">
+            <div className="flex items-center text-blue-600 pt-2 gap-1">
               <MapPin size={18} className="ml-[-5px]" />
               <span className="text-sm font-normal">
                 {' '}
@@ -392,39 +424,45 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
           {/* Quantity */}
           <div className="py-3">
-            <div className="flex flex-col items-start gap-2 mb-4">
+            <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
               {productDetails?.stock > 0 ? (
                 <span className="text-green-600 font-medium">
                   In Stock{' '}
-                  <span className="text-gray-500 font-medium">
+                  {/* <span className="text-gray-500 font-medium">
                     (Stock {productDetails?.stock})
-                  </span>
+                  </span> */}
                 </span>
               ) : (
                 <span className="text-red-600 font-medium">Out of Stock</span>
               )}
-              {/* Quantity dropdown with placeholder */}
-              <select
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                className="w-full border bg-gray-100 border-gray-400 font-semibold rounded-lg px-3 py-[6px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="" disabled>
+
+              {/* Quantity dropdown */}
+              <div className="flex flex-col gap-1 w-full">
+                <span className="text-sm font-semibold text-gray-700">
                   Quantity
-                </option>
-                {[1, 2, 3, 5, 10, 20, 50, 100].map((q) => (
-                  <option key={q} value={q}>
-                    {q}
-                  </option>
-                ))}
-              </select>
+                </span>
+                <select
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-full border bg-white border-gray-500 font-medium text-gray-800 text-sm rounded-lg px-3 py-[6px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {/* <option value="" disabled>
+                  Quantity
+                </option> */}
+                  {[1, 2, 3, 5, 10, 20, 50, 100].map((q) => (
+                    <option key={q} value={q}>
+                      {q}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Add to cart button */}
             <div className="flex flex-col gap-2 w-full">
               <button
-                className={`flex items-center justify-center p-[8px] bg-orange-400 hover:bg-orange-500 text-sm text-gray-800 font-medium rounded-full transition ${
+                className={`flex items-center justify-center p-[8px] bg-[#f16232] hover:bg-[#e05628] text-sm text-white font-medium rounded-full transition ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -444,41 +482,49 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   )
                 }
               >
-                Add to cart
+                Add to Cart
               </button>
 
               {/* Buy Now button */}
-              <button className="flex items-center justify-center p-[8px] bg-rose-600 hover:bg-rose-500 text-sm text-gray-800 font-medium rounded-full transition">
+              {/* <button className="flex items-center justify-center p-[8px] bg-rose-600 hover:bg-rose-500 text-sm text-gray-800 font-medium rounded-full transition">
                 Buy Now
-              </button>
+              </button> */}
             </div>
           </div>
 
           <div className="py-1">
             <div className="w-full rounded-lg">
               {/* Sold by section */}
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm pb-4">
-                <dt className="font-medium text-gray-700">Sold by</dt>
-                <dd className="text-gray-900">{productDetails?.Shop?.name}</dd>
+              <dl className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-2 text-sm pb-4">
+                <dt className="font-normal tracking-tight text-gray-500">
+                  Sold by
+                </dt>
+                <dd className="font-normal tracking-tight text-blue-600 ">
+                  {productDetails?.Shop?.name}
+                </dd>
 
-                <dt className="font-medium text-gray-700">Returns</dt>
-                <dd className="text-gray-900">7 Day Returns</dd>
+                <dt className="font-normal tracking-tight text-gray-500">
+                  Returns
+                </dt>
+                <dd className="font-normal tracking-tight text-blue-600">
+                  7 day returns
+                </dd>
               </dl>
 
               {/* Seller performance stats */}
               <div className="flex flex-col gap-2 py-3 border-t border-gray-200">
                 {/* Seller score */}
                 <div className="flex gap-1 text-sm">
-                  <span className="">88%</span>
+                  <span className="font-semibold">88%</span>
 
-                  <span className="">Seller score</span>
+                  <span className="text-gray-800">Seller score</span>
                 </div>
 
                 {/* Chat with seller */}
                 <Link
                   href={'#'}
                   onClick={() => handleChat()}
-                  className="text-blue-500 text-sm flex items-center gap-2"
+                  className="text-blue-600 text-sm flex items-center gap-2"
                 >
                   <MessageSquareText size={18} />
                   Chat
@@ -535,6 +581,22 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               <ProductCard key={i.id} product={i} />
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Product description */}
+      <div className="w-full lg:w-full mx-auto mt-5">
+        <div className="bg-white py-4 border-t border-gray-200">
+          <h3 className="text-xl font-bold pb-1">
+            {/* Product description {productDetails?.title} */}
+            Product description
+          </h3>
+          <div
+            className="prose prose-sm text-slate-800 max-w-none break-words "
+            dangerouslySetInnerHTML={{
+              __html: productDetails?.detailed_description,
+            }}
+          />
         </div>
       </div>
 

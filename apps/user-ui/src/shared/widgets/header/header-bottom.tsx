@@ -20,7 +20,7 @@ const HeaderBottom = () => {
   console.log(user);
 
   return (
-    <div className="w-full transition-all duration-300 flex items-center justify-center h-[40px] bg-white ">
+    <div className="w-full transition-all duration-300 flex items-center justify-center h-[40px] bg-white border-b border-gray-200 ">
       <div className="w-[95%] relative mx-auto flex items-center justify-start gap-4 ">
         {/* All Dropdowns */}
         <div>

@@ -17,7 +17,6 @@ const ProductCard = ({
   isDeal?: boolean;
 }) => {
   const [timeLeft, setTimeLeft] = useState('');
-  // const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (isDeal && product?.ending_date) {
@@ -37,9 +36,13 @@ const ProductCard = ({
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         setTimeLeft(`${days}d ${hours}h ${minutes}m left with this price`);
       }, 60000);
+
+      // ✅ Always return a cleanup function
       return () => clearInterval(interval);
     }
-    return;
+
+    // ✅ Explicitly return nothing if no deal
+    return undefined;
   }, [isDeal, product?.ending_date]);
 
   const capitalizeWords = (str: string) => {
@@ -90,14 +93,27 @@ const ProductCard = ({
       {/* product price */}
       <div className="mt-2 flex items-center gap-2">
         <div className="flex items-center gap-1">
-          <span className="text-sm font-bold text-gray-900">KSh</span>
-          <span className="text-xl font-bold text-gray-900 tracking-tight">
-            {product?.sale_price}
+          <span
+            className={`text-sm font-bold ${
+              isDeal ? 'text-green-700' : 'text-gray-900'
+            }`}
+          >
+            KSh
+          </span>
+          <span
+            className={`text-xl font-bold tracking-tight ${
+              isDeal ? 'text-green-700' : 'text-gray-900'
+            }`}
+          >
+            {isDeal ? product?.sale_price : product?.regular_price}
           </span>
         </div>
-        <span className="text-xs font-normal line-through text-gray-500">
-          KSh {product?.regular_price}
-        </span>
+
+        {isDeal && (
+          <span className="text-xs font-normal line-through text-gray-500">
+            KSh {product?.regular_price}
+          </span>
+        )}
       </div>
 
       {/* product title */}

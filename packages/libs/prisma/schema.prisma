@@ -190,7 +190,6 @@ model products {
   ending_date           DateTime?
   stock                 Int
   regular_price         Float
-  sale_price            Float
   ratings               Float         @default(5)
   custom_specifications Json?
   customProperties      Json

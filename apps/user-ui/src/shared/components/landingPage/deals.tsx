@@ -7,6 +7,9 @@ import ProductCard from 'packages/components/ProductCard';
 import { fetchDeals } from 'apps/user-ui/src/lib/queries/deals';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+import Carousel from 'react-multi-carousel';
+// import 'react-multi-carousel/lib/styles.css';
+
 const Deals = () => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -46,6 +49,26 @@ const Deals = () => {
     return () => el.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
+
   return (
     <div className="bg-white pb-6 ">
       <div className="pb-2 flex justify-between">
@@ -69,45 +92,12 @@ const Deals = () => {
       {isFetched && deals.length > 0 && isMounted && (
         <div className="relative w-full group">
           {/* Scrollable grid */}
-          <div
-            ref={scrollRef}
-            className="
-    grid grid-flow-col 
-    auto-cols-[40%]        /* mobile: 2.5 items (100 / 40 ≈ 2.5) */
-    sm:auto-cols-[28.5%]   /* tablet: 3.5 items (100 / 28.5 ≈ 3.5) */
-    md:auto-cols-[22%]     /* medium: 4.5 items (100 / 22 ≈ 4.5) */
-    lg:auto-cols-[calc(16.6666%-13.3333px)] /* desktop: 6 items perfectly aligned */
-    gap-4 overflow-x-auto scrollbar-hide w-full
-  "
-          >
-            {deals.map((deal: any) => (
-              <ProductCard key={deal.id} product={deal} isDeal={true} />
-            ))}
-          </div>
-
-          {/* Left arrow (fade in on hover) */}
-          <button
-            onClick={() =>
-              scrollRef.current?.scrollBy({ left: -250, behavior: 'smooth' })
-            }
-            className="absolute left-0 top-20 flex items-center justify-center 
-             w-12 h-20 bg-gray-200 bg-opacity-60 rounded-sm shadow-lg 
-             opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
-          >
-            <ChevronLeft size={22} />
-          </button>
-
-          {/* Right arrow (fade in on hover) */}
-          <button
-            onClick={() =>
-              scrollRef.current?.scrollBy({ left: 250, behavior: 'smooth' })
-            }
-            className="absolute right-0 top-20 flex items-center justify-center 
-             w-12 h-20 bg-gray-200 bg-opacity-60 rounded-sm shadow-lg 
-             opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
-          >
-            <ChevronRight size={22} />
-          </button>
+          <Carousel responsive={responsive}>
+            <div>Item 1</div>
+            <div>Item 2</div>
+            <div>Item 3</div>
+            <div>Item 4</div>
+          </Carousel>
         </div>
       )}
 

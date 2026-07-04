@@ -40,7 +40,9 @@
     ".next/types/**/*.ts",
     "../../packages/**/*.ts",
     "../../packages/**/*.tsx",
-    "../../global.d.ts"
+    "../../global.d.ts",
+    "src",
+    "declarations.d.ts"
   ],
   "exclude": [
     "out-tsc",

@@ -93,7 +93,7 @@ const Header = () => {
   return (
     <>
       {/* Top header - fixed */}
-      <div className="fixed top-0 left-0 w-full bg-[#fff] z-[100] border-b border-white">
+      <div className="fixed top-0 left-0 w-full bg-[#fff] z-[100] ">
         <div className="w-[95%] h-[56px] m-auto flex items-center justify-between gap-6 bg-[#fff] ">
           {/* logo */}
           <div>
@@ -116,11 +116,11 @@ const Header = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="w-[50%] relative flex items-center">
+          <div className="w-[60%] relative flex items-center">
             {/* All categories dropdown */}
             {/* <div className="h-[40px] pl-4 pr-3 cursor-pointer flex items-center justify-center absolute border-r border-gray-200 hover:bg-gray-200 transition left-0 rounded-l-md "> */}
             <div className="h-[40px] pl-4 pr-3 cursor-pointer flex items-center justify-center absolute hover:bg-gray-200 transition left-0 rounded-l-lg ">
-              <span className="text-sm text-[#333]">All</span>
+              <span className="text-sm text-gray-800">All</span>
               <ChevronDownIcon color="#333" size={18} className="pl-[6px]" />
             </div>
 
@@ -131,14 +131,14 @@ const Header = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onClick={() => setOpenSearchBackdrop(true)}
               placeholder="Search "
-              className="w-full pl-[75px] pr-10 py-1 font-Poppins font-normal text-sm tracking-normal bg-gray-100 text-gray-600 border-r border-gray-100 h-[40px] rounded-lg outline-none focus:outline-none focus:border-[#ebedf0] focus:ring-0 focus:shadow-none"
+              className="w-full h-[40px] pl-[75px] pr-10 py-1 font-Poppins font-normal text-sm tracking-normal bg-[#f5f5f7] text-gray-800 border-r border-[#f5f5f5] rounded-full outline-none focus:outline-none focus:border-gray-700 focus:ring-0 focus:shadow-none"
             />
             {/* bg-[#f3f3f6] */}
             {/* border-[#ebedf0]  */}
             {/* Search Backdrop */}
             {openSearchBackdrop && (
               <div
-                className="fixed top-[56px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
+                className="fixed top-[96px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
                 onClick={() => setOpenSearchBackdrop(false)} // click backdrop closes everything
               />
             )}
@@ -146,7 +146,7 @@ const Header = () => {
             {/* Search icon */}
             <div
               onClick={handleSearchClick}
-              className="w-[38px] h-[38px] cursor-pointer flex items-center justify-center hover:bg-orange-300 text-white transition outline-none absolute right-0 rounded-r-lg"
+              className="w-[38px] h-[38px] cursor-pointer flex items-center justify-center bg-[#f5f5f5] hover:bg-orange-300 text-white transition outline-none absolute right-[1px] rounded-full"
             >
               {/* <Search color="#333" size={20} /> */}
               <Search color="#333" size={20} />
@@ -227,21 +227,27 @@ const Header = () => {
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full right-0 mt-[0px] w-64 bg-white z-[110] shadow-md rounded-br-lg rounded-bl-lg">
-                  <div className="p-6 ">
+                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fbfbfd] z-[110] shadow-lg rounded-md ">
+                  {/* Arrow pointing up */}
+                  <div
+                    className="absolute -top-2 right-4 w-0 h-0 
+                border-l-[10px] border-l-transparent 
+                border-r-[10px] border-r-transparent 
+                border-b-[12px] border-[#fbfbfd]"
+                  ></div>
+
+                  <div className="p-6">
                     {user?.name ? (
                       <div className="flex flex-col items-start rounded-md bg-gray-100 px-6 py-2">
                         <span className="block font-semibold text-base">
-                          {/* {user?.name?.split(' ')[0]} */}
-                          {/* {capitalizeWords(user?.name?.split(' ')[0])} */}
                           {capitalizeWords(user?.name)}
                         </span>
-                        <span className="block font-normal text-sm text-gray-600 mb-1 ">
+                        <span className="block font-normal text-sm text-gray-600 mb-1">
                           {user?.email?.split(' ')[0]}
                         </span>
                         <Link
                           href="#"
-                          className=" text-blue-800 text-sm font-medium no-underline hover:underline"
+                          className="text-blue-800 text-sm font-medium no-underline hover:underline"
                           onClick={() => {
                             logOutHandler();
                             setOpen(false);
@@ -251,7 +257,7 @@ const Header = () => {
                         </Link>
                       </div>
                     ) : (
-                      <div className="flex flex-col items-start ">
+                      <div className="flex flex-col items-start">
                         <Link
                           href="/login"
                           className="block w-full rounded-md text-gray-800 bg-amber-300 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
@@ -285,12 +291,6 @@ const Header = () => {
                       <Link href="/sign-in" className="hover:underline">
                         Watchlist
                       </Link>
-                      {/* <Link
-                        href={`${process.env.NEXT_PUBLIC_SELLER_SERVER_URI}/signup`}
-                        className="hover:underline"
-                      >
-                        Start a Selling Account
-                      </Link> */}
                       <Link href="/sign-in" className="hover:underline">
                         Customer Service
                       </Link>

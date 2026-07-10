@@ -196,11 +196,11 @@ const Header = () => {
     <>
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
-        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
+        className={`sticky top-0 z-50 bg-[#2D384B] text-white transition-shadow duration-200 ${
           scrolled ? 'shadow-sm' : 'shadow-none'
         }`}
       >
-        <div className="max-w-[1200px] mx-auto pt-4 pb-4 grid grid-cols-[900px_1fr] items-center gap-6">
+        <div className="max-w-[1200px] mx-auto pt-3 pb-3 grid grid-cols-[900px_1fr] items-center gap-6">
           <div className="flex items-center justify-center w-full gap-6">
             {/* Logo */}
             <div
@@ -210,18 +210,16 @@ const Header = () => {
               Sokonis<span className="text-[#E85D1F]">.</span>
             </div>
 
-            <div className="flex items-end gap-1">
-              {/* <MapPin color="#333" size={24} className="pr-1 " /> */}
-              <PinFilledIcon color="#333" className=" " />
-              <div className="flex flex-col items-start shrink-0">
-                <span className="text-xs font-normal text-gray-500">
-                  Deliver to:{' '}
-                </span>
-                <span className="text-sm font-semibold text-gray-950 -mt-1.5">
+            {/* Deliver to */}
+            <button className="hidden md:flex items-start gap-1 text-[11px] leading-tight text-[#AEB9C8] shrink-0">
+              <MapPin size={16} className="mt-0.5 shrink-0" />
+              <span>
+                Deliver to
+                <b className="block text-[12.5px] text-white font-semibold">
                   Naivasha
-                </span>
-              </div>
-            </div>
+                </b>
+              </span>
+            </button>
 
             {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
@@ -231,7 +229,7 @@ const Header = () => {
             >
               {/* INNER pill — this is the ONLY element with overflow-hidden,
                 so its rounded corners clip the dropdown button + search button */}
-              <div className="flex items-center h-10 bg-white rounded-md border border-gray-300 overflow-hidden focus-within:border-blue-500 transition-colors duration-300">
+              <div className="flex items-center h-10 bg-white rounded-md border border-[#2D384B] overflow-hidden focus-within:border-blue-500 transition-colors duration-300">
                 <SearchScopeDropdown
                   value={searchScope}
                   onToggle={() => setOpenDepartments((o) => !o)}
@@ -247,9 +245,9 @@ const Header = () => {
                 {/* Search Icon Button */}
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-[50px] h-10 border-l border-[#D1D5DB] text-[#14181A] hover:bg-[#EDEBE5] hover:text-[#E85D1F] transition-colors flex-shrink-0"
+                  className="flex items-center justify-center w-[50px] h-10 border-2 border-[#F16232] bg-[#F16232] hover:bg-[#d9551f] transition-colors flex-shrink-0"
                 >
-                  <Search size={16} />
+                  <Search size={18} className="text-white" />
                 </button>
               </div>
 
@@ -297,7 +295,7 @@ const Header = () => {
                   className=""
                   size={20}
                   strokeWidth={1.8}
-                  color="#57534E"
+                  color="#fff"
                 />
 
                 {/* <span className="block text-[13.0px] font-normal text-[#14181A] tracking-wide">
@@ -418,9 +416,9 @@ const Header = () => {
                   strokeWidth={1.8}
                   className="text-[#5B6265] hover:text-[#14181A]"
                 /> */}
-                <CartIcon strokeWidth={1.8} color="#1C1917" />
+                <CartIcon strokeWidth={1.8} color="#fff" />
                 {/* {cart?.length > 0 && ( */}
-                <div className="absolute top-[-4px] right-[-8px] w-4 h-4 rounded-full bg-[#C2410C] text-white font-semibold flex items-center justify-center ">
+                <div className="absolute top-[-4px] right-[-8px] w-4 h-4 rounded-full bg-[#F16232] text-white font-semibold flex items-center justify-center ">
                   <span className="text-white font-medium text-[10px]">
                     {cart.length}
                   </span>
@@ -433,7 +431,7 @@ const Header = () => {
                 </span> */}
               {/* </div> */}
             </div>
-            <span className="flex items-center justify-center py-1 px-3 ml-0 bg-[#F7F6F3] border border-gray-200 rounded-full text-[11.5px] text-gray-700 font-semibold ">
+            <span className="flex items-center justify-center py-1 px-3 ml-0 text-[11.5px] text-white font-semibold bg-[#3B4A61] rounded-full ">
               KES 0.00
             </span>
           </div>

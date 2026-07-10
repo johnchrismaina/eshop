@@ -20,16 +20,16 @@ const HeaderBottom = () => {
   console.log(user);
 
   return (
-    <div className="transition-all duration-300 bg-[#FAF9F6] ">
+    <div className="transition-all duration-300 bg-[#1C3041] ">
       <div className="max-w-[1200px] pt-1 pb-1 relative mx-auto flex items-center justify-between gap-10 ">
         {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 ">
           {/* All Dropdowns */}
           <div>
             {/* Bottom header button */}
             <button
-              className="flex items-center gap-2.5 text-[#14181A] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 text-[13.5px] font-medium "
+              className="flex items-center gap-2.5 text-[13.5px] font-medium text-[#C9D2DD] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 "
               onClick={() => setShowSidebar(true)}
             >
               <Menu size={16} />
@@ -47,10 +47,10 @@ const HeaderBottom = () => {
           <nav className="flex items-center flex-1 justify-start gap-2 ml-0">
             {navItems.map((i: NavItemsTypes, index: number) => (
               <Link
-                className={`flex items-center px-3 py-0.5 font-medium text-[13.0px] tracking-wide transition-colors ${
+                className={`flex items-center px-3 py-0.5 font-medium text-[13.5px] tracking-wide transition-colors ${
                   i.accent
-                    ? 'text-[#C2410C] font-semibold'
-                    : 'text-[#5B6265] hover:text-[#14181A]'
+                    ? 'text-[#F16232] font-semibold'
+                    : 'text-[#C9D2DD] hover:text-[#fff]'
                 }`}
                 href={i.href}
                 key={index}
@@ -60,10 +60,20 @@ const HeaderBottom = () => {
             ))}
           </nav>
         </div>
-        <div className="flex gap-6 font-medium text-[13.0px] tracking-wide text-[#44403C]">
-          <span>Sell on Sokonis</span>
-          <span>Customer Service</span>
-        </div>
+        <span className="flex-1" />
+
+        <a
+          href="/sell"
+          className="hidden lg:inline text-[13.5px] text-[#C9D2DD] font-medium opacity-80 hover:opacity-100 shrink-0"
+        >
+          Sell on Sokonis
+        </a>
+        <a
+          href="/support"
+          className="hidden lg:inline text-[13.5px] text-[#C9D2DD] font-medium opacity-80 hover:opacity-100 shrink-0"
+        >
+          Customer Service
+        </a>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { navItems } from 'apps/user-ui/src/configs/constants';
 import useUser from 'apps/user-ui/src/hooks/useUser';
 // import { useStore } from 'apps/user-ui/src/store';
 // import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
-import { TextAlignJustify } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 // import { BsBag } from 'react-icons/bs';
@@ -20,40 +20,49 @@ const HeaderBottom = () => {
   console.log(user);
 
   return (
-    <div className="w-full transition-all duration-300 flex items-center justify-center h-[40px] bg-[#fff] border-b border-gray-200 ">
-      <div className="w-[95%] relative mx-auto flex items-center justify-center gap-0 ">
-        {/* All Dropdowns */}
-        <div>
-          {/* Bottom header button */}
-          <button
-            className="py-2 bg-transparent rounded flex items-center justify-between gap-1"
-            onClick={() => setShowSidebar(true)}
-          >
-            <TextAlignJustify color="#000" className="size-4" />
-            {/* <EqualIcon color="#333" /> */}
-            <span className="font-semibold text-[13px] text-gray-900 hover:text-gray-900 ">
-              Categories
-            </span>
-          </button>
+    <div className="transition-all duration-300 bg-[#FAF9F6] ">
+      <div className="max-w-[1200px] pt-1 pb-1 relative mx-auto flex items-center justify-between gap-10 ">
+        {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 
-          {/* Sidebar controlled by parent state */}
-          <SidebarMenu
-            isOpen={showSidebar}
-            onClose={() => setShowSidebar(false)}
-          />
-        </div>
-
-        {/* Navigation Links */}
-        <div className="flex items-center gap-3">
-          {navItems.map((i: NavItemsTypes, index: number) => (
-            <Link
-              className="px-3 py-0 font-semibold text-[13px] text-gray-900 hover:text-gray-900 transition flex items-center"
-              href={i.href}
-              key={index}
+        <div className="flex items-center justify-center gap-2">
+          {/* All Dropdowns */}
+          <div>
+            {/* Bottom header button */}
+            <button
+              className="flex items-center gap-2.5 text-[#14181A] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 text-[13.5px] font-medium "
+              onClick={() => setShowSidebar(true)}
             >
-              {i.title}
-            </Link>
-          ))}
+              <Menu size={16} />
+              Categories
+            </button>
+
+            {/* Sidebar controlled by parent state */}
+            <SidebarMenu
+              isOpen={showSidebar}
+              onClose={() => setShowSidebar(false)}
+            />
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="flex items-center flex-1 justify-start gap-2 ml-0">
+            {navItems.map((i: NavItemsTypes, index: number) => (
+              <Link
+                className={`flex items-center px-3 py-0.5 font-medium text-[13.0px] tracking-wide transition-colors ${
+                  i.accent
+                    ? 'text-[#C2410C] font-semibold'
+                    : 'text-[#5B6265] hover:text-[#14181A]'
+                }`}
+                href={i.href}
+                key={index}
+              >
+                {i.title}
+              </Link>
+            ))}
+          </nav>
+        </div>
+        <div className="flex gap-6 font-medium text-[13.0px] tracking-wide text-[#44403C]">
+          <span>Sell on Sokonis</span>
+          <span>Customer Service</span>
         </div>
       </div>
     </div>

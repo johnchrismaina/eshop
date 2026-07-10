@@ -1,18 +1,26 @@
 import * as React from 'react';
 
-const CartIcon = (props: any) => (
+interface CartIconProps {
+  size?: number;
+  strokeWidth?: number;
+  color?: string;
+}
+
+const CartIcon: React.FC<CartIconProps> = ({
+  size = 24,
+  strokeWidth = 2,
+  color = '#000',
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
-    viewBox="0 0 512 512"
+    viewBox="0 0 24 24"
   >
-    <path d="M0 0h512v512H0z" fill="none" />
-    <circle cx="176" cy="416" r="32" fill="currentColor" />
-    <circle cx="400" cy="416" r="32" fill="currentColor" />
+    <path d="M0 0h24v24H0z" fill="none" />
     <path
-      fill="currentColor"
-      d="M456.8 120.78a23.92 23.92 0 0 0-18.56-8.78H133.89l-6.13-34.78A16 16 0 0 0 112 64H48a16 16 0 0 0 0 32h50.58l45.66 258.78A16 16 0 0 0 160 368h256a16 16 0 0 0 0-32H173.42l-5.64-32h241.66A24.07 24.07 0 0 0 433 284.71l28.8-144a24 24 0 0 0-5-19.93"
+      fill={color}
+      d="M11.25 18.75c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5s1.5.67 1.5 1.5m5-1.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5s1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5m4.48-9.57l-2 8a.75.75 0 0 1-.73.57H8c-.36 0-.67-.26-.74-.62L5.37 5.25H4c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h2c.36 0 .67.26.74.62l.43 2.38H20a.754.754 0 0 1 .73.93m-1.69.57H7.44l1.18 6.5h8.79z"
     />
   </svg>
 );

@@ -15,9 +15,9 @@ export default function LandingPage() {
   return (
     <div className="bg-white min-h-screen">
       <Hero />
-      <div className="w-full px-10 py-5 m-auto flex flex-col bg-white">
-        <Deals />
+      <div className="w-full px-0 pb-5 m-auto flex flex-col bg-white">
         <PromoGrid />
+        <Deals />
         <LatestProducts />
         <Products />
         {/* <TopShops /> */}

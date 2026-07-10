@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import {
   ChevronDown,
   ChevronDownIcon,
   MapPin,
-  Search,
-  ShoppingCart,
+  UserRound,
+  // Search,
+  // ShoppingCart,
   // ShoppingCart,
 } from 'lucide-react';
 import HeaderBottom from './header-bottom';
@@ -27,7 +28,106 @@ import CartFilledIcon from 'apps/user-ui/src/assets/svgs/cart-filled';
 import PinFilledIcon from 'apps/user-ui/src/assets/svgs/pin-filled';
 import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 
+import { useEffect } from 'react';
+import { Search, User, ShoppingCart, Menu } from 'lucide-react';
+import SidebarMenu from '../../components/sidebar-menu';
+
+// ----------------------------------
+
+function useScrolled(threshold = 8) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > threshold);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [threshold]);
+  return scrolled;
+}
+
+const DEPARTMENTS = [
+  { label: 'Deals', href: '#' },
+  { label: 'Electronics', href: '#' },
+  { label: 'Fashion', href: '#' },
+  { label: 'Home & Living', href: '#' },
+  { label: 'Groceries', href: '#' },
+  { label: 'Sell on Sokonis', href: '#' },
+  { label: 'Customer Service', href: '#' },
+];
+
+const SEARCH_CATEGORIES = [
+  'All',
+  'Electronics',
+  'Fashion',
+  'Home & Living',
+  'Groceries',
+];
+
+// ----------------------------------
+
+// Define the props type
+interface SearchScopeDropdownProps {
+  value: string; // or whatever type your SEARCH_CATEGORIES values are
+  onChange: (newValue: string) => void;
+}
+
+// ----------------------------------
+
+// All Departments Dropdown
+
+// SearchScopeDropdown is now just the trigger button — no state, no panel.
+// The header owns the open/close state and renders the panel itself.
+function SearchScopeDropdown({
+  value,
+  onToggle,
+}: {
+  value: string;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="flex items-center gap-1.5 h-10 pl-4 pr-3 text-[13px] text-[#333] hover:text-[#14181A] bg-[#F1F0ED] transition-colors flex-shrink-0"
+    >
+      {value}
+      <ChevronDown size={14} />
+    </button>
+  );
+}
+
+// ----------------------------------
+
 const Header = () => {
+  //Image and layout used by logo
+  // const scrolled = useScrolled();
+  // const [searchScope, setSearchScope] = useState('All');
+
+  const [scrolled, setScrolled] = useState(false);
+  const [searchScope, setSearchScope] = useState('All');
+  const [openDepartments, setOpenDepartments] = useState(false);
+  const searchWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Click-outside now lives at the header level, watching the OUTER
+  // wrapper (which contains both the pill and the dropdown panel).
+  useEffect(() => {
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        searchWrapperRef.current &&
+        !searchWrapperRef.current.contains(e.target as Node)
+      ) {
+        setOpenDepartments(false);
+      }
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, []);
+
   // const { user, isLoading } = useUser();
   const cart = useStore((state: any) => state.cart);
   const { layout } = useLayout();
@@ -40,6 +140,8 @@ const Header = () => {
 
   const [open, setOpen] = useState(false);
   const [openSearchBackdrop, setOpenSearchBackdrop] = useState(false);
+
+  const [showSidebar, setShowSidebar] = useState(false);
 
   // Track if we've mounted and what the initial session state was
   const [mounted, setMounted] = useState(false);
@@ -92,106 +194,113 @@ const Header = () => {
 
   return (
     <>
-      {/* Top header - fixed */}
-      <div className="fixed top-0 left-0 w-full bg-[#fff] z-[100] ">
-        <div className="w-[95%] h-[56px] m-auto flex items-center justify-between gap-6 bg-[#fff] ">
-          {/* logo */}
-          <div>
-            <Link href="/">
-              {/* <span className="font-semibold text-3xl tracking-tight">
-                Sokonis
-              </span> */}
-              <Image
-                src={
-                  layout?.logo ||
-                  'https://ik.imagekit.io/johnchrismaina/Assets/sokonis_logo1.svg?updatedAt=1782386876690'
-                }
-                alt="logo"
-                width={120}
-                height={50}
-                className="object-contain"
-                unoptimized
-              />
-            </Link>
-          </div>
-
-          {/* Search Bar */}
-          <div className="w-[60%] relative flex items-center">
-            {/* All categories dropdown */}
-            {/* <div className="h-[40px] pl-4 pr-3 cursor-pointer flex items-center justify-center absolute border-r border-gray-200 hover:bg-gray-200 transition left-0 rounded-l-md "> */}
-            <div className="h-[40px] pl-4 pr-3 cursor-pointer flex items-center justify-center absolute hover:bg-gray-200 transition left-0 rounded-l-lg ">
-              <span className="text-sm text-gray-800">All</span>
-              <ChevronDownIcon color="#333" size={18} className="pl-[6px]" />
-            </div>
-
-            {/* Search input */}
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClick={() => setOpenSearchBackdrop(true)}
-              placeholder="Search "
-              className="w-full h-[40px] pl-[75px] pr-10 py-1 font-Poppins font-normal text-sm tracking-normal bg-[#f5f5f7] text-gray-800 border-r border-[#f5f5f5] rounded-full outline-none focus:outline-none focus:border-gray-700 focus:ring-0 focus:shadow-none"
-            />
-            {/* bg-[#f3f3f6] */}
-            {/* border-[#ebedf0]  */}
-            {/* Search Backdrop */}
-            {openSearchBackdrop && (
-              <div
-                className="fixed top-[96px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
-                onClick={() => setOpenSearchBackdrop(false)} // click backdrop closes everything
-              />
-            )}
-
-            {/* Search icon */}
+      {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
+      <header
+        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
+          scrolled ? 'shadow-sm' : 'shadow-none'
+        }`}
+      >
+        <div className="max-w-[1200px] mx-auto pt-4 pb-4 grid grid-cols-[900px_1fr] items-center gap-6">
+          <div className="flex items-center justify-center w-full gap-6">
+            {/* Logo */}
             <div
-              onClick={handleSearchClick}
-              className="w-[38px] h-[38px] cursor-pointer flex items-center justify-center bg-[#f5f5f5] hover:bg-orange-300 text-white transition outline-none absolute right-[1px] rounded-full"
+              className="font-bold text-[23px] tracking-tight"
+              style={{ fontFamily: "'Libre Franklin', sans-serif" }}
             >
-              {/* <Search color="#333" size={20} /> */}
-              <Search color="#333" size={20} />
+              Sokonis<span className="text-[#E85D1F]">.</span>
             </div>
 
-            {/* Suggestions dropdown */}
-            {suggestions.length > 0 && (
-              <div className="absolute w-full top-[60px] bg-white border border-gray-600 z-[120]">
-                {suggestions.map((item) => (
-                  <Link
-                    href={`/product/${item.slug}`}
-                    key={item.id}
-                    onClick={() => {
-                      setSuggestions([]);
-                      setSearchQuery('');
-                    }}
-                    className="block px-4 py-2 text-sm hover:bg-blue-500"
-                  >
-                    {item.title}
-                  </Link>
-                ))}
+            <div className="flex items-end gap-1">
+              {/* <MapPin color="#333" size={24} className="pr-1 " /> */}
+              <PinFilledIcon color="#333" className=" " />
+              <div className="flex flex-col items-start shrink-0">
+                <span className="text-xs font-normal text-gray-500">
+                  Deliver to:{' '}
+                </span>
+                <span className="text-sm font-semibold text-gray-950 -mt-1.5">
+                  Naivasha
+                </span>
               </div>
-            )}
-            {loadingSuggestions && (
-              <div className="absolute w-full top-[60px] bg-white border z-[120]">
-                Searching...
+            </div>
+
+            {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
+              This is what click-outside watches, and what holds the panel. */}
+            <div
+              ref={searchWrapperRef}
+              className="relative max-w-[560px] w-full mx-auto"
+            >
+              {/* INNER pill — this is the ONLY element with overflow-hidden,
+                so its rounded corners clip the dropdown button + search button */}
+              <div className="flex items-center h-10 bg-white rounded-md border border-gray-300 overflow-hidden focus-within:border-blue-500 transition-colors duration-300">
+                <SearchScopeDropdown
+                  value={searchScope}
+                  onToggle={() => setOpenDepartments((o) => !o)}
+                />
+
+                {/* Search Input */}
+                <input
+                  type="text"
+                  placeholder="Search products, brands, categories..."
+                  className="flex-1 h-10 bg-transparent outline-none border-none text-[13.5px] placeholder:text-gray-400 px-2"
+                />
+
+                {/* Search Icon Button */}
+                <button
+                  aria-label="Search"
+                  className="flex items-center justify-center w-[50px] h-10 border-l border-[#D1D5DB] text-[#14181A] hover:bg-[#EDEBE5] hover:text-[#E85D1F] transition-colors flex-shrink-0"
+                >
+                  <Search size={16} />
+                </button>
               </div>
-            )}
+
+              {/* Dropdown panel — sibling of the clipped pill, NOT inside it.
+                Positioned relative to the OUTER wrapper, so it's unaffected
+                by the inner pill's overflow-hidden. */}
+              {openDepartments && (
+                <div className="absolute top-full left-0 mt-2 w-48 bg-[#fff] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
+                  {SEARCH_CATEGORIES.map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => {
+                        setSearchScope(cat);
+                        setOpenDepartments(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-[13.5px] transition-colors ${
+                        cat === searchScope
+                          ? 'text-[#E85D1F] font-medium bg-[#FCE6D9]/40'
+                          : 'text-[#14181A] hover:bg-[#F6F5F1]'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Profile icons */}
-          {/* Account */}
-          <div className="flex items-center gap-3 shrink-0 h-full ">
+          {/* Account / Cart column */}
+          <div className="flex items-center justify-end w-full gap-4">
+            {/* Account */}
             {/* Trigger */}
             <div
-              className="relative flex items-center gap-2 text-gray-600 px-2 h-full "
+              className="relative flex items-end gap-2 text-gray-600 px-2 h-full "
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
             >
               <Link
                 href={user?.name ? '/profile' : '/login'}
-                className="flex items-center justify-center "
+                className="flex gap-2 items-start justify-center "
               >
-                {/* <span className="block text-xs h-[16px]"> */}
-                <span className="block text-xs ">
+                <UserRound
+                  className=""
+                  size={20}
+                  strokeWidth={1.8}
+                  color="#57534E"
+                />
+
+                {/* <span className="block text-[13.0px] font-normal text-[#14181A] tracking-wide">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
                     <span className="font-normal text-gray-500 ">Sign in</span>
@@ -200,20 +309,18 @@ const Header = () => {
                     <span className="block w-12 h-3 bg-gray-300 rounded animate-pulse"></span>
                   ) : user?.name ? (
                     // Hydrated with user: show username
-                    <span className="font-medium">
+                    <span className="font-normal">
                       {`Hi, ${capitalizeWords(user.name.split(' ')[0])}`}
                     </span>
                   ) : (
                     // No user or no previous session: show Log in
-                    <span className="font-semibold text-gray-900 text-sm tracking-tight">
-                      Sign in
-                    </span>
+                    <span className="">Sign in</span>
                   )}
-                </span>
+                </span> */}
 
-                {/* <span className="flex items-center font-semibold text-gray-900 text-sm tracking-tight gap-1 -mt-1.5">
+                {/* <span className="flex items-center text-[#14181A] font-medium text-[13.5px] tracking-tight gap-1 -mt-1.5">
                   Account
-                  <ChevronDown className="mt-1" size={12} color="#555" />
+                  <ChevronDown className="mt-1" size={12} color="#5B6265" />
                 </span> */}
               </Link>
 
@@ -227,14 +334,14 @@ const Header = () => {
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fbfbfd] z-[110] shadow-lg rounded-md ">
+                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fff] z-[110] shadow-lg rounded-bl-md rounded-br-md ">
                   {/* Arrow pointing up */}
-                  <div
+                  {/* <div
                     className="absolute -top-2 right-4 w-0 h-0 
-                border-l-[10px] border-l-transparent 
-                border-r-[10px] border-r-transparent 
-                border-b-[12px] border-[#fbfbfd]"
-                  ></div>
+                            border-l-[10px] border-l-transparent 
+                            border-r-[10px] border-r-transparent 
+                            border-b-[12px] border-gray-400"
+                  ></div> */}
 
                   <div className="p-6">
                     {user?.name ? (
@@ -280,47 +387,61 @@ const Header = () => {
 
                     <div className="w-full h-[0.5px] bg-gray-300 my-4"></div>
 
-                    <div className="flex flex-col text-[13px] text-gray-800 font-medium mt-0 gap-2">
-                      <span className="text-gray-800 text-xl">Account</span>
-                      <Link href="/sign-in" className="hover:underline">
-                        My Account
-                      </Link>
-                      <Link href="/sign-in" className="hover:underline">
-                        My Orders
-                      </Link>
-                      <Link href="/sign-in" className="hover:underline">
-                        Watchlist
-                      </Link>
-                      <Link href="/sign-in" className="hover:underline">
-                        Customer Service
-                      </Link>
+                    <div className="flex flex-col mt-0 gap-2">
+                      <span className="text-gray-900 font-semibold text-base">
+                        Account
+                      </span>
+                      <div className="flex flex-col mt-0 gap-2 text-[13px] text-gray-600 font-normal ">
+                        <Link href="/sign-in" className="hover:underline">
+                          My Account
+                        </Link>
+                        <Link href="/sign-in" className="hover:underline">
+                          My Orders
+                        </Link>
+                        <Link href="/sign-in" className="hover:underline">
+                          Watchlist
+                        </Link>
+                        <Link href="/sign-in" className="hover:underline">
+                          Customer Service
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
             </div>
-
             {/* Cart */}
-            <div className="flex items-center mt-0 gap-1">
-              <Link href="/cart" className="relative ">
-                <CartIcon className="bg-[#333] " />
-                {/* <ShoppingCart /> */}
-                {/* <CartFilledIcon color="#555" /> */}
-                {cart?.length > 0 && (
-                  <div className="w-5 h-5 border-2 border-white bg-orange-500 rounded-full flex items-center justify-center absolute top-[-10px] right-[-10px]">
-                    <span className="text-white font-medium text-sm">
-                      {cart.length}
-                    </span>
-                  </div>
-                )}
+            <div className="flex items-center justify-center mt-0 gap-2 ">
+              <Link href="/cart" className="relative cursor-pointer">
+                {/* <ShoppingCart
+                  size={20}
+                  strokeWidth={1.8}
+                  className="text-[#5B6265] hover:text-[#14181A]"
+                /> */}
+                <CartIcon strokeWidth={1.8} color="#1C1917" />
+                {/* {cart?.length > 0 && ( */}
+                <div className="absolute top-[-4px] right-[-8px] w-4 h-4 rounded-full bg-[#C2410C] text-white font-semibold flex items-center justify-center ">
+                  <span className="text-white font-medium text-[10px]">
+                    {cart.length}
+                  </span>
+                </div>
+                {/* )} */}
               </Link>
-              {/* <span className="font-semibold text-sm text-gray-900">Cart</span> */}
+              {/* <div className="flex items-center justify-center p-1 border border-gray-300 rounded-full"> */}
+              {/* <span className="text-[11.5px] text-[#5B6265] font-medium tracking-wide transition-colors">
+                  KES
+                </span> */}
+              {/* </div> */}
             </div>
+            <span className="flex items-center justify-center py-1 px-3 ml-0 bg-[#F7F6F3] border border-gray-200 rounded-full text-[11.5px] text-gray-700 font-semibold ">
+              KES 0.00
+            </span>
           </div>
         </div>
-      </div>
-      {/* Bottom header - scrolls normally, with top padding to account for fixed header */}
-      <div className="pt-[56px]">
+      </header>
+
+      {/* HEADER 2 — categories — normal flow, not sticky, no shadow */}
+      <div className="">
         <HeaderBottom />
       </div>
     </>

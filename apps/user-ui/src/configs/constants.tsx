@@ -37,13 +37,16 @@ export const navItems: NavItemsTypes[] = [
   // {
   //   title: 'Products',
   //   href: '/products',
+  //   accent: false,
   // },
   // {
   //   title: 'Shops',
   //   href: '/shops',
+  //   accent: false,
   // },
   // {
   //   title: 'Trending',
   //   href: '/trending',
+  //   accent: false,
   // },
 ];

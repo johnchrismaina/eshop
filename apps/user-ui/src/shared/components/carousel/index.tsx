@@ -32,29 +32,29 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
   }, [slide, isPaused]);
 
   return (
-    <div className="relative flex justify-center items-center w-full px-0 h-[40vh] overflow-hidden">
+    <div className="relative flex justify-center items-center w-full px-0 h-[50vh] overflow-hidden">
       {data.map((item, idx) => (
         <img
           src={item.src}
           alt={item.alt}
           key={idx}
-          className={`w-full h-full object-top object-cover transition-opacity duration-1000 ${
+          className={`w-full h-full object-center object-cover transition-opacity duration-1000 ${
             slide === idx ? 'opacity-100' : 'opacity-0 absolute'
           }`}
         />
       ))}
 
       {/* The Dark Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-5 z-10"></div>
+      {/* <div className="absolute inset-0 bg-black bg-opacity-5 z-10"></div> */}
 
       <div className="absolute bottom-4 right-6 flex items-center justify-center gap-2">
         {/* Pause/Play button */}
         <button
           onClick={() => setIsPaused(!isPaused)}
-          className="  bg-gray-800/40 p-1.5 rounded-full text-gray-700 z-30"
+          className="  bg-gray-800/40 flex items-center justify-center w-9 h-9 rounded-full text-gray-700 z-30"
         >
           {isPaused ? (
-            <Play size={18} color="#fff" fill="#fff" />
+            <Play size={14} color="#fff" fill="#fff" />
           ) : (
             // <Pause size={18} color="#1F2937B3" fill="#fff" />
             <PauseIcon size={20} color="#fff" />

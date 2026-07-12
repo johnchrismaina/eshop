@@ -31,6 +31,7 @@ import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 import { useEffect } from 'react';
 import { Search, User, ShoppingCart, Menu } from 'lucide-react';
 import SidebarMenu from '../../components/sidebar-menu';
+import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
 
 // ----------------------------------
 
@@ -87,7 +88,7 @@ function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-1.5 h-10 pl-4 pr-3 text-[13px] text-[#333] hover:text-[#14181A] bg-[#F1F0ED] transition-colors flex-shrink-0"
+      className="flex items-center gap-1.5 h-10 pl-4 pr-3 text-[13px] text-[#333] hover:text-[#14181A] bg-[#F1F0ED] transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none"
     >
       {value}
       <ChevronDown size={14} />
@@ -196,66 +197,66 @@ const Header = () => {
     <>
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
-        className={`sticky top-0 z-50 bg-[#2D384B] text-white transition-shadow duration-200 ${
+        className={`sticky top-0 z-50 bg-[#fcfcfc] transition-shadow duration-200 ${
           scrolled ? 'shadow-sm' : 'shadow-none'
         }`}
       >
-        <div className="max-w-[1200px] mx-auto pt-3 pb-3 grid grid-cols-[900px_1fr] items-center gap-6">
-          <div className="flex items-center justify-center w-full gap-6">
-            {/* Logo */}
-            <div
-              className="font-bold text-[23px] tracking-tight"
-              style={{ fontFamily: "'Libre Franklin', sans-serif" }}
-            >
-              Sokonis<span className="text-[#E85D1F]">.</span>
+        <div className="max-w-[1200px] mx-auto pt-3 pb-3 grid grid-cols-[1fr_1fr] items-center justify-between ">
+          <div className="flex items-center justify-center gap-40">
+            {/* logo */}
+            <div>
+              <Link href="/">
+                {/* <span className="font-semibold text-3xl tracking-tight">
+                Sokonis
+              </span> */}
+                <Image
+                  src={
+                    layout?.logo ||
+                    'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/logo.svg'
+                  }
+                  alt="logo"
+                  width={120}
+                  height={50}
+                  className="object-contain"
+                  unoptimized
+                />
+              </Link>
             </div>
-
-            {/* Deliver to */}
-            <button className="hidden md:flex items-start gap-1 text-[11px] leading-tight text-[#AEB9C8] shrink-0">
-              <MapPin size={16} className="mt-0.5 shrink-0" />
-              <span>
-                Deliver to
-                <b className="block text-[12.5px] text-white font-semibold">
-                  Naivasha
-                </b>
-              </span>
-            </button>
 
             {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-            <div
-              ref={searchWrapperRef}
-              className="relative max-w-[560px] w-full mx-auto"
-            >
-              {/* INNER pill — this is the ONLY element with overflow-hidden,
-                so its rounded corners clip the dropdown button + search button */}
-              <div className="flex items-center h-10 bg-white rounded-md border border-[#2D384B] overflow-hidden focus-within:border-blue-500 transition-colors duration-300">
+            <div ref={searchWrapperRef} className="relative w-[700px] mx-auto">
+              <div className="flex items-center h-10 bg-[#fcfcfc] rounded-md border border-gray-400 overflow-hidden transition-colors duration-500">
                 <SearchScopeDropdown
                   value={searchScope}
                   onToggle={() => setOpenDepartments((o) => !o)}
                 />
-
-                {/* Search Input */}
                 <input
                   type="text"
+                  onClick={() => setOpenSearchBackdrop(true)}
                   placeholder="Search products, brands, categories..."
-                  className="flex-1 h-10 bg-transparent outline-none border-none text-[13.5px] placeholder:text-gray-400 px-2"
+                  className="flex-1 h-12 bg-transparent outline-none border-none text-[13.5px] placeholder:text-gray-400 px-2 py-0 focus:border-blue-500 focus:border-2 focus:ring-0"
                 />
 
-                {/* Search Icon Button */}
+                {/* Search Backdrop */}
+                {openSearchBackdrop && (
+                  <div
+                    className="fixed top-[102px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
+                    onClick={() => setOpenSearchBackdrop(false)} // click backdrop closes everything
+                  />
+                )}
+
+                {/* Search icon */}
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-[50px] h-10 border-2 border-[#F16232] bg-[#F16232] hover:bg-[#d9551f] transition-colors flex-shrink-0"
+                  className="flex items-center justify-center w-12 h-10 mr-[-1px] rounded-r-md text-[#14181A] bg-amber-400 hover:text-[#14181A] hover:bg-amber-400 transition-colors flex-shrink-0"
                 >
-                  <Search size={18} className="text-white" />
+                  <Search size={16} />
                 </button>
               </div>
-
-              {/* Dropdown panel — sibling of the clipped pill, NOT inside it.
-                Positioned relative to the OUTER wrapper, so it's unaffected
-                by the inner pill's overflow-hidden. */}
+              {/* dropdown panel unchanged */}
               {openDepartments && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-[#fff] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
+                <div className="absolute top-full left-0 mt-2 w-48 bg-[#F1F0ED] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
                   {SEARCH_CATEGORIES.map((cat) => (
                     <button
                       key={cat}
@@ -279,11 +280,10 @@ const Header = () => {
           </div>
 
           {/* Account / Cart column */}
-          <div className="flex items-center justify-end w-full gap-4">
-            {/* Account */}
+          <div className="flex items-center justify-end w-full gap-2">
             {/* Trigger */}
             <div
-              className="relative flex items-end gap-2 text-gray-600 px-2 h-full "
+              className="relative flex items-end gap-1 text-gray-600 px-2 h-full "
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
             >
@@ -291,17 +291,19 @@ const Header = () => {
                 href={user?.name ? '/profile' : '/login'}
                 className="flex gap-2 items-start justify-center "
               >
-                <UserRound
+                {/* <UserRound
                   className=""
                   size={20}
                   strokeWidth={1.8}
-                  color="#fff"
-                />
+                  color="#57534E"
+                /> */}
 
-                {/* <span className="block text-[13.0px] font-normal text-[#14181A] tracking-wide">
+                {/* <ProfileIcon size={20} color="#fcfcfc" /> */}
+
+                <span className="block text-[13.0px] font-normal text-[#14181A] tracking-wide">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
-                    <span className="font-normal text-gray-500 ">Sign in</span>
+                    <span className="font-normal text-[#14181A] ">Sign in</span>
                   ) : hadSession && !hydrated ? (
                     // Had previous session, still hydrating: show skeleton
                     <span className="block w-12 h-3 bg-gray-300 rounded animate-pulse"></span>
@@ -312,9 +314,9 @@ const Header = () => {
                     </span>
                   ) : (
                     // No user or no previous session: show Log in
-                    <span className="">Sign in</span>
+                    <span className="font-normal text-[#14181A]">Sign in</span>
                   )}
-                </span> */}
+                </span>
 
                 {/* <span className="flex items-center text-[#14181A] font-medium text-[13.5px] tracking-tight gap-1 -mt-1.5">
                   Account
@@ -332,7 +334,7 @@ const Header = () => {
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fff] z-[110] shadow-lg rounded-bl-md rounded-br-md ">
+                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fff] z-[110] shadow-lg rounded-md ">
                   {/* Arrow pointing up */}
                   {/* <div
                     className="absolute -top-2 right-4 w-0 h-0 
@@ -416,10 +418,10 @@ const Header = () => {
                   strokeWidth={1.8}
                   className="text-[#5B6265] hover:text-[#14181A]"
                 /> */}
-                <CartIcon strokeWidth={1.8} color="#fff" />
+                <CartIcon strokeWidth={1.0} color="#14181A" />
                 {/* {cart?.length > 0 && ( */}
-                <div className="absolute top-[-4px] right-[-8px] w-4 h-4 rounded-full bg-[#F16232] text-white font-semibold flex items-center justify-center ">
-                  <span className="text-white font-medium text-[10px]">
+                <div className="absolute top-[-4px] right-[-8px] w-4 h-4 rounded-full bg-[#fab528] text-white font-semibold flex items-center justify-center ">
+                  <span className="text-gray-800 font-semibold text-[10px]">
                     {cart.length}
                   </span>
                 </div>
@@ -431,7 +433,7 @@ const Header = () => {
                 </span> */}
               {/* </div> */}
             </div>
-            <span className="flex items-center justify-center py-1 px-3 ml-0 text-[11.5px] text-white font-semibold bg-[#3B4A61] rounded-full ">
+            <span className="flex items-center justify-center py-1 px-3 ml-2 bg-gray-200 rounded-full text-[11.5px] text-gray-600 font-medium ">
               KES 0.00
             </span>
           </div>

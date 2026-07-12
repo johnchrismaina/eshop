@@ -1,31 +1,30 @@
 import * as React from 'react';
 
-const ProfileIcon = (props: any) => (
+interface CartIconProps {
+  size?: number;
+  strokeWidth?: number;
+  color?: string;
+}
+
+const ProfileIcon: React.FC<CartIconProps> = ({
+  size = 24,
+  strokeWidth = 2,
+  color = '#000',
+}) => (
   <svg
-    width={20}
-    height={23}
-    viewBox="0 0 17 21"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
   >
-    <circle
-      cx={8.57894}
-      cy={5.77803}
-      r={4.77803}
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <path d="M0 0h24v24H0z" fill="none" />
     <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M1.5 19.5C1.5 15.5 5.5 13 8.5 13C11.5 13 15.5 15.5 15.5 19.5"
+      fill={color}
       stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.5"
+      d="M15.75 6a3.75 3.75 0 1 1-7.5 0a3.75 3.75 0 0 1 7.5 0M4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.9 17.9 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632"
     />
   </svg>
 );

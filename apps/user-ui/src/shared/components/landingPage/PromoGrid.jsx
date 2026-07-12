@@ -13,9 +13,7 @@ const PromoGrid = () => {
         <div className="flex flex-col items-center justify-start bg-[#f5f5f7] p-4 rounded-lg">
           {/* Title zone */}
           <div className="w-full px-4 pt-2 pb-6 ">
-            <h3 className="text-base font-bold text-[#1d1d1f]">
-              Back to School
-            </h3>
+            <h3 className="text-lg font-bold text-[#1d1d1f]">Back to School</h3>
             <span className="text-sm">Bags, stationery & more</span>
           </div>
 
@@ -37,7 +35,7 @@ const PromoGrid = () => {
         <div className="flex flex-col items-center justify-start bg-[#f5f5f7] p-4 rounded-lg">
           {/* Title zone */}
           <div className="w-full px-4 pt-2 pb-6">
-            <h3 className="text-base font-bold text-[#1d1d1f]">Gaming Week</h3>
+            <h3 className="text-lg font-bold text-[#1d1d1f]">Gaming Week</h3>
             <span className="text-sm">Consoles & accessories</span>
           </div>
 
@@ -59,9 +57,7 @@ const PromoGrid = () => {
         <div className="flex flex-col items-center justify-start bg-[#f5f5f7] p-4 rounded-lg">
           {/* Title zone */}
           <div className=" w-full px-6 pt-2 pb-6 ">
-            <h3 className="text-base font-bold text-[#1d1d1f]">
-              Fresh Fridays
-            </h3>
+            <h3 className="text-lg font-bold text-[#1d1d1f]">Fresh Fridays</h3>
             <span className="text-sm">Groceries restocked weekly</span>{' '}
           </div>
 
@@ -83,7 +79,7 @@ const PromoGrid = () => {
         <div className="flex flex-col items-center justify-start bg-[#f5f5f7] p-4 rounded-lg">
           {/* Title zone */}
           <div className="w-full px-0 pt-2 pb-6">
-            <h3 className="text-base font-bold text-[#1d1d1f]">Home Refresh</h3>
+            <h3 className="text-lg font-bold text-[#1d1d1f]">Home Refresh</h3>
             <span className="text-sm">20% off selected decor</span>
           </div>
 

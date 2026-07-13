@@ -7,7 +7,7 @@ interface CartIconProps {
 }
 
 const ProfileIcon: React.FC<CartIconProps> = ({
-  size = 24,
+  size = 22,
   strokeWidth = 2,
   color = '#000',
 }) => (

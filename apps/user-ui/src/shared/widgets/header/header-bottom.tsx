@@ -20,8 +20,8 @@ const HeaderBottom = () => {
   console.log(user);
 
   return (
-    <div className="transition-all duration-300 bg-[#f5f5f7] shadow-b shadow-lg">
-      <div className="max-w-[1200px] pt-0 pb-0 relative mx-auto flex items-center justify-between gap-10 ">
+    <div className="transition-all duration-300 bg-[#f4f4f4] shadow-b shadow-lg">
+      <div className="max-w-[1200px] pt-0.5 pb-0.5 relative mx-auto flex items-center justify-between gap-10 ">
         {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 
         <div className="flex items-center justify-center gap-6">
@@ -29,7 +29,7 @@ const HeaderBottom = () => {
           <div>
             {/* Bottom header button */}
             <button
-              className="flex items-center gap-2.5 text-[#14181A] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 text-[13.5px] font-medium "
+              className="flex items-center gap-2.5 text-[#14181A] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 text-sm font-medium "
               onClick={() => setShowSidebar(true)}
             >
               <Menu size={16} />
@@ -47,10 +47,10 @@ const HeaderBottom = () => {
           <nav className="flex items-center flex-1 justify-start gap-4 ml-0">
             {navItems.map((i: NavItemsTypes, index: number) => (
               <Link
-                className={`flex items-center px-3 pt-1.5 pb-1.5 text-[13.0px] tracking-wide transition-colors ${
+                className={`flex items-center px-3 pt-1.5 pb-1.5 text-[13.0px] transition-colors ${
                   i.accent
-                    ? 'text-[#fab528] font-semibold hover:text-amber-500'
-                    : 'text-[#444444] font-medium hover:text-[#14181A] '
+                    ? 'text-[#C2410C] font-medium hover:text-[#C2410C]'
+                    : 'text-[#1d1d1f] font-medium hover:text-[#14181A] '
                 }`}
                 href={i.href}
                 key={index}
@@ -60,7 +60,7 @@ const HeaderBottom = () => {
             ))}
           </nav>
         </div>
-        <div className="flex gap-4 font-normal text-[13.0px] pt-1.5 pb-1.5 tracking-wide text-[#5B6265] hover:text-[#14181A]">
+        <div className="flex gap-4 font-normal text-[13.0px] pt-1.5 pb-1.5 text-[#1d1d1f] hover:text-[#14181A]">
           <span className="cursor-pointer">Sell on Sokonis</span>
           <span className="cursor-pointer">Customer Service</span>
         </div>

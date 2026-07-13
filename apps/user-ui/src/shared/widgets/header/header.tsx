@@ -4,7 +4,6 @@ import Link from 'next/link';
 import React, { useState, useLayoutEffect, useRef } from 'react';
 import {
   ChevronDown,
-  ChevronDownIcon,
   MapPin,
   UserRound,
   // Search,
@@ -24,14 +23,15 @@ import {
   hadPreviousSession,
 } from 'apps/user-ui/src/store/authStore';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
-import CartFilledIcon from 'apps/user-ui/src/assets/svgs/cart-filled';
-import PinFilledIcon from 'apps/user-ui/src/assets/svgs/pin-filled';
 import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
+// import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
 
 import { useEffect } from 'react';
 import { Search, User, ShoppingCart, Menu } from 'lucide-react';
 import SidebarMenu from '../../components/sidebar-menu';
 import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
+import PinFilledIcon from 'apps/user-ui/src/assets/svgs/pin-filled';
+import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
 
 // ----------------------------------
 
@@ -88,7 +88,7 @@ function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-1.5 h-10 pl-4 pr-3 text-[13px] text-[#333] hover:text-[#14181A] bg-[#F1F0ED] transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none"
+      className="flex items-center gap-1.5 h-10 pl-4 pr-3 text-[13px] text-[#333] hover:text-[#14181A] bg-white transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none"
     >
       {value}
       <ChevronDown size={14} />
@@ -197,12 +197,12 @@ const Header = () => {
     <>
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
-        className={`sticky top-0 z-50 bg-[#fcfcfc] transition-shadow duration-200 ${
+        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
           scrolled ? 'shadow-sm' : 'shadow-none'
         }`}
       >
         <div className="max-w-[1200px] mx-auto pt-3 pb-3 grid grid-cols-[1fr_1fr] items-center justify-between ">
-          <div className="flex items-center justify-center gap-40">
+          <div className="flex items-center justify-center gap-12">
             {/* logo */}
             <div>
               <Link href="/">
@@ -223,10 +223,27 @@ const Header = () => {
               </Link>
             </div>
 
+            {/* Delivery location - can be dropdown in future */}
+            <div className="relative flex items-end gap-1 ml-4">
+              {/* <MapPin color="#333" size={22} className="pr-1 " /> */}
+              <div className="absolute top-[8px] left-[-24px] ">
+                <MapPin color="#333" size={18} className="" />
+                {/* <PinFilledIcon size={24} color="#FF2E2E" /> */}
+              </div>
+              <div className="flex flex-col items-start shrink-0">
+                <span className="text-xs font-normal text-gray-500">
+                  Deliver to:{' '}
+                </span>
+                <span className="text-[13.5px] font-medium text-gray-950 -mt-1.5">
+                  Naivasha
+                </span>
+              </div>
+            </div>
+
             {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
             <div ref={searchWrapperRef} className="relative w-[700px] mx-auto">
-              <div className="flex items-center h-10 bg-[#fcfcfc] rounded-md border border-gray-400 overflow-hidden transition-colors duration-500">
+              <div className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-600 overflow-hidden transition-colors duration-500">
                 <SearchScopeDropdown
                   value={searchScope}
                   onToggle={() => setOpenDepartments((o) => !o)}
@@ -235,13 +252,13 @@ const Header = () => {
                   type="text"
                   onClick={() => setOpenSearchBackdrop(true)}
                   placeholder="Search products, brands, categories..."
-                  className="flex-1 h-12 bg-transparent outline-none border-none text-[13.5px] placeholder:text-gray-400 px-2 py-0 focus:border-blue-500 focus:border-2 focus:ring-0"
+                  className="flex-1 h-12 bg-transparent outline-none border-none text-[13.5px] placeholder:font-normal placeholder:text-gray-500 px-4 py-0 focus:border-blue-500 focus:border-2 focus:ring-0"
                 />
 
                 {/* Search Backdrop */}
                 {openSearchBackdrop && (
                   <div
-                    className="fixed top-[102px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
+                    className="fixed top-[106px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
                     onClick={() => setOpenSearchBackdrop(false)} // click backdrop closes everything
                   />
                 )}
@@ -249,14 +266,14 @@ const Header = () => {
                 {/* Search icon */}
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-12 h-10 mr-[-1px] rounded-r-md text-[#14181A] bg-amber-400 hover:text-[#14181A] hover:bg-amber-400 transition-colors flex-shrink-0"
+                  className="flex items-center justify-center w-12 h-10 mr-[-1px] rounded-r-md text-[#14181A] bg-orange-400 hover:text-[#14181A] hover:bg-orange-400 transition-colors flex-shrink-0"
                 >
-                  <Search size={16} />
+                  <Search size={20} />
                 </button>
               </div>
               {/* dropdown panel unchanged */}
               {openDepartments && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-[#F1F0ED] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
+                <div className="absolute top-full left-0 mt-2 w-48 bg-gray-100 border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
                   {SEARCH_CATEGORIES.map((cat) => (
                     <button
                       key={cat}
@@ -280,30 +297,23 @@ const Header = () => {
           </div>
 
           {/* Account / Cart column */}
-          <div className="flex items-center justify-end w-full gap-2">
-            {/* Trigger */}
+          <div className="flex items-center justify-end w-full h-full gap-7">
+            {/* Account/Trigger */}
             <div
-              className="relative flex items-end gap-1 text-gray-600 px-2 h-full "
+              className="relative flex items-center gap-1 text-gray-600 px-0 h-full "
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
             >
               <Link
                 href={user?.name ? '/profile' : '/login'}
-                className="flex gap-2 items-start justify-center "
+                className="flex flex-col gap-0 items-start justify-start "
               >
-                {/* <UserRound
-                  className=""
-                  size={20}
-                  strokeWidth={1.8}
-                  color="#57534E"
-                /> */}
-
-                {/* <ProfileIcon size={20} color="#fcfcfc" /> */}
-
-                <span className="block text-[13.0px] font-normal text-[#14181A] tracking-wide">
+                <span className="block text-[13.0px] font-normal text-[#1c1c1c] tracking-wide">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
-                    <span className="font-normal text-[#14181A] ">Sign in</span>
+                    <span className="text-xs text-gray-500 font-normal ">
+                      Sign in
+                    </span>
                   ) : hadSession && !hydrated ? (
                     // Had previous session, still hydrating: show skeleton
                     <span className="block w-12 h-3 bg-gray-300 rounded animate-pulse"></span>
@@ -314,20 +324,24 @@ const Header = () => {
                     </span>
                   ) : (
                     // No user or no previous session: show Log in
-                    <span className="font-normal text-[#14181A]">Sign in</span>
+                    <span className="flex items-center justify-center text-xs text-gray-500 font-normal ">
+                      {/* <ProfileIcon size={18} color="#fff" /> */}
+                      Sign in
+                    </span>
                   )}
                 </span>
 
-                {/* <span className="flex items-center text-[#14181A] font-medium text-[13.5px] tracking-tight gap-1 -mt-1.5">
+                <span className="relative flex items-center text-[13.5px] text-gray-950 font-medium gap-0.5 -mt-1.5">
                   Account
-                  <ChevronDown className="mt-1" size={12} color="#5B6265" />
-                </span> */}
+                  {/* <ChevronDown size={14} color="#333" /> */}
+                  <ChevronDownIcon size={12} color="#333" />
+                </span>
               </Link>
 
               {/* Backdrop */}
               {open && (
                 <div
-                  className="fixed top-[96px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
+                  className="fixed top-[106px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
                   onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
                 />
               )}
@@ -410,32 +424,42 @@ const Header = () => {
                 </div>
               )}
             </div>
+
+            {/* divider */}
+            {/* <div className="w-px h-6 bg-gray-200 mx-3" /> */}
+
             {/* Cart */}
-            <div className="flex items-center justify-center mt-0 gap-2 ">
-              <Link href="/cart" className="relative cursor-pointer">
+            <div className="flex items-center justify-start h-full gap-3 ">
+              <Link
+                href="/cart"
+                className="relative flex items-center justify-center mt-[2px] cursor-pointer"
+              >
                 {/* <ShoppingCart
                   size={20}
                   strokeWidth={1.8}
                   className="text-[#5B6265] hover:text-[#14181A]"
                 /> */}
-                <CartIcon strokeWidth={1.0} color="#14181A" />
+                <CartIcon strokeWidth={1.5} size={24} color="#fff" />
                 {/* {cart?.length > 0 && ( */}
-                <div className="absolute top-[-4px] right-[-8px] w-4 h-4 rounded-full bg-[#fab528] text-white font-semibold flex items-center justify-center ">
-                  <span className="text-gray-800 font-semibold text-[10px]">
-                    {cart.length}
+                <div className="absolute top-[-2px] right-[-6px] min-w-[16px] h-4 px-1 rounded-full bg-[#C2410C] flex items-center justify-center mt-[0px]">
+                  <span className="text-white font-semibold text-[10px] leading-none">
+                    {cart.length > 99 ? '99+' : cart.length}
                   </span>
                 </div>
                 {/* )} */}
               </Link>
-              {/* <div className="flex items-center justify-center p-1 border border-gray-300 rounded-full"> */}
-              {/* <span className="text-[11.5px] text-[#5B6265] font-medium tracking-wide transition-colors">
-                  KES
+              <span className="flex items-center justify-center py-1.5 px-2 ml-0 bg-gray-100 rounded-md text-[11.5px] text-gray-900 font-semibold ">
+                KES 0.00
+              </span>
+              {/* <div className="flex flex-col items-start justify-center"> */}
+              {/* <span className="font-normal text-[11px] text-gray-500  ">
+                  Cart
+                </span>
+                <span className=" text-[13.0px] text-gray-900 font-medium -mt-1.5">
+                  KES 0.00
                 </span> */}
               {/* </div> */}
             </div>
-            <span className="flex items-center justify-center py-1 px-3 ml-2 bg-gray-200 rounded-full text-[11.5px] text-gray-600 font-medium ">
-              KES 0.00
-            </span>
           </div>
         </div>
       </header>

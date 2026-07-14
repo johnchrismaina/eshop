@@ -261,13 +261,12 @@ export const createProduct = async (
         category,
         subCategory,
         colors,
-        discount_codes: discountCodes ?? [],
         sizes,
         stock: parseInt(stock),
         regular_price: parseFloat(regular_price),
-        sale_price: parseFloat(sale_price),
         customProperties,
         custom_specifications,
+        discount_codes: discountCodes ?? [],
         images: {
           create: images
             .filter((img: any) => img && img.fileId && img.file_url)

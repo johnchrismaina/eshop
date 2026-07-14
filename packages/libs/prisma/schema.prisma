@@ -197,6 +197,9 @@ model products {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
+  // ✅ New field for coupon codes
+  discount_codes String[] @default([])
+
   // Relations
   shopId String   @db.ObjectId
   Shop   shops    @relation("ShopProducts", fields: [shopId], references: [id])

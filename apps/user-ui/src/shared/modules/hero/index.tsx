@@ -17,7 +17,7 @@ const bannerImages = [
   {
     // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/71ROLBmB4AL._SX3000_.jpg?updatedAt=1783286350355',
     // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/Homepage-Promo-Model-Y-L-Family-Desktop-NA.png?updatedAt=1783850204653',
-    src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/Uber%20eats.webp?updatedAt=1783957391189',
+    src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/2026_06_1782452782-TTT19.webp?updatedAt=1783461452311',
     alt: 'White cooking pot',
   },
   // { src: '/images/bottle.png', alt: 'Green bottle' },

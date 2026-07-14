@@ -108,6 +108,9 @@ const Header = () => {
   const [openDepartments, setOpenDepartments] = useState(false);
   const searchWrapperRef = useRef<HTMLDivElement>(null);
 
+  const [openSearchBackdrop, setOpenSearchBackdrop] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
     window.addEventListener('scroll', onScroll);
@@ -129,6 +132,33 @@ const Header = () => {
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
 
+  //----------------------------------------------------
+
+  //Search bar backdrop function
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setOpenSearchBackdrop(false);
+      }
+    }
+
+    if (openSearchBackdrop) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openSearchBackdrop]);
+
+  //----------------------------------------------------
+
   // const { user, isLoading } = useUser();
   const cart = useStore((state: any) => state.cart);
   const { layout } = useLayout();
@@ -140,7 +170,7 @@ const Header = () => {
   const { logout, user, hydrated } = useAuthStore();
 
   const [open, setOpen] = useState(false);
-  const [openSearchBackdrop, setOpenSearchBackdrop] = useState(false);
+  // const [openSearchBackdrop, setOpenSearchBackdrop] = useState(false);
 
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -243,30 +273,44 @@ const Header = () => {
             {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
             <div ref={searchWrapperRef} className="relative w-[700px] mx-auto">
-              <div className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-600 overflow-hidden transition-colors duration-500">
+              <div
+                ref={searchContainerRef}
+                className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-600 
+                 focus-within:border-orange-500/50 overflow-hidden 
+                 focus-within:ring focus-within:ring-opacity-50 focus-within:ring-orange-500 
+                 transition-all duration-200 ease-out"
+              >
                 <SearchScopeDropdown
                   value={searchScope}
                   onToggle={() => setOpenDepartments((o) => !o)}
                 />
+
                 <input
                   type="text"
-                  onClick={() => setOpenSearchBackdrop(true)}
+                  onFocus={() => setOpenSearchBackdrop(true)} // open backdrop when input is focused
                   placeholder="Search products, brands, categories..."
-                  className="flex-1 h-12 bg-transparent outline-none border-none text-[13.5px] placeholder:font-normal placeholder:text-gray-500 px-4 py-0 focus:border-blue-500 focus:border-2 focus:ring-0"
+                  className="flex-1 h-12 bg-transparent outline-none border-none text-[13.5px] 
+                   placeholder:font-normal placeholder:text-gray-500 px-4 py-0 
+                   focus:border-blue-500 focus:border-2 focus:ring-0"
                 />
 
-                {/* Search Backdrop */}
-                {openSearchBackdrop && (
-                  <div
-                    className="fixed top-[106px] left-0 right-0 bottom-0 bg-black bg-opacity-40 transition-opacity z-[100]"
-                    onClick={() => setOpenSearchBackdrop(false)} // click backdrop closes everything
-                  />
-                )}
+                {/* Backdrop with synced fade */}
+                <div
+                  className={`fixed top-[106px] left-0 right-0 bottom-0 bg-black 
+                   transition-opacity duration-200 ease-out z-[100] 
+                   ${
+                     openSearchBackdrop
+                       ? 'opacity-40'
+                       : 'opacity-0 pointer-events-none'
+                   }`}
+                  onClick={() => setOpenSearchBackdrop(false)}
+                />
 
-                {/* Search icon */}
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-12 h-10 mr-[-1px] rounded-r-md text-[#14181A] bg-orange-400 hover:text-[#14181A] hover:bg-orange-400 transition-colors flex-shrink-0"
+                  className="flex items-center justify-center w-12 h-10 mr-[-1px] rounded-r-md 
+                   text-[#14181A] bg-orange-400 hover:text-[#14181A] hover:bg-orange-400 
+                   transition-colors flex-shrink-0"
                 >
                   <Search size={20} />
                 </button>
@@ -334,7 +378,7 @@ const Header = () => {
                 <span className="relative flex items-center text-[13.5px] text-gray-950 font-medium gap-0.5 -mt-1.5">
                   Account
                   {/* <ChevronDown size={14} color="#333" /> */}
-                  <ChevronDownIcon size={12} color="#333" />
+                  <ChevronDownIcon size={12} color="#555" />
                 </span>
               </Link>
 
@@ -441,14 +485,14 @@ const Header = () => {
                 /> */}
                 <CartIcon strokeWidth={1.5} size={24} color="#fff" />
                 {/* {cart?.length > 0 && ( */}
-                <div className="absolute top-[-2px] right-[-6px] min-w-[16px] h-4 px-1 rounded-full bg-[#C2410C] flex items-center justify-center mt-[0px]">
+                <div className="absolute top-[-2px] right-[-6px] min-w-[16px] h-4 px-1 rounded-full bg-[#e85d1f] flex items-center justify-center mt-[0px]">
                   <span className="text-white font-semibold text-[10px] leading-none">
                     {cart.length > 99 ? '99+' : cart.length}
                   </span>
                 </div>
                 {/* )} */}
               </Link>
-              <span className="flex items-center justify-center py-1.5 px-2 ml-0 bg-gray-100 rounded-md text-[11.5px] text-gray-900 font-semibold ">
+              <span className="flex items-center justify-center py-1.5 px-3 ml-0 text-[11.5px] text-gray-900 font-semibold ">
                 KES 0.00
               </span>
               {/* <div className="flex flex-col items-start justify-center"> */}

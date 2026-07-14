@@ -1,0 +1,91 @@
+import React from 'react';
+import { Controller, useFieldArray } from 'react-hook-form';
+import { PlusCircle, Trash2 } from 'lucide-react';
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/react';
+import Input from 'packages/components/input';
+// import RichTextEditor from '../RichTextEditor'; // your editor component
+import dynamic from 'next/dynamic';
+
+const RichTextEditor = dynamic(
+  () => import('packages/components/rich-text-editor'),
+  { ssr: false }
+);
+
+const CustomAccordion = ({ control, errors }: any) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'accordions',
+  });
+
+  return (
+    <div>
+      <label className="block font-semibold text-gray-300 mb-4">
+        Product Accordions (max 3)
+      </label>
+
+      <div className="flex flex-col gap-4 mt-2">
+        {fields.map((item, index) => (
+          <Disclosure key={item.id}>
+            {({ open }) => (
+              <div className="border border-gray-600 rounded-lg p-2">
+                <DisclosureButton className="flex w-full justify-between rounded-lg bg-gray-700 px-4 py-2 text-left text-sm font-medium text-gray-300 hover:bg-gray-600">
+                  <Controller
+                    name={`accordions.${index}.title`}
+                    control={control}
+                    rules={{ required: 'Title is required' }}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="Accordion title (e.g. Top Highlights)"
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Trash2
+                    size={20}
+                    className="text-red-500 hover:text-red-700 cursor-pointer ml-2"
+                    onClick={() => remove(index)}
+                  />
+                </DisclosureButton>
+
+                <DisclosurePanel className="px-4 pt-4 pb-2 text-sm text-gray-200">
+                  <Controller
+                    name={`accordions.${index}.content`}
+                    control={control}
+                    rules={{ required: 'Content is required' }}
+                    render={({ field }) => (
+                      <RichTextEditor
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                  {errors?.accordions?.[index]?.content && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.accordions[index].content.message}
+                    </p>
+                  )}
+                </DisclosurePanel>
+              </div>
+            )}
+          </Disclosure>
+        ))}
+
+        {fields.length < 3 && (
+          <button
+            type="button"
+            className="flex items-center gap-2 text-blue-500 hover:text-blue-600 pb-6 border-b border-gray-600"
+            onClick={() => append({ title: '', content: '' })}
+          >
+            <PlusCircle size={20} /> Add Accordion
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CustomAccordion;

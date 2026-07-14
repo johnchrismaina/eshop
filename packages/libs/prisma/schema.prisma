@@ -179,22 +179,19 @@ model products {
   title                 String
   slug                  String        @unique
   category              String
-  subCategory           String
+  subCategory           String?
   short_description     String
-  detailed_description  String
+  detailed_description  String?
   video_url             String?
   tags                  String[]
   colors                String[]
   sizes                 String[]
-  starting_date         DateTime?
-  ending_date           DateTime?
   stock                 Int
   regular_price         Float
   ratings               Float         @default(5)
   custom_specifications Json?
   customProperties      Json
   isDeleted             Boolean?      @default(false)
-  discount_codes        String[]      @db.ObjectId
   status                productStatus @default(Active)
   deletedAt             DateTime?
   createdAt             DateTime      @default(now())
@@ -203,46 +200,49 @@ model products {
   // Relations
   shopId String   @db.ObjectId
   Shop   shops    @relation("ShopProducts", fields: [shopId], references: [id])
-  images images[] @relation("ProductImages") // one-to-many gallery
+  images images[] @relation("ProductImages")
 
-  dealScore Float @default(0)
-
-  // New field for sales tracking
-  totalSales Int @default(0)
+  // ✅ One-to-one relation with deals
+  deal deals? @relation("ProductDeal")
 
   @@index([createdAt])
-  @@index([starting_date])
 }
 
 model deals {
-  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
-  title                String
-  slug                 String    @unique
-  category             String
-  short_description    String
-  detailed_description String?
-  location             String
-  deal_start           DateTime
-  deal_end             DateTime
-  regular_price        Float
-  sale_price           Float
-  total_tickets        Int
-  available_tickets    Int
-  isDeleted            Boolean?  @default(false)
-  deletedAt            DateTime?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug              String   @unique
+  deal_start        DateTime
+  deal_end          DateTime
+  sale_price        Float
+  regular_price     Float
+  total_tickets     Int // ✅ original allocation
+  available_tickets Int // ✅ decremented as sales happen
 
-  // 🔹 Shop relation (RECOMMENDED)
-  shopId String @db.ObjectId
-  Shop   shops  @relation("ShopDeals", fields: [shopId], references: [id])
+  // ✅ Analytics fields
+  views          Int   @default(0) // how many times viewed
+  clicks         Int   @default(0) // how many times clicked
+  redemptions    Int   @default(0) // count of deal activations
+  revenue        Float @default(0) // total revenue generated
+  conversionRate Float @default(0) // redemptions / views
+  dealRankScore  Float @default(0) // composite score for ranking
+  totalSales     Int   @default(0) // total units sold
+  totalAddToCart Int   @default(0) // total times added to cart
 
-  // 🔹 Images relation
+  // ✅ Enforce 1:1 relation
+  productId String   @unique @db.ObjectId
+  product   products @relation("ProductDeal", fields: [productId], references: [id])
+
+  shopId String   @db.ObjectId
+  Shop   shops    @relation("ShopDeals", fields: [shopId], references: [id])
   images images[] @relation("EventImages")
 
-  dealRankScore Float @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([shopId])
+  // ✅ Soft delete fields
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+
   @@index([deal_start])
 }
 

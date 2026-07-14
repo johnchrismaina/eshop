@@ -112,6 +112,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         `/product/get-filtered-products?${query.toString()}`
       );
       setRecommendedProducts(res.data.products);
+      console.log(res);
     } catch (error) {
       console.error('Failed to fetch filtered products', error);
     }

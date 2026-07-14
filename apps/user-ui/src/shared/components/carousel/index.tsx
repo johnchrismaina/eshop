@@ -38,7 +38,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
           src={item.src}
           alt={item.alt}
           key={idx}
-          className={`w-full h-full object-bottom object-cover transition-opacity duration-1000 ${
+          className={`w-full h-full object-center object-cover transition-opacity duration-1000 ${
             slide === idx ? 'opacity-100' : 'opacity-0 absolute'
           }`}
         />
@@ -51,7 +51,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
         {/* Pause/Play button */}
         <button
           onClick={() => setIsPaused(!isPaused)}
-          className="  bg-gray-800/40 flex items-center justify-center w-9 h-9 rounded-full text-gray-700 z-30"
+          className="  bg-gray-800/40 flex items-center justify-center w-9 h-9 rounded-full text-gray-700 z-30 hover:bg-gray-800/60 transition-colors duration-300"
         >
           {isPaused ? (
             <Play size={14} color="#fff" fill="#fff" />
@@ -63,12 +63,12 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
 
         <ChevronLeft
           onClick={prevSlide}
-          className=" bg-white/70 p-1.5 rounded-full text-gray-700 w-8 h-8 drop-shadow-lg cursor-pointer z-10"
+          className="p-1.5 rounded-full text-gray-700 w-8 h-8 bg-white/80 hover:bg-white/90 transition-colors duration-300 drop-shadow-lg cursor-pointer z-10"
         />
 
         <ChevronRight
           onClick={nextSlide}
-          className=" bg-white/70 p-1.5 rounded-full text-gray-700 w-8 h-8 drop-shadow-lg cursor-pointer z-20 "
+          className="p-1.5 rounded-full text-gray-700 w-8 h-8 bg-white/80 hover:bg-white/90 transition-colors duration-300 drop-shadow-lg cursor-pointer z-20 "
         />
       </div>
 

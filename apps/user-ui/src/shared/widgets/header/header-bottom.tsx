@@ -50,7 +50,7 @@ const HeaderBottom = () => {
                 className={`flex items-center px-3 pt-1.5 pb-1.5 text-[13.0px] transition-colors ${
                   i.accent
                     ? 'text-[#C2410C] font-medium hover:text-[#C2410C]'
-                    : 'text-[#1d1d1f] font-medium hover:text-[#14181A] '
+                    : 'text-gray-700 font-medium hover:text-gray-800 '
                 }`}
                 href={i.href}
                 key={index}

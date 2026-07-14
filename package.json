@@ -31,6 +31,7 @@
   },
   "private": true,
   "dependencies": {
+    "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.2.0",
     "@imagekit/nodejs": "^7.1.1",
     "@prisma/client": "^6.19.0",

@@ -91,10 +91,10 @@ const Deals = () => {
               scrollRef.current?.scrollBy({ left: -250, behavior: 'smooth' })
             }
             className="absolute left-0 top-20 flex items-center justify-center 
-             w-12 h-20 bg-gray-200 bg-opacity-60 rounded-sm shadow-lg 
+             w-12 h-20 bg-gray-100 bg-opacity-60 rounded-sm shadow-[0_1px_3px_1px_rgba(0,0,0,0.20)] 
              opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
           >
-            <ChevronLeft size={22} />
+            <ChevronLeft size={30} className="text-gray-500" />
           </button>
 
           {/* Right arrow (fade in on hover) */}
@@ -103,10 +103,10 @@ const Deals = () => {
               scrollRef.current?.scrollBy({ left: 250, behavior: 'smooth' })
             }
             className="absolute right-0 top-20 flex items-center justify-center 
-             w-12 h-20 bg-gray-200 bg-opacity-60 rounded-sm shadow-lg 
+             w-12 h-20 bg-gray-100 bg-opacity-60 rounded-sm shadow-[1px_0_3px_1px_rgba(0,0,0,0.20)] 
              opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
           >
-            <ChevronRight size={22} />
+            <ChevronRight size={30} className="text-gray-500" />
           </button>
         </div>
       )}

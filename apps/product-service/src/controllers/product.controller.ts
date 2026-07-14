@@ -213,9 +213,10 @@ export const createProduct = async (
       customProperties = {},
       custom_specifications,
       images = [],
+      // ✅ Deal fields
+      deal_start,
+      deal_end,
     } = req.body;
-
-    console.log('📦 Incoming body:', req.body);
 
     if (
       !title ||
@@ -229,32 +230,22 @@ export const createProduct = async (
       !tags ||
       !stock
     ) {
-      console.log('❌ Validation failed: missing required fields');
       return next(new ValidationError('Missing required fields'));
     }
 
     if (!req.seller.id) {
-      console.log('❌ Auth failed: seller not found');
       return next(new AuthError('Only seller can create products!'));
     }
 
-    console.log('Incoming images:', images);
-
-    console.log('🔎 Checking slug uniqueness:', slug);
-    const slugChecking = await prisma.products.findUnique({
-      where: {
-        slug,
-      },
-    });
-
+    // Slug uniqueness check
+    const slugChecking = await prisma.products.findUnique({ where: { slug } });
     if (slugChecking) {
-      console.log('❌ Slug already exists:', slug);
       return next(
         new ValidationError('Slug already exists! Please use a different slug!')
       );
     }
 
-    console.log('🛠 Creating product in DB...');
+    // ✅ Create product
     const newProduct = await prisma.products.create({
       data: {
         title,
@@ -263,21 +254,20 @@ export const createProduct = async (
         warranty,
         cashOnDelivery: cash_on_delivery,
         slug,
-        // shopId: req.seller?.shop?.id!,
         shopId: req.seller.shops[0].id,
         tags: Array.isArray(tags) ? tags : tags.split(','),
         brand,
         video_url,
         category,
         subCategory,
-        colors: colors || [],
+        colors,
         discount_codes: discountCodes ?? [],
-        sizes: sizes || [],
+        sizes,
         stock: parseInt(stock),
         regular_price: parseFloat(regular_price),
         sale_price: parseFloat(sale_price),
-        customProperties: customProperties || {},
-        custom_specifications: custom_specifications || {},
+        customProperties,
+        custom_specifications,
         images: {
           create: images
             .filter((img: any) => img && img.fileId && img.file_url)
@@ -290,13 +280,65 @@ export const createProduct = async (
       include: { images: true },
     });
 
-    console.log('✅ Product created successfully:', newProduct.id);
+    // ✅ Handle deal creation/update with analytics initialization
+    let dealRecord = null;
+    if (deal_start && deal_end) {
+      const existingDeal = await prisma.deals.findUnique({
+        where: { productId: newProduct.id },
+      });
+
+      if (existingDeal) {
+        dealRecord = await prisma.deals.update({
+          where: { productId: newProduct.id },
+          data: {
+            deal_start: new Date(deal_start),
+            deal_end: new Date(deal_end),
+            sale_price: parseFloat(sale_price),
+            regular_price: parseFloat(regular_price),
+            // Reset analytics if updating
+            views: 0,
+            clicks: 0,
+            redemptions: 0,
+            revenue: 0,
+            conversionRate: 0,
+            dealRankScore: 0,
+            totalSales: 0,
+            totalAddToCart: 0,
+          },
+        });
+        console.log('🔄 Deal updated for product:', newProduct.id);
+      } else {
+        dealRecord = await prisma.deals.create({
+          data: {
+            slug: slug.trim(), // ✅ required
+            deal_start: new Date(deal_start),
+            deal_end: new Date(deal_end),
+            sale_price: parseFloat(sale_price),
+            regular_price: parseFloat(regular_price),
+            productId: newProduct.id,
+            shopId: req.seller.shops[0].id,
+            total_tickets: parseInt(stock), // ✅ initialize from product stock
+            available_tickets: parseInt(stock), // ✅ same as total initially
+            // ✅ Initialize analytics
+            views: 0,
+            clicks: 0,
+            redemptions: 0,
+            revenue: 0,
+            conversionRate: 0,
+            dealRankScore: 0,
+            totalSales: 0,
+            totalAddToCart: 0,
+          },
+        });
+        console.log('✅ Deal created for product:', newProduct.id);
+      }
+    }
 
     res.status(201).json({
       success: true,
-      newProduct,
+      product: newProduct,
+      deal: dealRecord,
     });
-    console.log('📤 Response sent to client');
   } catch (error) {
     console.error('💥 Error in createProduct:', error);
     next(error);
@@ -313,12 +355,8 @@ export const createDeal = async (
 
   try {
     const {
-      title,
+      productId, // ✅ expect productId from client
       slug,
-      category,
-      short_description,
-      detailed_description,
-      location,
       deal_start,
       deal_end,
       regular_price = 0,
@@ -331,11 +369,7 @@ export const createDeal = async (
 
     // ✅ Required field validation
     if (
-      !title ||
-      !slug ||
-      !category ||
-      !short_description ||
-      !location ||
+      !productId ||
       !deal_start ||
       !deal_end ||
       !sale_price ||
@@ -361,61 +395,53 @@ export const createDeal = async (
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
       return next(new ValidationError('Invalid date format'));
     }
-
     if (startDate < now) {
       return next(new ValidationError('Deal cannot start in the past'));
     }
-
     if (startDate > endDate) {
       return next(new ValidationError('Start date cannot be after end date'));
     }
 
     // ✅ Ticket validation
     const parsedTotalTickets = parseInt(total_tickets);
-
     if (isNaN(parsedTotalTickets) || parsedTotalTickets <= 0) {
       return next(new ValidationError('Invalid total tickets value'));
     }
 
-    let parsedSalePrice: number | null = null;
-
-    if (sale_price !== undefined && sale_price !== null) {
-      parsedSalePrice = parseFloat(sale_price);
-
-      if (isNaN(parsedSalePrice) || parsedSalePrice < 0) {
-        return next(new ValidationError('Invalid ticket price'));
-      }
+    const parsedSalePrice = parseFloat(sale_price);
+    if (isNaN(parsedSalePrice) || parsedSalePrice < 0) {
+      return next(new ValidationError('Invalid ticket price'));
     }
 
-    // ✅ Slug uniqueness check
-    const existingSlug = await prisma.deals.findUnique({
-      where: { slug: slug.trim() },
+    // ✅ Ensure product exists
+    const product = await prisma.products.findUnique({
+      where: { id: productId },
     });
-
-    if (existingSlug) {
-      return next(
-        new ValidationError('Slug already exists! Please use a different slug!')
-      );
+    if (!product) {
+      return next(new ValidationError('Product not found for this deal'));
     }
 
     console.log('🛠 Creating deal in DB...');
 
     const newDeal = await prisma.deals.create({
       data: {
-        title: title.trim(),
-        slug: slug.trim(),
-        category: category.trim(),
-        short_description: short_description.trim(),
-        detailed_description: detailed_description?.trim(),
-        location: location.trim(),
+        productId, // ✅ link to product
+        slug: slug.trim(), // ✅ required if schema has slug
         deal_start: startDate,
         deal_end: endDate,
         regular_price: parseFloat(regular_price),
-        sale_price: parseFloat(sale_price),
-        total_tickets: parsedTotalTickets,
-        available_tickets: parsedTotalTickets,
-        // shopId: req.seller?.shop?.id!,
+        sale_price: parsedSalePrice,
+        total_tickets: parsedTotalTickets, // ✅ camelCase
+        available_tickets: parsedTotalTickets, // ✅ camelCase
         shopId: req.seller.shops[0].id,
+        views: 0,
+        clicks: 0,
+        redemptions: 0,
+        revenue: 0,
+        conversionRate: 0,
+        dealRankScore: 0,
+        totalSales: 0,
+        totalAddToCart: 0,
         images: {
           create: images
             .filter((img: any) => img && img.fileId && img.file_url)
@@ -427,12 +453,7 @@ export const createDeal = async (
       },
       include: {
         images: true,
-        // Shop: {
-        //   select: {
-        //     id: true,
-        //     name: true,
-        //   },
-        // },
+        product: true,
       },
     });
 
@@ -595,7 +616,7 @@ export const deleteDeal = async (
 ) => {
   try {
     const { dealId } = req.params;
-    const sellerId = req.seller?.shop?.id;
+    const sellerId = req.seller?.shops?.[0]?.id; // ✅ use shops[0].id
 
     const deal = await prisma.deals.findUnique({
       where: { id: dealId },
@@ -614,18 +635,18 @@ export const deleteDeal = async (
       return next(new ValidationError('Deal is already deleted'));
     }
 
-    const deleteDeal = await prisma.deals.update({
+    const deletedDeal = await prisma.deals.update({
       where: { id: dealId },
       data: {
         isDeleted: true,
-        deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        deletedAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // ✅ 2 hours
       },
     });
 
     return res.status(200).json({
       message:
         'Deal is scheduled for deletion in 2 hours. You can restore it within this time',
-      deletedAt: deleteDeal.deletedAt,
+      deletedAt: deletedDeal.deletedAt,
     });
   } catch (error) {
     return next(error);
@@ -687,11 +708,11 @@ export const restoreDeal = async (
 ) => {
   try {
     const { dealId } = req.params;
-    const sellerId = req.seller?.shop?.id;
+    const sellerId = req.seller?.shops?.[0]?.id; // ✅ match deleteDeal logic
 
     const deal = await prisma.deals.findUnique({
       where: { id: dealId },
-      select: { id: true, shopId: true, isDeleted: true },
+      select: { id: true, shopId: true, isDeleted: true, deletedAt: true },
     });
 
     if (!deal) {
@@ -706,6 +727,13 @@ export const restoreDeal = async (
       return res.status(400).json({ message: 'Deal is not in deleted state' });
     }
 
+    // ✅ Optional: check if restore window expired
+    if (deal.deletedAt && deal.deletedAt < new Date()) {
+      return res.status(400).json({
+        message: 'Restore window has expired. Deal is permanently deleted.',
+      });
+    }
+
     await prisma.deals.update({
       where: { id: dealId },
       data: { isDeleted: false, deletedAt: null },
@@ -713,7 +741,7 @@ export const restoreDeal = async (
 
     return res.status(200).json({ message: 'Deal successfully restored!' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error restoring deal', error });
+    return next(error);
   }
 };
 

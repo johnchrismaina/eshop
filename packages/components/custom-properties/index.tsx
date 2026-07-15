@@ -13,7 +13,7 @@ const CustomProperties = ({ control, errors }: any) => {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 mt-2">
+      <div className="flex flex-col gap-4 mt-2 mb-4">
         <Controller
           name="customProperties"
           control={control}
@@ -42,7 +42,7 @@ const CustomProperties = ({ control, errors }: any) => {
 
             return (
               <div className="mt-2">
-                <label className="block font-semibold text-gray-300 mb-1">
+                <label className="block font-semibold text-gray-700 mb-1">
                   Custom Properties
                 </label>
 
@@ -51,10 +51,10 @@ const CustomProperties = ({ control, errors }: any) => {
                   {properties.map((property, index) => (
                     <div
                       key={index}
-                      className="border border-gray-700 p-3 rounded-lg bg-gray-900"
+                      className="border border-gray-400 p-3 rounded-lg bg-gray-200"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-white font-medium">
+                        <span className="text-gray-700 font-medium">
                           {property.label}
                         </span>
                         <button
@@ -69,7 +69,7 @@ const CustomProperties = ({ control, errors }: any) => {
                       <div className="flex items-center mt-2 gap-2">
                         <input
                           type="text"
-                          className="border outline-none border-gray-700 bg-gray-800 p-2 rounded-md text-white w-full"
+                          className="border outline-none border-gray-300 bg-gray-100 p-2 rounded-md text-gray-700 w-full"
                           placeholder="Enter value..."
                           value={newValue}
                           onChange={(e) => setNewValue(e.target.value)}

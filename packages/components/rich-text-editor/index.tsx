@@ -2,34 +2,44 @@ import React, { useEffect, useRef, useState } from 'react';
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from 'react-quill-new';
 
-const RichTextEditor = ({
-  value,
-  onChange,
-}: {
+interface RichTextEditorProps {
   value: string;
   onChange: (content: string) => void;
+  id?: string; // ✅ allow optional id
+  className?: string; // ✅ allow optional className
+}
+
+const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  value,
+  onChange,
+  id,
+  className,
 }) => {
-  const [editorValue, setEditorValue] = useState(value || ''); // Single state
+  const [editorValue, setEditorValue] = useState(value || '');
   const quillRef = useRef(false);
 
   useEffect(() => {
     if (!quillRef.current) {
-      quillRef.current = true; // Mark as mounted
+      quillRef.current = true;
 
-      // 🔥 Fix: Ensure only one toolbar is present
+      // 🔥 Fix: Ensure only one toolbar is present per editor
       setTimeout(() => {
-        document.querySelectorAll('.ql-toolbar').forEach((toolbar, index) => {
-          if (index > 0) {
-            toolbar.remove(); //Remove extra toolbars
-          }
-        });
-      }, 100); // Short delay ensures Quill is fully initialized
+        const container = id
+          ? document.querySelector(`#${id} .ql-toolbar`)
+          : null;
+
+        // If id is provided, only clean toolbars inside that editor
+        if (!container) {
+          document.querySelectorAll('.ql-toolbar').forEach((toolbar, index) => {
+            if (index > 0) toolbar.remove();
+          });
+        }
+      }, 100);
     }
-  }, []);
+  }, [id]);
 
   return (
-    <div className="relative">
-      {/* ✅ No duplicate Quill instance */}
+    <div id={id} className={`relative ${className || ''}`}>
       <ReactQuill
         theme="snow"
         value={editorValue}
@@ -39,62 +49,58 @@ const RichTextEditor = ({
         }}
         modules={{
           toolbar: [
-            [{ font: [] }], //Font picker
-            [{ header: [1, 2, 3, 4, 5, 6, false] }], // Headers
-            [{ size: ['small', false, 'large', 'huge'] }], // Font sizes
-            ['bold', 'italic', 'underline', 'strike'], // Basic text styling
-            [{ color: [] }, { background: [] }], // Font & Background colors
-            [{ script: 'sub' }, { script: 'super' }], // Subscript / Superscript
-            [{ list: 'ordered' }, { list: 'bullet' }], // Lists
-            [{ indent: '-1' }, { indent: '+1' }], // Indentation
-            [{ align: [] }], // Text alignment
-            ['blockquote', 'code-block'], // Blockquotee & Code Block
-            ['link', 'image', 'video'], // Insert Link, image, Video
-            ['clean'], // Remove formatting
+            [{ font: [] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ size: ['small', false, 'large', 'huge'] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ color: [] }, { background: [] }],
+            [{ script: 'sub' }, { script: 'super' }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+            ['blockquote', 'code-block'],
+            ['link', 'image', 'video'],
+            ['clean'],
           ],
         }}
-        placeholder="Write a detailed product decription here ..."
-        className="bg-transparent border border-gray-700 text-white rounded-md"
-        style={{
-          minHeight: '250px',
-        }}
+        placeholder="Write a detailed product description here ..."
+        className="bg-transparent border border-gray-700 text-gray-700 rounded-md"
+        style={{ minHeight: '250px' }}
       />
-
-      <style>
-        {`
-            .ql-toolbar {
-            background: transparent; /* Dark toolbar */
-            border-color: #444;
-            }
-            .ql-container {
-            background: transparent !important; 
-            border-color: #444;
-            color: white; /* Text color inside editor */
-            }
-            .ql-picker {
-            color: white !important;
-            }
-            .ql-editor {
-            min-height: 200px; /* Adjust editor height */
-            }
-            .ql-snow {
-            border-color: #444 !important;            
-            }
-            .ql-editor.ql-blank::before {
-            color: #aaa !important; /* Placeholder color */
-            }
-            .ql-picker-options {
-            background: #333 !important; /* Fix dropdown color */
-            color: white !important; 
-            }
-            .ql-picker-item {
-            color: white !important;            
-            }
-            .ql-stroke {
-            stroke: white !important;
-            }
-            `}
-      </style>
+      {/* Custom styling */}
+      <style>{`
+        .ql-toolbar {
+          background: transparent;
+          border-color: #444;
+        }
+        .ql-container {
+          background: transparent !important;
+          border-color: #444;
+          color: #374151;
+        }
+        .ql-picker {
+          color: #374151 !important;
+        }
+        .ql-editor {
+          min-height: 200px;
+        }
+        .ql-snow {
+          border-color: #444 !important;
+        }
+        .ql-editor.ql-blank::before {
+          color: #aaa !important;
+        }
+        .ql-picker-options {
+          background: #333 !important;
+          color: #374151 !important;
+        }
+        .ql-picker-item {
+          color: #374151 !important;
+        }
+        .ql-stroke {
+          stroke: #374151 !important;
+        }
+      `}</style>
     </div>
   );
 };

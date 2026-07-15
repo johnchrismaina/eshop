@@ -18,13 +18,13 @@ const SidebarItem = ({ icon, title, isActive, href, onClick }: Props) => {
       className="my-1 block"
     >
       <div
-        className={`flex gap-5 w-full min-h-9 h-full items-center px-[13px] rounded-lg cursor-pointer transition hover:!bg-[#2b2f31] ${
+        className={`flex gap-5 w-full min-h-9 h-full items-center px-[13px] rounded-lg cursor-pointer transition hover:!bg-gray-200 ${
           isActive &&
-          'scale-[.98] bg-gray-800 fill-blue-200 hover:bg-[#0f3158d6]'
+          'scale-[.98] bg-gray-100 fill-blue-200 hover:bg-[#0f3158d6]'
         }`}
       >
         {icon}
-        <h5 className="text-slate-200 text-sm">{title}</h5>
+        <h5 className="text-gray-800 text-sm font-medium">{title}</h5>
       </div>
     </Link>
   );

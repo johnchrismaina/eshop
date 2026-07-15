@@ -24,6 +24,7 @@ import Select from 'react-select';
 import { usePathname } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import CustomAccordion from '../CustomAccordion';
+import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 
 const RichTextEditor = dynamic(
   () => import('packages/components/rich-text-editor'),
@@ -297,7 +298,7 @@ const CreatePage = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading */}
-      <h2 className="text-2xl py-2 font-semibold text-white">{title}</h2>
+      <h2 className="text-2xl py-2 font-semibold text-gray-800">{title}</h2>
 
       {/* Breadcrumbs */}
       <Breadcrumbs title={title} />
@@ -355,54 +356,39 @@ const CreatePage = () => {
                 </p>
               )}
 
-              {/* Description */}
-              <div className="mt-2">
-                <label className="block font-semibold text-gray-300 mb-1">
-                  Short description * (Min 50 words)
-                </label>
-                <Controller
-                  name="short_description"
-                  control={control}
-                  rules={{
-                    required: 'Description is required!',
-                    validate: (value) => {
-                      const plainText = value
-                        ?.replace(/<[^>]+>/g, '')
-                        .replace(/&nbsp;/g, ' ')
-                        .trim();
-
-                      const wordCount = plainText
-                        ?.split(/\s+/)
-                        .filter((word) => word).length;
-
-                      return (
-                        wordCount >= 50 ||
-                        'Description must be at least 50 words!'
-                      );
+              {/* Slug */}
+              <div className="mt-3">
+                <Input
+                  label="Slug *"
+                  placeholder="product_slug"
+                  {...register('slug', {
+                    required: 'Slug is required!',
+                    pattern: {
+                      value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+                      message:
+                        'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
                     },
-                  }}
-                  render={({ field }) => (
-                    <RichTextEditor
-                      value={field.value || ''}
-                      onChange={field.onChange}
-                    />
-                  )}
+                    minLength: {
+                      value: 3,
+                      message: 'Slug must be at least 3 characters long.',
+                    },
+                    maxLength: {
+                      value: 50,
+                      message: 'Slug cannot be longer than 50 characters.',
+                    },
+                  })}
                 />
-                {errors.short_description && (
+
+                {errors.slug && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.short_description.message as string}
+                    {errors.slug.message as string}
                   </p>
                 )}
               </div>
 
-              {/* Accordion */}
-              <div className="mt-2">
-                <CustomAccordion control={control} errors={errors} />{' '}
-              </div>
-
               {/* Tags */}
-              <div className="mt-2">
-                <label className="block text-sm font-medium text-gray-200 mb-1">
+              <div className="mt-3">
+                <label className="block text-base font-semibold text-gray-700 mb-1">
                   Tags *
                 </label>
                 <Controller
@@ -430,9 +416,9 @@ const CreatePage = () => {
                       styles={{
                         control: (base) => ({
                           ...base,
-                          backgroundColor: 'rgb(31 41 55)', // Tailwind bg-gray-800
+                          backgroundColor: 'white',
                           borderColor: 'rgb(75 85 99)', // border-gray-600
-                          color: 'white',
+                          color: 'rgb(31 41 55)', // Tailwind bg-gray-800
                           borderRadius: '0.375rem', // rounded-md
                           padding: '2px',
                           boxShadow: 'none',
@@ -481,62 +467,73 @@ const CreatePage = () => {
                 )}
               </div>
 
-              {/* Slug */}
-              <div className="mt-2">
-                <Input
-                  label="Slug *"
-                  placeholder="product_slug"
-                  {...register('slug', {
-                    required: 'Slug is required!',
-                    pattern: {
-                      value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-                      message:
-                        'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
-                    },
-                    minLength: {
-                      value: 3,
-                      message: 'Slug must be at least 3 characters long.',
-                    },
-                    maxLength: {
-                      value: 50,
-                      message: 'Slug cannot be longer than 50 characters.',
-                    },
-                  })}
-                />
+              {/* Color Selector */}
 
-                {errors.slug && (
+              <div className="mt-3 pb-6 border-b border-gray-600">
+                <ColorSelector control={control} errors={errors} />
+              </div>
+
+              {/* Size Selector */}
+              <div className="mt-3 pb-6 border-b border-gray-600">
+                <SizeSelector control={control} errors={errors} />
+              </div>
+
+              {/* Product Properties */}
+              <div className="mt-3">
+                <CustomProperties control={control} errors={errors} />
+              </div>
+
+              {/* Product Specifications */}
+              <div className="mt-3">
+                <CustomSpecifications control={control} errors={errors} />
+              </div>
+
+              {/* Short Description */}
+              <div className="mt-4">
+                <label className="block font-semibold text-gray-700 pb-3">
+                  About this item * (Min 50 words)
+                </label>
+                <Controller
+                  name="short_description"
+                  control={control}
+                  rules={{
+                    required: 'Description is required!',
+                    validate: (value) =>
+                      validateWordCount(
+                        value,
+                        50,
+                        'Description must be at least 50 words!'
+                      ),
+                  }}
+                  render={({ field }) => (
+                    <RichTextEditor
+                      id="short-description-editor" // ✅ unique id
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+                {errors.short_description && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.slug.message as string}
+                    {errors.short_description.message as string}
                   </p>
                 )}
               </div>
 
-              <div className="mt-2 pb-6 border-b border-gray-600">
-                <ColorSelector control={control} errors={errors} />
-              </div>
-
-              {/* Size selecting */}
-              <div className="mt-2 pb-6 border-b border-gray-600">
-                <SizeSelector control={control} errors={errors} />
-              </div>
-
-              <div className="mt-2">
-                <CustomSpecifications control={control} errors={errors} />
-              </div>
-
-              <div className="mt-2">
-                <CustomProperties control={control} errors={errors} />
+              {/* Product details / Accordions */}
+              <div className="mt-2 py-3 ">
+                <CustomAccordion control={control} errors={errors} />{' '}
               </div>
             </div>
 
             <div className="w-2/4">
               {/* Category */}
-              <label className="block font-semibold text-gray-300 mb-1">
+              <label className="block font-semibold text-gray-700 mb-1">
                 Category *
               </label>
               <div className="relative">
                 {isLoading ? (
-                  <p className="text-gray-400">Loading Categories...</p>
+                  <p className="text-gray-700">Loading Categories...</p>
                 ) : isError ? (
                   <p className="text-red-500">Failed to load categories</p>
                 ) : (
@@ -547,16 +544,16 @@ const CreatePage = () => {
                     render={({ field }) => (
                       <select
                         {...field}
-                        className="w-full p-2 rounded-md border outline-none border-gray-700 bg-transparent appearance-none"
+                        className="w-full p-2 rounded-md border outline-none border-gray-700 text-gray-700 bg-transparent appearance-none"
                       >
-                        <option value="" className="bg-black">
+                        <option value="" className="bg-gray-100 text-gray-700">
                           Select Category
                         </option>
                         {categories?.map((category: string) => (
                           <option
                             value={category}
                             key={category}
-                            className="bg-black"
+                            className="bg-gray-200 text-gray-800"
                           >
                             {category}
                           </option>
@@ -566,7 +563,7 @@ const CreatePage = () => {
                   />
                 )}
                 {/* Custom arrow */}
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-700">
                   <ChevronDown />
                 </div>
               </div>
@@ -578,7 +575,7 @@ const CreatePage = () => {
 
               {/* Sub Categories */}
               <div className="mt-2">
-                <label className="block font-semibold text-gray-300 mb-1">
+                <label className="block font-semibold text-gray-700 mb-1">
                   Subcategory *
                 </label>
                 <div className="relative">
@@ -589,16 +586,16 @@ const CreatePage = () => {
                     render={({ field }) => (
                       <select
                         {...field}
-                        className="w-full p-2 rounded-md border outline-none border-gray-700 bg-transparent appearance-none"
+                        className="w-full p-2 rounded-md border outline-none border-gray-700 text-gray-700 bg-transparent appearance-none"
                       >
-                        <option value="" className="bg-black">
+                        <option value="" className="bg-gray-100 text-gray-700">
                           Select Subcategory
                         </option>
                         {subcategories?.map((subcategory: string) => (
                           <option
                             value={subcategory}
                             key={subcategory}
-                            className="bg-black"
+                            className="bg-gray-200 text-gray-800"
                           >
                             {subcategory}
                           </option>
@@ -607,7 +604,7 @@ const CreatePage = () => {
                     )}
                   />
                   {/* Custom arrow */}
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-700">
                     <ChevronDown />
                   </div>
                 </div>
@@ -620,8 +617,8 @@ const CreatePage = () => {
               </div>
 
               {/* Detailed description */}
-              <div className="mt-2">
-                <label className="block font-semibold text-gray-300 mb-1">
+              <div className="mt-4">
+                <label className="block font-semibold text-gray-700 mb-3">
                   Detailed description * (Min 100 words)
                 </label>
                 <Controller
@@ -629,24 +626,16 @@ const CreatePage = () => {
                   control={control}
                   rules={{
                     required: 'Detailed description is required!',
-                    validate: (value) => {
-                      const plainText = value
-                        ?.replace(/<[^>]+>/g, '')
-                        .replace(/&nbsp;/g, ' ')
-                        .trim();
-
-                      const wordCount = plainText
-                        ?.split(/\s+/)
-                        .filter((word) => word).length;
-
-                      return (
-                        wordCount >= 100 ||
+                    validate: (value) =>
+                      validateWordCount(
+                        value,
+                        100,
                         'Detailed description must be at least 100 words!'
-                      );
-                    },
+                      ),
                   }}
                   render={({ field }) => (
                     <RichTextEditor
+                      id="detailed-description-editor" // ✅ unique id
                       value={field.value || ''}
                       onChange={field.onChange}
                     />
@@ -660,9 +649,9 @@ const CreatePage = () => {
               </div>
 
               {/* Video Url */}
-              <div className="mt-2">
+              <div className="my-4">
                 <Input
-                  label="Video URL"
+                  label="Product Videos"
                   placeholder="https://www.youtube.com/embed/xyz123"
                   {...register('video_url', {
                     pattern: {
@@ -681,7 +670,7 @@ const CreatePage = () => {
               </div>
 
               {/* Deal toggle */}
-              <div className="mt-4">
+              <div className="mt-6">
                 <button
                   type="button"
                   onClick={() => {
@@ -718,8 +707,8 @@ const CreatePage = () => {
 
               {/* Conditionally render deal fields */}
               {enableDeal && (
-                <div className="flex flex-col gap-2 mt-2">
-                  <label className="text-base font-semibold text-gray-300 mt-1">
+                <div className="flex flex-col gap-2 mt-2 pb-6 border-b border-gray-400 ">
+                  <label className="text-base font-medium text-gray-700 mt-1">
                     Deal Start Date
                   </label>
                   <Controller
@@ -748,7 +737,7 @@ const CreatePage = () => {
                     </p>
                   )}
 
-                  <label className="text-base font-semibold text-gray-300 mt-1">
+                  <label className="text-base font-medium text-gray-700 mt-1">
                     Deal End Date
                   </label>
                   <Controller
@@ -857,7 +846,7 @@ const CreatePage = () => {
 
               {/* Discount codes */}
               <div className="mt-3">
-                <label className="block font-semibold text-gray-300 mb-1">
+                <label className="block font-semibold text-gray-700 mb-1">
                   Select Discount Codes (optional)
                 </label>
 

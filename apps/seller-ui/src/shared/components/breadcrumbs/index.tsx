@@ -18,9 +18,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ title }) => {
           </Link>
         </li>
 
-        <ChevronRight size={20} className="opacity-[.8] text-gray-200 " />
+        <ChevronRight size={20} className="opacity-[.8] text-gray-700 " />
 
-        <li className="text-gray-200 font-medium">{title}</li>
+        <li className="text-gray-700 font-medium">{title}</li>
       </ol>
     </nav>
   );

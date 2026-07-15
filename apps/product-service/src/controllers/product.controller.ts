@@ -194,17 +194,13 @@ export const createProduct = async (
   try {
     const {
       title,
-      short_description,
-      detailed_description,
-      warranty,
       slug,
       tags,
-      cash_on_delivery,
-      brand,
+      short_description,
+      detailed_description,
+      accordions = [], // ✅ seller-provided accordions
       video_url,
       category,
-      colors = [],
-      sizes = [],
       discountCodes,
       stock,
       regular_price,
@@ -249,24 +245,20 @@ export const createProduct = async (
     const newProduct = await prisma.products.create({
       data: {
         title,
+        slug,
+        tags: Array.isArray(tags) ? tags : tags.split(','),
         short_description,
         detailed_description,
-        warranty,
-        cashOnDelivery: cash_on_delivery,
-        slug,
-        shopId: req.seller.shops[0].id,
-        tags: Array.isArray(tags) ? tags : tags.split(','),
-        brand,
-        video_url,
-        category,
-        subCategory,
-        colors,
-        sizes,
-        stock: parseInt(stock),
-        regular_price: parseFloat(regular_price),
         customProperties,
         custom_specifications,
+        accordions, // ✅ save directly as JSON
+        category,
+        subCategory,
+        shopId: req.seller.shops[0].id,
+        stock: parseInt(stock),
+        regular_price: parseFloat(regular_price),
         discount_codes: discountCodes ?? [],
+        video_url,
         images: {
           create: images
             .filter((img: any) => img && img.fileId && img.file_url)

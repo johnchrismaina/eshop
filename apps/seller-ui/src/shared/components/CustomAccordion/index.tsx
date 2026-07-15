@@ -23,8 +23,8 @@ const CustomAccordion = ({ control, errors }: any) => {
 
   return (
     <div>
-      <label className="block font-semibold text-gray-300 mb-4">
-        Product Accordions (max 3)
+      <label className="block font-semibold text-gray-700 mb-4">
+        Product Details - Accordions (max 3)
       </label>
 
       <div className="flex flex-col gap-4 mt-2">
@@ -32,18 +32,30 @@ const CustomAccordion = ({ control, errors }: any) => {
           <Disclosure key={item.id}>
             {({ open }) => (
               <div className="border border-gray-600 rounded-lg p-2">
-                <DisclosureButton className="flex w-full justify-between rounded-lg bg-gray-700 px-4 py-2 text-left text-sm font-medium text-gray-300 hover:bg-gray-600">
-                  <Controller
-                    name={`accordions.${index}.title`}
-                    control={control}
-                    rules={{ required: 'Title is required' }}
-                    render={({ field }) => (
-                      <Input
-                        placeholder="Accordion title (e.g. Top Highlights)"
-                        {...field}
-                      />
-                    )}
-                  />
+                {/* Title input field */}
+                <Controller
+                  name={`accordions.${index}.title`}
+                  control={control}
+                  rules={{ required: 'Title is required' }}
+                  render={({ field }) => (
+                    <Input
+                      placeholder="Accordion title (e.g. Top Highlights)"
+                      {...field}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        // Auto-capitalize each word
+                        const formatted = e.target.value.replace(
+                          /\b\w/g,
+                          (char: string) => char.toUpperCase() // ✅ typed parameter
+                        );
+                        field.onChange(formatted);
+                      }}
+                    />
+                  )}
+                />
+
+                {/* Toggle button */}
+                <DisclosureButton className="flex w-full justify-between rounded-lg bg-gray-700 px-4 py-2 mt-2 text-left text-sm font-medium text-gray-300 hover:bg-gray-600">
+                  <span className="font-bold">Product Details</span>
                   <Trash2
                     size={20}
                     className="text-red-500 hover:text-red-700 cursor-pointer ml-2"
@@ -51,6 +63,7 @@ const CustomAccordion = ({ control, errors }: any) => {
                   />
                 </DisclosureButton>
 
+                {/* Content editor */}
                 <DisclosurePanel className="px-4 pt-4 pb-2 text-sm text-gray-200">
                   <Controller
                     name={`accordions.${index}.content`}
@@ -58,6 +71,7 @@ const CustomAccordion = ({ control, errors }: any) => {
                     rules={{ required: 'Content is required' }}
                     render={({ field }) => (
                       <RichTextEditor
+                        id={`accordion-editor-${index}`} // ✅ unique id per editor
                         value={field.value || ''}
                         onChange={field.onChange}
                       />

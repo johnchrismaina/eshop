@@ -19,7 +19,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block font-semibold text-gray-300 mb-1">
+          <label className="block font-semibold text-gray-700 mb-1">
             {label}
           </label>
         )}
@@ -27,14 +27,14 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
         {type === 'textarea' ? (
           <textarea
             ref={ref as React.Ref<HTMLTextAreaElement>}
-            className={`w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-white ${className}`}
+            className={`w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-gray-800 ${className}`}
             {...(props as TextareaProps)}
           />
         ) : (
           <input
             type={type}
             ref={ref as React.Ref<HTMLInputElement>}
-            className={`w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-white ${className}`}
+            className={`w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-gray-800 ${className}`}
             {...(props as InputProps)}
           />
         )}

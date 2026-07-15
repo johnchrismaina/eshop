@@ -1,13 +1,11 @@
 'use client';
 import {
+  ChevronDownIcon,
   ChevronLeft,
   ChevronRight,
   Heart,
   MapPin,
   MessageSquareText,
-  Package,
-  ShoppingCartIcon,
-  WalletMinimal,
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -25,6 +23,11 @@ import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import { useRouter } from 'next/navigation';
 import ProductCard from '../ProductCard';
 // import { userAgent } from 'next/server';
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/react';
 
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   // const { user, isLoading } = useUser();
@@ -247,21 +250,27 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
           <div className="mt-1">
             {/* Product price */}
-            <div className="flex flex-col ">
-              <div className="pt-4 ">
+            <div className="flex flex-col">
+              <div className="pt-4">
                 <span className="text-2xl font-semibold tracking-tight text-gray-900">
-                  Ksh {productDetails?.sale_price}
+                  Ksh{' '}
+                  {productDetails?.deal
+                    ? productDetails.deal.sale_price
+                    : productDetails?.regular_price}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 ">
-                <span className="text-slate-500 text-sm font-normal line-through tracking-tight">
-                  Ksh {productDetails?.regular_price}
-                </span>
-                <span className="text-rose-600 text-sm font-semibold tracking-tight">
-                  {discountPercentage}% off
-                </span>
-              </div>
+              {/* Show discount only if deal exists */}
+              {productDetails?.deal && (
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-500 text-sm font-normal line-through tracking-tight">
+                    Ksh {productDetails?.regular_price}
+                  </span>
+                  <span className="text-rose-600 text-sm font-semibold tracking-tight">
+                    {discountPercentage}% off
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="mt-2">
@@ -318,13 +327,13 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Product description */}
             {/* <div className="w-full lg:w-full mx-auto mt-5"> */}
             <div className="bg-white py-4 ">
-              <span className="text-lg font-bold text-gray-800 ">
+              <span className="text-lg font-semibold text-gray-800 ">
                 {/* About this item {productDetails?.title} */}
                 Product details
               </span>
 
               {/* Divider */}
-              <hr className="border-t border-slate-300 my-2" />
+              <hr className="border-t border-slate-300 my-3" />
 
               {/* Custom Specifications */}
               {productDetails?.custom_specifications?.length > 0 && (
@@ -357,7 +366,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 </div>
               )}
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <span className="text-base font-semibold text-gray-800 ">
                   {/* About this item {productDetails?.title} */}
                   About this item
@@ -371,18 +380,44 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   }}
                 />
               </div>
+
+              {/* Product Accordions */}
+              <div className="mt-6 ">
+                {productDetails?.accordions?.map(
+                  (accordion: any, index: number) => (
+                    <Disclosure key={index}>
+                      {({ open }) => (
+                        <div className="rounded-none mb-2">
+                          <hr className="border-t border-slate-300 py-1" />
+
+                          <DisclosureButton className="flex w-full justify-between pl-0 pr-3 py-2 text-left text-sm font-medium text-gray-800 ">
+                            <span>{accordion.title}</span>
+                            <ChevronDownIcon
+                              className={`${
+                                open ? 'rotate-180 transform' : ''
+                              } w-5 h-5 text-gray-500`}
+                            />
+                          </DisclosureButton>
+
+                          <DisclosurePanel className="px-2 pt-3 pb-2 text-sm text-gray-700">
+                            <div
+                              className="prose prose-sm text-slate-800 text-[15px] max-w-none break-words"
+                              dangerouslySetInnerHTML={{
+                                __html: accordion.content,
+                              }}
+                            />
+                          </DisclosurePanel>
+                        </div>
+                      )}
+                    </Disclosure>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>
         {/* Right column - Seller information */}
         <div className="bg-white border border-gray-200 w-[244px] px-5 py-4 rounded-md ">
-          <div className="flex gap-2 items-end pb-2">
-            {/* <span className="text-sm">Ksh</span> */}
-            <span className="text-2xl font-medium tracking-tight text-gray-800">
-              Ksh {productDetails?.sale_price}
-            </span>
-          </div>
-
           {/* Delivery options */}
           <div className="flex flex-col gap-3 py-1 ">
             {/* Instant delivery */}
@@ -586,7 +621,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
       </div>
 
       {/* Product description */}
-      <div className="w-full lg:w-full mx-auto mt-5">
+      <div className="w-full lg:w-full mx-auto mt-40">
         <div className="bg-white py-4 border-t border-gray-200">
           <h3 className="text-xl font-bold pb-1">
             {/* Product description {productDetails?.title} */}

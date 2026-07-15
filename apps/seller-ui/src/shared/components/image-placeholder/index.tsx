@@ -38,7 +38,7 @@ const ImagePlaceholder = ({
     <div
       className={`relative ${
         small ? 'h-[180px]' : 'h-[450px]'
-      } w-full cursor-pointer bg-[#1e1e1e] border border-gray-600 rounded-lg flex flex-col justify-center items-center`}
+      } w-full cursor-pointer bg-gray-200 border border-gray-400 rounded-lg flex flex-col justify-center items-center`}
     >
       <input
         type="file"
@@ -75,7 +75,7 @@ const ImagePlaceholder = ({
       ) : (
         <label
           htmlFor={`image-upload-${index}`}
-          className="absolute top-3 right-3 p-2 !rounded bg-slate-700 text-gray-200 shadow-lg cursor-pointer"
+          className="absolute top-3 right-3 p-2 !rounded bg-slate-700 text-gray-100 shadow-lg cursor-pointer"
         >
           <Pencil size={16} />
         </label>
@@ -92,14 +92,14 @@ const ImagePlaceholder = ({
       ) : (
         <>
           <p
-            className={`text-gray-400 ${
+            className={`text-gray-600 ${
               small ? 'text-xl' : 'text-4xl'
             } font-semibold`}
           >
             {size}
           </p>
           <p
-            className={`text-gray-300 ${
+            className={`text-gray-500 ${
               small ? 'text-sm' : 'text-lg'
             } pt-2 text-center`}
           >

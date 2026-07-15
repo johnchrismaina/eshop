@@ -11,8 +11,8 @@ const CustomSpecifications = ({ control, errors }: any) => {
 
   return (
     <div>
-      <label className="block font-semibold text-gray-300 mb-4 ">
-        Custom Specifications
+      <label className="block font-semibold text-gray-700 mb-4 ">
+        Product Specifications
       </label>
       <div className="flex flex-col gap-4 mt-2">
         {fields.map((item, index) => (
@@ -68,7 +68,7 @@ const CustomSpecifications = ({ control, errors }: any) => {
           className="flex items-center gap-2 text-blue-500 hover:text-blue-600 pb-6 border-b border-gray-600"
           onClick={() => append({ name: '', value: '' })}
         >
-          <PlusCircle size={20} /> Add Specification
+          <PlusCircle size={20} /> Add Specifications
         </button>
       </div>
     </div>

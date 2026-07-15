@@ -46,7 +46,7 @@ const SidebarWrapper = () => {
   }, [pathName, setActiveSidebar]);
 
   const getIconColor = (route: string) =>
-    activeSidebar === route ? '#0085ff' : '#969696';
+    activeSidebar === route ? '#0085ff' : '#1F2937';
 
   // console.log('Sidebar seller:', seller);
 
@@ -109,13 +109,13 @@ const SidebarWrapper = () => {
               />
             </div>
             <Box>
-              <h3 className="text-lg font-medium text-[#ecedee]">
+              <h3 className="text-lg font-medium text-gray-800">
                 {selectedShop?.name
                   ? capitalizeWords(selectedShop.name)
                   : 'No shop name available'}
               </h3>
 
-              <h5 className="font-medium text-xs text-[#ecedeecf] whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
+              <h5 className="font-medium text-xs text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis max-w-[170px]">
                 {selectedShop?.address
                   ? selectedShop.address
                   : 'No address available'}

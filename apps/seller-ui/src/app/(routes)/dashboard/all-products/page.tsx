@@ -117,7 +117,7 @@ const ProductList = () => {
           return (
             <Link
               href={`${process.env.NEXT_PUBLIC_USER_UI_LINK}/product/${row.original.slug}`}
-              className="text-blue-400 hover:underline"
+              className="text-blue-500 hover:underline"
               title={row.original.title}
             >
               {truncatedTitle}
@@ -225,7 +225,7 @@ const ProductList = () => {
     <div className="w-full min-h-screen p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2l text-white font-semibold">All Products</h2>
+        <h2 className="text-2l text-gray-700 font-semibold">All Products</h2>
         <Link
           href="/dashboard/create-product"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
@@ -238,23 +238,23 @@ const ProductList = () => {
       <Breadcrumbs title="All Products" />
 
       {/* Search Bar */}
-      <div className="mb-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
+      <div className="mb-4 flex items-center bg-gray-200 p-2 rounded-md flex-1">
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
           placeholder="Search products"
-          className="w-full bg-transparent text-white outline-none"
+          className="w-full bg-transparent text-gray-700 outline-none"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
         />
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
+      <div className="overflow-x-auto bg-white rounded-lg p-4">
         {isLoading ? (
-          <p className="text-center text-white">Loading products...</p>
+          <p className="text-center text-gray-700">Loading products...</p>
         ) : (
-          <table className="w-full text-white">
+          <table className="w-full text-gray-700">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="border-b border-gray-800">

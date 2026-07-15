@@ -191,6 +191,7 @@ model products {
   ratings               Float         @default(5)
   custom_specifications Json?
   customProperties      Json
+  accordions            Json?
   isDeleted             Boolean?      @default(false)
   status                productStatus @default(Active)
   deletedAt             DateTime?

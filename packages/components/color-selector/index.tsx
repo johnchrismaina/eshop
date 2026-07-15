@@ -21,7 +21,7 @@ const ColorSelector = ({ control, errors }: any) => {
 
   return (
     <div className="mt-2">
-      <label className="block font-semibold text-gray-300 mb-1">Colors</label>
+      <label className="block font-semibold text-gray-700 mb-1">Colors</label>
       <Controller
         name="colors"
         control={control}
@@ -43,7 +43,9 @@ const ColorSelector = ({ control, errors }: any) => {
                     )
                   }
                   className={`w-7 h-7 p-2 rounded-md my-1 flex items-center justify-center border-2 border-gray-100 transition ${
-                    isSelected ? 'scale-110 border-white' : 'border-transparent'
+                    isSelected
+                      ? 'scale-110 border-gray-800 '
+                      : 'border-transparent'
                   } ${isLightColor ? 'border-gray-600' : ''}`}
                   style={{ backgroundColor: color }}
                 />

@@ -606,6 +606,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         </div>
       </div>
 
+      {/* You may also like */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
         <div className="w-full h-full ">
           <h3 className="text-xl font-semibold pt-3 pb-2">
@@ -636,6 +637,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         </div>
       </div>
 
+      {/* From the manufacturer */}
       <div className="w-full lg:w-full mx-auto mt-5 border-t border-y-gray-200">
         <div className="bg-white min-h-[60vh] h-full ">
           <h3 className="text-xl font-bold pt-3 pb-2">
@@ -645,6 +647,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         </div>
       </div>
 
+      {/* Ratings & Reviews */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
         <div className="bg-white min-h-[50vh] h-full ">
           <h3 className="text-lg font-semibold pt-2 pb-2">

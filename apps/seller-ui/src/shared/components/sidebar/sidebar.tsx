@@ -167,13 +167,13 @@ const SidebarWrapper = () => {
             </SidebarMenu>
             <SidebarMenu title="Products">
               <SidebarItem
-                isActive={activeSidebar === '/dashboard/create-product'}
+                isActive={activeSidebar === '/create-product'}
                 title="Create Product"
-                href="/dashboard/create-product"
+                href="/create-product"
                 icon={
                   <SquarePlus
                     size={22}
-                    color={getIconColor('/dashboard/create-product')}
+                    color={getIconColor('/create-product')}
                   />
                 }
               />

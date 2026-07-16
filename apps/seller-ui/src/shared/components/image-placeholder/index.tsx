@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 const ImagePlaceholder = ({
   size,
   small,
+  aspect = 'square', // NEW PROP
   onImageChange,
   pictureUploadingLoader,
   onRemove,
@@ -16,6 +17,7 @@ const ImagePlaceholder = ({
 }: {
   size: string;
   small?: boolean;
+  aspect?: 'square' | 'portrait'; // NEW TYPE
   pictureUploadingLoader: boolean;
   onImageChange: (file: File | null, index: number) => void;
   onRemove?: (index: number) => void;
@@ -36,9 +38,9 @@ const ImagePlaceholder = ({
 
   return (
     <div
-      className={`relative ${
-        small ? 'h-[180px]' : 'h-[450px]'
-      } w-full cursor-pointer bg-gray-200 border border-gray-400 rounded-lg flex flex-col justify-center items-center`}
+      className={`relative w-full cursor-pointer bg-gray-200 border rounded-none flex flex-col justify-center items-center
+    ${aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'}
+  `}
     >
       <input
         type="file"
@@ -87,25 +89,25 @@ const ImagePlaceholder = ({
           height={300}
           src={imagePreview}
           alt="uploaded"
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover rounded-lg transition-all duration-300"
         />
       ) : (
         <>
           <p
             className={`text-gray-600 ${
-              small ? 'text-xl' : 'text-4xl'
+              small ? 'text-lg' : 'text-xl'
             } font-semibold`}
           >
             {size}
           </p>
-          <p
+          {/* <p
             className={`text-gray-500 ${
               small ? 'text-sm' : 'text-lg'
             } pt-2 text-center`}
           >
             Please choose an image <br />
             according to the expected ratio
-          </p>
+          </p> */}
         </>
       )}
     </div>

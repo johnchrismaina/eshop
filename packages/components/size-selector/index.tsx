@@ -6,12 +6,12 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
 const SizeSelector = ({ control, errors }: any) => {
   return (
     <div className="mt-2">
-      <label className="block font-semibold text-gray-700 mb-1">Sizes</label>
+      <label className="block font-semibold text-gray-700 mb-2">Sizes</label>
       <Controller
         name="sizes"
         control={control}
         render={({ field }) => (
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-3 flex-wrap">
             {sizes.map((size) => {
               const isSelected = (field.value || []).includes(size);
 
@@ -26,10 +26,10 @@ const SizeSelector = ({ control, errors }: any) => {
                         : [...(field.value || []), size]
                     )
                   }
-                  className={`px-3 py-1 rounded-lg font-poppins transition-colors ${
+                  className={`px-2 py-1 rounded-lg font-poppins transition-colors w-[70px] ${
                     isSelected
-                      ? 'bg-gray-600 text-white border border-[#ffffff6b]'
-                      : 'bg-gray-600 text-gray-300'
+                      ? 'bg-white text-gray-700 ring ring-gray-800 ring-offset-0'
+                      : 'bg-white text-gray-700 border border-gray-300'
                   }`}
                 >
                   {size}

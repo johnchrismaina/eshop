@@ -25,6 +25,7 @@ import { usePathname } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
+import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 
 const RichTextEditor = dynamic(
   () => import('packages/components/rich-text-editor'),
@@ -80,8 +81,8 @@ const CreatePage = () => {
     defaultValues: {
       title: '',
       images: [null, null, null, null, null, null, null, null], // 8 slots
-      regular_price: 0,
-      sale_price: 0,
+      regular_price: undefined,
+      sale_price: undefined,
       short_description: '',
       accordions: [], // ✅ initialize accordions array
       slug: '',
@@ -92,7 +93,7 @@ const CreatePage = () => {
       video_url: '',
       deal_start: null,
       deal_end: null,
-      stock: 0,
+      stock: undefined,
       discountCodes: [],
       enableDeal: isDealRoute, // ✅ auto-enable toggle if on /create-deal
     },
@@ -324,13 +325,13 @@ const CreatePage = () => {
 
   return (
     <form
-      className="w-full mx-auto px-8 py-6 shadow-md rounded-lg text-white"
+      className="w-full mx-auto px-0 py-6 shadow-md rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
       <div className="grid grid-cols-[200px_minmax(300px,1fr)] gap-4 border-b border-gray-300">
         {/* Dashboard button */}
-        <div className="w-full px-3 py-2">
+        <div className="w-full px-8 py-2">
           <button
             onClick={() => router.push('/dashboard/all-products')}
             className="flex items-center gap-1 text-gray-800 bg-gray-200 hover:bg-gray-300 transition px-4 py-2 rounded-full text-sm"
@@ -348,31 +349,31 @@ const CreatePage = () => {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-white mt-4 pt-2 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f5] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
 
         <div className="flex flex-col items-start space-y-2">
           {/* Dropdown */}
           <div
             ref={dropdownRef}
-            className="relative inline-block text-left mb-3"
+            className="relative inline-block text-left ml-14 "
           >
             {/* Button */}
             <button
               type="button"
               onClick={() => setOpenAspectRatio(!openAspectRatio)}
-              className="border rounded-md px-4 py-2 text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
+              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[300px] flex justify-between items-center"
             >
               Aspect Ratio:{' '}
               {aspect === 'square'
                 ? 'Square (850 × 850)'
                 : 'Portrait (765 × 1020)'}
-              <span className="ml-2">▼</span>
+              <ChevronDown className="text-gray-600" />
             </button>
 
             {/* Dropdown menu */}
             {openAspectRatio && (
-              <div className="absolute mt-1 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
+              <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
                 {options.map((opt) => (
                   <div
                     key={opt.value}
@@ -380,21 +381,20 @@ const CreatePage = () => {
                       setAspect(opt.value as 'square' | 'portrait');
                       setOpenAspectRatio(false);
                     }}
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
                   >
                     {opt.label}
                   </div>
                 ))}
               </div>
             )}
-
-            {/* Hint text */}
-            <p className="mt-2 text-sm text-gray-500">
-              Recommended size: 850×850 for square, 765×1020 for portrait
-            </p>
           </div>
+          {/* Hint text */}
+          <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
+            Recommended size: 850×850 for square, 765×1020 for portrait
+          </p>
 
-          <div className="flex flex-col items-center w-[580px] mx-auto">
+          <div className="flex flex-col items-center w-[580px] mx-auto ">
             {/* Image upload section */}
             {/* Main preview */}
             <div className="w-[500px]">
@@ -438,8 +438,8 @@ const CreatePage = () => {
         {/* Middle column - product details */}
         <div className="px-4 pb-1 prose prose-sm max-w-none">
           {/* Product Title */}
-          <div className="">
-            <Input
+          <div className="w-[500px]">
+            <AutoResizeTextarea
               label="Product Title *"
               placeholder="Enter product title"
               {...register('title', { required: 'Title is required' })}
@@ -452,10 +452,11 @@ const CreatePage = () => {
           </div>
 
           {/* Slug */}
-          <div className="mt-3">
+          <div className="mt-3 w-[500px]">
             <Input
               label="Slug *"
               placeholder="product_slug"
+              className="bg-[#fdfdfd]"
               {...register('slug', {
                 required: 'Slug is required!',
                 pattern: {
@@ -482,7 +483,7 @@ const CreatePage = () => {
           </div>
 
           {/* Tags */}
-          <div className="mt-3">
+          <div className="mt-3 w-[500px]">
             <label className="block text-base font-semibold text-gray-700 mb-1">
               Tags *
             </label>
@@ -511,11 +512,11 @@ const CreatePage = () => {
                   styles={{
                     control: (base) => ({
                       ...base,
-                      backgroundColor: 'white',
+                      backgroundColor: 'rgb(253 253 253)', // fdfdfd
                       borderColor: 'rgb(75 85 99)', // border-gray-600
                       color: 'rgb(31 41 55)', // Tailwind bg-gray-800
                       borderRadius: '0.375rem', // rounded-md
-                      padding: '2px',
+                      padding: '5px',
                       boxShadow: 'none',
                       '&:hover': { borderColor: 'rgb(107 114 128)' }, // gray-500
                     }),
@@ -537,6 +538,7 @@ const CreatePage = () => {
                     multiValue: (base) => ({
                       ...base,
                       backgroundColor: 'rgb(55 65 81)', // bg-gray-700
+                      padding: '2px',
                       borderRadius: '0.375rem',
                     }),
                     multiValueLabel: (base) => ({
@@ -615,15 +617,16 @@ const CreatePage = () => {
           </div>
 
           {/* Product details / Accordions */}
-          <div className="mt-2 py-3 ">
+          <div className="mt-4 ">
             <CustomAccordion control={control} errors={errors} />{' '}
           </div>
 
           {/* Video Url */}
-          <div className="my-4">
+          <div className="mt-4">
             <Input
               label="Video Url"
               placeholder="https://www.youtube.com/embed/xyz123"
+              className="bg-[#fdfdfd]"
               {...register('video_url', {
                 pattern: {
                   value:
@@ -642,59 +645,60 @@ const CreatePage = () => {
         </div>
 
         {/* Right column - form inputs */}
-        <div className="bg-white border border-gray-200 w-[244px] px-5 py-4 rounded-md ">
+        <div className="bg-[#f5f5f5] border-l border-gray-200 w-[244px] px-5 py-0 rounded-none ">
           {/* Category */}
-          <label className="block font-semibold text-gray-700 mb-1">
-            Category *
-          </label>
-          <div className="relative">
-            {isLoading ? (
-              <p className="text-gray-700">Loading Categories...</p>
-            ) : isError ? (
-              <p className="text-red-500">Failed to load categories</p>
-            ) : (
-              <Controller
-                name="category"
-                control={control}
-                rules={{ required: 'Categories is required' }}
-                render={({ field }) => (
-                  <select
-                    {...field}
-                    className="w-full p-2 rounded-md border outline-none border-gray-700 text-gray-700 bg-transparent appearance-none"
-                  >
-                    <option value="" className="bg-gray-100 text-gray-700">
-                      Select Category
-                    </option>
-                    {categories?.map((category: string) => (
-                      <option
-                        value={category}
-                        key={category}
-                        className="bg-gray-200 text-gray-800"
-                      >
-                        {category}
+          <div className="">
+            <label className="block font-semibold text-gray-700 mb-1">
+              Category *
+            </label>
+            <div className="relative mb-2">
+              {isLoading ? (
+                <p className="text-gray-700">Loading Categories...</p>
+              ) : isError ? (
+                <p className="text-red-500">Failed to load categories</p>
+              ) : (
+                <Controller
+                  name="category"
+                  control={control}
+                  rules={{ required: 'Categories is required' }}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-600 text-gray-700 bg-transparent appearance-none"
+                    >
+                      <option value="" className="bg-gray-100 text-gray-700">
+                        Select
                       </option>
-                    ))}
-                  </select>
-                )}
-              />
-            )}
-            {/* Custom arrow */}
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-700">
-              <ChevronDown />
+                      {categories?.map((category: string) => (
+                        <option
+                          value={category}
+                          key={category}
+                          className="bg-gray-200 text-gray-800"
+                        >
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                />
+              )}
+              {/* Custom arrow */}
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                <ChevronDown />
+              </div>
             </div>
+            {errors.category && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.category.message as string}
+              </p>
+            )}
           </div>
-          {errors.category && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.category.message as string}
-            </p>
-          )}
-
           {/* Sub Categories */}
           <div className="mt-2">
             <label className="block font-semibold text-gray-700 mb-1">
               Subcategory *
             </label>
-            <div className="relative">
+            <div className="relative mb-2">
               <Controller
                 name="subCategory"
                 control={control}
@@ -702,10 +706,10 @@ const CreatePage = () => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full p-2 rounded-md border outline-none border-gray-700 text-gray-700 bg-transparent appearance-none"
+                    className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-600 text-gray-700 bg-transparent appearance-none"
                   >
                     <option value="" className="bg-gray-100 text-gray-700">
-                      Select Subcategory
+                      Select
                     </option>
                     {subcategories?.map((subcategory: string) => (
                       <option
@@ -720,7 +724,7 @@ const CreatePage = () => {
                 )}
               />
               {/* Custom arrow */}
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-700">
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
                 <ChevronDown />
               </div>
             </div>
@@ -732,8 +736,35 @@ const CreatePage = () => {
             )}
           </div>
 
+          {/* Regular Price */}
+          <div className="mt-4 ">
+            <p className="text-[14px] font-semibold text-gray-700 py-2">
+              Regular Price * <span className="text-xs">(KES)</span>
+            </p>
+            <Input
+              label=""
+              type="number"
+              placeholder="0"
+              className="bg-[#fdfdfd] text-[15px]"
+              {...register('regular_price', {
+                setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                min: { value: 1, message: 'Price must be at least 1' },
+                validate: (value) =>
+                  (typeof value === 'number' && !isNaN(value)) ||
+                  'Only numbers are allowed',
+              })}
+            />
+            {errors.regular_price && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.regular_price.message as string}
+              </p>
+            )}
+          </div>
+
           {/* Deal toggle */}
-          <div className="mt-6">
+          <div className="mt-6 flex items-center justify-between border border-gray-500 px-2 py-2 rounded-md">
+            <span className="font-semibold text-gray-700">Deals</span>
+
             <button
               type="button"
               onClick={() => {
@@ -741,37 +772,62 @@ const CreatePage = () => {
                   setValue('enableDeal', !getValues('enableDeal'));
                 }
               }}
-              disabled={images.length >= 8} // ✅ disable when 8 images
-              className={`flex items-center gap-1.5 px-3 py-2 mb-2 w-[160px] rounded-md font-medium transition
+              disabled={images.length >= 8}
+              className={`flex items-center justify-center w-9 h-9 rounded-full transition-all transition-500
                 ${
                   getValues('enableDeal')
-                    ? 'bg-red-700 text-white '
-                    : 'bg-green-700 text-white '
+                    ? 'bg-red-200 text-red-700'
+                    : 'bg-green-200 text-green-700'
                 }
-                ${images.length >= 8 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                ${images.length >= 8 ? 'opacity-50 cursor-not-allowed' : ''}
+              `}
             >
-              <span className="transition-transform duration-300 ease-in-out">
-                {getValues('enableDeal') ? (
-                  <XIcon className="h-5 w-5 transform rotate-90" />
-                ) : (
-                  <PlusIcon className="h-5 w-5 transform rotate-0" />
-                )}
-              </span>
-              {getValues('enableDeal') ? 'Remove Deal' : 'Add Deal'}
+              {getValues('enableDeal') ? (
+                <XIcon className="h-5 w-5" />
+              ) : (
+                <PlusIcon className="h-5 w-5" />
+              )}
             </button>
-
-            {images.length >= 8 && (
-              <p className="text-xs text-red-400 mt-1">
-                You’ve reached the maximum of 8 images. Remove one to enable
-                deals.
-              </p>
-            )}
           </div>
+
+          {images.length >= 8 && (
+            <p className="text-xs text-red-400 mt-1">
+              You’ve reached the maximum of 8 images. Remove one to enable
+              deals.
+            </p>
+          )}
+
+          {/* Sale Price (only if deal enabled) */}
+          {getValues('enableDeal') && (
+            <div className="mt-2">
+              <p className="text-[14px] font-semibold text-gray-700 py-2">
+                Sale Price <span className="text-xs">(KES)</span>
+              </p>
+              <Input
+                label=""
+                type="number"
+                placeholder="0"
+                className="bg-[#fdfdfd] text-[15px]"
+                {...register('sale_price', {
+                  setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                  min: { value: 1, message: 'Sale price must be at least 1' },
+                  validate: (value) =>
+                    (typeof value === 'number' && !isNaN(value)) ||
+                    'Only numbers are allowed',
+                })}
+              />
+              {errors.sale_price && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.sale_price.message as string}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Conditionally render deal fields */}
           {enableDeal && (
-            <div className="flex flex-col gap-2 mt-2 pb-6 border-b border-gray-400 ">
-              <label className="text-base font-medium text-gray-700 mt-1">
+            <div className="flex flex-col gap-2 mt-3 pb-6 px-2 py-2 bg-gray-200 rounded-md">
+              <label className="text-sm font-medium text-gray-800 mt-1">
                 Deal Start Date
               </label>
               <Controller
@@ -789,7 +845,7 @@ const CreatePage = () => {
                         setValue('deal_end', autoEnd);
                       }
                     }}
-                    className="border rounded-md px-2 py-1 text-sm font-semibold text-gray-700 w-full"
+                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
                     dateFormat="yyyy-MM-dd"
                   />
                 )}
@@ -800,7 +856,7 @@ const CreatePage = () => {
                 </p>
               )}
 
-              <label className="text-base font-medium text-gray-700 mt-1">
+              <label className="text-sm font-medium text-gray-800 mt-1">
                 Deal End Date
               </label>
               <Controller
@@ -820,7 +876,7 @@ const CreatePage = () => {
                   <DatePicker
                     selected={field.value}
                     onChange={(date: Date | null) => field.onChange(date)}
-                    className="border rounded-md px-2 py-1 text-sm font-semibold text-gray-700 w-full"
+                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
                     dateFormat="yyyy-MM-dd"
                   />
                 )}
@@ -833,69 +889,22 @@ const CreatePage = () => {
             </div>
           )}
 
-          {/* Regular Price */}
-          <div className="mt-4">
-            <Input
-              label="Regular Price"
-              placeholder="$20"
-              {...register('regular_price', {
-                valueAsNumber: true,
-                min: { value: 1, message: 'Price must be at least 1' },
-                validate: (value) =>
-                  !isNaN(value) || 'Only numbers are allowed',
-              })}
-            />
-            {errors.regular_price && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.regular_price.message as string}
-              </p>
-            )}
-          </div>
-
-          {/* Sale Price */}
-          <div className="mt-2">
-            <Input
-              label="Sale Price *"
-              placeholder="$15"
-              {...register('sale_price', {
-                required: 'Sale Price is required',
-                valueAsNumber: true,
-                min: { value: 1, message: 'Sale Price must be at least 1' },
-                validate: (value) => {
-                  if (isNaN(value)) return 'Only numbers are allowed';
-                  if (regularPrice && value >= regularPrice) {
-                    return 'Sale Price must be less than Regular Price';
-                  }
-                  return true;
-                },
-              })}
-            />
-            {errors.sale_price && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.sale_price.message as string}
-              </p>
-            )}
-          </div>
-
           {/* Stock */}
           <div className="mt-2">
+            <p className="text-[14px] font-semibold text-gray-700 py-2">
+              Stock *
+            </p>
             <Input
-              label="Stock *"
-              placeholder="100"
+              label=""
+              placeholder="0"
+              type="number"
+              className="bg-[#fdfdfd] text-[15px]"
               {...register('stock', {
-                required: 'Stock is required',
-                valueAsNumber: true,
-                min: { value: 1, message: 'Stock must be at least 1' },
-                max: {
-                  value: 1000,
-                  message: 'Stock cannot exceed 1,000',
-                },
-                validate: (value) => {
-                  if (isNaN(value)) return 'Only numbers are allowed';
-                  if (!Number.isInteger(value))
-                    return 'Stock must be a whole number!';
-                  return true;
-                },
+                setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                min: { value: 0, message: 'Stock cannot be negative' },
+                validate: (value) =>
+                  (typeof value === 'number' && !isNaN(value)) ||
+                  'Only numbers are allowed',
               })}
             />
             {errors.stock && (
@@ -904,7 +913,6 @@ const CreatePage = () => {
               </p>
             )}
           </div>
-
           {/* Discount codes */}
           <div className="mt-3">
             <label className="block font-semibold text-gray-700 mb-1">
@@ -950,7 +958,7 @@ const CreatePage = () => {
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200"></div>
 
       {/* Detailed product description */}
-      <div className="w-full lg:w-full mx-auto mt-6">
+      <div className="w-full lg:w-full mx-auto px-8 pt-6">
         {/* Detailed description */}
         <div className="mt-4">
           <label className="block font-semibold text-gray-700 mb-3">

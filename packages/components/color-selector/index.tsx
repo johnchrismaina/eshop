@@ -42,11 +42,13 @@ const ColorSelector = ({ control, errors }: any) => {
                         : [...(field.value || []), color]
                     )
                   }
-                  className={`w-7 h-7 p-2 rounded-md my-1 flex items-center justify-center border-2 border-gray-100 transition ${
-                    isSelected
-                      ? 'scale-110 border-gray-800 '
-                      : 'border-transparent'
-                  } ${isLightColor ? 'border-gray-600' : ''}`}
+                  className={`w-7 h-7 p-2 rounded-none my-1 flex items-center justify-center transition ${
+                    isSelected ? 'ring-2 ring-gray-950 ring-offset-2' : 'ring-0'
+                  } ${
+                    isLightColor
+                      ? 'border border-gray-600'
+                      : 'border border-transparent'
+                  }`}
                   style={{ backgroundColor: color }}
                 />
               );
@@ -55,7 +57,7 @@ const ColorSelector = ({ control, errors }: any) => {
             {/* Add new color */}
             <button
               type="button"
-              className="w-8 h-8 flex items-center justify-center rounded-full border-2 border-gray-500 bg-gray-800 hover:bg-gray-700 transition"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition"
               onClick={() => setShowColorPicker(!showColorPicker)}
             >
               <Plus size={16} color="white" />

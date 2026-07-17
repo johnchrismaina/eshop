@@ -5,6 +5,7 @@ interface BaseProps {
   label?: string;
   type?: 'text' | 'number' | 'password' | 'email' | 'textarea';
   className?: string;
+  rows?: number; // add rows support for textarea
 }
 
 type InputProps = BaseProps & React.InputHTMLAttributes<HTMLInputElement>;
@@ -27,14 +28,14 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
         {type === 'textarea' ? (
           <textarea
             ref={ref as React.Ref<HTMLTextAreaElement>}
-            className={`w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-gray-800 ${className}`}
+            className={`w-full border outline-none border-gray-600 bg-transparent px-2 py-1.5 rounded-md text-gray-800 ${className}`}
             {...(props as TextareaProps)}
           />
         ) : (
           <input
             type={type}
             ref={ref as React.Ref<HTMLInputElement>}
-            className={`w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-gray-800 ${className}`}
+            className={`w-full border outline-none border-gray-600 bg-transparent px-2 py-1.5 rounded-md text-gray-800 ${className}`}
             {...(props as InputProps)}
           />
         )}

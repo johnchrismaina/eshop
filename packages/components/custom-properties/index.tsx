@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Input from '../input';
-import { Plus, X } from 'lucide-react';
+import { Plus, PlusCircle, X } from 'lucide-react';
 
 const CustomProperties = ({ control, errors }: any) => {
   const [properties, setProperties] = useState<
@@ -43,18 +43,19 @@ const CustomProperties = ({ control, errors }: any) => {
             return (
               <div className="mt-2">
                 <label className="block font-semibold text-gray-700 mb-1">
-                  Custom Properties
+                  Custom properties
                 </label>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 ">
                   {/* Existing properties */}
                   {properties.map((property, index) => (
                     <div
                       key={index}
                       className="border border-gray-400 p-3 rounded-lg bg-gray-200"
                     >
+                      {/* Show labels */}
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-700 font-medium">
+                        <span className="text-gray-700 text-[15px] font-semibold capitalize">
                           {property.label}
                         </span>
                         <button
@@ -65,18 +66,18 @@ const CustomProperties = ({ control, errors }: any) => {
                         </button>
                       </div>
 
-                      {/* Add Values to property */}
-                      <div className="flex items-center mt-2 gap-2">
+                      {/* Add Values to property label */}
+                      <div className="flex items-center mt-2 gap-2 ">
                         <input
                           type="text"
-                          className="border outline-none border-gray-300 bg-gray-100 p-2 rounded-md text-gray-700 w-full"
+                          className="border outline-none border-gray-300 bg-gray-100 p-2 rounded-md text-gray-700 "
                           placeholder="Enter value..."
                           value={newValue}
                           onChange={(e) => setNewValue(e.target.value)}
                         />
                         <button
                           type="button"
-                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md w-[100px]"
                           onClick={() => addValue(index)}
                         >
                           Add
@@ -88,7 +89,7 @@ const CustomProperties = ({ control, errors }: any) => {
                         {property.values.map((value, i) => (
                           <span
                             key={i}
-                            className="px-2 py-1 bg-gray-700 text-white rounded-md text-sm"
+                            className="px-2 py-1 bg-gray-700 text-white rounded-md text-sm capitalize tracking-wide "
                           >
                             {value}
                           </span>
@@ -97,7 +98,7 @@ const CustomProperties = ({ control, errors }: any) => {
                     </div>
                   ))}
 
-                  {/* Add New Property */}
+                  {/* Add New Property label */}
                   <div className="flex items-center gap-2 mt-1">
                     <Input
                       placeholder="Enter property label (e.g. Material, Warranty)"
@@ -106,10 +107,10 @@ const CustomProperties = ({ control, errors }: any) => {
                     />
                     <button
                       type="button"
-                      className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center justify-center gap-1"
+                      className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center justify-center gap-2 w-[100px]"
                       onClick={addProperty}
                     >
-                      <Plus size={16} /> Add
+                      <PlusCircle size={16} /> Add
                     </button>
                   </div>
                 </div>

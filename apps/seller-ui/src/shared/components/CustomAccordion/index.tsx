@@ -23,7 +23,7 @@ const CustomAccordion = ({ control, errors }: any) => {
 
   return (
     <div>
-      <label className="block font-semibold text-gray-700 mb-4">
+      <label className="block font-semibold text-gray-700 mb-2">
         Product Details - Accordions (max 3)
       </label>
 
@@ -91,7 +91,7 @@ const CustomAccordion = ({ control, errors }: any) => {
         {fields.length < 3 && (
           <button
             type="button"
-            className="flex items-center gap-2 text-blue-500 hover:text-blue-600 pb-6 border-b border-gray-600"
+            className="flex items-center justify-center gap-2 text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md w-[200px]"
             onClick={() => append({ title: '', content: '' })}
           >
             <PlusCircle size={20} /> Add Accordion

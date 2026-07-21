@@ -191,13 +191,13 @@ const SidebarWrapper = () => {
             </SidebarMenu>
             <SidebarMenu title="Deals">
               <SidebarItem
-                isActive={activeSidebar === '/dashboard/create-deal'}
+                isActive={activeSidebar === '/create-deal'}
                 title="Create Deal"
-                href="/dashboard/create-deal"
+                href="/create-deal"
                 icon={
                   <CalendarPlus
                     size={22}
-                    color={getIconColor('/dashboard/create-deal')}
+                    color={getIconColor('/create-deal')}
                   />
                 }
               />

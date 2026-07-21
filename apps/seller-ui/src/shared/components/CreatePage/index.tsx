@@ -349,7 +349,7 @@ const CreatePage = () => {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f5] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#fff] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
 
         <div className="flex flex-col items-start space-y-2">
@@ -439,8 +439,11 @@ const CreatePage = () => {
         <div className="px-4 pb-1 prose prose-sm max-w-none">
           {/* Product Title */}
           <div className="w-[500px]">
+            <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
+              Product Title *
+            </label>
             <AutoResizeTextarea
-              label="Product Title *"
+              label=""
               placeholder="Enter product title"
               {...register('title', { required: 'Title is required' })}
             />
@@ -453,10 +456,13 @@ const CreatePage = () => {
 
           {/* Slug */}
           <div className="mt-3 w-[500px]">
+            <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
+              Slug *
+            </label>
             <Input
-              label="Slug *"
+              label=""
               placeholder="product_slug"
-              className="bg-[#fdfdfd]"
+              className="bg-[#fff]"
               {...register('slug', {
                 required: 'Slug is required!',
                 pattern: {
@@ -483,8 +489,8 @@ const CreatePage = () => {
           </div>
 
           {/* Tags */}
-          <div className="mt-3 w-[500px]">
-            <label className="block text-base font-semibold text-gray-700 mb-1">
+          <div className="mt-4 w-[500px]">
+            <label className="block text-[15px] font-semibold text-gray-700 mb-1">
               Tags *
             </label>
             <Controller
@@ -513,7 +519,7 @@ const CreatePage = () => {
                     control: (base) => ({
                       ...base,
                       backgroundColor: 'rgb(253 253 253)', // fdfdfd
-                      borderColor: 'rgb(75 85 99)', // border-gray-600
+                      borderColor: 'rgb(156 163 175)', // border-gray-400
                       color: 'rgb(31 41 55)', // Tailwind bg-gray-800
                       borderRadius: '0.375rem', // rounded-md
                       padding: '5px',
@@ -586,7 +592,7 @@ const CreatePage = () => {
 
           {/* Short Description */}
           <div className="mt-4">
-            <label className="block font-semibold text-gray-700 pb-3">
+            <label className="block text-[15px] font-semibold text-gray-700 pb-3">
               About this item * (Min 50 words)
             </label>
             <Controller
@@ -645,13 +651,13 @@ const CreatePage = () => {
         </div>
 
         {/* Right column - form inputs */}
-        <div className="bg-[#f5f5f5] border-l border-gray-200 w-[244px] px-5 py-0 rounded-none ">
+        <div className="bg-[#fff] border-l border-gray-200 w-[244px] px-5 py-0 rounded-none ">
           {/* Category */}
           <div className="">
-            <label className="block font-semibold text-gray-700 mb-1">
+            <label className="block font-semibold text-[15px] text-gray-700 mb-1">
               Category *
             </label>
-            <div className="relative mb-2">
+            <div className="relative mb-3">
               {isLoading ? (
                 <p className="text-gray-700">Loading Categories...</p>
               ) : isError ? (
@@ -664,7 +670,7 @@ const CreatePage = () => {
                   render={({ field }) => (
                     <select
                       {...field}
-                      className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-600 text-gray-700 bg-transparent appearance-none"
+                      className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
                     >
                       <option value="" className="bg-gray-100 text-gray-700">
                         Select
@@ -693,10 +699,11 @@ const CreatePage = () => {
               </p>
             )}
           </div>
+
           {/* Sub Categories */}
-          <div className="mt-2">
-            <label className="block font-semibold text-gray-700 mb-1">
-              Subcategory *
+          <div className="mt-3">
+            <label className="block font-semibold text-[15px] text-gray-700 mb-1">
+              Sub-category *
             </label>
             <div className="relative mb-2">
               <Controller
@@ -706,7 +713,7 @@ const CreatePage = () => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-600 text-gray-700 bg-transparent appearance-none"
+                    className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
                   >
                     <option value="" className="bg-gray-100 text-gray-700">
                       Select
@@ -737,15 +744,15 @@ const CreatePage = () => {
           </div>
 
           {/* Regular Price */}
-          <div className="mt-4 ">
-            <p className="text-[14px] font-semibold text-gray-700 py-2">
+          <div className=" ">
+            <p className="text-[15px] font-semibold text-gray-700 py-2">
               Regular Price * <span className="text-xs">(KES)</span>
             </p>
             <Input
               label=""
               type="number"
               placeholder="0"
-              className="bg-[#fdfdfd] text-[15px]"
+              className="bg-[#fff] text-[15px]"
               {...register('regular_price', {
                 setValueAs: (v) => (v === '' ? undefined : Number(v)),
                 min: { value: 1, message: 'Price must be at least 1' },
@@ -800,14 +807,14 @@ const CreatePage = () => {
           {/* Sale Price (only if deal enabled) */}
           {getValues('enableDeal') && (
             <div className="mt-2">
-              <p className="text-[14px] font-semibold text-gray-700 py-2">
+              <p className="text-[15px] font-semibold text-gray-700 py-2">
                 Sale Price <span className="text-xs">(KES)</span>
               </p>
               <Input
                 label=""
                 type="number"
                 placeholder="0"
-                className="bg-[#fdfdfd] text-[15px]"
+                className="bg-[#fff] text-[15px]"
                 {...register('sale_price', {
                   setValueAs: (v) => (v === '' ? undefined : Number(v)),
                   min: { value: 1, message: 'Sale price must be at least 1' },
@@ -891,7 +898,7 @@ const CreatePage = () => {
 
           {/* Stock */}
           <div className="mt-2">
-            <p className="text-[14px] font-semibold text-gray-700 py-2">
+            <p className="text-[15px] font-semibold text-gray-700 py-2">
               Stock *
             </p>
             <Input

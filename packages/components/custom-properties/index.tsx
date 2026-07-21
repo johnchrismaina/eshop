@@ -42,7 +42,7 @@ const CustomProperties = ({ control, errors }: any) => {
 
             return (
               <div className="mt-2">
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-[14px] text-gray-700 mb-1">
                   Custom properties
                 </label>
 

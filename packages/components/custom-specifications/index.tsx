@@ -11,7 +11,7 @@ const CustomSpecifications = ({ control, errors }: any) => {
 
   return (
     <div>
-      <label className="block font-semibold text-gray-700 mb-2 ">
+      <label className="block font-semibold text-[15px] text-gray-700 mb-2 ">
         Product specifications
       </label>
       <div className="flex flex-col gap-4 mt-2">
@@ -53,13 +53,15 @@ const CustomSpecifications = ({ control, errors }: any) => {
               </p>
             )}
 
-            <button
-              type="button"
-              className="text-red-500 hover:text-red-700"
-              onClick={() => remove(index)}
-            >
-              <Trash2 size={20} />
-            </button>
+            <div className="relative ml-2 px-2 ">
+              <button
+                type="button"
+                className="absolute top-1 right-0 text-red-500 hover:text-red-700"
+                onClick={() => remove(index)}
+              >
+                <Trash2 size={20} />
+              </button>
+            </div>
           </div>
         ))}
 

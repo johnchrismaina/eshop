@@ -20,48 +20,48 @@ const HeaderBottom = () => {
   console.log(user);
 
   return (
-    <div className="transition-all duration-300 bg-[#f4f4f4] shadow-b shadow-lg">
-      <div className="max-w-[1200px] pt-0.5 pb-0.5 relative mx-auto flex items-center justify-between gap-10 ">
+    <div className="w-full transition-all duration-300 bg-[#fff] shadow-b shadow-lg border-b border-gray-300">
+      <div className="w-[1200px] mx-auto pt-0 pb-2 relative flex items-center justify-center gap-10 ">
         {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 
-        <div className="flex items-center justify-center gap-6">
-          {/* All Dropdowns */}
-          <div>
-            {/* Bottom header button */}
-            <button
-              className="flex items-center gap-2.5 text-[#14181A] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 text-sm font-medium "
-              onClick={() => setShowSidebar(true)}
-            >
-              <Menu size={16} />
-              Categories
-            </button>
+        {/* <div className="flex items-center justify-center gap-10"> */}
+        {/* All Dropdowns */}
+        <div>
+          {/* Bottom header button */}
+          <button
+            className="flex items-center text-[14.0px] font-bold gap-2.5 text-[#14181A] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 "
+            onClick={() => setShowSidebar(true)}
+          >
+            <Menu size={16} />
+            Categories
+          </button>
 
-            {/* Sidebar controlled by parent state */}
-            <SidebarMenu
-              isOpen={showSidebar}
-              onClose={() => setShowSidebar(false)}
-            />
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="flex items-center flex-1 justify-start gap-4 ml-0">
-            {navItems.map((i: NavItemsTypes, index: number) => (
-              <Link
-                className={`flex items-center px-3 pt-1.5 pb-1.5 text-[13.0px] transition-colors ${
-                  i.accent
-                    ? 'text-[#C2410C] font-medium hover:text-[#C2410C]'
-                    : 'text-gray-700 font-medium hover:text-gray-800 '
-                }`}
-                href={i.href}
-                key={index}
-              >
-                {i.title}
-              </Link>
-            ))}
-          </nav>
+          {/* Sidebar controlled by parent state */}
+          <SidebarMenu
+            isOpen={showSidebar}
+            onClose={() => setShowSidebar(false)}
+          />
         </div>
-        <div className="flex gap-4 font-normal text-[13.0px] pt-1.5 pb-1.5 text-[#1d1d1f] hover:text-[#14181A]">
-          <span className="cursor-pointer">Sell on Sokonis</span>
+
+        {/* Navigation Links */}
+        <nav className="flex items-center flex-1 justify-start gap-4 ml-0">
+          {navItems.map((i: NavItemsTypes, index: number) => (
+            <Link
+              className={`flex items-center px-3 py-0 rounded-sm pt-0 pb-0 text-[14.0px] transition-colors ${
+                i.accent
+                  ? 'text-[#fab528] font-bold hover:text-[#fab528]'
+                  : 'text-gray-800 font-bold hover:bg-gray-100 '
+              }`}
+              href={i.href}
+              key={index}
+            >
+              {i.title}
+            </Link>
+          ))}
+        </nav>
+        {/* </div> */}
+        <div className="flex gap-4 font-medium text-[14.0px] pt-1.5 pb-1.5 text-[#14181A] hover:text-gray-950">
+          <span className="cursor-pointer">Sell </span>
           <span className="cursor-pointer">Customer Service</span>
         </div>
       </div>

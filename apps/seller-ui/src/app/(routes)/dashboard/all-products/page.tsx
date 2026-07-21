@@ -167,7 +167,7 @@ const ProductList = () => {
               <Eye size={18} />
             </Link>
             <Link
-              href={`${SELLER_UI_BASE_URL}/dashboard/product/edit/${row.original.slug}`}
+              href={`${SELLER_UI_BASE_URL}/product/edit/${row.original.slug}`}
               className="text-yellow-400 hover:text-yellow-30 transtion "
             >
               <Pencil size={18} />

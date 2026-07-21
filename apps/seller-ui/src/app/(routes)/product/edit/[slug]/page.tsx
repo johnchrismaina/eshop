@@ -306,7 +306,7 @@ export default function EditProductPage() {
 
             <div className="w-2/4">
               {/* Category */}
-              <label className="block font-semibold text-gray-300 mb-1">
+              <label className="block font-semibold text-gray-700 mb-1">
                 Category *
               </label>
               <div className="relative">
@@ -348,7 +348,7 @@ export default function EditProductPage() {
 
               {/* Sub-category */}
               <div className="mt-2">
-                <label className="block font-semibold text-gray-300 mb-1">
+                <label className="block font-semibold text-gray-700 mb-1">
                   Subcategory *
                 </label>
                 <div className="relative">

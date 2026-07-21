@@ -32,7 +32,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
   }, [slide, isPaused]);
 
   return (
-    <div className="relative flex justify-center items-center w-full px-0 h-[50vh] overflow-hidden">
+    <div className="relative flex justify-center items-center w-full bg-[#f4f4f4] px-0 h-[40vh] overflow-hidden">
       {data.map((item, idx) => (
         <img
           src={item.src}

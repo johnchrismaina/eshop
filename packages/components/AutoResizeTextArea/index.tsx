@@ -25,7 +25,7 @@ const AutoResizeTextarea = React.forwardRef<
         ref={ref}
         rows={1} // starts at 1 row, expands automatically
         onInput={handleInput}
-        className={`w-full border outline-none border-gray-500 bg-[#fdfdfd] px-2 pt-2 pb-4 rounded-md text-gray-800 resize-none ${className}`}
+        className={`w-full border outline-none border-gray-400 bg-[#fdfdfd] px-2 pt-2 pb-4 rounded-md text-gray-800 resize-none ${className}`}
         {...props}
       />
     </div>

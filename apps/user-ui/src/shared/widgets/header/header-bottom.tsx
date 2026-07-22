@@ -29,7 +29,7 @@ const HeaderBottom = () => {
         <div>
           {/* Bottom header button */}
           <button
-            className="flex items-center text-[14.0px] font-bold gap-2.5 text-[#14181A] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 "
+            className="flex items-center text-[14.0px] font-bold gap-2.5 text-[#00000CC] hover:text-[#000000] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 "
             onClick={() => setShowSidebar(true)}
           >
             <Menu size={16} />
@@ -50,7 +50,7 @@ const HeaderBottom = () => {
               className={`flex items-center px-3 py-0 rounded-sm pt-0 pb-0 text-[14.0px] transition-colors ${
                 i.accent
                   ? 'text-[#fab528] font-bold hover:text-[#fab528]'
-                  : 'text-gray-800 font-bold hover:bg-gray-100 '
+                  : 'text-[#000000CC] font-bold hover:text-[#000000]'
               }`}
               href={i.href}
               key={index}
@@ -60,7 +60,7 @@ const HeaderBottom = () => {
           ))}
         </nav>
         {/* </div> */}
-        <div className="flex gap-4 font-medium text-[14.0px] pt-1.5 pb-1.5 text-[#14181A] hover:text-gray-950">
+        <div className="flex gap-4 font-medium text-[14.0px] pt-1.5 pb-1.5 text-[#000000CC] hover:text-[#000000]">
           <span className="cursor-pointer">Sell </span>
           <span className="cursor-pointer">Customer Service</span>
         </div>

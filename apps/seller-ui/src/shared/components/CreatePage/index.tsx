@@ -1048,7 +1048,7 @@ const CreatePage = () => {
         </div>
       )}
       {/* Create product */}
-      <div className="mt-6 flex justify-end gap-3">
+      <div className="mt-6 flex justify-end gap-3 px-8">
         {isChanged && (
           <button
             type="button"

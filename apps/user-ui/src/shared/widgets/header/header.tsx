@@ -25,8 +25,8 @@ import {
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 // import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
-// import { CiUser } from 'react-icons/ci';
-// import { HiOutlineUser } from 'react-icons/hi2';
+import { IoCartOutline } from 'react-icons/io5';
+
 import { TbShoppingCart } from 'react-icons/tb';
 import { FiMapPin } from 'react-icons/fi';
 import { LuMapPin } from 'react-icons/lu';
@@ -399,7 +399,7 @@ const Header = () => {
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fff] z-[110] shadow-lg rounded-md ">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-[0] w-64 bg-[#fff] shadow-[0_0_30px_rgba(0,0,0,0.1)] z-[110] rounded-md ">
                   {/* Arrow pointing up */}
                   {/* <div
                     className="absolute -top-2 right-4 w-0 h-0 
@@ -482,22 +482,11 @@ const Header = () => {
                 href="/cart"
                 className="relative flex items-center justify-center mt-[2px] cursor-pointer"
               >
-                {/* <ShoppingCart
-                  size={20}
-                  strokeWidth={1.8}
-                  className="text-[#5B6265] hover:text-[#14181A]"
-                /> */}
-                {/* <CartIcon strokeWidth={1.5} size={24} color="#fff" /> */}
-                {/* <TbShoppingCart size={18} color="#404040" /> */}
-                {/* <PiShoppingCart
-                  size={20}
-                  color="#404040"
-                  className="stroke-current [&>path]:stroke-[4]"
-                /> */}
+                {/* <PiShoppingCart size={22} /> */}
+                {/* <IoCartOutline size={22} /> */}
                 <CgShoppingCart size={20} color="#404040" />
-
                 {/* {cart?.length > 0 && ( */}
-                <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full bg-[#ffb100] flex items-center justify-center mt-[0px]">
+                <div className="absolute top-[-6px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full border border-white bg-[#ffb100] flex items-center justify-center mt-[0px]">
                   <span className="text-gray-800 font-semibold text-[10px] leading-none">
                     {cart.length > 99 ? '99+' : cart.length}
                   </span>

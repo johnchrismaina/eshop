@@ -801,35 +801,68 @@ export const getAllProducts = async (
       isDeleted: false,
     };
 
-    const orderBy: Prisma.productsOrderByWithRelationInput =
-      type === 'latest'
-        ? { createdAt: 'desc' }
-        : ({ totalSales: 'desc' } as Prisma.productsOrderByWithRelationInput);
+    // Case 1: latest products
+    if (type === 'latest') {
+      const [products, total, top10Products] = await Promise.all([
+        prisma.products.findMany({
+          skip,
+          take: limit,
+          include: { images: true, Shop: true },
+          where: baseFilter,
+          orderBy: { createdAt: 'desc' },
+        }),
+        prisma.products.count({ where: baseFilter }),
+        prisma.products.findMany({
+          take: 10,
+          where: baseFilter,
+          orderBy: { createdAt: 'desc' },
+        }),
+      ]);
+
+      return res.status(200).json({
+        products,
+        top10By: 'latest',
+        top10Products,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      });
+    }
+
+    // Case 2: trending products by total sales
+    const trending = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 10,
+    });
+
+    const productIds = trending.map(t => t.productId);
 
     const [products, total, top10Products] = await Promise.all([
       prisma.products.findMany({
         skip,
         take: limit,
-        include: {
-          images: true,
-          Shop: true,
-        },
+        include: { images: true, Shop: true },
         where: baseFilter,
-        orderBy,
       }),
-
       prisma.products.count({ where: baseFilter }),
       prisma.products.findMany({
-        take: 10,
-        where: baseFilter,
-        orderBy,
+        where: { id: { in: productIds } },
+        include: { images: true, Shop: true },
       }),
     ]);
 
+    // Merge sales counts into product objects
+    const top10WithSales = top10Products.map(p => ({
+      ...p,
+      totalSales: trending.find(t => t.productId === p.id)?._sum.quantity ?? 0,
+    }));
+
     res.status(200).json({
       products,
-      top10By: type === 'latest' ? 'latest' : 'topSales',
-      top10Products,
+      top10By: 'topSales',
+      top10Products: top10WithSales,
       total,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
@@ -838,6 +871,7 @@ export const getAllProducts = async (
     next(error);
   }
 };
+
 
 // Get product details
 export const getProductDetails = async (

@@ -52,6 +52,7 @@ type FormValues = {
   deal_start: Date | null;
   deal_end: Date | null;
   stock: number;
+  total_tickets: number;
   discountCodes: string[];
   enableDeal: boolean;
   // ✅ Add accordions
@@ -94,6 +95,7 @@ const CreatePage = () => {
       deal_start: null,
       deal_end: null,
       stock: undefined,
+      total_tickets: undefined,
       discountCodes: [],
       enableDeal: isDealRoute, // ✅ auto-enable toggle if on /create-deal
     },
@@ -179,6 +181,7 @@ const CreatePage = () => {
   // console.log(categories, subCategoriesData);
 
   //   Create product function
+  // Unified submit function
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
@@ -191,8 +194,15 @@ const CreatePage = () => {
         ),
       };
 
-      await axiosProduct.post('/create-product', payload);
-      router.push('/dashboard/all-products');
+      if (isDealRoute || data.enableDeal) {
+        // 👉 Creating a deal
+        await axiosProduct.post('/create-deal', payload);
+        router.push('/dashboard/all-deals');
+      } else {
+        // 👉 Creating a product
+        await axiosProduct.post('/create-product', payload);
+        router.push('/dashboard/all-products');
+      }
     } catch (error: any) {
       toast.error(error?.response?.data?.message ?? 'Something went wrong');
     } finally {
@@ -768,42 +778,6 @@ const CreatePage = () => {
             )}
           </div>
 
-          {/* Deal toggle */}
-          <div className="mt-6 flex items-center justify-between border border-gray-500 px-2 py-2 rounded-md">
-            <span className="font-semibold text-gray-700">Deals</span>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (images.length < 8) {
-                  setValue('enableDeal', !getValues('enableDeal'));
-                }
-              }}
-              disabled={images.length >= 8}
-              className={`flex items-center justify-center w-9 h-9 rounded-full transition-all transition-500
-                ${
-                  getValues('enableDeal')
-                    ? 'bg-red-200 text-red-700'
-                    : 'bg-green-200 text-green-700'
-                }
-                ${images.length >= 8 ? 'opacity-50 cursor-not-allowed' : ''}
-              `}
-            >
-              {getValues('enableDeal') ? (
-                <XIcon className="h-5 w-5" />
-              ) : (
-                <PlusIcon className="h-5 w-5" />
-              )}
-            </button>
-          </div>
-
-          {images.length >= 8 && (
-            <p className="text-xs text-red-400 mt-1">
-              You’ve reached the maximum of 8 images. Remove one to enable
-              deals.
-            </p>
-          )}
-
           {/* Sale Price (only if deal enabled) */}
           {getValues('enableDeal') && (
             <div className="mt-2">
@@ -833,7 +807,8 @@ const CreatePage = () => {
 
           {/* Conditionally render deal fields */}
           {enableDeal && (
-            <div className="flex flex-col gap-2 mt-3 pb-6 px-2 py-2 bg-gray-200 rounded-md">
+            <div className="flex flex-col gap-2 mt-3 pb-6 px-2 py-2 bg-gray-100 rounded-md">
+              {/* Deal Start Date */}
               <label className="text-sm font-medium text-gray-800 mt-1">
                 Deal Start Date
               </label>
@@ -863,6 +838,7 @@ const CreatePage = () => {
                 </p>
               )}
 
+              {/* Deal End Date */}
               <label className="text-sm font-medium text-gray-800 mt-1">
                 Deal End Date
               </label>
@@ -893,6 +869,34 @@ const CreatePage = () => {
                   {errors.deal_end.message as string}
                 </p>
               )}
+
+              {/* Total Tickets (required for deals) */}
+              <div className="mt-2">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  Total Tickets *
+                </p>
+                <Input
+                  label=""
+                  placeholder="0"
+                  type="number"
+                  className="bg-[#fdfdfd] text-[15px]"
+                  {...register('total_tickets', {
+                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                    min: {
+                      value: 1,
+                      message: 'Total tickets must be at least 1',
+                    },
+                    validate: (value) =>
+                      (typeof value === 'number' && !isNaN(value)) ||
+                      'Only numbers are allowed',
+                  })}
+                />
+                {errors.total_tickets && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.total_tickets.message as string}
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
@@ -920,6 +924,7 @@ const CreatePage = () => {
               </p>
             )}
           </div>
+
           {/* Discount codes */}
           <div className="mt-3">
             <label className="block font-semibold text-gray-700 mb-1">

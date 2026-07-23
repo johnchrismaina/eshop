@@ -63,7 +63,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             ['clean'],
           ],
         }}
-        placeholder="Write a detailed product description here ..."
+        placeholder="Write a detailed product description here..."
         className="bg-transparent border border-gray-700 text-gray-700 rounded-md"
         style={{ minHeight: '250px' }}
       />
@@ -78,6 +78,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           border-color: #444;
           color: #374151;
         }
+        .ql-editor {
+          min-height: 200px;
+          font-size: 14px;   /* 👈 increase font size */
+          line-height: 1.6;  /* 👈 optional for spacing */
+        }
         .ql-picker {
           color: #374151 !important;
         }
@@ -91,7 +96,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           color: #aaa !important;
         }
         .ql-picker-options {
-          background: #333 !important;
+          background: #E2E8F0 !important;
           color: #374151 !important;
         }
         .ql-picker-item {

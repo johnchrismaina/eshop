@@ -8,16 +8,7 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 
-import {
-  Search,
-  Pencil,
-  Trash,
-  Eye,
-  Plus,
-  BarChart,
-  Star,
-  ChevronRight,
-} from 'lucide-react';
+import { Search, Pencil, Trash, Eye, Plus, BarChart, Star } from 'lucide-react';
 
 import Link from 'next/link';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
@@ -70,6 +61,12 @@ const DealList = () => {
       setShowDeleteModal(false);
     },
   });
+
+  const USER_UI_BASE_URL =
+    process.env.NEXT_PUBLIC_USER_UI_BASE_URL || 'http://localhost:3001';
+
+  const SELLER_UI_BASE_URL =
+    process.env.NEXT_PUBLIC_SELLER_UI_BASE_URL || 'http://localhost:3000';
 
   const columns = useMemo(
     () => [
@@ -159,13 +156,15 @@ const DealList = () => {
         cell: ({ row }: any) => (
           <div className="flex gap-4 ">
             <Link
-              href={`/product/${row.original.id}`}
+              // href={`/product/${row.original.id}`}
+              href={`${USER_UI_BASE_URL}/product/${row.original.slug}`}
               className="text-blue-400 hover:text-blue-300 transition"
             >
               <Eye size={18} />
             </Link>
             <Link
-              href={`/product/edit/${row.original.id}`}
+              // href={`/product/edit/${row.original.id}`}
+              href={`${SELLER_UI_BASE_URL}/product/edit/${row.original.slug}`}
               className="text-yellow-400 hover:text-yellow-30 transtion "
             >
               <Pencil size={18} />
@@ -210,7 +209,7 @@ const DealList = () => {
     <div className="w-full min-h-screen p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2l text-white font-semibold">All Deals</h2>
+        <h2 className="text-2l text-gray-700 font-semibold">All Deals</h2>
         <Link
           href="/dashboard/create-deal"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"

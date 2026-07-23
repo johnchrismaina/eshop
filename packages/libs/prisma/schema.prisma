@@ -12,11 +12,11 @@ model images {
   file_id String
   url     String
 
-  // 🔹 Product relation
+  // ✅ Product images
   productId String?   @db.ObjectId
   product   products? @relation("ProductImages", fields: [productId], references: [id])
 
-  // 🔹 Event relation (NEW)
+  // ✅ Deal images
   eventId String? @db.ObjectId
   deal    deals?  @relation("EventImages", fields: [eventId], references: [id])
 }
@@ -130,7 +130,8 @@ model shops {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   products      products[]    @relation("ShopProducts") // one-to-many products
-  deal          deals[]       @relation("ShopDeals") // one-to-many events
+  // deal          deals[]       @relation("ShopDeals") // one-to-many events
+  deals         deals[]       @relation("ShopDeals") // one-to-many events
 
   orders    orders[]
   followers userFollowsShop[]
@@ -198,16 +199,34 @@ model products {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
-  // ✅ New field for coupon codes
+  // ✅ Coupon codes
   discount_codes String[] @default([])
+
+  // ✅ Deal fields (flattened)
+  isDeal            Boolean   @default(false)
+  sale_price        Float?
+  deal_start        DateTime?
+  deal_end          DateTime?
+  total_tickets     Int?
+  available_tickets Int?
+
+  // ✅ Analytics fields
+  views          Int   @default(0)
+  clicks         Int   @default(0)
+  redemptions    Int   @default(0)
+  revenue        Float @default(0)
+  conversionRate Float @default(0)
+  dealRankScore  Float @default(0)
+  totalSales     Int   @default(0)
+  totalAddToCart Int   @default(0)
 
   // Relations
   shopId String   @db.ObjectId
   Shop   shops    @relation("ShopProducts", fields: [shopId], references: [id])
   images images[] @relation("ProductImages")
 
-  // ✅ One-to-one relation with deals
-  deal deals? @relation("ProductDeal")
+  // ✅ Opposite side of ProductDeal
+  deals deals[] @relation("ProductDeal")
 
   @@index([createdAt])
 }
@@ -219,35 +238,37 @@ model deals {
   deal_end          DateTime
   sale_price        Float
   regular_price     Float
-  total_tickets     Int // ✅ original allocation
-  available_tickets Int // ✅ decremented as sales happen
+  total_tickets     Int
+  available_tickets Int
 
-  // ✅ Analytics fields
-  views          Int   @default(0) // how many times viewed
-  clicks         Int   @default(0) // how many times clicked
-  redemptions    Int   @default(0) // count of deal activations
-  revenue        Float @default(0) // total revenue generated
-  conversionRate Float @default(0) // redemptions / views
-  dealRankScore  Float @default(0) // composite score for ranking
-  totalSales     Int   @default(0) // total units sold
-  totalAddToCart Int   @default(0) // total times added to cart
+  // Status
+  status String @default("Active") // Active | Expired | Archived
 
-  // ✅ Enforce 1:1 relation
-  productId String   @unique @db.ObjectId
+  // Analytics
+  views          Int   @default(0)
+  clicks         Int   @default(0)
+  redemptions    Int   @default(0)
+  revenue        Float @default(0)
+  conversionRate Float @default(0)
+  dealRankScore  Float @default(0)
+  totalSales     Int   @default(0)
+  totalAddToCart Int   @default(0)
+
+  // ✅ Relations
+  productId String   @db.ObjectId
   product   products @relation("ProductDeal", fields: [productId], references: [id])
 
-  shopId String   @db.ObjectId
-  Shop   shops    @relation("ShopDeals", fields: [shopId], references: [id])
+  shopId String @db.ObjectId
+  Shop   shops  @relation("ShopDeals", fields: [shopId], references: [id])
+
   images images[] @relation("EventImages")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // ✅ Soft delete fields
+  // Soft delete
   isDeleted Boolean   @default(false)
   deletedAt DateTime?
-
-  @@index([deal_start])
 }
 
 model Deal {

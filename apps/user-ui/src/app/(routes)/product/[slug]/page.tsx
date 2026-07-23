@@ -7,7 +7,7 @@ import ProductDetails from 'packages/components/ProductDetails';
 
 // ✅ Corrected fetch function
 async function fetchProductDetails(slug: string) {
-  console.log('fetchProductDetails called with slug:', slug);
+  // console.log('fetchProductDetails called with slug:', slug);
 
   if (!slug) throw new Error('Slug is undefined');
 

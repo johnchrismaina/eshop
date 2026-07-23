@@ -51,6 +51,7 @@ type Product = {
   sale_price: number;
   deal_start: Date | null;
   deal_end: Date | null;
+  total_tickets: number;
   stock: number;
   discountCodes: string[];
   enableDeal: boolean;
@@ -67,7 +68,7 @@ export default function EditProductPage() {
   const [images, setImages] = useState<string[]>([]);
 
   const pathname = usePathname();
-  const isDealRoute = pathname.includes('create-deal');
+  // const isDealRoute = pathname.includes('create-deal');
 
   // Detect which route we're on
   // const isDeal = pathname.includes('create-deal');
@@ -97,13 +98,15 @@ export default function EditProductPage() {
       video_url: '',
       deal_start: null,
       deal_end: null,
+      total_tickets: undefined,
       stock: undefined,
       discountCodes: [],
-      enableDeal: isDealRoute, // ✅ auto-enable toggle if on /create-deal
+      enableDeal: false,
     },
   });
 
-  const enableDeal = watch('enableDeal');
+  // const enableDeal = watch('enableDeal');
+
   const [openImageModal, setOpenImageModal] = useState(false);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
@@ -127,20 +130,6 @@ export default function EditProductPage() {
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // const options: { value: 'square' | 'portrait'; label: string }[] = [
-  //   { value: 'square', label: 'Square (850 × 850)' },
-  //   { value: 'portrait', label: 'Portrait (765 × 1020)' },
-  // ];
-
-  //   Fetch discount codes
-  const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
-    queryKey: ['shop-discounts'],
-    queryFn: async () => {
-      const res = await axiosProduct.get('/get-discount-codes');
-      return res?.data?.discount_codes || [];
-    },
-  });
-
   const options = [
     { value: 'square', label: 'Square (850 × 850)' },
     { value: 'portrait', label: 'Portrait (765 × 1020)' },
@@ -150,19 +139,32 @@ export default function EditProductPage() {
     async function fetchProduct() {
       const res = await axiosProduct.get(`/get-product/${slug}`);
       const { product } = res.data;
+
       reset({
         ...product,
-        tags: product.tags || [], // ✅ pre-populate as array
-        detailed_description: product.detailed_description || '',
-        video_url: product.video_url || '', // ✅ ensure string
-        regular_price: product.regular_price || 0, // ✅ pre-populate
-        sale_price: product.sale_price || 0, // ✅ pre-populate
-        stock: product.stock || 0, // ✅ pre-populate
+        // ✅ Use product fields directly / Deal fields come directly from product
+        sale_price: product.sale_price || 0,
+        deal_start: product.deal_start ? new Date(product.deal_start) : null,
+        deal_end: product.deal_end ? new Date(product.deal_end) : null,
+        enableDeal: !!product.isDeal, // ✅ check isDeal flag / ✅ toggle deal fields
       });
-      setImages(product.images.map((img: any) => img.url));
+
+      setImages(product.images?.map((img: any) => img.url) || []);
     }
+
     if (slug) fetchProduct();
   }, [slug, reset]);
+
+  const enableDeal = watch('enableDeal');
+
+  //   Fetch discount codes
+  const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
+    queryKey: ['shop-discounts'],
+    queryFn: async () => {
+      const res = await axiosProduct.get('/get-discount-codes');
+      return res?.data?.discount_codes || [];
+    },
+  });
 
   const fetchCategories = async () => {
     const res = await axiosProduct.get('/get-categories');
@@ -533,6 +535,7 @@ export default function EditProductPage() {
               render={({ field }) => (
                 <RichTextEditor
                   id="short-description-editor" // ✅ unique id
+                  key={field.value} // 👈 forces re-render when value changes
                   value={field.value || ''}
                   onChange={field.onChange}
                 />
@@ -691,44 +694,8 @@ export default function EditProductPage() {
             )}
           </div>
 
-          {/* Deal toggle */}
-          <div className="mt-6 flex items-center justify-between border border-gray-500 px-2 py-2 rounded-md">
-            <span className="font-semibold text-gray-700">Deals</span>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (images.length < 8) {
-                  setValue('enableDeal', !getValues('enableDeal'));
-                }
-              }}
-              disabled={images.length >= 8}
-              className={`flex items-center justify-center w-9 h-9 rounded-full transition-all transition-500
-                    ${
-                      getValues('enableDeal')
-                        ? 'bg-red-200 text-red-700'
-                        : 'bg-green-200 text-green-700'
-                    }
-                    ${images.length >= 8 ? 'opacity-50 cursor-not-allowed' : ''}
-                  `}
-            >
-              {getValues('enableDeal') ? (
-                <XIcon className="h-5 w-5" />
-              ) : (
-                <PlusIcon className="h-5 w-5" />
-              )}
-            </button>
-          </div>
-
-          {images.length >= 8 && (
-            <p className="text-xs text-red-400 mt-1">
-              You’ve reached the maximum of 8 images. Remove one to enable
-              deals.
-            </p>
-          )}
-
           {/* Sale Price (only if deal enabled) */}
-          {getValues('enableDeal') && (
+          {enableDeal && (
             <div className="mt-2">
               <p className="text-[15px] font-semibold text-gray-700 py-2">
                 Sale Price <span className="text-xs">(KES)</span>
@@ -754,9 +721,10 @@ export default function EditProductPage() {
             </div>
           )}
 
-          {/* Conditionally render deal fields */}
+          {/* Deal fields */}
           {enableDeal && (
-            <div className="flex flex-col gap-2 mt-3 pb-6 px-2 py-2 bg-gray-200 rounded-md">
+            <div className="flex flex-col gap-2 mt-3 pb-6 px-2 py-2 bg-gray-100 rounded-md">
+              {/* Deal Start Date */}
               <label className="text-sm font-medium text-gray-800 mt-1">
                 Deal Start Date
               </label>
@@ -786,6 +754,7 @@ export default function EditProductPage() {
                 </p>
               )}
 
+              {/* Deal End Date */}
               <label className="text-sm font-medium text-gray-800 mt-1">
                 Deal End Date
               </label>
@@ -816,6 +785,34 @@ export default function EditProductPage() {
                   {errors.deal_end.message as string}
                 </p>
               )}
+
+              {/* Total Tickets (required for deals) */}
+              <div className="mt-2">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  Total Tickets *
+                </p>
+                <Input
+                  label=""
+                  placeholder="0"
+                  type="number"
+                  className="bg-[#fdfdfd] text-[15px]"
+                  {...register('total_tickets', {
+                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                    min: {
+                      value: 1,
+                      message: 'Total tickets must be at least 1',
+                    },
+                    validate: (value) =>
+                      (typeof value === 'number' && !isNaN(value)) ||
+                      'Only numbers are allowed',
+                  })}
+                />
+                {errors.total_tickets && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.total_tickets.message as string}
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
@@ -900,23 +897,16 @@ export default function EditProductPage() {
             control={control}
             rules={{
               required: 'Detailed description is required!',
-              validate: (value) => {
-                const plainText = value
-                  .replace(/<[^>]+>/g, '')
-                  .replace(/&nbsp;/g, ' ')
-                  .trim();
-
-                const wordCount = plainText
-                  ?.split(/\s+/)
-                  .filter((word: string) => word).length;
-
-                return (
-                  wordCount >= 50 || 'Description must be at least 50 words!'
-                );
-              },
+              validate: (value) =>
+                validateWordCount(
+                  value,
+                  100,
+                  'Detailed description must be at least 100 words!'
+                ),
             }}
             render={({ field }) => (
               <RichTextEditor
+                id="detailed-description-editor" // ✅ unique id
                 key={field.value} // 👈 forces re-render when value changes
                 value={field.value || ''}
                 onChange={field.onChange}

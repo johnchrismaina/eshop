@@ -197,15 +197,15 @@ export const createProduct = async (
       tags,
       short_description,
       detailed_description,
-      accordions = [],
+      product_details = {},
       video_url,
       category,
       discountCodes,
       stock,
       regular_price,
       subCategory,
-      customProperties = {},
-      custom_specifications,
+      custom_properties = {},
+      product_specifications = {},
       images = [],
     } = req.body;
 
@@ -243,9 +243,9 @@ export const createProduct = async (
         tags: Array.isArray(tags) ? tags : tags.split(','),
         short_description,
         detailed_description,
-        customProperties,
-        custom_specifications,
-        accordions,
+        custom_properties,
+        product_specifications,
+        product_details,
         category,
         subCategory,
         shopId: req.seller.shops[0].id,
@@ -290,26 +290,31 @@ export const createDeal = async (
 
   try {
     const {
-      productId, // optional: if provided, we promote an existing product
-      title, // required if creating product directly
+      productId,
+      title,
       slug,
       category,
+      subCategory,
       short_description,
+      detailed_description,
+      tags,
+      sizes,
+      colors,
+      custom_properties,
+      product_specifications,
+      product_details,
       stock,
       regular_price = 0,
       sale_price,
       deal_start,
       deal_end,
-      total_tickets,
       images = [],
     } = req.body;
 
-    // ✅ Basic required fields for any deal
-    if (!deal_start || !deal_end || !sale_price || !total_tickets) {
+    if (!deal_start || !deal_end || !sale_price) {
       return next(new ValidationError('Missing required fields'));
     }
 
-    // ✅ Ensure seller is authenticated and has a shop
     if (!req.seller?.id || !req.seller?.shops?.length) {
       return next(
         new AuthError(
@@ -318,7 +323,6 @@ export const createDeal = async (
       );
     }
 
-    // ✅ Validate dates
     const startDate = new Date(deal_start);
     const endDate = new Date(deal_end);
     const now = new Date();
@@ -333,13 +337,6 @@ export const createDeal = async (
       return next(new ValidationError('Start date cannot be after end date'));
     }
 
-    // ✅ Validate tickets
-    const parsedTotalTickets = parseInt(total_tickets);
-    if (isNaN(parsedTotalTickets) || parsedTotalTickets <= 0) {
-      return next(new ValidationError('Invalid total tickets value'));
-    }
-
-    // ✅ Validate sale price
     const parsedSalePrice = parseFloat(sale_price);
     if (isNaN(parsedSalePrice) || parsedSalePrice < 0) {
       return next(new ValidationError('Invalid sale price'));
@@ -348,11 +345,10 @@ export const createDeal = async (
     let product;
 
     if (productId) {
-      // 👉 Flow 1: Promote existing product
+      // Promote existing product
       product = await prisma.products.findUnique({ where: { id: productId } });
       if (!product) return next(new ValidationError('Product not found'));
 
-      // Update product with deal fields
       product = await prisma.products.update({
         where: { id: productId },
         data: {
@@ -360,62 +356,82 @@ export const createDeal = async (
           sale_price: parsedSalePrice,
           deal_start: startDate,
           deal_end: endDate,
-          total_tickets: parsedTotalTickets,
-          available_tickets: parsedTotalTickets,
         },
       });
     } else {
-      // 👉 Flow 2: Create product directly from deal form
+      // Create product directly from deal form
       product = await prisma.products.create({
         data: {
-          // Required product fields
           title,
           slug,
-          category,
-          short_description, // must be provided
+          category:
+            category && category.trim() !== '' ? category : 'Uncategorized',
+          subCategory: subCategory ?? null,
+          short_description:
+            short_description && short_description.trim() !== ''
+              ? short_description
+              : 'No description',
+          detailed_description: detailed_description ?? null,
           stock: parseInt(stock),
           regular_price: parseFloat(regular_price),
-
-          // Deal fields
           isDeal: true,
           sale_price: parsedSalePrice,
           deal_start: startDate,
           deal_end: endDate,
-          total_tickets: parsedTotalTickets,
-          available_tickets: parsedTotalTickets,
-
-          // ✅ Shop relation (use connect, not shopId)
           Shop: { connect: { id: req.seller.shops[0].id } },
-
-          // Optional fields
-          customProperties: req.body.customProperties ?? null,
-
-          // Images
+          tags: tags || [],
+          colors: colors || [],
+          sizes: sizes || [],
+          custom_properties: custom_properties ?? null,
+          product_specifications: product_specifications ?? null,
+          product_details: product_details ?? null,
           images: {
-            create: images.map((img: any) => ({
-              file_id: img.fileId,
-              url: img.file_url,
-            })),
+            create: images
+              .filter((img: any) => img?.fileId && img?.file_url)
+              .map((img: any) => ({
+                file_id: img.fileId,
+                url: img.file_url,
+              })),
           },
         },
       });
     }
 
-    // ✅ Create deal record linked to product
+    // Create deal record linked to product
     const newDeal = await prisma.deals.create({
       data: {
-        productId: product.id, // always link deal to product
-        slug: slug ? slug.trim() + '-deal' : product.slug + '-deal',
+        productId: product.id,
+        slug: product.slug.includes('-deal')
+          ? product.slug
+          : product.slug + '-deal',
         deal_start: startDate,
         deal_end: endDate,
         regular_price: parseFloat(regular_price) || product.regular_price,
         sale_price: parsedSalePrice,
-        total_tickets: parsedTotalTickets,
-        available_tickets: parsedTotalTickets,
         shopId: req.seller.shops[0].id,
+
+        // ✅ required fields
+        category:
+          category && category.trim() !== ''
+            ? category
+            : product.category || 'Uncategorized',
+        short_description:
+          short_description && short_description.trim() !== ''
+            ? short_description
+            : product.short_description || 'No description',
+
+        // snapshot fields
+        subCategory: subCategory ?? product.subCategory ?? null,
+        tags: tags || product.tags || [],
+        colors: colors || product.colors || [],
+        sizes: sizes || product.sizes || [],
+        product_specifications:
+          product_specifications ?? product.product_specifications ?? null,
+        product_details: product_details ?? product.product_details ?? null,
+
         images: {
           create: images
-            .filter((img: any) => img && img.fileId && img.file_url)
+            .filter((img: any) => img?.fileId && img?.file_url)
             .map((img: any) => ({
               file_id: img.fileId,
               url: img.file_url,
@@ -430,7 +446,169 @@ export const createDeal = async (
     return res.status(201).json({ success: true, product, deal: newDeal });
   } catch (error) {
     console.error('💥 Error in createDeal:', error);
-    next(error);
+    return next(error);
+  }
+};
+
+// Update product by slug and sync deal
+export const updateProductBySlug = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { slug } = req.params;
+    const {
+      title,
+      category,
+      subCategory,
+      short_description,
+      detailed_description,
+      tags,
+      sizes,
+      colors,
+      custom_properties,
+      product_specifications,
+      product_details,
+      regular_price,
+      sale_price,
+      deal_start,
+      deal_end,
+      stock,
+      images,
+      enableDeal,
+      video_url,
+      ratings,
+    } = req.body;
+
+    const product = await prisma.products.findUnique({
+      where: { slug },
+      include: { deals: true },
+    });
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Product not found' });
+    }
+
+    // ✅ Update product with all fields
+    const updatedProduct = await prisma.products.update({
+      where: { slug },
+      data: {
+        title,
+        category:
+          category && category.trim() !== ''
+            ? category
+            : product.category || 'Uncategorized', // ✅ always a string
+        subCategory: subCategory ?? product.subCategory ?? null,
+        short_description:
+          short_description && short_description.trim() !== ''
+            ? short_description
+            : product.short_description || 'No description', // ✅ required in deals
+        detailed_description:
+          detailed_description ?? product.detailed_description ?? null,
+        regular_price,
+        sale_price: enableDeal ? sale_price : null,
+        deal_start: enableDeal ? deal_start : null,
+        deal_end: enableDeal ? deal_end : null,
+        isDeal: enableDeal,
+        stock,
+        tags: tags || product.tags || [],
+        colors: colors || product.colors || [],
+        sizes: sizes || product.sizes || [],
+        custom_properties:
+          custom_properties ?? product.custom_properties ?? null,
+        product_specifications:
+          product_specifications ?? product.product_specifications ?? null,
+        product_details: product_details ?? product.product_details ?? null,
+        video_url,
+        ratings,
+        images: {
+          deleteMany: {},
+          create: (images || [])
+            .filter((img: any) => img?.fileId && img?.file_url)
+            .map((img: any) => ({
+              file_id: img.fileId,
+              url: img.file_url,
+            })),
+        },
+      },
+      include: { images: true, deals: true },
+    });
+
+    // ✅ Sync deal table if product is a deal
+    let updatedDeal = null;
+    if (enableDeal) {
+      const activeDeal = product.deals.find(
+        (d) => d.status === 'Active' && (!d.deal_end || d.deal_end > new Date())
+      );
+
+      if (activeDeal) {
+        // Update existing deal
+        updatedDeal = await prisma.deals.update({
+          where: { id: activeDeal.id },
+          data: {
+            sale_price,
+            deal_start,
+            deal_end,
+            regular_price,
+            tags: tags || product.tags || [],
+            colors: colors || product.colors || [],
+            sizes: sizes || product.sizes || [],
+            category:
+              category && category.trim() !== ''
+                ? category
+                : product.category || 'Uncategorized',
+            subCategory: subCategory ?? product.subCategory ?? null,
+            short_description:
+              short_description && short_description.trim() !== ''
+                ? short_description
+                : product.short_description || 'No description',
+            product_specifications:
+              product_specifications ?? product.product_specifications ?? null,
+            product_details: product_details ?? product.product_details ?? null,
+          },
+        });
+      } else {
+        // Create new deal
+        updatedDeal = await prisma.deals.create({
+          data: {
+            productId: product.id,
+            slug: product.slug.includes('-deal')
+              ? product.slug
+              : product.slug + '-deal',
+            deal_start,
+            deal_end,
+            regular_price,
+            sale_price,
+            shopId: product.shopId,
+            tags: tags || [],
+            colors: colors || [],
+            sizes: sizes || [],
+            category:
+              category && category.trim() !== ''
+                ? category
+                : product.category || 'Uncategorized',
+            subCategory: subCategory ?? null,
+            short_description:
+              short_description && short_description.trim() !== ''
+                ? short_description
+                : product.short_description || 'No description',
+            product_specifications: product_specifications ?? null,
+            product_details: product_details ?? null,
+          },
+        });
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      product: updatedProduct,
+      deal: updatedDeal,
+    });
+  } catch (error) {
+    return next(error);
   }
 };
 
@@ -483,17 +661,9 @@ export const updateDeal = async (
   next: NextFunction
 ) => {
   try {
-    const {
-      dealId,
-      productId,
-      sale_price,
-      deal_start,
-      deal_end,
-      total_tickets,
-    } = req.body;
+    const { dealId, productId, sale_price, deal_start, deal_end } = req.body;
 
     const parsedSalePrice = parseFloat(sale_price);
-    const parsedTotalTickets = parseInt(total_tickets);
 
     const [updatedProduct, updatedDeal] = await prisma.$transaction([
       prisma.products.update({
@@ -502,8 +672,6 @@ export const updateDeal = async (
           sale_price: parsedSalePrice,
           deal_start: new Date(deal_start),
           deal_end: new Date(deal_end),
-          total_tickets: parsedTotalTickets,
-          available_tickets: parsedTotalTickets,
         },
       }),
       prisma.deals.update({
@@ -512,8 +680,6 @@ export const updateDeal = async (
           sale_price: parsedSalePrice,
           deal_start: new Date(deal_start),
           deal_end: new Date(deal_end),
-          total_tickets: parsedTotalTickets,
-          available_tickets: parsedTotalTickets,
         },
       }),
     ]);
@@ -531,8 +697,7 @@ export const promoteToDeal = async (
   next: NextFunction
 ) => {
   try {
-    const { productId, sale_price, deal_start, deal_end, total_tickets } =
-      req.body;
+    const { productId, sale_price, deal_start, deal_end } = req.body;
 
     const product = await prisma.products.findUnique({
       where: { id: productId },
@@ -540,7 +705,6 @@ export const promoteToDeal = async (
     if (!product) return next(new ValidationError('Product not found'));
 
     const parsedSalePrice = parseFloat(sale_price);
-    const parsedTotalTickets = parseInt(total_tickets);
 
     const [updatedProduct, newDeal] = await prisma.$transaction([
       prisma.products.update({
@@ -550,20 +714,18 @@ export const promoteToDeal = async (
           sale_price: parsedSalePrice,
           deal_start: new Date(deal_start),
           deal_end: new Date(deal_end),
-          total_tickets: parsedTotalTickets,
-          available_tickets: parsedTotalTickets,
         },
       }),
       prisma.deals.create({
         data: {
           productId,
-          slug: product.slug + '-deal',
+          slug: product.slug.includes('-deal')
+            ? product.slug // ✅ don’t append again
+            : product.slug + '-deal',
           deal_start: new Date(deal_start),
           deal_end: new Date(deal_end),
           regular_price: product.regular_price,
           sale_price: parsedSalePrice,
-          total_tickets: parsedTotalTickets,
-          available_tickets: parsedTotalTickets,
           shopId: product.shopId,
         },
       }),
@@ -599,8 +761,6 @@ export const demoteToProduct = async (
           sale_price: null,
           deal_start: null,
           deal_end: null,
-          total_tickets: null,
-          available_tickets: null,
         },
       }),
       prisma.deals.update({

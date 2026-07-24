@@ -26,6 +26,7 @@ import {
   uploadProductImage,
   getFilteredDeals,
   getProductBySlug,
+  updateProductBySlug,
 } from '../controllers/product.controller';
 import isAuthenticated from '@packages/middleware/isAuthenticated';
 import { upload } from '@packages/middleware/multer';
@@ -59,6 +60,7 @@ router.get('/get-stripe-account', isAuthenticated, isSeller, getStripeAccount);
 router.get('/get-all-products', getAllProducts);
 router.get('/get-all-deals', getAllDeals);
 router.get('/get-product/:slug', getProductDetails);
+router.put('/update-product/:slug', updateProductBySlug);
 router.get('/get-filtered-products', getFilteredProducts);
 router.get('/get-filtered-deals', getFilteredDeals);
 router.get('/get-filtered-shops', getFilteredShops);

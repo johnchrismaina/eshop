@@ -359,7 +359,7 @@ const CreatePage = () => {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#fff] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f7] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
 
         <div className="flex flex-col items-start space-y-2">
@@ -869,34 +869,6 @@ const CreatePage = () => {
                   {errors.deal_end.message as string}
                 </p>
               )}
-
-              {/* Total Tickets (required for deals) */}
-              <div className="mt-2">
-                <p className="text-[15px] font-semibold text-gray-700 py-2">
-                  Total Tickets *
-                </p>
-                <Input
-                  label=""
-                  placeholder="0"
-                  type="number"
-                  className="bg-[#fdfdfd] text-[15px]"
-                  {...register('total_tickets', {
-                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                    min: {
-                      value: 1,
-                      message: 'Total tickets must be at least 1',
-                    },
-                    validate: (value) =>
-                      (typeof value === 'number' && !isNaN(value)) ||
-                      'Only numbers are allowed',
-                  })}
-                />
-                {errors.total_tickets && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.total_tickets.message as string}
-                  </p>
-                )}
-              </div>
             </div>
           )}
 
@@ -960,6 +932,36 @@ const CreatePage = () => {
                     {code.discountType === 'percentage' ? '%' : '$'})
                   </button>
                 ))}
+
+                {/* Total Tickets  */}
+                <div className="mt-2">
+                  <p className="text-[15px] font-semibold text-gray-700 py-2">
+                    Total Tickets
+                  </p>
+                  <Input
+                    label=""
+                    placeholder="0"
+                    type="number"
+                    className="bg-[#fdfdfd] text-[15px]"
+                    {...register('total_tickets', {
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
+                      validate: (value) => {
+                        if (value === undefined) return true; // ✅ allow empty
+                        if (typeof value === 'number' && !isNaN(value)) {
+                          if (value < 1)
+                            return 'Total tickets must be at least 1';
+                          return true;
+                        }
+                        return 'Only numbers are allowed';
+                      },
+                    })}
+                  />
+                  {errors.total_tickets && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.total_tickets.message as string}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>

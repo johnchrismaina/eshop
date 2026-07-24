@@ -86,10 +86,10 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       return next();
     }
 
-    console.log('Decoded role:', req.role);
-    console.log('Attached user:', req.user);
-    console.log('Attached seller:', req.seller);
-    console.log('Attached admin:', req.admin);
+    // console.log('Decoded role:', req.role);
+    // console.log('Attached user:', req.user);
+    // console.log('Attached seller:', req.seller);
+    // console.log('Attached admin:', req.admin);
 
     return next();
   } catch (error) {

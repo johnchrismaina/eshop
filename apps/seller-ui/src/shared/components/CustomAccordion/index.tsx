@@ -18,7 +18,7 @@ const RichTextEditor = dynamic(
 const CustomAccordion = ({ control, errors }: any) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'accordions',
+    name: 'product_details',
   });
 
   return (
@@ -35,7 +35,7 @@ const CustomAccordion = ({ control, errors }: any) => {
                 {/* Title input field */}
                 <div className="flex items-center justify-between gap-2">
                   <Controller
-                    name={`accordions.${index}.title`}
+                    name={`product_details.${index}.title`}
                     control={control}
                     rules={{ required: 'Title is required' }}
                     render={({ field }) => (
@@ -74,7 +74,7 @@ const CustomAccordion = ({ control, errors }: any) => {
                 {/* Content editor */}
                 <DisclosurePanel className="px-4 pt-4 pb-2 text-sm text-gray-200">
                   <Controller
-                    name={`accordions.${index}.content`}
+                    name={`product_details.${index}.content`}
                     control={control}
                     rules={{ required: 'Content is required' }}
                     render={({ field }) => (

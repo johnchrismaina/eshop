@@ -43,7 +43,8 @@ type Product = {
   subCategory: string;
   short_description: string;
   detailed_description: string;
-  custom_specifications: Specification[];
+  custom_properties?: Record<string, string | number | boolean>;
+  product_specifications: Specification[];
   colors: string[];
   sizes: string[];
   video_url?: string;
@@ -56,7 +57,7 @@ type Product = {
   discountCodes: string[];
   enableDeal: boolean;
   // ✅ Add accordions
-  accordions?: {
+  product_details?: {
     title: string;
     content: string;
   }[];
@@ -89,8 +90,8 @@ export default function EditProductPage() {
       regular_price: undefined,
       sale_price: undefined,
       short_description: '',
-      detailed_description: '', // ✅ ensures editor starts with empty string
-      accordions: [], // ✅ initialize accordions array
+      detailed_description: '', // ✅ editor starts empty
+      product_details: [], // ✅ initialize accordions array
       slug: '',
       tags: [], // ✅ always start as an empty array
       category: '',
@@ -102,6 +103,8 @@ export default function EditProductPage() {
       stock: undefined,
       discountCodes: [],
       enableDeal: false,
+      product_specifications: [], // start as empty array
+      custom_properties: {}, // start as empty object
     },
   });
 
@@ -181,9 +184,8 @@ export default function EditProductPage() {
   const selectedCategory = useWatch({ control, name: 'category' });
 
   const onSubmit = async (values: Product) => {
-    await axiosProduct.put(`/get-product/${slug}`, {
+    await axiosProduct.put(`/update-product/${slug}`, {
       ...values,
-      tags: values.tags, // ✅ already array
       images,
     });
     alert('Product updated!');
@@ -243,7 +245,7 @@ export default function EditProductPage() {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#fff] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f7] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
 
         <div className="flex flex-col items-start space-y-2">
@@ -496,12 +498,12 @@ export default function EditProductPage() {
           </div>
 
           {/* Color Selector */}
-          <div className="mt-3 pb-6 border-b border-gray-600">
+          <div className="mt-3 pb-6 border-b border-gray-300">
             <ColorSelector control={control} errors={errors} />
           </div>
 
           {/* Size Selector */}
-          <div className="mt-3 pb-6 border-b border-gray-600">
+          <div className="mt-3 pb-6 border-b border-gray-300">
             <SizeSelector control={control} errors={errors} />
           </div>
 
@@ -597,7 +599,7 @@ export default function EditProductPage() {
                       {...field}
                       className="w-full p-2 text-gray-700 rounded-md border outline-none border-gray-700 bg-transparent appearance-none"
                     >
-                      <option value="" className="bg-gray-100">
+                      <option value="" disabled className="bg-gray-100">
                         Select Category
                       </option>
                       {data?.categories?.map((category: string) => (
@@ -785,34 +787,6 @@ export default function EditProductPage() {
                   {errors.deal_end.message as string}
                 </p>
               )}
-
-              {/* Total Tickets (required for deals) */}
-              <div className="mt-2">
-                <p className="text-[15px] font-semibold text-gray-700 py-2">
-                  Total Tickets *
-                </p>
-                <Input
-                  label=""
-                  placeholder="0"
-                  type="number"
-                  className="bg-[#fdfdfd] text-[15px]"
-                  {...register('total_tickets', {
-                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                    min: {
-                      value: 1,
-                      message: 'Total tickets must be at least 1',
-                    },
-                    validate: (value) =>
-                      (typeof value === 'number' && !isNaN(value)) ||
-                      'Only numbers are allowed',
-                  })}
-                />
-                {errors.total_tickets && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.total_tickets.message as string}
-                  </p>
-                )}
-              </div>
             </div>
           )}
 
@@ -876,6 +850,36 @@ export default function EditProductPage() {
                     {code.discountType === 'percentage' ? '%' : '$'})
                   </button>
                 ))}
+
+                {/* Total Tickets  */}
+                <div className="mt-2">
+                  <p className="text-[15px] font-semibold text-gray-700 py-2">
+                    Total Tickets
+                  </p>
+                  <Input
+                    label=""
+                    placeholder="0"
+                    type="number"
+                    className="bg-[#fdfdfd] text-[15px]"
+                    {...register('total_tickets', {
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
+                      validate: (value) => {
+                        if (value === undefined) return true; // ✅ allow empty
+                        if (typeof value === 'number' && !isNaN(value)) {
+                          if (value < 1)
+                            return 'Total tickets must be at least 1';
+                          return true;
+                        }
+                        return 'Only numbers are allowed';
+                      },
+                    })}
+                  />
+                  {errors.total_tickets && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.total_tickets.message as string}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>

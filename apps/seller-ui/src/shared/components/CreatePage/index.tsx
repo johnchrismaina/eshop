@@ -62,7 +62,7 @@ type FormValues = {
   }[];
 };
 
-const CreatePage = () => {
+const CreatePage = ({ ...props }) => {
   const pathname = usePathname();
   const isDealRoute = pathname.includes('create-deal');
 
@@ -108,6 +108,9 @@ const CreatePage = () => {
   const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
+  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<{ [key: number]: boolean }>({});
+
   const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
   const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
   const [loading, setLoading] = useState(false);
@@ -279,6 +282,16 @@ const CreatePage = () => {
     // setValue('images', updatedImages);
   };
 
+  const handleImageChangeWithLoader = async (
+    file: File | null,
+    idx: number
+  ) => {
+    if (!file) return;
+    setUploading((prev) => ({ ...prev, [idx]: true }));
+    await handleImageChange(file, idx); // your existing upload logic
+    setUploading((prev) => ({ ...prev, [idx]: false }));
+  };
+
   const handleRemoveImage = async (index: number) => {
     try {
       const updatedImages = [...images];
@@ -337,7 +350,7 @@ const CreatePage = () => {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-6 shadow-md rounded-lg text-white"
+      className="w-full mx-auto px-0 py-2 shadow-md rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
@@ -354,27 +367,79 @@ const CreatePage = () => {
         </div>
         {/* Heading */}
         <div className="flex flex-col items-start justify-center">
-          <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
+          <h2 className="text-base font-bold text-gray-800">{title}</h2>
           {/* Breadcrumbs */}
           <Breadcrumbs title={title} />
         </div>
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f7] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f7] px-8 pt-4 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
 
         <div className="flex flex-col items-start space-y-2">
+          {/* Image upload section */}
+          <div className="flex flex-col items-center w-[580px] mx-auto">
+            {/* Main preview */}
+            <div className="w-[500px] mb-6">
+              <div
+                className={`relative w-full ${
+                  aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'
+                }`}
+              >
+                {hoveredImage ? (
+                  <Image
+                    src={hoveredImage}
+                    alt="Product preview"
+                    fill
+                    className="object-cover rounded-lg transition-all duration-300"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
+                    <span className="text-gray-500">Upload product image</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Thumbnails */}
+            <div className="grid grid-cols-4 gap-3 w-full">
+              {images.map((img: UploadedImage | null, index: number) => (
+                <ImagePlaceholder
+                  key={index}
+                  size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
+                  small={index !== 0}
+                  aspect={aspect}
+                  pictureUploadingLoader={uploading[index] ?? false} // ✅ only this slot
+                  images={images}
+                  index={index}
+                  onImageChange={handleImageChangeWithLoader}
+                  onRemove={handleRemoveImage}
+                  setSelectedImage={setHoveredImage}
+                  setOpenImageModal={setOpenImageModal}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Middle column - product details */}
+        <div className="px-4 pb-1 prose prose-sm max-w-none">
           {/* Dropdown */}
+          <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
+            Image Aspect Ratio
+          </label>
           <div
             ref={dropdownRef}
-            className="relative inline-block text-left ml-14 "
+            className="relative inline-block text-left ml-0 pb-3"
+            // className="relative flex flex-col items-start justify-center text-left pb-3 w-[340px]"
           >
             {/* Button */}
             <button
               type="button"
               onClick={() => setOpenAspectRatio(!openAspectRatio)}
-              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[300px] flex justify-between items-center"
+              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
             >
               Aspect Ratio:{' '}
               {aspect === 'square'
@@ -402,53 +467,10 @@ const CreatePage = () => {
             )}
           </div>
           {/* Hint text */}
-          <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
+          {/* <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
             Recommended size: 850×850 for square, 765×1020 for portrait
-          </p>
+          </p> */}
 
-          <div className="flex flex-col items-center w-[580px] mx-auto ">
-            {/* Image upload section */}
-            {/* Main preview */}
-            <div className="w-[500px]">
-              {images?.length > 0 && (
-                <ImagePlaceholder
-                  setOpenImageModal={setOpenImageModal}
-                  size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
-                  small={false}
-                  aspect={aspect} // NEW PROP
-                  images={images}
-                  pictureUploadingLoader={pictureUploadingLoader}
-                  index={0}
-                  onImageChange={handleImageChange}
-                  setSelectedImage={setSelectedImage}
-                  onRemove={handleRemoveImage}
-                />
-              )}
-            </div>
-
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-3 mt-8 w-full">
-              {images.slice(1).map((_, index) => (
-                <ImagePlaceholder
-                  setOpenImageModal={setOpenImageModal}
-                  size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
-                  pictureUploadingLoader={pictureUploadingLoader}
-                  images={images}
-                  key={index}
-                  small
-                  aspect={aspect} // NEW PROP
-                  setSelectedImage={setSelectedImage}
-                  index={index + 1}
-                  onImageChange={handleImageChange}
-                  onRemove={handleRemoveImage}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Middle column - product details */}
-        <div className="px-4 pb-1 prose prose-sm max-w-none">
           {/* Product Title */}
           <div className="w-[500px]">
             <label className="block text-[15px] font-semibold  text-gray-700 mb-1">

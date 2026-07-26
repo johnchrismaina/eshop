@@ -304,7 +304,7 @@ export default function EditProductPage() {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-2 shadow-md rounded-lg text-[#fdfdfd]"
+      className="w-full mx-auto px-0 py-2 shadow-md rounded-lg text-[#fff]"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
@@ -378,7 +378,7 @@ export default function EditProductPage() {
             <button
               type="button"
               onClick={() => setOpenAspectRatio(!openAspectRatio)}
-              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[300px] flex justify-between items-center"
+              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
             >
               Aspect Ratio:{' '}
               {aspect === 'square'

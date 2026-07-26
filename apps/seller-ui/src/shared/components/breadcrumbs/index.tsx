@@ -7,12 +7,12 @@ interface BreadcrumbsProps {
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ title }) => {
   return (
-    <nav aria-label="breadcrumb" className="mb-4">
-      <ol className="flex items-center text-base text-blue-400">
+    <nav aria-label="breadcrumb" className="mb-2">
+      <ol className="flex items-center text-sm text-blue-500">
         <li>
           <Link
             href="/dashboard"
-            className="hover:underline hover:text-blue-500 transition-colors"
+            className="hover:underline hover:text-blue-600 transition-colors"
           >
             Dashboard
           </Link>

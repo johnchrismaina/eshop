@@ -304,7 +304,7 @@ export default function EditProductPage() {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-6 shadow-md rounded-lg text-[#fdfdfd]"
+      className="w-full mx-auto px-0 py-2 shadow-md rounded-lg text-[#fdfdfd]"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
@@ -322,56 +322,16 @@ export default function EditProductPage() {
         {/* Heading */}
         <div className="flex flex-col items-start justify-center">
           {/* <h2 className="text-2xl font-semibold text-gray-800">{title}</h2> */}
-          <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
+          <h2 className="text-base font-bold text-gray-800">{title}</h2>
           {/* Breadcrumbs */}
           <Breadcrumbs title={title} />
         </div>
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f7] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f7] px-8 pt-4 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
         <div className="flex flex-col items-start space-y-2">
-          {/* Dropdown */}
-          <div
-            ref={dropdownRef}
-            className="relative inline-block text-left ml-14 "
-          >
-            {/* Button */}
-            <button
-              type="button"
-              onClick={() => setOpenAspectRatio(!openAspectRatio)}
-              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[300px] flex justify-between items-center"
-            >
-              Aspect Ratio:{' '}
-              {aspect === 'square'
-                ? 'Square (850 × 850)'
-                : 'Portrait (765 × 1020)'}
-              <ChevronDown className="text-gray-600" />
-            </button>
-
-            {/* Dropdown menu */}
-            {openAspectRatio && (
-              <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
-                {options.map((opt) => (
-                  <div
-                    key={opt.value}
-                    onClick={() => {
-                      setAspect(opt.value as 'square' | 'portrait');
-                      setOpenAspectRatio(false);
-                    }}
-                    className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
-                  >
-                    {opt.label}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {/* Hint text */}
-          <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
-            Recommended size: 850×850 for square, 765×1020 for portrait
-          </p>
           {/* Images Section with Preview + Title */}
           <div className="flex flex-col items-center w-[580px] mx-auto">
             {/* Main preview */}
@@ -405,6 +365,51 @@ export default function EditProductPage() {
 
         {/* Middle column - product details */}
         <div className="px-4 pb-1 prose prose-sm max-w-none">
+          {/* Dropdown */}
+          <div
+            ref={dropdownRef}
+            // className="relative inline-block text-left ml-14 "
+            className="relative flex flex-col items-start justify-center text-left pb-3 "
+          >
+            <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
+              Image Aspect Ratio
+            </label>
+            {/* Button */}
+            <button
+              type="button"
+              onClick={() => setOpenAspectRatio(!openAspectRatio)}
+              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[300px] flex justify-between items-center"
+            >
+              Aspect Ratio:{' '}
+              {aspect === 'square'
+                ? 'Square (850 × 850)'
+                : 'Portrait (765 × 1020)'}
+              <ChevronDown className="text-gray-600" />
+            </button>
+
+            {/* Dropdown menu */}
+            {openAspectRatio && (
+              <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
+                {options.map((opt) => (
+                  <div
+                    key={opt.value}
+                    onClick={() => {
+                      setAspect(opt.value as 'square' | 'portrait');
+                      setOpenAspectRatio(false);
+                    }}
+                    className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
+                  >
+                    {opt.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {/* Hint text */}
+          {/* <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
+            Recommended size: 850×850 for square, 765×1020 for portrait
+          </p> */}
+
           {/* Product Title */}
           <div className="w-[500px]">
             <label className="block text-[15px] font-semibold  text-gray-700 mb-1">

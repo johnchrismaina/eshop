@@ -17,17 +17,17 @@ function ZoomImage({
     null
   );
 
-  // Walmart dimensions
-  const lensWidth = 213.642;
-  const lensHeight = 185.256;
-  const panelWidth = 819;
-  const panelHeight = 709;
-  const zoom = panelWidth / lensWidth; // ≈ 3.83
+  // Dimensions for 3× zoom
+  const lensWidth = 234;
+  const lensHeight = 186;
+  const panelWidth = 702;
+  const panelHeight = 558;
+  const zoom = 3;
 
   function handleMouseEnter(event: MouseEvent) {
     const rect = (event.target as HTMLElement).getBoundingClientRect();
     updateImageDetailVisibility('block');
-    updateImageDetailBackgroundImage(src);
+    updateImageDetailBackgroundImage(src, rect);
     updateImageDetailPosition(rect);
   }
 
@@ -48,17 +48,21 @@ function ZoomImage({
 
     setOverlayPos({ x: clampedX, y: clampedY });
 
-    // Use overlay center for zoom panel background position
+    // Overlay top-left corner
+    const overlayLeft = clampedX - lensWidth / 2;
+    const overlayTop = clampedY - lensHeight / 2;
+
     if (imageDetailRef.current) {
-      const new_x = (clampedX / rect.width) * 100;
-      const new_y = (clampedY / rect.height) * 100;
-      imageDetailRef.current.style.backgroundPosition = `${new_x}% ${new_y}%`;
+      // Background offset in pixels (not percentages)
+      const bgX = -(overlayLeft * zoom);
+      const bgY = -(overlayTop * zoom);
+      imageDetailRef.current.style.backgroundPosition = `${bgX}px ${bgY}px`;
     }
   }
 
   function handleMouseLeave() {
     updateImageDetailVisibility('none');
-    updateImageDetailBackgroundImage('');
+    updateImageDetailBackgroundImage('', null);
     setOverlayPos(null);
   }
 
@@ -66,7 +70,7 @@ function ZoomImage({
     if (imageDetailRef.current) {
       imageDetailRef.current.style.left =
         imageBoxRect.left + imageBoxRect.width + 'px';
-      imageDetailRef.current.style.top = imageBoxRect.top - 200 + 'px'; // move panel higher by 50px
+      imageDetailRef.current.style.top = imageBoxRect.top - 50 + 'px'; // adjust vertical offset
     }
   }
 
@@ -76,10 +80,15 @@ function ZoomImage({
     }
   }
 
-  function updateImageDetailBackgroundImage(src: string) {
-    if (imageDetailRef.current) {
+  function updateImageDetailBackgroundImage(src: string, rect: DOMRect | null) {
+    if (imageDetailRef.current && src) {
       imageDetailRef.current.style.backgroundImage = `url(${src})`;
-      imageDetailRef.current.style.backgroundSize = `${zoom * 100}%`; // proportional zoom
+      if (rect) {
+        // Scale background to actual image size × zoom
+        imageDetailRef.current.style.backgroundSize = `${rect.width * zoom}px ${
+          rect.height * zoom
+        }px`;
+      }
     }
   }
 
@@ -100,7 +109,7 @@ function ZoomImage({
 
   return (
     <div className="zoom-image">
-      <div className="image-box bg-blue-500" ref={imageBoxRef}>
+      <div className="image-box" ref={imageBoxRef}>
         <img src={src} alt={alt ?? ''} {...rest} />
         {overlayPos && (
           <div

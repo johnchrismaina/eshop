@@ -203,6 +203,8 @@ const CreatePage = () => {
         await axiosProduct.post('/create-product', payload);
         router.push('/dashboard/all-products');
       }
+
+      console.log('➡️ Submitting images:', payload.images);
     } catch (error: any) {
       toast.error(error?.response?.data?.message ?? 'Something went wrong');
     } finally {

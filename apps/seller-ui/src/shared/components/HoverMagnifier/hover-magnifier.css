@@ -1,0 +1,28 @@
+.zoom-image {
+  position: relative;
+  display: inline-block;
+}
+
+.image-box {
+  position: relative;
+}
+
+.image-box img {
+  width: 600px; /* product image size */
+  border: 1px solid #ccc;
+}
+
+.lens-overlay {
+  position: absolute;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.3); /* translucent */
+  pointer-events: none;
+}
+
+.image-detail {
+  display: none;
+  position: absolute;
+  border: 1px solid #ccc;
+  background-repeat: no-repeat;
+  z-index: 1000;
+}

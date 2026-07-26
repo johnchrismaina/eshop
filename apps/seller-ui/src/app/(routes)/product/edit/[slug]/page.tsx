@@ -1,8 +1,8 @@
 'use client';
-import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
+// import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import CustomSpecifications from 'packages/components/custom-specifications';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'next/navigation';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
@@ -25,6 +25,10 @@ import CustomAccordion from 'apps/seller-ui/src/shared/components/CustomAccordio
 import CustomProperties from 'packages/components/custom-properties';
 import SizeSelector from 'packages/components/size-selector';
 import ColorSelector from 'packages/components/color-selector';
+import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
+import ImagePlaceholderPreview from 'apps/seller-ui/src/shared/components/ImagePlaceholder';
+import HoverMagnifier from 'apps/seller-ui/src/shared/components/HoverMagnifier/HoverMagnifier';
+import ZoomImage from 'apps/seller-ui/src/shared/components/HoverMagnifier/HoverMagnifier';
 
 const RichTextEditor = dynamic(
   () => import('packages/components/rich-text-editor'),
@@ -33,10 +37,16 @@ const RichTextEditor = dynamic(
 
 type Specification = { name: string; value: string };
 
+// Backend shape
+type ProductImage = {
+  file_id: string;
+  url: string;
+};
+
 type Product = {
   id: string;
   title: string;
-  images: string[];
+  images: ProductImage[];
   tags: string[]; // ✅ array instead of string
   slug: string;
   category: string;
@@ -63,10 +73,29 @@ type Product = {
   }[];
 };
 
+// Frontend form shape
+// type FormImage = {
+//   fileId: string;
+//   file_url: string;
+// };
+
+type FormImage = {
+  fileId?: string;
+  file_url: string; // always present
+};
+
+type FormProduct = Omit<Product, 'images'> & {
+  images: FormImage[];
+};
+
 export default function EditProductPage() {
   const { slug } = useParams(); // get slug from URL
   // const { register, control, handleSubmit, reset } = useForm<Product>();
-  const [images, setImages] = useState<string[]>([]);
+  // const [images, setImages] = useState<string[]>([]);
+  // const [images, setImages] = useState<FormImage[]>([]);
+  const [images, setImages] = useState<FormImage[]>([]);
+
+  const [product, setProduct] = useState<Product | null>(null);
 
   const pathname = usePathname();
   // const isDealRoute = pathname.includes('create-deal');
@@ -79,21 +108,21 @@ export default function EditProductPage() {
     register,
     control,
     setValue,
-    getValues, // ✅ add this
+    getValues,
     watch,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Product>({
+  } = useForm<FormProduct>({
     defaultValues: {
       title: '',
       regular_price: undefined,
       sale_price: undefined,
       short_description: '',
-      detailed_description: '', // ✅ editor starts empty
-      product_details: [], // ✅ initialize accordions array
+      detailed_description: '',
+      product_details: [],
       slug: '',
-      tags: [], // ✅ always start as an empty array
+      tags: [],
       category: '',
       subCategory: '',
       video_url: '',
@@ -103,8 +132,10 @@ export default function EditProductPage() {
       stock: undefined,
       discountCodes: [],
       enableDeal: false,
-      product_specifications: [], // start as empty array
-      custom_properties: {}, // start as empty object
+      product_specifications: [],
+      custom_properties: {},
+      // images: [], // start empty, populate via reset
+      images: [] as FormImage[], // ✅ explicitly typed
     },
   });
 
@@ -115,6 +146,8 @@ export default function EditProductPage() {
   const [selectedImage, setSelectedImage] = useState('');
   const [processing, setProcessing] = useState(false);
   const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
+
+  const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -138,37 +171,6 @@ export default function EditProductPage() {
     { value: 'portrait', label: 'Portrait (765 × 1020)' },
   ];
 
-  useEffect(() => {
-    async function fetchProduct() {
-      const res = await axiosProduct.get(`/get-product/${slug}`);
-      const { product } = res.data;
-
-      reset({
-        ...product,
-        // ✅ Use product fields directly / Deal fields come directly from product
-        sale_price: product.sale_price || 0,
-        deal_start: product.deal_start ? new Date(product.deal_start) : null,
-        deal_end: product.deal_end ? new Date(product.deal_end) : null,
-        enableDeal: !!product.isDeal, // ✅ check isDeal flag / ✅ toggle deal fields
-      });
-
-      setImages(product.images?.map((img: any) => img.url) || []);
-    }
-
-    if (slug) fetchProduct();
-  }, [slug, reset]);
-
-  const enableDeal = watch('enableDeal');
-
-  //   Fetch discount codes
-  const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
-    queryKey: ['shop-discounts'],
-    queryFn: async () => {
-      const res = await axiosProduct.get('/get-discount-codes');
-      return res?.data?.discount_codes || [];
-    },
-  });
-
   const fetchCategories = async () => {
     const res = await axiosProduct.get('/get-categories');
     return res.data;
@@ -183,24 +185,56 @@ export default function EditProductPage() {
   // Watch the selected category (pre-populated from productDetails)
   const selectedCategory = useWatch({ control, name: 'category' });
 
-  const onSubmit = async (values: Product) => {
-    await axiosProduct.put(`/update-product/${slug}`, {
-      ...values,
-      images,
-    });
-    alert('Product updated!');
-  };
+  useEffect(() => {
+    async function fetchProduct() {
+      const res = await axiosProduct.get(`/get-product/${slug}`);
+      const { product } = res.data;
+
+      // store product in state
+      setProduct(product);
+
+      // map backend images into FormImage[]
+      const mappedImages = product.images.map((img: ProductImage) => {
+        console.log('Fetched image from backend:', img.url);
+        return {
+          fileId: img.file_id,
+          file_url: img.url,
+        };
+      });
+
+      // reset form with product data
+      reset({
+        ...product,
+        sale_price: product.sale_price || 0,
+        deal_start: product.deal_start ? new Date(product.deal_start) : null,
+        deal_end: product.deal_end ? new Date(product.deal_end) : null,
+        enableDeal: !!product.isDeal,
+        images: mappedImages,
+      });
+
+      // ✅ sync local state
+      setImages(mappedImages);
+      console.log('Edit page images state after sync:', mappedImages);
+    }
+
+    if (slug) fetchProduct();
+  }, [slug, reset]);
+
+  const enableDeal = watch('enableDeal');
 
   const handleImageChange = (file: File | null, index: number) => {
     if (!file) return;
-    const newImages = [...images];
-    newImages[index] = URL.createObjectURL(file); // preview
-    setImages(newImages);
+    const currentImages = getValues('images'); // FormImage[]
+    const newImages = [...currentImages];
+    newImages[index] = {
+      file_url: URL.createObjectURL(file), // preview URL
+    };
+    setValue('images', newImages); // ✅ update form state
   };
 
-  const handleRemoveImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
-  };
+  // const handleRemoveImage = (index: number) => {
+  //   setImages(images.filter((_, i) => i !== index));
+  // };
 
   const applyTransformation = async (transformation: string) => {
     if (!selectedImage || processing) return;
@@ -216,6 +250,57 @@ export default function EditProductPage() {
       setProcessing(false);
     }
   };
+
+  const handleRemoveImage = (index: number) => {
+    const currentImages = getValues('images');
+    const image = currentImages[index];
+
+    // Only push if fileId is a string
+    setRemovedImageIds((prev) => [
+      ...prev,
+      ...(image?.fileId ? [image.fileId] : []),
+    ]);
+
+    setValue(
+      'images',
+      currentImages.filter((_, i) => i !== index)
+    );
+  };
+
+  //   Fetch discount codes
+  const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
+    queryKey: ['shop-discounts'],
+    queryFn: async () => {
+      const res = await axiosProduct.get('/get-discount-codes');
+      return res?.data?.discount_codes || [];
+    },
+  });
+
+  // Accept FormProduct values
+  const onSubmit: SubmitHandler<FormProduct> = async (values) => {
+    // Normalize images into backend shape
+    const normalizedImages = values.images.map((img) => ({
+      fileId: img.fileId, // keep fileId for persisted images
+      file_url: img.file_url, // preview or existing URL
+    }));
+
+    // Build payload for backend
+    const payload = {
+      ...values,
+      images: normalizedImages,
+      removedImageIds, // ✅ send IDs of deleted images
+    };
+
+    try {
+      await axiosProduct.put(`/update-product/${slug}`, payload);
+      alert('Product updated!');
+    } catch (err) {
+      console.error('💥 Error updating product:', err);
+      alert('Failed to update product');
+    }
+  };
+
+  console.log('Edit page images state:', images);
 
   return (
     <form
@@ -234,7 +319,6 @@ export default function EditProductPage() {
             <span className="font-medium ">All Products</span>
           </button>
         </div>
-
         {/* Heading */}
         <div className="flex flex-col items-start justify-center">
           {/* <h2 className="text-2xl font-semibold text-gray-800">{title}</h2> */}
@@ -247,7 +331,6 @@ export default function EditProductPage() {
       {/* Content layout */}
       <div className="w-full bg-[#f5f5f7] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
-
         <div className="flex flex-col items-start space-y-2">
           {/* Dropdown */}
           <div
@@ -289,76 +372,29 @@ export default function EditProductPage() {
           <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
             Recommended size: 850×850 for square, 765×1020 for portrait
           </p>
-
           {/* Images Section with Preview + Title */}
-          <div className="flex flex-col items-center w-[580px] mx-auto ">
-            {/* Image upload section */}
+          <div className="flex flex-col items-center w-[580px] mx-auto">
             {/* Main preview */}
-            <div className="w-[500px]">
+            <div className="w-full">
               {images?.length > 0 && (
-                <div className="mb-4">
-                  <img
-                    src={images[0]}
-                    alt="Main product image"
-                    className="w-full h-auto border rounded"
-                  />
-                  <p className="text-sm text-gray-300 p-2">
-                    Main Image (slug: {slug})
-                  </p>
-                  <ImagePlaceholder
-                    size="765 x 850"
-                    small={false}
-                    images={images}
-                    pictureUploadingLoader={false}
-                    index={0}
-                    onImageChange={handleImageChange}
-                    onRemove={handleRemoveImage}
-                    setOpenImageModal={() => {}}
-                    setSelectedImage={() => {}}
-                  />
-                </div>
+                <ZoomImage src={images[0].file_url} alt="Product preview" />
               )}
-
-              <div className="grid grid-cols-2 gap-3 mt-4">
-                {images.slice(1).map((img, index) => (
-                  <div key={index} className="mb-4">
-                    <img
-                      src={img}
-                      alt={`Product image ${index + 1}`}
-                      className="w-full h-auto border rounded"
-                    />
-                    <p className="text-sm text-gray-500 mt-1">
-                      Image {index + 1}
-                    </p>
-                    <ImagePlaceholder
-                      size="765 x 850"
-                      small
-                      images={images}
-                      pictureUploadingLoader={false}
-                      index={index + 1}
-                      onImageChange={handleImageChange}
-                      onRemove={handleRemoveImage}
-                      setOpenImageModal={() => {}}
-                      setSelectedImage={() => {}}
-                    />
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Thumbnails */}
             <div className="grid grid-cols-4 gap-3 mt-8 w-full">
-              {images.slice(1).map((_, index) => (
+              {images.slice(1).map((img, index) => (
                 <ImagePlaceholder
                   setOpenImageModal={setOpenImageModal}
                   size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
                   pictureUploadingLoader={pictureUploadingLoader}
-                  images={images}
+                  // ✅ pass array of URLs
+                  images={images.map((i) => i.file_url)}
                   key={index}
                   small
-                  aspect={aspect} // NEW PROP
+                  aspect={aspect}
                   setSelectedImage={setSelectedImage}
-                  index={index + 1}
+                  index={index + 1} // offset by 1 since we sliced
                   onImageChange={handleImageChange}
                   onRemove={handleRemoveImage}
                 />
@@ -576,7 +612,6 @@ export default function EditProductPage() {
             )}
           </div>
         </div>
-
         {/* Right column - form inputs */}
         <div className="bg-[#fff] border-l border-gray-200 w-[244px] px-5 py-0 rounded-none ">
           {/* Category */}

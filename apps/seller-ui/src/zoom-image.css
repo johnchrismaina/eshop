@@ -1,0 +1,20 @@
+.zoom-image {
+  position: relative;
+  display: inline-block;
+}
+
+.image-box img {
+  width: 600px; /* product image size */
+  border: 1px solid #ccc;
+}
+
+.image-detail {
+  display: none;
+  position: absolute;
+  width: 600px; /* zoom panel size */
+  height: 600px;
+  border: 1px solid #ccc;
+  background-repeat: no-repeat;
+  background-size: 1000%; /* 10× zoom */
+  z-index: 1000;
+}

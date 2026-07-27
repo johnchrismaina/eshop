@@ -239,7 +239,7 @@ const Header = () => {
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
         className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
-          scrolled ? 'shadow-none' : 'shadow-none'
+          scrolled ? 'shadow-sm' : 'shadow-none'
         }`}
       >
         <div className="w-[1200px] mx-auto pt-1.5 pb-1.5 grid grid-cols-[1fr_300px] items-center justify-start gap-4 ">

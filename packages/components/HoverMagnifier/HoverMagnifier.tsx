@@ -8,7 +8,7 @@ interface ZoomImageProps {
 
 function ZoomImage({
   src,
-  alt,
+  alt = 'Product image',
   ...rest
 }: ZoomImageProps & React.HTMLProps<HTMLImageElement>) {
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
@@ -105,12 +105,12 @@ function ZoomImage({
       box.removeEventListener('mousemove', handleMouseMove);
       box.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, []);
+  }, [src]);
 
   return (
     <div className="zoom-image">
       <div className="image-box" ref={imageBoxRef}>
-        <img src={src} alt={alt ?? ''} {...rest} />
+        <img src={src} alt={alt} {...rest} />
         {overlayPos && (
           <div
             className="lens-overlay"

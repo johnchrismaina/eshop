@@ -8,7 +8,15 @@ import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import Input from 'packages/components/input';
-import { ArrowLeft, ChevronDown, PlusIcon, Wand, X, XIcon } from 'lucide-react';
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronLeft,
+  PlusIcon,
+  Wand,
+  X,
+  XIcon,
+} from 'lucide-react';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { useWatch } from 'react-hook-form';
@@ -27,8 +35,8 @@ import SizeSelector from 'packages/components/size-selector';
 import ColorSelector from 'packages/components/color-selector';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import ImagePlaceholderPreview from 'apps/seller-ui/src/shared/components/ImagePlaceholder';
-import HoverMagnifier from 'apps/seller-ui/src/shared/components/HoverMagnifier/HoverMagnifier';
-import ZoomImage from 'apps/seller-ui/src/shared/components/HoverMagnifier/HoverMagnifier';
+import HoverMagnifier from 'packages/components/HoverMagnifier/HoverMagnifier';
+import ZoomImage from 'packages/components/HoverMagnifier/HoverMagnifier';
 
 const RichTextEditor = dynamic(
   () => import('packages/components/rich-text-editor'),
@@ -42,6 +50,11 @@ type ProductImage = {
   file_id: string;
   url: string;
 };
+
+interface UploadedImage {
+  fileId: string;
+  file_url: string;
+}
 
 type Product = {
   id: string;
@@ -84,16 +97,21 @@ type FormImage = {
   file_url: string; // always present
 };
 
+// type FormProduct = Omit<Product, 'images'> & {
+//   images: FormImage[];
+// };
+
 type FormProduct = Omit<Product, 'images'> & {
-  images: FormImage[];
+  images: (FormImage | null)[];
 };
 
 export default function EditProductPage() {
   const { slug } = useParams(); // get slug from URL
   // const { register, control, handleSubmit, reset } = useForm<Product>();
   // const [images, setImages] = useState<string[]>([]);
+
   // const [images, setImages] = useState<FormImage[]>([]);
-  const [images, setImages] = useState<FormImage[]>([]);
+  const [images, setImages] = useState<(FormImage | null)[]>([]);
 
   const [product, setProduct] = useState<Product | null>(null);
 
@@ -135,17 +153,40 @@ export default function EditProductPage() {
       product_specifications: [],
       custom_properties: {},
       // images: [], // start empty, populate via reset
-      images: [] as FormImage[], // ✅ explicitly typed
+      // images: [] as FormImage[], // ✅ explicitly typed
+      images: [] as (FormImage | null)[], // ✅ explicitly typed
     },
   });
 
-  // const enableDeal = watch('enableDeal');
+  const enableDeal = watch('enableDeal');
 
   const [openImageModal, setOpenImageModal] = useState(false);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
   const [processing, setProcessing] = useState(false);
   const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
+
+  const uploadedImages: (UploadedImage | null)[] = images.map((img) =>
+    img ? { fileId: img.fileId ?? '', file_url: img.file_url } : null
+  );
+
+  // const [hoveredImage, setHoveredImage] = useState<string | null>(
+  //   images[0]?.file_url ?? null
+  // );
+
+  const [hoveredImage, setHoveredImage] = useState<string | null>(
+    images[0]?.file_url ?? null
+  );
+
+  useEffect(() => {
+    if (!images[0]?.file_url) {
+      // find the next available image
+      const nextImage = images.find((img) => img?.file_url)?.file_url ?? null;
+      setHoveredImage(nextImage);
+    }
+  }, [images]);
+
+  // const [hoveredImage, setHoveredImage] = useState<string | null>(null);
 
   const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
 
@@ -180,6 +221,7 @@ export default function EditProductPage() {
     queryKey: ['categories'],
     queryFn: fetchCategories,
   });
+
   console.log(new Date().toLocaleString(), 'Fetched categories:', data);
 
   // Watch the selected category (pre-populated from productDetails)
@@ -194,13 +236,21 @@ export default function EditProductPage() {
       setProduct(product);
 
       // map backend images into FormImage[]
-      const mappedImages = product.images.map((img: ProductImage) => {
+      let mappedImages = product.images.map((img: ProductImage) => {
         console.log('Fetched image from backend:', img.url);
         return {
           fileId: img.file_id,
           file_url: img.url,
         };
       });
+
+      // ✅ Always ensure one trailing empty slot if under 8
+      if (
+        mappedImages.length < 8 &&
+        mappedImages[mappedImages.length - 1] !== null
+      ) {
+        mappedImages.push(null);
+      }
 
       // reset form with product data
       reset({
@@ -212,7 +262,7 @@ export default function EditProductPage() {
         images: mappedImages,
       });
 
-      // ✅ sync local state
+      // ✅ sync local state with trailing empty slot
       setImages(mappedImages);
       console.log('Edit page images state after sync:', mappedImages);
     }
@@ -220,21 +270,55 @@ export default function EditProductPage() {
     if (slug) fetchProduct();
   }, [slug, reset]);
 
-  const enableDeal = watch('enableDeal');
-
   const handleImageChange = (file: File | null, index: number) => {
-    if (!file) return;
-    const currentImages = getValues('images'); // FormImage[]
-    const newImages = [...currentImages];
-    newImages[index] = {
-      file_url: URL.createObjectURL(file), // preview URL
-    };
-    setValue('images', newImages); // ✅ update form state
+    const currentImages = [...images];
+
+    if (file) {
+      // Replace or insert at index
+      const newImage: FormImage = {
+        fileId: undefined, // new uploads don’t have an ID yet
+        file_url: URL.createObjectURL(file),
+      };
+      currentImages[index] = newImage;
+    } else {
+      // Clear slot
+      currentImages[index] = null;
+    }
+
+    // ✅ Always ensure one trailing empty slot if under 8
+    if (
+      currentImages.length < 8 &&
+      currentImages[currentImages.length - 1] !== null
+    ) {
+      currentImages.push(null);
+    }
+
+    setImages(currentImages);
+    setValue('images', currentImages);
   };
 
-  // const handleRemoveImage = (index: number) => {
-  //   setImages(images.filter((_, i) => i !== index));
-  // };
+  const handleRemoveImage = (index: number) => {
+    const currentImages = images; // same source of truth handleImageChange uses
+    const image = currentImages[index];
+
+    setRemovedImageIds((prev) => [
+      ...prev,
+      ...(image?.fileId ? [image.fileId] : []),
+    ]);
+
+    const updatedImages = currentImages.filter((_, i) => i !== index);
+
+    // Keep a trailing empty slot for uploading, same rule as handleImageChange
+    if (
+      updatedImages.length < 8 &&
+      updatedImages[updatedImages.length - 1] !== null
+    ) {
+      updatedImages.push(null);
+    }
+
+    setImages(updatedImages);
+    setValue('images', updatedImages);
+  };
 
   const applyTransformation = async (transformation: string) => {
     if (!selectedImage || processing) return;
@@ -251,22 +335,6 @@ export default function EditProductPage() {
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    const currentImages = getValues('images');
-    const image = currentImages[index];
-
-    // Only push if fileId is a string
-    setRemovedImageIds((prev) => [
-      ...prev,
-      ...(image?.fileId ? [image.fileId] : []),
-    ]);
-
-    setValue(
-      'images',
-      currentImages.filter((_, i) => i !== index)
-    );
-  };
-
   //   Fetch discount codes
   const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
     queryKey: ['shop-discounts'],
@@ -279,16 +347,18 @@ export default function EditProductPage() {
   // Accept FormProduct values
   const onSubmit: SubmitHandler<FormProduct> = async (values) => {
     // Normalize images into backend shape
-    const normalizedImages = values.images.map((img) => ({
-      fileId: img.fileId, // keep fileId for persisted images
-      file_url: img.file_url, // preview or existing URL
-    }));
+    const normalizedImages = values.images
+      .filter((img): img is FormImage => img !== null) // ✅ remove nulls
+      .map((img) => ({
+        fileId: img.fileId, // keep fileId for persisted images
+        file_url: img.file_url, // preview or existing URL
+      }));
 
     // Build payload for backend
     const payload = {
       ...values,
-      images: normalizedImages,
-      removedImageIds, // ✅ send IDs of deleted images
+      images: normalizedImages, // ✅ only valid images
+      removedImageIds,
     };
 
     try {
@@ -304,59 +374,69 @@ export default function EditProductPage() {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-2 shadow-md rounded-lg text-[#fff]"
+      className="w-full mx-auto px-0 py-0 shadow-md rounded-lg text-[#fff]"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
-      <div className="grid grid-cols-[200px_minmax(300px,1fr)] gap-4 border-b border-gray-300">
-        {/* Dashboard button */}
-        <div className="w-full px-8 py-2">
+      <div className="grid grid-cols-[500px_minmax(300px,1fr)] gap-4 py-0 bg-[#f5f5f7] border-b border-gray-300">
+        {/* Dashboard button & Heading */}
+        <div className="flex items-center justify-start gap-6 w-full px-8 py-2">
           <button
-            onClick={() => router.push('/dashboard/all-products')}
+            onClick={() => router.push('/dashboard')}
             className="flex items-center gap-1 text-gray-800 bg-gray-200 hover:bg-gray-300 transition px-4 py-2 rounded-full text-sm"
           >
-            <ArrowLeft size={20} />
-            <span className="font-medium ">All Products</span>
+            <ChevronLeft size={20} />
+            <span className="font-medium ">Dashboard</span>
           </button>
-        </div>
-        {/* Heading */}
-        <div className="flex flex-col items-start justify-center">
-          {/* <h2 className="text-2xl font-semibold text-gray-800">{title}</h2> */}
-          <h2 className="text-base font-bold text-gray-800">{title}</h2>
-          {/* Breadcrumbs */}
-          <Breadcrumbs title={title} />
+          <h2 className="text-[18px] font-bold text-gray-800">{title}</h2>
         </div>
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f7] px-8 pt-4 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f5] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
         <div className="flex flex-col items-start space-y-2">
           {/* Images Section with Preview + Title */}
           <div className="flex flex-col items-center w-[580px] mx-auto">
             {/* Main preview */}
-            <div className="w-full">
-              {images?.length > 0 && (
-                <ZoomImage src={images[0].file_url} alt="Product preview" />
-              )}
+            <div className="w-[500px] mb-6">
+              <div
+                className={`relative w-full ${
+                  aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'
+                }`}
+              >
+                {hoveredImage ? (
+                  <Image
+                    src={hoveredImage}
+                    alt="Product preview"
+                    fill
+                    className="object-cover rounded-lg transition-all duration-300"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
+                    <span className="text-gray-500">Upload product image</span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Thumbnails */}
             <div className="grid grid-cols-4 gap-3 mt-8 w-full">
-              {images.slice(1).map((img, index) => (
+              {uploadedImages.map((img, index) => (
                 <ImagePlaceholder
-                  setOpenImageModal={setOpenImageModal}
-                  size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
-                  pictureUploadingLoader={pictureUploadingLoader}
-                  // ✅ pass array of URLs
-                  images={images.map((i) => i.file_url)}
                   key={index}
-                  small
+                  size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
+                  small={index !== 0}
                   aspect={aspect}
-                  setSelectedImage={setSelectedImage}
-                  index={index + 1} // offset by 1 since we sliced
+                  pictureUploadingLoader={pictureUploadingLoader}
+                  images={uploadedImages}
+                  index={index}
                   onImageChange={handleImageChange}
                   onRemove={handleRemoveImage}
+                  setSelectedImage={setHoveredImage} // ✅ updates main preview
+                  setOpenImageModal={setOpenImageModal}
+                  defaultImage={img?.file_url ?? null} // ✅ show thumbnail image
                 />
               ))}
             </div>

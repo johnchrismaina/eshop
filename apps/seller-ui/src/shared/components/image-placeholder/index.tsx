@@ -1,4 +1,4 @@
-import { Pencil, WandSparkles, X } from 'lucide-react';
+import { Pencil, Trash2, WandSparkles, X } from 'lucide-react';
 import Image from 'next/image';
 import Spinner from 'packages/components/spinner';
 import React, { useState, useEffect } from 'react';
@@ -33,26 +33,35 @@ const ImagePlaceholder = ({
   setOpenImageModal: (openImageModal: boolean) => void;
   index: number;
 }) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(defaultImage);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLocalPreview(null);
+  }, [images[index]?.file_url]);
+
+  const imagePreview = images[index]?.file_url ?? localPreview;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
+      setLocalPreview(URL.createObjectURL(file));
       onImageChange(file, index);
     }
   };
 
-  // Sync main preview with first uploaded image
   useEffect(() => {
-    if (index === 0 && images && images[0] && images[0].file_url) {
-      setSelectedImage(images[0].file_url);
+    if (index === 0) {
+      if (images && images[0] && images[0].file_url) {
+        setSelectedImage(images[0].file_url);
+      } else {
+        setSelectedImage(''); // or null, depending on setSelectedImage's type
+      }
     }
   }, [images, index, setSelectedImage]);
 
   return (
     <div
-      className={`relative w-full cursor-pointer bg-gray-200 border rounded-none flex flex-col justify-center items-center
+      className={`relative w-full cursor-pointer bg-gray-200 border rounded-lg flex flex-col justify-center items-center
         ${aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'}
       `}
       onMouseEnter={() => {
@@ -75,13 +84,14 @@ const ImagePlaceholder = ({
               type="button"
               disabled={pictureUploadingLoader}
               onClick={() => onRemove?.(index)}
-              className="p-2 !rounded bg-red-600 shadow-lg"
+              className="p-2 !rounded bg-slate-700/80 hover:bg-slate-600 shadow-lg"
             >
-              <X size={16} />
+              {/* <X size={16} /> */}
+              <Trash2 size={16} />
             </button>
 
             {/* Edit / Magic button */}
-            <button
+            {/* <button
               type="button"
               disabled={pictureUploadingLoader}
               className="p-2 !rounded bg-blue-500 shadow-lg cursor-pointer"
@@ -93,17 +103,17 @@ const ImagePlaceholder = ({
               }}
             >
               <WandSparkles size={16} />
-            </button>
+            </button> */}
 
             {/* ✅ Pencil always visible on main preview (index === 0) */}
-            {index === 0 && (
-              <label
-                htmlFor={`image-upload-${index}`}
-                className="p-2 !rounded bg-slate-700 text-gray-100 shadow-lg cursor-pointer"
-              >
-                <Pencil size={16} />
-              </label>
-            )}
+            {/* {index === 0 && ( */}
+            <label
+              htmlFor={`image-upload-${index}`}
+              className="p-2 !rounded bg-slate-700/80 hover:bg-slate-700 text-gray-100 shadow-lg cursor-pointer"
+            >
+              <Pencil size={16} />
+            </label>
+            {/* )} */}
           </div>
 
           <Image

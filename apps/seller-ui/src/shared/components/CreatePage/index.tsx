@@ -4,7 +4,15 @@ import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-import { ArrowLeft, ChevronDown, PlusIcon, Wand, X, XIcon } from 'lucide-react';
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronLeft,
+  PlusIcon,
+  Wand,
+  X,
+  XIcon,
+} from 'lucide-react';
 import Image from 'next/image';
 // import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -111,6 +119,8 @@ const CreatePage = ({ ...props }) => {
   const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState<{ [key: number]: boolean }>({});
 
+  const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
+
   const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
   const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
   const [loading, setLoading] = useState(false);
@@ -158,6 +168,23 @@ const CreatePage = ({ ...props }) => {
   // const options: { value: 'square' | 'portrait'; label: string }[] = [
   //   { value: 'square', label: 'Square (850 × 850)' },
   //   { value: 'portrait', label: 'Portrait (765 × 1020)' },
+
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // console.log(categories, subCategoriesData);
+
+  // const convertFiletoBase64 = (file: File) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // };
+
+  useEffect(() => {
+    setImageLoaded(false); // reset every time the source changes, including first upload
+  }, [hoveredImage]);
   // ];
 
   const options = [
@@ -180,49 +207,6 @@ const CreatePage = ({ ...props }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  // console.log(categories, subCategoriesData);
-
-  //   Create product function
-  // Unified submit function
-  const onSubmit = async (data: any) => {
-    try {
-      setLoading(true);
-
-      // ✅ Clean up images before sending
-      const payload = {
-        ...data,
-        images: (data.images || []).filter(
-          (img: any) => img && img.file_url && img.fileId
-        ),
-      };
-
-      if (isDealRoute || data.enableDeal) {
-        // 👉 Creating a deal
-        await axiosProduct.post('/create-deal', payload);
-        router.push('/dashboard/all-deals');
-      } else {
-        // 👉 Creating a product
-        await axiosProduct.post('/create-product', payload);
-        router.push('/dashboard/all-products');
-      }
-
-      console.log('➡️ Submitting images:', payload.images);
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // const convertFiletoBase64 = (file: File) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // };
 
   const handleImageChange = async (file: File | null, index: number) => {
     if (!file) return;
@@ -292,43 +276,27 @@ const CreatePage = ({ ...props }) => {
     setUploading((prev) => ({ ...prev, [idx]: false }));
   };
 
-  const handleRemoveImage = async (index: number) => {
-    try {
-      const updatedImages = [...images];
+  const handleRemoveImage = (index: number) => {
+    const currentImages = images; // use the same source of truth handleImageChange uses
+    const image = currentImages[index];
 
-      const imageToDelete = updatedImages[index];
-      if (imageToDelete && typeof imageToDelete === 'object') {
-        await axiosProduct.delete('/delete-product-image', {
-          data: { fileId: imageToDelete.fileId! },
-        });
-      }
+    setRemovedImageIds((prev) => [
+      ...prev,
+      ...(image?.fileId ? [image.fileId] : []),
+    ]);
 
-      updatedImages.splice(index, 1);
+    const updatedImages = currentImages.filter((_, i) => i !== index);
 
-      //  Add null placeholder
-      if (!updatedImages.includes(null) && updatedImages.length < 8) {
-        updatedImages.push(null);
-      }
-
-      setImages(updatedImages);
-      setValue('images', updatedImages);
-    } catch (error) {
-      console.log(error);
+    // Keep a trailing empty slot for uploading, same rule as handleImageChange
+    if (
+      updatedImages.length < 8 &&
+      updatedImages[updatedImages.length - 1] !== null
+    ) {
+      updatedImages.push(null);
     }
 
-    // setImages((prevImages) => {
-    //   let updatedImages = [...prevImages];
-    //   if (index === -1) {
-    //     updatedImages[0] = null;
-    //   } else {
-    //     updatedImages.splice(index, 1);
-    //   }
-    //   if (!updatedImages.includes(null) && updatedImages.length < 8) {
-    //     updatedImages.push(null);
-    //   }
-    //   return updatedImages;
-    // });
-    // setValue('images', images);
+    setImages(updatedImages);
+    setValue('images', updatedImages);
   };
 
   const applyTransformation = async (transformation: string) => {
@@ -346,35 +314,62 @@ const CreatePage = ({ ...props }) => {
     }
   };
 
+  //   Create product function
+  // Unified submit function
+  const onSubmit = async (data: any) => {
+    try {
+      setLoading(true);
+
+      // ✅ Clean up images before sending
+      const payload = {
+        ...data,
+        images: (data.images || []).filter(
+          (img: any) => img && img.file_url && img.fileId
+        ),
+      };
+
+      if (isDealRoute || data.enableDeal) {
+        // 👉 Creating a deal
+        await axiosProduct.post('/create-deal', payload);
+        router.push('/dashboard/all-deals');
+      } else {
+        // 👉 Creating a product
+        await axiosProduct.post('/create-product', payload);
+        router.push('/dashboard/all-products');
+      }
+
+      console.log('➡️ Submitting images:', payload.images);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message ?? 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSaveDraft = () => {};
 
   return (
     <form
-      className="w-full mx-auto px-0 py-2 shadow-md rounded-lg text-white"
+      className="w-full mx-auto px-0 py-0 shadow-md rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
-      <div className="grid grid-cols-[200px_minmax(300px,1fr)] gap-4 border-b border-gray-300">
-        {/* Dashboard button */}
-        <div className="w-full px-8 py-2">
+      <div className="grid grid-cols-[500px_minmax(300px,1fr)] gap-4 py-0 bg-[#f5f5f7] border-b border-gray-300">
+        {/* Dashboard button & Heading */}
+        <div className="flex items-center justify-start gap-6 w-full px-8 py-2">
           <button
-            onClick={() => router.push('/dashboard/all-products')}
+            onClick={() => router.push('/dashboard')}
             className="flex items-center gap-1 text-gray-800 bg-gray-200 hover:bg-gray-300 transition px-4 py-2 rounded-full text-sm"
           >
-            <ArrowLeft size={20} />
-            <span className="font-medium ">All Products</span>
+            <ChevronLeft size={20} />
+            <span className="font-medium ">Dashboard</span>
           </button>
-        </div>
-        {/* Heading */}
-        <div className="flex flex-col items-start justify-center">
-          <h2 className="text-base font-bold text-gray-800">{title}</h2>
-          {/* Breadcrumbs */}
-          <Breadcrumbs title={title} />
+          <h2 className="text-[18px] font-bold text-gray-800">{title}</h2>
         </div>
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f7] px-8 pt-4 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f7] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
 
         <div className="flex flex-col items-start space-y-2">
@@ -389,15 +384,19 @@ const CreatePage = ({ ...props }) => {
               >
                 {hoveredImage ? (
                   <Image
+                    key={hoveredImage}
                     src={hoveredImage}
                     alt="Product preview"
                     fill
-                    className="object-cover rounded-lg transition-all duration-300"
+                    onLoad={() => setImageLoaded(true)}
+                    className={`object-cover rounded-lg transition-opacity duration-75 ${
+                      imageLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
                     unoptimized
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
-                    <span className="text-gray-500">Upload product image</span>
+                    <span className="text-gray-500">Upload Product Image</span>
                   </div>
                 )}
               </div>

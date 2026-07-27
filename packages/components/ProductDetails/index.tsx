@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import ReactImageMagnify from 'react-image-magnify';
+// import ReactImageMagnify from 'react-image-magnify';
 import Ratings from '../../components/ratings';
 import Link from 'next/link';
 import { useStore } from 'apps/user-ui/src/store';
@@ -28,6 +28,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/react';
+import ZoomImage from '../HoverMagnifier/HoverMagnifier';
 
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   // const { user, isLoading } = useUser();
@@ -152,27 +153,15 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* left column - product images */}
         <div className="px-0">
           <div className="relative mx-auto flex justify-center items-start h-[500px]">
-            <ReactImageMagnify
-              {...{
-                smallImage: {
-                  alt: 'Product Image',
-                  src: currentImage || '',
-                  isFluidWidth: true, // required
-                },
-                largeImage: {
-                  src: currentImage || '',
-                  width: 1200,
-                  height: 1200,
-                },
-                enlargedImageStyle: {
-                  border: 'none',
-                  boxShadow: 'none',
-                },
-                isHintEnabled: true,
-                enlargedImagePosition: 'beside',
-                shouldUsePositiveSpaceLens: true,
-              }}
-            />
+            {/* Main preview */}
+            <div className="w-full">
+              {productDetails?.images?.length > 0 && (
+                <ZoomImage
+                  src={productDetails.images[currentIndex]?.url}
+                  alt="Product preview"
+                />
+              )}
+            </div>
           </div>
 
           {/* Thumbnail images array */}

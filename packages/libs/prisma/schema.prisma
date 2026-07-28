@@ -180,6 +180,7 @@ enum productStatus {
 model products {
   id                     String        @id @default(auto()) @map("_id") @db.ObjectId
   title                  String
+  aspect                 String        @default("square") // default at DB level too
   slug                   String        @unique
   tags                   String[]
   colors                 String[]

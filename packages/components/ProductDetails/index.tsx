@@ -1,8 +1,8 @@
 'use client';
 import {
+  ChevronUp,
+  ChevronDown,
   ChevronDownIcon,
-  ChevronLeft,
-  ChevronRight,
   Heart,
   MapPin,
   MessageSquareText,
@@ -148,63 +148,86 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
   return (
     <div className="w-full bg-white px-8">
-      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
         {' '}
         {/* left column - product images */}
-        <div className="px-0">
-          <div className="relative mx-auto flex justify-center items-start h-[500px]">
+        <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
+          {/* Thumbnail images array */}
+          <div className=" flex flex-col items-center gap-2">
+            {/* Scroll up button */}
+            {productDetails?.images?.length > 4 && (
+              <button
+                className="absolute top-0 bg-white p-2 rounded-full shadow-md z-10"
+                onClick={prevImage}
+                disabled={currentIndex === 0}
+              >
+                <ChevronUp size={24} />
+              </button>
+            )}
+
+            {/* Thumbnails */}
+            <div className="flex flex-col gap-3 overflow-y-auto">
+              {productDetails?.images?.map((img: any, index: number) => {
+                const thumbHeight =
+                  productDetails?.aspect === 'square'
+                    ? 75
+                    : Math.round((75 * 4) / 3);
+
+                return (
+                  <img
+                    key={index}
+                    src={
+                      img?.url ||
+                      'https://ik.imagekit.io/johnchrismaina/products/product-1764947748099_PpFh77hy3.jpg?updatedAt=1764947756039'
+                    }
+                    alt="Thumbnail"
+                    width={75}
+                    height={thumbHeight}
+                    style={{ width: 75, height: thumbHeight }} // ✅ forces exact box, overrides Preflight
+                    className={`cursor-pointer border rounded-lg object-cover flex-shrink-0 ${
+                      currentImage === img
+                        ? 'border-blue-500'
+                        : 'border-gray-300'
+                    }`}
+                    onClick={() => {
+                      setCurrentIndex(index);
+                      setCurrentImage(img);
+                    }}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Scroll up button */}
+            {(productDetails?.images?.length ?? 0) > 4 && (
+              <button
+                className="absolute bottom-0 bg-white p-2 rounded-full shadow-md z-10"
+                onClick={nextImage}
+                disabled={currentIndex === productDetails?.images.length - 1}
+              >
+                <ChevronDown size={24} />
+              </button>
+            )}
+          </div>
+
+          {/* <div className="relative mx-auto flex justify-center items-start h-[500px]"> */}
+          <div className="w-[540px] mx-auto rounded-lg">
             {/* Main preview */}
-            <div className="w-full">
+            <div
+              className={`relative mx-auto ${
+                productDetails?.aspect === 'square'
+                  ? 'w-[500px] h-[500px]'
+                  : 'w-[503px] h-[670px]'
+              }`}
+            >
               {productDetails?.images?.length > 0 && (
                 <ZoomImage
                   src={productDetails.images[currentIndex]?.url}
                   alt="Product preview"
+                  aspect={productDetails.aspect}
                 />
               )}
             </div>
-          </div>
-
-          {/* Thumbnail images array */}
-          <div className="relative flex items-center gap-2 mt-1 overflow-hidden">
-            {productDetails?.images?.length > 4 && (
-              <button
-                className="absolute left-0 bg-white p-2 rounded-full shadow-md z-10"
-                onClick={prevImage}
-                disabled={currentIndex === 0}
-              >
-                <ChevronLeft size={24} />
-              </button>
-            )}
-            <div className="flex gap-2 overflow-x-auto">
-              {productDetails?.images?.map((img: any, index: number) => (
-                <Image
-                  key={index}
-                  src={
-                    img?.url ||
-                    'https://ik.imagekit.io/johnchrismaina/products/product-1764947748099_PpFh77hy3.jpg?updatedAt=1764947756039'
-                  }
-                  alt="Thumbnail"
-                  width={60}
-                  height={60}
-                  className={`cursor-pointer border rounded-lg p-1 ${
-                    currentImage === img ? 'border-blue-500' : 'border-gray-300'
-                  }`}
-                  onClick={() => {
-                    setCurrentIndex(index);
-                    setCurrentImage(img);
-                  }}
-                />
-              ))}
-            </div>
-            {(productDetails?.images?.length ?? 0) > 4 && (
-              <button
-                className="absolute right-0 bg-white p-2 rounded-full shadow-md z-10"
-                onClick={nextImage}
-                disabled={currentIndex === productDetails?.images.length - 1}
-              >
-                <ChevronRight size={24} />
-              </button>
-            )}
           </div>
         </div>
         {/* Middle column - product details */}
@@ -225,12 +248,12 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
 
             <div className="flex gap-2 text-yellow-500 mb-1">
-              <Ratings rating={productDetails?.rating} />
+              <Ratings rating={productDetails?.ratings} />
               <Link
                 href={'#reviews'}
                 className="text-blue-600 text-sm hover:underline"
               >
-                (0 Reviews)
+                (Reviews)
               </Link>
             </div>
           </div>

@@ -47,6 +47,7 @@ interface UploadedImage {
 
 type FormValues = {
   title: string;
+  aspect: string;
   images: (UploadedImage | null)[];
   regular_price: number;
   sale_price: number;
@@ -89,6 +90,7 @@ const CreatePage = ({ ...props }) => {
   } = useForm<FormValues>({
     defaultValues: {
       title: '',
+      aspect: 'square', // ✅ default aspect ratio
       images: [null, null, null, null, null, null, null, null], // 8 slots
       regular_price: undefined,
       sale_price: undefined,
@@ -160,7 +162,6 @@ const CreatePage = ({ ...props }) => {
     return selectedCategory ? subCategoriesData[selectedCategory] || [] : [];
   }, [selectedCategory, subCategoriesData]);
 
-  const [aspect, setAspect] = useState<'square' | 'portrait'>('square');
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -168,9 +169,16 @@ const CreatePage = ({ ...props }) => {
   //   { value: 'square', label: 'Square (850 × 850)' },
   //   { value: 'portrait', label: 'Portrait (765 × 1020)' },
 
+  const [aspect, setAspect] = useState<'square' | 'portrait'>('square');
+
+  const aspectMap = {
+    square: { width: 'w-[500px]', aspect: 'aspect-square' },
+    portrait: { width: 'w-[503px]', aspect: 'aspect-[3/4]' },
+  };
+
   const options = [
-    { value: 'square', label: 'Square (850 × 850)' },
-    { value: 'portrait', label: 'Portrait (765 × 1020)' },
+    { value: 'square', label: 'Square (500 × 500)' },
+    { value: 'portrait', label: 'Portrait (503 × 670)' },
   ];
 
   // Close Aspect Ratio dropdown when clicking outside
@@ -378,56 +386,51 @@ const CreatePage = ({ ...props }) => {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f7] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f7] px-7 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
+        {/* Image upload section */}
+        <div className="flex items-start justify-between px-0 bg-gray-300 w-[650px] h-auto mx-auto">
+          {/* Thumbnails */}
+          <div className="flex flex-col gap-1">
+            {images.map((img: UploadedImage | null, index: number) => (
+              <ImagePlaceholder
+                key={index}
+                size={aspect === 'square' ? '500 x 500' : '503 x 670'}
+                small={index !== 0}
+                aspect={aspect}
+                pictureUploadingLoader={uploading[index] ?? false} // ✅ only this slot
+                images={images}
+                index={index}
+                onImageChange={handleImageChangeWithLoader}
+                onRemove={handleRemoveImage}
+                setSelectedImage={setHoveredImage}
+                setOpenImageModal={setOpenImageModal}
+              />
+            ))}
+          </div>
 
-        <div className="flex flex-col items-start space-y-2">
-          {/* Image upload section */}
-          <div className="flex flex-col items-center w-[580px] mx-auto">
-            {/* Main preview */}
-            <div className="w-[500px] mb-6">
-              <div
-                className={`relative w-full ${
-                  aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'
-                }`}
-              >
-                {hoveredImage ? (
-                  <Image
-                    key={hoveredImage}
-                    src={hoveredImage}
-                    alt="Product preview"
-                    fill
-                    onLoad={() => setImageLoaded(true)}
-                    className={`object-cover rounded-lg transition-opacity duration-75 ${
-                      imageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    unoptimized
-                  />
-                ) : (
-                  <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
-                    <span className="text-gray-500">Upload Product Image</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-3 w-full">
-              {images.map((img: UploadedImage | null, index: number) => (
-                <ImagePlaceholder
-                  key={index}
-                  size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
-                  small={index !== 0}
-                  aspect={aspect}
-                  pictureUploadingLoader={uploading[index] ?? false} // ✅ only this slot
-                  images={images}
-                  index={index}
-                  onImageChange={handleImageChangeWithLoader}
-                  onRemove={handleRemoveImage}
-                  setSelectedImage={setHoveredImage}
-                  setOpenImageModal={setOpenImageModal}
+          {/* Main preview */}
+          <div className="w-[540px] rounded-lg">
+            <div
+              className={`relative mx-auto ${aspectMap[aspect].width} ${aspectMap[aspect].aspect}`}
+            >
+              {hoveredImage ? (
+                <Image
+                  key={hoveredImage}
+                  src={hoveredImage}
+                  alt="Product preview"
+                  fill
+                  onLoad={() => setImageLoaded(true)}
+                  className={`object-cover rounded-none transition-opacity duration-0 ${
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  unoptimized
                 />
-              ))}
+              ) : (
+                <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
+                  <span className="text-gray-500">Upload Product Image</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -451,8 +454,8 @@ const CreatePage = ({ ...props }) => {
             >
               Aspect Ratio:{' '}
               {aspect === 'square'
-                ? 'Square (850 × 850)'
-                : 'Portrait (765 × 1020)'}
+                ? 'Square (500 × 500)'
+                : 'Portrait (503 × 670)'}
               <ChevronDown className="text-gray-600" />
             </button>
 
@@ -464,6 +467,7 @@ const CreatePage = ({ ...props }) => {
                     key={opt.value}
                     onClick={() => {
                       setAspect(opt.value as 'square' | 'portrait');
+                      setValue('aspect', opt.value); // ✅ sync with form
                       setOpenAspectRatio(false);
                     }}
                     className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"

@@ -394,11 +394,11 @@ export default function EditProductPage() {
         {/* Dashboard button & Heading */}
         <div className="flex items-center justify-start gap-6 w-full px-8 py-2">
           <button
-            onClick={() => router.push('/dashboard/all-deals')}
+            onClick={() => router.push('/dashboard/')}
             className="flex items-center gap-1 text-gray-800 bg-gray-200 hover:bg-gray-300 transition px-4 py-2 rounded-full text-sm"
           >
             <ChevronLeft size={20} />
-            <span className="font-medium ">All deals</span>
+            <span className="font-medium ">Dashboard</span>
           </button>
           <h2 className="text-[18px] font-bold text-gray-800">{title}</h2>
         </div>
@@ -423,7 +423,7 @@ export default function EditProductPage() {
                     alt="Product preview"
                     fill
                     onLoad={() => setImageLoaded(true)}
-                    className={`object-cover rounded-lg transition-opacity duration-75 ${
+                    className={`object-cover rounded-none transition-opacity duration-75 ${
                       imageLoaded ? 'opacity-100' : 'opacity-0'
                     }`}
                     unoptimized

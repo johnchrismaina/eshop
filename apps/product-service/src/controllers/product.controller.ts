@@ -193,6 +193,7 @@ export const createProduct = async (
   try {
     const {
       title,
+      aspect,
       slug,
       tags,
       short_description,
@@ -257,6 +258,7 @@ export const createProduct = async (
     const newProduct = await prisma.products.create({
       data: {
         title,
+        aspect,
         slug,
         tags: normalizedTags,
         short_description,
@@ -301,6 +303,7 @@ export const createDeal = async (
     const {
       productId,
       title,
+      aspect,
       slug,
       category,
       subCategory,
@@ -382,6 +385,7 @@ export const createDeal = async (
       product = await prisma.products.create({
         data: {
           title,
+          aspect,
           slug,
           category: category?.trim() || 'Uncategorized',
           subCategory: subCategory ?? null,
@@ -462,6 +466,7 @@ export const updateProductBySlug = async (
     const { slug } = req.params;
     const {
       title,
+      aspect,
       category,
       subCategory,
       short_description,
@@ -507,6 +512,7 @@ export const updateProductBySlug = async (
       where: { slug },
       data: {
         title,
+        aspect,
         category: category?.trim() || product.category || 'Uncategorized',
         subCategory: subCategory ?? product.subCategory ?? null,
         short_description:

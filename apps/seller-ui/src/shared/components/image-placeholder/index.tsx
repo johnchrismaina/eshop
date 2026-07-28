@@ -61,7 +61,7 @@ const ImagePlaceholder = ({
 
   return (
     <div
-      className={`relative w-full cursor-pointer bg-gray-200 border rounded-lg flex flex-col justify-center items-center
+      className={`relative w-[100px] cursor-pointer bg-gray-200 border rounded-lg flex flex-col justify-center items-center
         ${aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'}
       `}
       onMouseEnter={() => {
@@ -144,7 +144,7 @@ const ImagePlaceholder = ({
       {!imagePreview && (
         <p
           className={`text-gray-600 ${
-            small ? 'text-lg' : 'text-xl'
+            small ? 'text-xs' : 'text-sm'
           } font-semibold`}
         >
           {size}

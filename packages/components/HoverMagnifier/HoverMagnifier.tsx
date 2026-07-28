@@ -4,11 +4,13 @@ import './hover-magnifier.css';
 interface ZoomImageProps {
   src: string;
   alt?: string;
+  aspect: 'square' | 'portrait';
 }
 
 function ZoomImage({
   src,
   alt = 'Product image',
+  aspect,
   ...rest
 }: ZoomImageProps & React.HTMLProps<HTMLImageElement>) {
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
@@ -109,8 +111,18 @@ function ZoomImage({
 
   return (
     <div className="zoom-image">
-      <div className="image-box" ref={imageBoxRef}>
-        <img src={src} alt={alt} {...rest} />
+      <div
+        className={`relative overflow-hidden ${
+          aspect === 'square' ? 'w-[500px] h-[500px]' : 'w-[503px] h-[670px]'
+        }`}
+        ref={imageBoxRef}
+      >
+        <img
+          src={src}
+          alt={alt}
+          {...rest}
+          className="w-full h-full object-cover rounded-none"
+        />
         {overlayPos && (
           <div
             className="lens-overlay"

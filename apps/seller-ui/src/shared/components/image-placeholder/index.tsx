@@ -49,15 +49,15 @@ const ImagePlaceholder = ({
     }
   };
 
-  useEffect(() => {
-    if (index === 0) {
-      if (images && images[0] && images[0].file_url) {
-        setSelectedImage(images[0].file_url);
-      } else {
-        setSelectedImage(''); // or null, depending on setSelectedImage's type
-      }
-    }
-  }, [images, index, setSelectedImage]);
+  // useEffect(() => {
+  //   if (index === 0) {
+  //     if (images && images[0] && images[0].file_url) {
+  //       setSelectedImage(images[0].file_url);
+  //     } else {
+  //       setSelectedImage(''); // or null, depending on setSelectedImage's type
+  //     }
+  //   }
+  // }, [images, index, setSelectedImage]);
 
   return (
     <div

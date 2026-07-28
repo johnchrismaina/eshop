@@ -116,7 +116,6 @@ const CreatePage = ({ ...props }) => {
   const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
-  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState<{ [key: number]: boolean }>({});
 
   const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
@@ -169,30 +168,12 @@ const CreatePage = ({ ...props }) => {
   //   { value: 'square', label: 'Square (850 × 850)' },
   //   { value: 'portrait', label: 'Portrait (765 × 1020)' },
 
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  // console.log(categories, subCategoriesData);
-
-  // const convertFiletoBase64 = (file: File) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // };
-
-  useEffect(() => {
-    setImageLoaded(false); // reset every time the source changes, including first upload
-  }, [hoveredImage]);
-  // ];
-
   const options = [
     { value: 'square', label: 'Square (850 × 850)' },
     { value: 'portrait', label: 'Portrait (765 × 1020)' },
   ];
 
-  // Close dropdown when clicking outside
+  // Close Aspect Ratio dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -207,6 +188,34 @@ const CreatePage = ({ ...props }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // console.log(categories, subCategoriesData);
+
+  // const convertFiletoBase64 = (file: File) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // };
+
+  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setImageLoaded(false); // reset every time the source changes, including first upload
+  }, [hoveredImage]);
+  // ];
+
+  useEffect(() => {
+    const stillExists = images.some((img) => img?.file_url === hoveredImage);
+    if (!stillExists) {
+      setHoveredImage(images.find((img) => img?.file_url)?.file_url ?? null);
+    }
+  }, [images]);
+
+  //-----------------------------------------------
 
   const handleImageChange = async (file: File | null, index: number) => {
     if (!file) return;

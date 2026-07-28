@@ -174,17 +174,9 @@ export default function EditProductPage() {
   //   images[0]?.file_url ?? null
   // );
 
-  const [hoveredImage, setHoveredImage] = useState<string | null>(
-    images[0]?.file_url ?? null
-  );
-
-  useEffect(() => {
-    if (!images[0]?.file_url) {
-      // find the next available image
-      const nextImage = images.find((img) => img?.file_url)?.file_url ?? null;
-      setHoveredImage(nextImage);
-    }
-  }, [images]);
+  // const [hoveredImage, setHoveredImage] = useState<string | null>(
+  //   images[0]?.file_url ?? null
+  // );
 
   // const [hoveredImage, setHoveredImage] = useState<string | null>(null);
 
@@ -211,6 +203,26 @@ export default function EditProductPage() {
     { value: 'square', label: 'Square (850 × 850)' },
     { value: 'portrait', label: 'Portrait (765 × 1020)' },
   ];
+
+  // Start with the first available image, or null
+  const [hoveredImage, setHoveredImage] = useState<string | null>(
+    images.find((img) => img?.file_url)?.file_url ?? null
+  );
+
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setImageLoaded(false); // reset opacity transition whenever hoveredImage changes
+  }, [hoveredImage]);
+
+  useEffect(() => {
+    const stillExists = images.some((img) => img?.file_url === hoveredImage);
+    if (!stillExists) {
+      setHoveredImage(images.find((img) => img?.file_url)?.file_url ?? null);
+    }
+  }, [images]);
+
+  //-----------------------------------------------
 
   const fetchCategories = async () => {
     const res = await axiosProduct.get('/get-categories');
@@ -382,11 +394,11 @@ export default function EditProductPage() {
         {/* Dashboard button & Heading */}
         <div className="flex items-center justify-start gap-6 w-full px-8 py-2">
           <button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push('/dashboard/all-deals')}
             className="flex items-center gap-1 text-gray-800 bg-gray-200 hover:bg-gray-300 transition px-4 py-2 rounded-full text-sm"
           >
             <ChevronLeft size={20} />
-            <span className="font-medium ">Dashboard</span>
+            <span className="font-medium ">All deals</span>
           </button>
           <h2 className="text-[18px] font-bold text-gray-800">{title}</h2>
         </div>
@@ -396,7 +408,7 @@ export default function EditProductPage() {
       <div className="w-full bg-[#f5f5f5] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
         <div className="flex flex-col items-start space-y-2">
-          {/* Images Section with Preview + Title */}
+          {/* Images Section */}
           <div className="flex flex-col items-center w-[580px] mx-auto">
             {/* Main preview */}
             <div className="w-[500px] mb-6">
@@ -407,10 +419,13 @@ export default function EditProductPage() {
               >
                 {hoveredImage ? (
                   <Image
-                    src={hoveredImage}
+                    src={hoveredImage} // ✅ no key here
                     alt="Product preview"
                     fill
-                    className="object-cover rounded-lg transition-all duration-300"
+                    onLoad={() => setImageLoaded(true)}
+                    className={`object-cover rounded-lg transition-opacity duration-75 ${
+                      imageLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
                     unoptimized
                   />
                 ) : (
@@ -434,9 +449,10 @@ export default function EditProductPage() {
                   index={index}
                   onImageChange={handleImageChange}
                   onRemove={handleRemoveImage}
-                  setSelectedImage={setHoveredImage} // ✅ updates main preview
+                  // ✅ setHoveredImage when hovering/clicking
+                  setSelectedImage={(url) => setHoveredImage(url)}
                   setOpenImageModal={setOpenImageModal}
-                  defaultImage={img?.file_url ?? null} // ✅ show thumbnail image
+                  defaultImage={img?.file_url ?? null}
                 />
               ))}
             </div>

@@ -155,13 +155,18 @@ const DealList = () => {
         header: 'Actions',
         cell: ({ row }: any) => (
           <div className="flex gap-4 ">
+            {/* View deal */}
             <Link
               // href={`/product/${row.original.id}`}
               href={`${USER_UI_BASE_URL}/product/${row.original.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-blue-400 hover:text-blue-300 transition"
             >
               <Eye size={18} />
             </Link>
+
+            {/* Edit */}
             <Link
               // href={`/product/edit/${row.original.id}`}
               href={`${SELLER_UI_BASE_URL}/product/edit/${row.original.slug}`}
@@ -169,12 +174,16 @@ const DealList = () => {
             >
               <Pencil size={18} />
             </Link>
+
+            {/* Analytics */}
             <button
               className="text-green-400 hover:text-green-300 transition"
               // onClick={() => openAnalytics(row.original)}
             >
               <BarChart size={18} />
             </button>
+
+            {/* Delete button */}
             <button
               className="text-red-400 hover:text-red-300 transition"
               onClick={() => openDeleteModal(row.original)}

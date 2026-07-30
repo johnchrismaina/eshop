@@ -232,22 +232,23 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         </div>
         {/* Middle column - product details */}
         <div className="px-4 pb-1 prose prose-sm max-w-none">
+          {/* Go to Store */}
+          <div className="text-left ">
+            <Link
+              href={`/shop/${productDetails?.Shop?.id}`}
+              className="text-blue-600 font-medium text-sm hover:underline"
+            >
+              {/* <Store size={18} /> */}
+              Go to store
+            </Link>
+          </div>
+
+          {/* Title */}
           <h1 className="text-3xl text-gray-950 font-medium">
             {productDetails?.title}
           </h1>
           <div className="w-full flex flex-col items-start ">
-            {/* Go to Store */}
-            <div className="text-center ">
-              <Link
-                href={`/shop/${productDetails?.Shop?.id}`}
-                className="text-blue-600 font-medium text-sm hover:underline"
-              >
-                {/* <Store size={18} /> */}
-                Go to store
-              </Link>
-            </div>
-
-            <div className="flex gap-2 text-yellow-500 mb-1">
+            <div className="flex gap-2 text-[#ffc220] mb-1">
               <Ratings rating={productDetails?.ratings} />
               <Link
                 href={'#reviews'}
@@ -258,7 +259,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
-          <hr className="border-t border-slate-300 " />
+          <hr className="border-t border-gray-200 " />
 
           <div className="mt-1">
             {/* Product price */}
@@ -345,7 +346,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </span>
 
               {/* Divider */}
-              <hr className="border-t border-slate-300 my-3" />
+              <hr className="border-t border-gray-200 my-3" />
 
               {/* Custom Specifications */}
               {productDetails?.custom_specifications?.length > 0 && (
@@ -429,7 +430,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className="bg-white border border-gray-200 w-[244px] px-5 py-4 rounded-md ">
+        <div className="bg-[#F5F5F5] w-[244px] px-5 py-4 rounded-md ">
           {/* Delivery options */}
           <div className="flex flex-col gap-3 py-1 ">
             {/* Instant delivery */}
@@ -620,8 +621,8 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
       {/* You may also like */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
-        <div className="w-full h-full ">
-          <h3 className="text-xl font-semibold pt-3 pb-2">
+        <div className="w-full h-full py-4 ">
+          <h3 className="text-xl font-bold pb-2">
             {/* You may also like these products from our store */}
             You may also like
           </h3>
@@ -636,7 +637,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
       {/* Product description */}
       <div className="w-full lg:w-full mx-auto mt-40">
         <div className="bg-white py-4 border-t border-gray-200">
-          <h3 className="text-xl font-bold pb-1">
+          <h3 className="text-xl font-bold pb-2">
             {/* Product description {productDetails?.title} */}
             Product description
           </h3>
@@ -650,7 +651,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
       </div>
 
       {/* From the manufacturer */}
-      <div className="w-full lg:w-full mx-auto mt-5 border-t border-y-gray-200">
+      <div className="w-full lg:w-full mx-auto mt-5 border-t border-y-gray-200 hidden">
         <div className="bg-white min-h-[60vh] h-full ">
           <h3 className="text-xl font-bold pt-3 pb-2">
             {/* About this item {productDetails?.title} */}
@@ -661,8 +662,8 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
       {/* Ratings & Reviews */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
-        <div className="bg-white min-h-[50vh] h-full ">
-          <h3 className="text-lg font-semibold pt-2 pb-2">
+        <div className="bg-white min-h-[50vh] py-4 h-full ">
+          <h3 className="text-xl font-bold pb-2">
             Ratings & Reviews of {productDetails?.title}
           </h3>
           <p className="text-center pt-14">No reviews available yet!</p>

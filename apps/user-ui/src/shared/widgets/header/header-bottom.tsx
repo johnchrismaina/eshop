@@ -20,8 +20,9 @@ const HeaderBottom = () => {
   console.log(user);
 
   return (
-    <div className="w-full transition-all duration-300 bg-[#fff] shadow-b shadow-lg border-b border-gray-300">
-      <div className="w-[1200px] mx-auto pt-0 pb-2 relative flex items-center justify-center gap-10 ">
+    // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
+    <div className="relative z-10 w-full transition-all duration-300 bg-[#fff] border-b border-gray-200/80 shadow-md shadow-gray-300/10 ">
+      <div className="w-[1200px] mx-auto pt-0 pb-0 relative flex items-center justify-center gap-8 h-full ">
         {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 
         {/* <div className="flex items-center justify-center gap-10"> */}
@@ -29,7 +30,7 @@ const HeaderBottom = () => {
         <div>
           {/* Bottom header button */}
           <button
-            className="flex items-center text-[14.0px] font-bold gap-2.5 text-[#00000CC] hover:text-[#000000] pl-0 pr-[17px] py-[9px] mr-0 flex-shrink-0 "
+            className="flex items-center text-[14.0px] font-semibold gap-2.5 text-[#000] hover:text-[#000] px-2 py-3 hover:bg-gray-200/80 transition-colors duration-100 mr-0 flex-shrink-0 "
             onClick={() => setShowSidebar(true)}
           >
             <Menu size={16} />
@@ -44,13 +45,13 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex items-center flex-1 justify-start gap-4 ml-0">
+        <nav className="flex flex-1 items-center justify-start gap-4 ml-0 ">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
-              className={`flex items-center px-3 py-0 rounded-sm pt-0 pb-0 text-[14.0px] transition-colors ${
+              className={`flex items-center px-3 py-3 text-[14.0px] h-full hover:bg-gray-200/80 transition-colors duration-100 ${
                 i.accent
-                  ? 'text-[#fab528] font-bold hover:text-[#fab528]'
-                  : 'text-[#000000CC] font-bold hover:text-[#000000]'
+                  ? 'text-[#e85d1f] font-bold hover:text-[#e85d1f]'
+                  : 'text-[#000] font-normal hover:text-[#000]'
               }`}
               href={i.href}
               key={index}
@@ -59,10 +60,15 @@ const HeaderBottom = () => {
             </Link>
           ))}
         </nav>
+
         {/* </div> */}
-        <div className="flex gap-4 font-medium text-[14.0px] pt-1.5 pb-1.5 text-[#000000CC] hover:text-[#000000]">
-          <span className="cursor-pointer">Sell </span>
-          <span className="cursor-pointer">Customer Service</span>
+        <div className="flex items-center justify-start text-[14.0px] text-[#000] font-normal gap-4 ml-0 h-full">
+          <span className="cursor-pointer px-2 py-3 hover:bg-gray-200/80 transition-colors duration-100 ">
+            Sell{' '}
+          </span>
+          <span className="cursor-pointer px-2 py-3 hover:bg-gray-200/80 transition-colors duration-100 ">
+            Customer Service
+          </span>
         </div>
       </div>
     </div>

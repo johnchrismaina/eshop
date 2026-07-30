@@ -386,10 +386,10 @@ const CreatePage = ({ ...props }) => {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f7] px-7 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f5] px-7 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
         {/* Image upload section */}
-        <div className="flex items-start justify-between px-0 bg-gray-300 w-[650px] h-auto mx-auto">
+        <div className="flex items-start justify-between px-0 bg-[#F5F5F5] w-[650px] h-auto mx-auto">
           {/* Thumbnails */}
           <div className="flex flex-col gap-1">
             {images.map((img: UploadedImage | null, index: number) => (
@@ -427,7 +427,7 @@ const CreatePage = ({ ...props }) => {
                   unoptimized
                 />
               ) : (
-                <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
+                <div className="flex items-center justify-center w-full h-full bg-gray-200 border border-dashed border-gray-300">
                   <span className="text-gray-500">Upload Product Image</span>
                 </div>
               )}

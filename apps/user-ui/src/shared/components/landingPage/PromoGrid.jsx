@@ -8,7 +8,7 @@ const PromoGrid = () => {
           Happening Now
         </span>
       </div> */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 font-sans gap-4 px-8 pt-10 pb-8 bg-[#f5f5f7] text-gray-800 ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 font-sans gap-4 px-8 pt-10 pb-8 bg-[#F5F5F5] text-gray-800 ">
         {/* Card 1  */}
         <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-none">
           {/* Title zone */}

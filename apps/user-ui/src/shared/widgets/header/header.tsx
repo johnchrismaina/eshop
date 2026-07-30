@@ -26,21 +26,23 @@ import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 // import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
 import { IoCartOutline } from 'react-icons/io5';
+import { CiUser } from 'react-icons/ci';
 
 import { TbShoppingCart } from 'react-icons/tb';
-import { FiMapPin } from 'react-icons/fi';
-import { LuMapPin } from 'react-icons/lu';
-import { HiOutlineUser } from 'react-icons/hi';
-import { CiUser } from 'react-icons/ci';
 import { PiShoppingCart } from 'react-icons/pi';
 import { CgShoppingCart } from 'react-icons/cg';
+import { IoCart } from 'react-icons/io5';
 
 import { useEffect } from 'react';
 import { Search, User, ShoppingCart, Menu } from 'lucide-react';
 import SidebarMenu from '../../components/sidebar-menu';
-import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
-import PinFilledIcon from 'apps/user-ui/src/assets/svgs/pin-filled';
+// import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
 import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
+
+<style>
+  @import
+  url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+</style>;
 
 // ----------------------------------
 
@@ -239,37 +241,28 @@ const Header = () => {
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
         className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
-          scrolled ? 'shadow-sm' : 'shadow-none'
+          scrolled ? 'shadow-none' : 'shadow-none'
         }`}
       >
         <div className="w-[1200px] mx-auto pt-1.5 pb-1.5 grid grid-cols-[1fr_300px] items-center justify-start gap-4 ">
           <div className="flex items-center justify-start gap-6">
-            {/* logo */}
-            <div className="mr-4">
-              <Link href="/">
-                {/* <span className="font-semibold text-3xl tracking-tight">
-                Sokonis
-              </span> */}
-                <Image
-                  src={
-                    layout?.logo ||
-                    'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/logo.svg'
-                  }
-                  alt="logo"
-                  width={120}
-                  height={50}
-                  className="object-contain"
-                  unoptimized
-                />
-              </Link>
+            {/* Logo */}
+            <div
+              className="font-bold text-[23px] tracking-tight pl-2"
+              style={{ fontFamily: "'Oswald', sans-serif" }}
+            >
+              Sokonis<span className="text-[#E85D1F]">.</span>
             </div>
 
             {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-            <div ref={searchWrapperRef} className="relative w-full mx-auto ">
+            <div
+              ref={searchWrapperRef}
+              className="relative w-full mx-auto ml-6"
+            >
               <div
                 ref={searchContainerRef}
-                className="flex items-center h-10 bg-[#fff] rounded-full border border-gray-400 
+                className="flex items-center h-[38px] bg-[#fff] rounded-md border border-[#404040] 
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out"
@@ -283,7 +276,7 @@ const Header = () => {
                   type="text"
                   onFocus={() => setOpenSearchBackdrop(true)} // open backdrop when input is focused
                   placeholder="Search products, brands, categories..."
-                  className="flex-1 h-10 bg-transparent outline-none border-none text-[14.0px] 
+                  className="flex-1 h-[38px] bg-transparent outline-none border-none text-[14.0px] 
                    placeholder:font-normal placeholder:text-gray-400 pl-0 pr-4 py-0 
                    focus:border-blue-500 focus:border-2 focus:ring-0"
                 />
@@ -302,11 +295,11 @@ const Header = () => {
 
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-8 h-8 mr-[4px] rounded-full 
-                   text-[#14181A] hover:text-[#14181A] bg-[#ffb100] hover:bg-orange-400 
+                  className="flex items-center justify-center w-12 h-[38px] mr-[-4px] rounded-r-md 
+                   text-[#fff] hover:text-[#fff] bg-[#262626] hover:bg-gray-950 border border-[#222]
                    transition-colors flex-shrink-0"
                 >
-                  <Search size={16} />
+                  <Search size={18} />
                 </button>
               </div>
               {/* dropdown panel unchanged */}
@@ -335,9 +328,9 @@ const Header = () => {
           </div>
 
           {/* Account / Cart column */}
-          <div className="flex items-center justify-end w-full h-full gap-6">
+          <div className="flex items-center justify-end w-full h-full gap-2">
             {/* Delivery location - can be dropdown in future */}
-            <div className="relative flex items-center justify-start gap-2 px-3 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors duration-300 ">
+            <div className="relative flex items-center justify-start gap-2 px-3 py-2 rounded-sm cursor-pointer hover:bg-gray-200/80 transition-colors duration-100 ">
               {/* </div> */}
               <div className="flex flex-col items-start shrink-0">
                 <span className="text-xs font-normal text-gray-600">
@@ -351,10 +344,11 @@ const Header = () => {
 
             {/* Account/Trigger */}
             <div
-              className="relative flex items-center gap-2 text-gray-600 px-0 h-full "
+              className="relative flex items-center gap-2 text-gray-600 px-3 rounded-sm h-full hover:bg-gray-200/80 transition-colors duration-100 "
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
             >
+              {/* <CiUser /> */}
               <Link
                 href={user?.name ? '/profile' : '/login'}
                 className="flex flex-col gap-0 items-start justify-start "
@@ -384,7 +378,7 @@ const Header = () => {
 
                 <span className="relative flex items-center text-[14.0px] text-[#171717] font-bold gap-0.5 -mt-1.5">
                   Account
-                  {/* <ChevronDown size={14} color="#333" /> */}
+                  {/* <ChevronDown size={14} color="#999" /> */}
                   <ChevronDownIcon size={12} color="#4c4c4c" />
                 </span>
               </Link>
@@ -477,31 +471,32 @@ const Header = () => {
             </div>
 
             {/* Cart */}
-            <div className="flex items-center justify-start h-full gap-3 ">
+            <div className="flex items-center justify-start h-full gap-2 pr-2">
               <Link
                 href="/cart"
                 className="relative flex items-center justify-center mt-[2px] cursor-pointer"
               >
                 {/* <PiShoppingCart size={22} /> */}
-                {/* <IoCartOutline size={22} /> */}
-                <CgShoppingCart size={20} color="#404040" />
-                {/* {cart?.length > 0 && ( */}
-                <div className="absolute top-[-6px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full border border-white bg-[#ffb100] flex items-center justify-center mt-[0px]">
-                  <span className="text-gray-800 font-semibold text-[10px] leading-none">
-                    {cart.length > 99 ? '99+' : cart.length}
-                  </span>
-                </div>
-                {/* )} */}
+                {/* <IoCartOutline size={22} color="#222" /> */}
+                <CgShoppingCart size={18} color="#222" />
+                {/* <IoCart size={20} color="#222" /> */}
+                {cart?.length > 0 && (
+                  <div className="absolute top-[-7px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full border border-white bg-[#fab528] flex items-center justify-center mt-[0px]">
+                    <span className="text-gray-800 font-semibold text-[11px] leading-none">
+                      {cart.length > 99 ? '99+' : cart.length}
+                    </span>
+                  </div>
+                )}
               </Link>
               {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
               <div className="flex flex-col items-start justify-center">
                 <span className="font-normal text-[11px] text-gray-600 ">
-                  Cart
+                  KES
                 </span>
-                <span className=" text-[13.0px] text-[#171717] font-bold -mt-1.5">
-                  KES 0.00
+                <span className=" text-[12.5px] text-[#171717] font-bold -mt-1.5">
+                  0.00
                 </span>
               </div>
             </div>

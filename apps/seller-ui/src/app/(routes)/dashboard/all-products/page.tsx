@@ -250,7 +250,7 @@ const ProductList = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-lg p-4">
+      <div className="overflow-x-auto text-gray-800 bg-white py-6 px-4 border border-gray-300 rounded-lg ">
         {isLoading ? (
           <p className="text-center text-gray-700">Loading products...</p>
         ) : (
@@ -275,7 +275,7 @@ const ProductList = () => {
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-gray-800 hover:border-gray-900 transition"
+                  className="border-b border-gray-400 hover:border-gray-900 transition"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-3">

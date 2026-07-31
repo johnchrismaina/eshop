@@ -2,19 +2,23 @@ import * as React from 'react';
 
 interface ChevronDownProps {
   size?: number;
+  width?: number;
+  height?: number;
   strokeWidth?: number;
   color?: string;
 }
 
 const ChevronDownIcon: React.FC<ChevronDownProps> = ({
   size = 22,
+  width = 12,
+  height = 14,
   strokeWidth = 1.5,
   color = '#000',
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
+    width={width}
+    height={height}
     viewBox="0 0 24 24"
   >
     <path d="M0 0h24v24H0z" fill="none" />

@@ -12,6 +12,8 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Nunito Sans', 'sans-serif'],
+        libre: ['Libre Franklin', 'sans-serif'],
+        oswald: ['Oswald', 'sans-serif'],
       },
       screens: {
         lg: '900px', // redefine lg to start at 900px

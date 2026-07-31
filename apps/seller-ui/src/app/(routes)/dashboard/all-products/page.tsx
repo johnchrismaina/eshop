@@ -222,10 +222,10 @@ const ProductList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen p-8">
+    <div className="w-full min-h-screen px-10 py-4 bg-[#f5f5f5]">
       {/* Header */}
-      <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2l text-gray-700 font-semibold">All Products</h2>
+      <div className="flex justify-between items-end mb-1 border-b border-gray-300 py-3">
+        <h2 className="text-xl text-[#000] font-semibold">All Products</h2>
         <Link
           href="/dashboard/create-product"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
@@ -235,10 +235,12 @@ const ProductList = () => {
       </div>
 
       {/* Breadcrumbs */}
-      <Breadcrumbs title="All Products" />
+      <div className="py-3">
+        <Breadcrumbs title="All Products" />
+      </div>
 
       {/* Search Bar */}
-      <div className="mb-4 flex items-center bg-gray-200 p-2 rounded-md flex-1">
+      <div className="mb-6 flex items-center bg-white border border-gray-200 p-2 rounded-md flex-1">
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
@@ -250,14 +252,14 @@ const ProductList = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto text-gray-800 bg-white py-6 px-4 border border-gray-300 rounded-lg ">
+      <div className="overflow-x-auto text-gray-800 bg-white py-6 px-8 border border-gray-200 rounded-lg ">
         {isLoading ? (
           <p className="text-center text-gray-700">Loading products...</p>
         ) : (
           <table className="w-full text-gray-700">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="border-b border-gray-800">
+                <tr key={headerGroup.id} className="border-b border-gray-600">
                   {headerGroup.headers.map((header) => (
                     <th key={header.id} className="p-3 text-left">
                       {header.isPlaceholder
@@ -273,10 +275,7 @@ const ProductList = () => {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b border-gray-400 hover:border-gray-900 transition"
-                >
+                <tr key={row.id} className="border-b border-gray-200 ">
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-3">
                       {flexRender(

@@ -6,6 +6,12 @@ import {
   Heart,
   MapPin,
   MessageSquareText,
+  Truck,
+  Gift,
+  Package,
+  Pencil,
+  RotateCcw,
+  ShieldCheck,
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -147,8 +153,8 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   };
 
   return (
-    <div className="w-full bg-white px-8">
-      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
+    <div className="w-full bg-white px-8 text-[#1d1d1f]">
+      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_280px] gap-2">
         {' '}
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
@@ -244,7 +250,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl text-gray-950 font-medium">
+          <h1 className="text-2xl text-gray-950 font-medium">
             {productDetails?.title}
           </h1>
           <div className="w-full flex flex-col items-start ">
@@ -259,14 +265,14 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
-          <hr className="border-t border-gray-200 " />
+          <hr className="border-t border-slate-200 " />
 
           <div className="mt-1">
             {/* Product price */}
             <div className="flex flex-col">
               <div className="pt-4">
-                <span className="text-2xl font-semibold tracking-tight text-gray-900">
-                  Ksh{' '}
+                <span className="text-sm font-bold">Ksh </span>
+                <span className="text-2xl font-bold tracking-tight text-gray-900">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
                     : productDetails?.regular_price}
@@ -340,13 +346,13 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Product description */}
             {/* <div className="w-full lg:w-full mx-auto mt-5"> */}
             <div className="bg-white py-4 ">
-              <span className="text-lg font-semibold text-gray-800 ">
+              <span className="text-lg font-bold text-[#1d1d1f] ">
                 {/* About this item {productDetails?.title} */}
                 Product details
               </span>
 
               {/* Divider */}
-              <hr className="border-t border-gray-200 my-3" />
+              <hr className="border-t border-slate-200 my-3" />
 
               {/* Custom Specifications */}
               {productDetails?.custom_specifications?.length > 0 && (
@@ -380,14 +386,14 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               )}
 
               <div className="flex flex-col gap-3">
-                <span className="text-base font-semibold text-gray-800 ">
+                <span className="text-base font-bold text-[#1d1d1f] ">
                   {/* About this item {productDetails?.title} */}
                   About this item
                 </span>
 
                 {/* Description */}
                 <div
-                  className="prose prose-sm text-slate-800 text-[15px] max-w-none break-words "
+                  className="prose prose-sm text-[#1d1d1f] text-[15px] text-sm/6 max-w-none break-words "
                   dangerouslySetInnerHTML={{
                     __html: productDetails?.short_description,
                   }}
@@ -430,71 +436,95 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className="bg-[#F5F5F5] w-[244px] px-5 py-4 rounded-md ">
+        <div className=" w-[280px] px-6 py-2 bg-[#f5f5f5] rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-3 py-1 ">
-            {/* Instant delivery */}
-            <div className="flex flex-col gap-0">
-              <span className="text-[15px] text-gray-800 font-semibold ">
-                Delivery:
-              </span>
-              <p className="text-sm text-gray-800 font-normal ">
-                Ships from <span className="font-semibold">Nairobi, Kenya</span>
+          <div className="flex flex-col gap-3 px-0 py-2 rounded-md">
+            <div className="flex items-end justify-start gap-2">
+              <p className="pt-2">
+                <span className="text-[15px] text-gray-800 font-semibold ">
+                  Deliver to{' '}
+                </span>
+                <span className="text-sm text-blue-600 font-normal cursor-pointer hover:underline ">
+                  {location?.city}
+                </span>
               </p>
-            </div>
-            {/* Pickup location */}
-            <div className="flex flex-col gap-0">
-              <span className="text-[15px] text-gray-800 font-semibold ">
-                Pickup:
-              </span>
-              <div className="flex flex-col gap-1">
-                <p className="text-sm text-gray-800 font-normal ">
-                  Kshs 70 delivery
-                </p>
-                <p className="text-sm text-gray-800 font-normal ">
-                  Order within{' '}
-                  <span className="text-green-700 font-medium">
-                    3 hrs 18 mins{' '}
-                  </span>{' '}
-                  to get by{' '}
-                  <span className="font-semibold">Tuesday, July 7</span>
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center text-blue-600 pt-2 gap-1">
-              <MapPin size={18} className="ml-[-5px]" />
-              <span className="text-sm font-normal">
+              {/* <span className="text-sm text-blue-700 font-normal cursor-pointer pt-2">
                 {' '}
                 Deliver to
                 {' ' + location?.city + ', ' + location?.country}
-              </span>
+              </span> */}
+            </div>
+            {/* Pickup location */}
+            <div className="flex items-start justify-start gap-2">
+              <div className="flex flex-col items-start justify-start gap-1">
+                <span className="text-[15px] text-[#1d1d1f] font-semibold ">
+                  Pickup Station:
+                </span>
+                <div className="flex flex-col gap-1">
+                  <p className="text-sm text-gray-800 font-normal ">
+                    Charges{' '}
+                    <span className="text-gray-800 font-bold">Kshs 70 </span>
+                  </p>
+                  <p className="text-sm text-gray-800 font-normal ">
+                    Delivery <span className="font-bold">Tuesday, July 7.</span>
+                  </p>
+                  <p className="text-sm text-gray-800 font-normal ">
+                    Order within{' '}
+                    <span className="text-gray-800 font-semibold">
+                      3 hrs 18 mins{' '}
+                    </span>
+                  </p>
+                </div>
+                <div className="flex items-center text-blue-700 ">
+                  {/* <MapPin size={18} className="ml-[-5px]" /> */}
+                </div>
+              </div>
+            </div>
+
+            {/* Instant delivery */}
+            <div className="flex items-start justify-start gap-2">
+              <div className="flex flex-col items-start justify-start gap-1">
+                <span className=" text-[15px] text-[#1d1d1f] font-semibold ">
+                  Door Delivery:
+                </span>
+                <p className="text-sm text-gray-800 font-normal ">
+                  Ships from{' '}
+                  <span className="font-semibold">Nairobi, Kenya</span>
+                </p>
+                <p className="text-sm text-gray-800 font-normal ">
+                  Delivery <span className="font-bold">Tuesday, July 7.</span>
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Quantity */}
-          <div className="py-3">
+          <div className="px-0 py-4 ">
+            <hr className="border-t border-slate-300 pb-4" />
             <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
-              {productDetails?.stock > 0 ? (
-                <span className="text-green-600 font-medium">
-                  In Stock{' '}
-                  {/* <span className="text-gray-500 font-medium">
+              <div className="hidden">
+                {productDetails?.stock > 0 ? (
+                  <span className="text-[15px] text-green-600 font-medium">
+                    In Stock{' '}
+                    {/* <span className="text-gray-500 font-medium">
                     (Stock {productDetails?.stock})
                   </span> */}
-                </span>
-              ) : (
-                <span className="text-red-600 font-medium">Out of Stock</span>
-              )}
+                  </span>
+                ) : (
+                  <span className="text-red-600 font-medium">Out of Stock</span>
+                )}
+              </div>
 
               {/* Quantity dropdown */}
-              <div className="flex flex-col gap-1 w-full">
-                <span className="text-sm font-semibold text-gray-700">
+              <div className="flex flex-col gap-2 w-full">
+                <span className="text-sm font-semibold text-gray-700 ">
                   Quantity
                 </span>
                 <select
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full border bg-white border-gray-500 font-medium text-gray-800 text-sm rounded-lg px-3 py-[6px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-200 font-medium text-gray-800 text-sm rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {/* <option value="" disabled>
                   Quantity
@@ -511,7 +541,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Add to cart button */}
             <div className="flex flex-col gap-2 w-full">
               <button
-                className={`flex items-center justify-center p-[8px] bg-[#f16232] hover:bg-[#e05628] text-sm text-white font-medium rounded-full transition ${
+                className={`flex items-center justify-center p-[8px] bg-[#ffac30] hover:bg-amber-500 text-[14.0] text-[#1d1d1f] font-medium rounded-md transition ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -541,22 +571,31 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
+          <hr className="border-t border-slate-300 pb-4" />
+
           <div className="py-1">
             <div className="w-full rounded-lg">
               {/* Sold by section */}
-              <dl className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-2 text-sm pb-4">
-                <dt className="font-normal tracking-tight text-gray-500">
-                  Sold by
-                </dt>
+              <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2 text-sm pb-4">
+                <dt className="text-[15px] font-bold ">Sold by</dt>
                 <dd className="font-normal tracking-tight text-blue-600 ">
                   {productDetails?.Shop?.name}
                 </dd>
 
-                <dt className="font-normal tracking-tight text-gray-500">
+                <dt className="flex items-center gap-2 font-bold tracking-tight ">
+                  <RotateCcw size={16} color="#1d1d1f" />
                   Returns
                 </dt>
                 <dd className="font-normal tracking-tight text-blue-600">
                   7 day returns
+                </dd>
+
+                <dt className="flex items-center gap-2 font-bold tracking-tight ">
+                  <ShieldCheck size={16} color="#1d1d1f" />
+                  Security
+                </dt>
+                <dd className="font-normal tracking-tight text-blue-600">
+                  Safe Payments
                 </dd>
               </dl>
 
@@ -582,12 +621,12 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
               {/* Add to wishlist */}
               <div className="border-t border-gray-200 pt-4 cursor-pointer">
-                <div className="flex items-center justify-center gap-2 p-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg ">
+                <div className="flex items-center justify-center gap-2 p-2 hover:bg-gray-100 border border-gray-300 rounded-lg ">
                   <Heart
                     size={20}
                     fill={isWishlisted ? 'red' : 'transparent'}
                     className="cursor-pointer"
-                    color={isWishlisted ? 'transparent' : '#777'}
+                    color={isWishlisted ? 'transparent' : '#333'}
                     onClick={() =>
                       isWishlisted
                         ? removeFromWishlist(

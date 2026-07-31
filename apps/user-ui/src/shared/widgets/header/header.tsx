@@ -333,7 +333,7 @@ const Header = () => {
             {/* Delivery location - can be dropdown in future */}
             <div className="relative flex items-center justify-start gap-2 px-3 py-0 rounded-sm cursor-pointer hover:bg-gray-200/80 transition-colors duration-100 ">
               {/* </div> */}
-              <MapPin size={17} color="#000000cc" />
+              {/* <MapPin size={17} color="#000000cc" /> */}
               <div className="flex flex-col items-start shrink-0">
                 <span className="text-xs font-normal text-[#000000cc] tracking-tight">
                   Deliver to:{' '}

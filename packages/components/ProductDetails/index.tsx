@@ -12,6 +12,7 @@ import {
   Pencil,
   RotateCcw,
   ShieldCheck,
+  Store,
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -154,8 +155,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
   return (
     <div className="w-full bg-white px-8 text-[#1d1d1f]">
-      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_280px] gap-2">
-        {' '}
+      {/* Breadcrumbs */}
+      <div className="bg-[#fff] py-4"></div>
+      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_300px] gap-3">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
@@ -238,6 +240,11 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         </div>
         {/* Middle column - product details */}
         <div className="px-4 pb-1 prose prose-sm max-w-none">
+          {/* Title */}
+          <h1 className="text-2xl text-gray-950 font-semibold">
+            {productDetails?.title}
+          </h1>
+
           {/* Go to Store */}
           <div className="text-left ">
             <Link
@@ -249,10 +256,6 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </Link>
           </div>
 
-          {/* Title */}
-          <h1 className="text-2xl text-gray-950 font-medium">
-            {productDetails?.title}
-          </h1>
           <div className="w-full flex flex-col items-start ">
             <div className="flex gap-2 text-[#ffc220] mb-1">
               <Ratings rating={productDetails?.ratings} />
@@ -270,8 +273,8 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           <div className="mt-1">
             {/* Product price */}
             <div className="flex flex-col">
-              <div className="pt-4">
-                <span className="text-sm font-bold">Ksh </span>
+              <div className="pt-4 tracking-tight">
+                <span className="text-base font-normal">Ksh </span>
                 <span className="text-2xl font-bold tracking-tight text-gray-900">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
@@ -393,7 +396,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
                 {/* Description */}
                 <div
-                  className="prose prose-sm text-[#1d1d1f] text-[15px] text-sm/6 max-w-none break-words "
+                  className="prose prose-sm text-[#1d1d1f] text-[15px] text-[15px]/6 max-w-none break-words pr-4"
                   dangerouslySetInnerHTML={{
                     __html: productDetails?.short_description,
                   }}
@@ -436,32 +439,25 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[280px] px-6 py-6 bg-[#f5f5f5] border-none border-slate-200 rounded-md">
+        <div className=" w-[300px] text-[#000] p-4 bg-[#f5f5f5] border-none border-slate-200 rounded-lg">
           {/* Delivery options */}
-          <div className="flex flex-col gap-3 px-0 py-0 rounded-md ">
+          <div className="flex flex-col gap-4 bg-[#fff] p-4 rounded-lg shadow-sm">
             {/* Pickup location */}
             <div className="flex items-start justify-start gap-2 ">
-              <div className="py-0">
-                <Package size={20} strokeWidth="1.0" color="#1d1d1f" />
-              </div>
-              <div className="flex flex-col items-start justify-start gap-1">
+              <Package size={18} strokeWidth="1.5" color="#1d1d1f" />
+
+              <div className="flex flex-col items-start justify-start gap-0.5">
                 <p className="text-[15px] ">
-                  <span className=" text-[15px] text-[#1d1d1f] font-semibold ">
-                    Pickup:{' '}
-                  </span>
-                  <span className="font-semibold">Ksh 70</span>
+                  <span className="text-[#000] font-bold ">Pickup: </span>
+                  <span className="font-normal">Ksh 70</span>
                 </p>
-                <div className="flex flex-col gap-0">
-                  <p className="text-sm text-gray-800 font-normal ">
-                    Delivery <span className="font-bold">Tuesday, July 7.</span>
-                  </p>
-                  <p className="text-sm text-gray-800 font-normal ">
-                    Order within{' '}
-                    <span className="text-gray-800 font-semibold">
-                      3 hrs 18 mins{' '}
-                    </span>
-                  </p>
-                </div>
+                <p className="text-sm  ">
+                  Delivery <span className="font-bold">Tuesday, July 7</span>
+                </p>
+                <p className="text-sm font-normal ">
+                  Order within{' '}
+                  <span className=" font-normal">3 hrs 18 mins </span>
+                </p>
                 <div className="flex items-center text-blue-700 ">
                   {/* <MapPin size={18} className="ml-[-5px]" /> */}
                 </div>
@@ -470,46 +466,42 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
             {/* Door delivery */}
             <div className="flex items-start justify-start gap-2">
-              <Truck size={20} strokeWidth="1.0" color="#1d1d1f" />
-              <div className="flex flex-col items-start justify-start gap-1">
+              <Truck size={18} strokeWidth="1.5" color="#1d1d1f" />
+
+              <div className="flex flex-col items-start justify-start gap-0.5">
                 <p className="text-[15px] ">
-                  <span className=" text-[15px] text-[#1d1d1f] font-semibold ">
-                    Delivery:{' '}
-                  </span>
-                  <span className="font-semibold">Ksh 200</span>
+                  <span className="font-bold ">Delivery: </span>
+                  <span className="font-normal">Ksh 200</span>
                 </p>
-                <p className="text-sm text-gray-800 font-normal ">
-                  Delivery <span className="font-bold">Tuesday, July 7.</span>
+                <p className="text-sm  ">
+                  Delivery <span className="font-bold">Tuesday, July 7</span>
                 </p>
-                <p className="text-sm text-gray-800 font-normal ">
+                <p className="text-sm font-normal ">
                   Order within{' '}
-                  <span className="text-gray-800 font-semibold">
-                    3 hrs 18 mins{' '}
-                  </span>
+                  <span className="font-normal">3 hrs 18 mins </span>
                 </p>
               </div>
             </div>
+          </div>
 
-            <div className="flex items-end justify-start gap-2">
-              <p className="pt-2">
-                <span className="text-[15px] text-gray-800 font-semibold ">
-                  Deliver to{' '}
-                </span>
-                <span className="text-sm text-blue-600 font-normal cursor-pointer hover:underline ">
-                  {location?.city}
-                </span>
-              </p>
-              {/* <span className="text-sm text-blue-700 font-normal cursor-pointer pt-2">
+          {/* <hr className="border-t border-slate-200 my-6" /> */}
+
+          <div className="flex items-end justify-start gap-2 my-4 bg-[#fff] p-4 rounded-lg shadow-sm">
+            <p className="">
+              <span className="text-[15px] font-normal ">Deliver to </span>
+              <span className="text-sm text-blue-600 font-normal cursor-pointer hover:underline ">
+                {location?.city}
+              </span>
+            </p>
+            {/* <span className="text-sm text-blue-700 font-normal cursor-pointer pt-2">
                 {' '}
                 Deliver to
                 {' ' + location?.city + ', ' + location?.country}
               </span> */}
-            </div>
           </div>
 
-          {/* Quantity */}
-          <div className="px-0 py-4 ">
-            <hr className="border-t border-slate-200 pb-4" />
+          {/* Quantity and Add to Cart */}
+          <div className="bg-[#fff] p-4 rounded-lg shadow-sm mb-4">
             <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
               <div className="hidden">
@@ -525,15 +517,23 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 )}
               </div>
 
-              {/* Quantity dropdown */}
-              <div className="flex flex-col gap-2 w-full">
-                <span className="text-sm font-semibold text-gray-700 ">
-                  Quantity
+              {/* Price */}
+              <div className="tracking-tight">
+                <span className="text-base font-normal">Ksh </span>
+                <span className="text-2xl font-bold tracking-tight text-gray-900">
+                  {productDetails?.deal
+                    ? productDetails.deal.sale_price
+                    : productDetails?.regular_price}
                 </span>
+              </div>
+
+              {/* Quantity dropdown */}
+              <div className="flex flex-col gap-1 w-full">
+                <span className="text-sm font-bold  ">Quantity</span>
                 <select
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full border border-gray-200 font-medium text-gray-800 text-sm rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border bg-transparent border-gray-300 font-medium text-sm rounded-md px-3 py-1.5 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition-all duration-300"
                 >
                   {/* <option value="" disabled>
                   Quantity
@@ -548,9 +548,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
 
             {/* Add to cart button */}
-            <div className="flex flex-col gap-2 w-full">
+            <div className="flex flex-col gap-1 w-full">
               <button
-                className={`flex items-center justify-center p-[8px] bg-[#ffac30] hover:bg-amber-500 text-[14.0] text-[#1d1d1f] font-medium rounded-md transition ${
+                className={`flex items-center justify-center px-[8px] py-1.5 bg-[#ffac30] hover:bg-amber-500 text-[14.0] text-[#1d1d1f] font-medium rounded-full transition ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -580,27 +580,30 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
-          {/* <hr className="border-t border-slate-300 pb-4" /> */}
+          {/* <hr className="border-t border-slate-200 pt-6" /> */}
 
-          <div className="py-1">
+          <div className="bg-[#fff] p-4 rounded-lg shadow-sm">
             <div className="w-full ">
               {/* Sold by section */}
-              <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2 text-sm pb-4">
-                <dt className="text-[15px] font-bold ">Sold by</dt>
-                <dd className="font-normal tracking-tight text-blue-600 ">
+              <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2 text-sm pb-3">
+                <dt className="flex items-center gap-2 font-normal tracking-tight ">
+                  <Store size={18} strokeWidth="1.5" color="#1d1d1f" />
+                  Sold by
+                </dt>
+                <dd className="font-normal tracking-tight text-gray-800 ">
                   {productDetails?.Shop?.name}
                 </dd>
 
-                <dt className="flex items-center gap-2 font-bold tracking-tight ">
-                  <RotateCcw size={16} color="#1d1d1f" />
+                <dt className="flex items-center gap-2 font-normal tracking-tight ">
+                  <RotateCcw size={18} strokeWidth="1.5" color="#1d1d1f" />
                   Returns
                 </dt>
                 <dd className="font-normal tracking-tight text-blue-600">
                   7 day returns
                 </dd>
 
-                <dt className="flex items-center gap-2 font-bold tracking-tight ">
-                  <ShieldCheck size={16} color="#1d1d1f" />
+                <dt className="flex items-center gap-2 font-normal tracking-tight ">
+                  <ShieldCheck size={18} strokeWidth="1.5" color="#1d1d1f" />
                   Security
                 </dt>
                 <dd className="font-normal tracking-tight text-blue-600">
@@ -609,7 +612,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </dl>
 
               {/* Seller performance stats */}
-              <div className="flex flex-col gap-2 py-3 border-t border-gray-200">
+              <div className="flex items-center justify-start gap-4 py-0 ">
                 {/* Seller score */}
                 <div className="flex gap-1 text-sm">
                   <span className="font-semibold">88%</span>
@@ -621,16 +624,18 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 <Link
                   href={'#'}
                   onClick={() => handleChat()}
-                  className="text-blue-600 text-sm flex items-center gap-2"
+                  className="text-blue-600 text-sm flex items-center gap-1"
                 >
-                  <MessageSquareText size={18} />
+                  <MessageSquareText size={16} />
                   Chat
                 </Link>
               </div>
 
+              <hr className="border-t border-slate-200 my-5" />
+
               {/* Add to wishlist */}
-              <div className="border-t border-gray-200 pt-4 cursor-pointer">
-                <div className="flex items-center justify-center gap-2 p-2 hover:bg-gray-100 border border-gray-300 rounded-lg ">
+              <div className="pt-0 cursor-pointer text-gray-800">
+                <div className="flex items-center justify-start gap-2 px-0 py-0 underline hover:text-[#000] ">
                   <Heart
                     size={20}
                     fill={isWishlisted ? 'red' : 'transparent'}
@@ -666,7 +671,6 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
       </div>
-
       {/* You may also like */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
         <div className="w-full h-full py-4 ">
@@ -681,7 +685,6 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
       </div>
-
       {/* Product description */}
       <div className="w-full lg:w-full mx-auto mt-40">
         <div className="bg-white py-4 border-t border-gray-200">
@@ -697,7 +700,6 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           />
         </div>
       </div>
-
       {/* From the manufacturer */}
       <div className="w-full lg:w-full mx-auto mt-5 border-t border-y-gray-200 hidden">
         <div className="bg-white min-h-[60vh] h-full ">
@@ -707,7 +709,6 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </h3>
         </div>
       </div>
-
       {/* Ratings & Reviews */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200">
         <div className="bg-white min-h-[50vh] py-4 h-full ">

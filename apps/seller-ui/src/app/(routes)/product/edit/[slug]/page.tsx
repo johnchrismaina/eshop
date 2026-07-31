@@ -405,58 +405,58 @@ export default function EditProductPage() {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f5] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,600px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f5f5f5] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
-        <div className="flex flex-col items-start space-y-2">
+        <div className="flex items-start justify-between px-0 bg-[#F5F5F5] w-[650px] h-auto mx-auto">
           {/* Images Section */}
-          <div className="flex flex-col items-center w-[580px] mx-auto">
-            {/* Main preview */}
-            <div className="w-[500px] mb-6">
-              <div
-                className={`relative w-full ${
-                  aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'
-                }`}
-              >
-                {hoveredImage ? (
-                  <Image
-                    src={hoveredImage} // ✅ no key here
-                    alt="Product preview"
-                    fill
-                    onLoad={() => setImageLoaded(true)}
-                    className={`object-cover rounded-none transition-opacity duration-75 ${
-                      imageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    unoptimized
-                  />
-                ) : (
-                  <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
-                    <span className="text-gray-500">Upload product image</span>
-                  </div>
-                )}
-              </div>
-            </div>
+          {/* <div className="flex flex-col items-center w-[580px] mx-auto"> */}
+          {/* Thumbnails */}
+          <div className="flex flex-col gap-1">
+            {uploadedImages.map((img, index) => (
+              <ImagePlaceholder
+                key={index}
+                size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
+                small={index !== 0}
+                aspect={aspect}
+                pictureUploadingLoader={pictureUploadingLoader}
+                images={uploadedImages}
+                index={index}
+                onImageChange={handleImageChange}
+                onRemove={handleRemoveImage}
+                // ✅ setHoveredImage when hovering/clicking
+                setSelectedImage={(url) => setHoveredImage(url)}
+                setOpenImageModal={setOpenImageModal}
+                defaultImage={img?.file_url ?? null}
+              />
+            ))}
+          </div>
 
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-3 mt-8 w-full">
-              {uploadedImages.map((img, index) => (
-                <ImagePlaceholder
-                  key={index}
-                  size={aspect === 'square' ? '850 x 850' : '765 x 1020'}
-                  small={index !== 0}
-                  aspect={aspect}
-                  pictureUploadingLoader={pictureUploadingLoader}
-                  images={uploadedImages}
-                  index={index}
-                  onImageChange={handleImageChange}
-                  onRemove={handleRemoveImage}
-                  // ✅ setHoveredImage when hovering/clicking
-                  setSelectedImage={(url) => setHoveredImage(url)}
-                  setOpenImageModal={setOpenImageModal}
-                  defaultImage={img?.file_url ?? null}
+          {/* Main preview */}
+          <div className="w-[540px] rounded-lg mb-6">
+            <div
+              className={`relative w-full ${
+                aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'
+              }`}
+            >
+              {hoveredImage ? (
+                <Image
+                  src={hoveredImage} // ✅ no key here
+                  alt="Product preview"
+                  fill
+                  onLoad={() => setImageLoaded(true)}
+                  className={`object-cover rounded-none transition-opacity duration-75 ${
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  unoptimized
                 />
-              ))}
+              ) : (
+                <div className="flex items-center justify-center w-full h-full bg-gray-100 border border-dashed border-gray-300">
+                  <span className="text-gray-500">Upload product image</span>
+                </div>
+              )}
             </div>
           </div>
+          {/* </div> */}
         </div>
 
         {/* Middle column - product details */}
@@ -465,7 +465,7 @@ export default function EditProductPage() {
           <div
             ref={dropdownRef}
             // className="relative inline-block text-left ml-14 "
-            className="relative flex flex-col items-start justify-center text-left pb-3 "
+            className="relative flex flex-col items-start justify-center text-left px-4 p-4 bg-white rounded-md mb-2"
           >
             <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
               Image Aspect Ratio
@@ -474,7 +474,7 @@ export default function EditProductPage() {
             <button
               type="button"
               onClick={() => setOpenAspectRatio(!openAspectRatio)}
-              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
+              className="border border-gray-300 rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-50 w-[320px] flex justify-between items-center"
             >
               Aspect Ratio:{' '}
               {aspect === 'square'
@@ -507,7 +507,7 @@ export default function EditProductPage() {
           </p> */}
 
           {/* Product Title */}
-          <div className="w-[500px]">
+          <div className="w-full px-4 p-4 bg-white rounded-md mb-2">
             <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
               Product Title *
             </label>
@@ -524,7 +524,7 @@ export default function EditProductPage() {
           </div>
 
           {/* Slug */}
-          <div className="mt-3 w-[500px]">
+          <div className="mt-3 w-full">
             <label className="block text-[15px] font-semibold  text-gray-700 mb-0">
               Slug *
             </label>
@@ -714,7 +714,7 @@ export default function EditProductPage() {
           </div>
         </div>
         {/* Right column - form inputs */}
-        <div className="bg-[#fff] border-l border-gray-200 w-[244px] px-5 py-0 rounded-none ">
+        <div className="bg-[#fff] border-l border-gray-200 w-[244px] px-5 py-2 rounded-md ">
           {/* Category */}
           <div className="">
             <label className="block font-semibold text-[15px] text-gray-700 mb-1">

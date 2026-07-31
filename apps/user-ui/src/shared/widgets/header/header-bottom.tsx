@@ -64,7 +64,7 @@ const HeaderBottom = () => {
         {/* </div> */}
         <div className="flex items-center justify-start text-[14.0px] text-[#000] font-medium gap-4 ml-0 h-full">
           <span className="cursor-pointer px-2 py-2 hover:bg-gray-200/80 transition-colors duration-100 ">
-            Sell{' '}
+            Sell on Sokonis
           </span>
           <span className="cursor-pointer px-2 py-2 hover:bg-gray-200/80 transition-colors duration-100 ">
             Customer Service

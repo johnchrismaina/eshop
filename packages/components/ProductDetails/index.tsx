@@ -436,35 +436,22 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[280px] px-6 py-2 bg-[#f5f5f5] rounded-md">
+        <div className=" w-[280px] px-6 py-6 bg-[#f5f5f5] border-none border-slate-200 rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-3 px-0 py-2 rounded-md">
-            <div className="flex items-end justify-start gap-2">
-              <p className="pt-2">
-                <span className="text-[15px] text-gray-800 font-semibold ">
-                  Deliver to{' '}
-                </span>
-                <span className="text-sm text-blue-600 font-normal cursor-pointer hover:underline ">
-                  {location?.city}
-                </span>
-              </p>
-              {/* <span className="text-sm text-blue-700 font-normal cursor-pointer pt-2">
-                {' '}
-                Deliver to
-                {' ' + location?.city + ', ' + location?.country}
-              </span> */}
-            </div>
+          <div className="flex flex-col gap-3 px-0 py-0 rounded-md ">
             {/* Pickup location */}
-            <div className="flex items-start justify-start gap-2">
+            <div className="flex items-start justify-start gap-2 ">
+              <div className="py-0">
+                <Package size={20} strokeWidth="1.0" color="#1d1d1f" />
+              </div>
               <div className="flex flex-col items-start justify-start gap-1">
-                <span className="text-[15px] text-[#1d1d1f] font-semibold ">
-                  Pickup Station:
-                </span>
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm text-gray-800 font-normal ">
-                    Charges{' '}
-                    <span className="text-gray-800 font-bold">Kshs 70 </span>
-                  </p>
+                <p className="text-[15px] ">
+                  <span className=" text-[15px] text-[#1d1d1f] font-semibold ">
+                    Pickup:{' '}
+                  </span>
+                  <span className="font-semibold">Ksh 70</span>
+                </p>
+                <div className="flex flex-col gap-0">
                   <p className="text-sm text-gray-800 font-normal ">
                     Delivery <span className="font-bold">Tuesday, July 7.</span>
                   </p>
@@ -481,26 +468,48 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </div>
             </div>
 
-            {/* Instant delivery */}
+            {/* Door delivery */}
             <div className="flex items-start justify-start gap-2">
+              <Truck size={20} strokeWidth="1.0" color="#1d1d1f" />
               <div className="flex flex-col items-start justify-start gap-1">
-                <span className=" text-[15px] text-[#1d1d1f] font-semibold ">
-                  Door Delivery:
-                </span>
-                <p className="text-sm text-gray-800 font-normal ">
-                  Ships from{' '}
-                  <span className="font-semibold">Nairobi, Kenya</span>
+                <p className="text-[15px] ">
+                  <span className=" text-[15px] text-[#1d1d1f] font-semibold ">
+                    Delivery:{' '}
+                  </span>
+                  <span className="font-semibold">Ksh 200</span>
                 </p>
                 <p className="text-sm text-gray-800 font-normal ">
                   Delivery <span className="font-bold">Tuesday, July 7.</span>
                 </p>
+                <p className="text-sm text-gray-800 font-normal ">
+                  Order within{' '}
+                  <span className="text-gray-800 font-semibold">
+                    3 hrs 18 mins{' '}
+                  </span>
+                </p>
               </div>
+            </div>
+
+            <div className="flex items-end justify-start gap-2">
+              <p className="pt-2">
+                <span className="text-[15px] text-gray-800 font-semibold ">
+                  Deliver to{' '}
+                </span>
+                <span className="text-sm text-blue-600 font-normal cursor-pointer hover:underline ">
+                  {location?.city}
+                </span>
+              </p>
+              {/* <span className="text-sm text-blue-700 font-normal cursor-pointer pt-2">
+                {' '}
+                Deliver to
+                {' ' + location?.city + ', ' + location?.country}
+              </span> */}
             </div>
           </div>
 
           {/* Quantity */}
           <div className="px-0 py-4 ">
-            <hr className="border-t border-slate-300 pb-4" />
+            <hr className="border-t border-slate-200 pb-4" />
             <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
               <div className="hidden">
@@ -571,10 +580,10 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
-          <hr className="border-t border-slate-300 pb-4" />
+          {/* <hr className="border-t border-slate-300 pb-4" /> */}
 
           <div className="py-1">
-            <div className="w-full rounded-lg">
+            <div className="w-full ">
               {/* Sold by section */}
               <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2 text-sm pb-4">
                 <dt className="text-[15px] font-bold ">Sold by</dt>

@@ -249,17 +249,31 @@ const Header = () => {
           <div className="flex items-center justify-start gap-6">
             {/* Logo */}
             <div
-              className="font-semibold font-libre text-[23px] tracking-tight pl-2"
+              className="flex items-center justify-center font-medium font-oswald text-3xl tracking-wide pl-2"
               // style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Sokonis<span className="text-2xl text-[#E85D1F] px-[1px]">.</span>
+            </div>
+
+            {/* Delivery location - can be dropdown in future */}
+            <div className="relative flex items-center justify-center gap-2 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors duration-100 ">
+              {/* </div> */}
+              <MapPin size={17} color="#000000cc" />
+              <div className="flex flex-col items-start shrink-0">
+                <span className="text-xs font-normal text-[#000000cc] tracking-tight">
+                  Deliver to:{' '}
+                </span>
+                <span className="text-[14.0px] font-semibold text-[#000] -mt-[4px] tracking-tight">
+                  Naivasha
+                </span>
+              </div>
             </div>
 
             {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
             <div
               ref={searchWrapperRef}
-              className="relative w-[800px] mx-auto ml-6"
+              className="relative w-[800px] mx-auto ml-0"
             >
               <div
                 ref={searchContainerRef}
@@ -329,24 +343,10 @@ const Header = () => {
           </div>
 
           {/* Account / Cart column */}
-          <div className="flex items-center justify-end w-full h-full gap-1">
-            {/* Delivery location - can be dropdown in future */}
-            <div className="relative flex items-center justify-start gap-2 px-3 py-0 rounded-sm cursor-pointer hover:bg-gray-200/80 transition-colors duration-100 ">
-              {/* </div> */}
-              {/* <MapPin size={17} color="#000000cc" /> */}
-              <div className="flex flex-col items-start shrink-0">
-                <span className="text-xs font-normal text-[#000000cc] tracking-tight">
-                  Deliver to:{' '}
-                </span>
-                <span className="text-[14.0px] font-semibold text-[#000] -mt-[4px] tracking-tight">
-                  Naivasha
-                </span>
-              </div>
-            </div>
-
+          <div className="flex items-center justify-end w-full h-full gap-2">
             {/* Account/Trigger */}
             <div
-              className="relative flex items-center gap-2 text-gray-600 px-3 rounded-sm h-full hover:bg-gray-200/80 transition-colors duration-100 "
+              className="relative flex items-center gap-2 text-gray-600 px-3 rounded-md h-full hover:bg-gray-100 transition-colors duration-100 "
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
             >

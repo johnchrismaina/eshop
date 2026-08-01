@@ -593,7 +593,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
           {/* <hr className="border-t border-slate-200 pt-6" /> */}
 
-          <div className="bg-[#fff] p-4 rounded-lg border border-gray-300">
+          <div className="bg-[#fff] px-4 py-6 rounded-lg border border-gray-300">
             {/* Sold by section */}
             <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-0 text-sm pb-0 ">
               {/* <dt className="flex items-center gap-2 font-normal tracking-tight ">
@@ -622,7 +622,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </dl>
 
             {/* Seller performance stats */}
-            <div className="flex flex-col items-start justify-start gap-2 py-0 mb-4">
+            <div className="flex flex-col items-start justify-start gap-2 py-0 mb-3">
               {/* Seller Store */}
               <span className="flex items-center gap-2 font-medium tracking-tight">
                 <Store size={18} strokeWidth="1.5" color="#1d1d1f" />
@@ -639,7 +639,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* <hr className="border-t border-slate-200 my-5" /> */}
 
             {/* Chat and Add to wishlist */}
-            <div className="flex flex-col items-center justify-start gap-2 cursor-pointer text-gray-800">
+            <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
               {/* Chat with seller */}
               <Link
                 href={'#'}
@@ -651,7 +651,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </Link>
 
               {/* Add to wishlist */}
-              <div className="w-full flex items-center justify-center gap-2 cursor-pointer hover:underline p-2 border border-gray-400 rounded-md ">
+              <div className="w-full flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-100 p-2 border border-gray-400 rounded-md transition-all duration-300">
                 <Heart
                   size={16}
                   fill={isWishlisted ? 'red' : 'transparent'}

@@ -22,7 +22,7 @@ const HeaderBottom = () => {
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
     <div className="relative z-10 w-full transition-all duration-300 bg-[#fff] border-b border-slate-200/80 shadow-md shadow-gray-300/10 ">
-      <div className="w-full px-12 mx-auto pt-0 pb-0 relative flex items-center justify-center gap-6 h-full ">
+      <div className="w-full px-12 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-center gap-8 h-full ">
         {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 
         {/* <div className="flex items-center justify-center gap-10"> */}
@@ -62,9 +62,9 @@ const HeaderBottom = () => {
         </nav>
 
         {/* </div> */}
-        <div className="flex items-center justify-start text-[14.0px] text-[#000] font-medium gap-4 ml-0 h-full">
+        <div className="flex items-center justify-start text-[14.0px] text-[#000] font-medium gap-3 ml-0 h-full">
           <span className="cursor-pointer px-2 py-2 hover:bg-gray-200/80 transition-colors duration-100 ">
-            Sell on Sokonis
+            Sell
           </span>
           <span className="cursor-pointer px-2 py-2 hover:bg-gray-200/80 transition-colors duration-100 ">
             Customer Service

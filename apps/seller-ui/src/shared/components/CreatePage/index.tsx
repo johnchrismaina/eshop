@@ -367,11 +367,11 @@ const CreatePage = ({ ...props }) => {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-0 pb-4 shadow-md rounded-lg text-white"
+      className="w-full mx-auto px-0 py-0 pb-4 rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
-      <div className="grid grid-cols-[500px_minmax(300px,1fr)] gap-4 py-0 bg-[#f5f5f7] border-b border-gray-300">
+      <div className="grid grid-cols-[500px_minmax(300px,1fr)] gap-2 py-0 bg-[#fff] border-b border-gray-200">
         {/* Dashboard button & Heading */}
         <div className="flex items-center justify-start gap-6 w-full px-8 py-2">
           <button
@@ -537,8 +537,101 @@ const CreatePage = ({ ...props }) => {
             )}
           </div>
 
+          <div className="mt-3 flex items-center justify-between gap-4 bg-white p-3 rounded-md">
+            {/* Category */}
+            <div className="flex-1">
+              <label className="block font-semibold text-[15px] text-gray-700 mb-1">
+                Category *
+              </label>
+              <div className="relative mb-2">
+                {isLoading ? (
+                  <p className="text-gray-700">Loading Categories...</p>
+                ) : isError ? (
+                  <p className="text-red-500">Failed to load categories</p>
+                ) : (
+                  <Controller
+                    name="category"
+                    control={control}
+                    rules={{ required: 'Categories is required' }}
+                    render={({ field }) => (
+                      <select
+                        {...field}
+                        className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
+                      >
+                        <option value="" className="bg-gray-100 text-gray-700">
+                          Select
+                        </option>
+                        {categories?.map((category: string) => (
+                          <option
+                            value={category}
+                            key={category}
+                            className="bg-gray-200 text-gray-800"
+                          >
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  />
+                )}
+                {/* Custom arrow */}
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <ChevronDown />
+                </div>
+              </div>
+              {errors.category && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.category.message as string}
+                </p>
+              )}
+            </div>
+
+            {/* Sub Categories */}
+            <div className="flex-1">
+              <label className="block font-semibold text-[15px] text-gray-700 mb-1">
+                Sub-category *
+              </label>
+              <div className="relative mb-2">
+                <Controller
+                  name="subCategory"
+                  control={control}
+                  rules={{ required: 'Subcategories is required' }}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
+                    >
+                      <option value="" className="bg-gray-100 text-gray-700">
+                        Select
+                      </option>
+                      {subcategories?.map((subcategory: string) => (
+                        <option
+                          value={subcategory}
+                          key={subcategory}
+                          className="bg-gray-200 text-gray-800"
+                        >
+                          {subcategory}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                />
+                {/* Custom arrow */}
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <ChevronDown />
+                </div>
+              </div>
+
+              {errors.subCategory && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.subCategory.message as string}
+                </p>
+              )}
+            </div>
+          </div>
+
           {/* Tags */}
-          <div className="mt-4 w-full bg-white p-3 rounded-md">
+          <div className="mt-4 w-full bg-white p-3 rounded-md hidden">
             <label className="block text-[15px] font-semibold text-gray-700 mb-1">
               Tags *
             </label>
@@ -618,6 +711,127 @@ const CreatePage = ({ ...props }) => {
               </p>
             )}
           </div>
+
+          <div className="mt-3 flex items-center justify-between gap-4 bg-white p-3 rounded-md">
+            {/* Regular Price */}
+            <div className="flex-1">
+              <p className="text-[15px] font-semibold text-gray-700 py-2">
+                Regular Price * <span className="text-xs">(KES)</span>
+              </p>
+              <Input
+                label=""
+                type="number"
+                placeholder="0"
+                className="bg-[#fff] text-[15px]"
+                {...register('regular_price', {
+                  setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                  min: { value: 1, message: 'Price must be at least 1' },
+                  validate: (value) =>
+                    (typeof value === 'number' && !isNaN(value)) ||
+                    'Only numbers are allowed',
+                })}
+              />
+              {errors.regular_price && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.regular_price.message as string}
+                </p>
+              )}
+            </div>
+
+            {/* Sale Price (only if deal enabled) */}
+            {getValues('enableDeal') && (
+              <div className="flex-1 mt-2">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  Sale Price <span className="text-xs">(KES)</span>
+                </p>
+                <Input
+                  label=""
+                  type="number"
+                  placeholder="0"
+                  className="bg-[#fff] text-[15px]"
+                  {...register('sale_price', {
+                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                    min: { value: 1, message: 'Sale price must be at least 1' },
+                    validate: (value) =>
+                      (typeof value === 'number' && !isNaN(value)) ||
+                      'Only numbers are allowed',
+                  })}
+                />
+                {errors.sale_price && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.sale_price.message as string}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Conditionally render deal fields */}
+          {enableDeal && (
+            <div className="mt-3 flex items-center justify-between gap-4 bg-white p-3 rounded-md">
+              {/* Deal Start Date */}
+              <label className="text-sm font-medium text-gray-800 mt-1">
+                Deal Start
+              </label>
+              <Controller
+                name="deal_start"
+                control={control}
+                rules={{ required: 'Start date is required' }}
+                render={({ field }) => (
+                  <DatePicker
+                    selected={field.value}
+                    onChange={(date: Date | null) => {
+                      field.onChange(date);
+                      if (date) {
+                        const autoEnd = new Date(date);
+                        autoEnd.setDate(autoEnd.getDate() + 7);
+                        setValue('deal_end', autoEnd);
+                      }
+                    }}
+                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
+                    dateFormat="yyyy-MM-dd"
+                  />
+                )}
+              />
+              {errors.deal_start && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.deal_start.message as string}
+                </p>
+              )}
+
+              {/* Deal End Date */}
+              <label className="text-sm font-medium text-gray-800 mt-1">
+                Deal End
+              </label>
+              <Controller
+                name="deal_end"
+                control={control}
+                rules={{
+                  required: 'End date is required',
+                  validate: (value) => {
+                    const start = getValues('deal_start');
+                    if (!value || !start) {
+                      return 'Both start and end dates are required';
+                    }
+                    return value > start || 'End date must be after start date';
+                  },
+                }}
+                render={({ field }) => (
+                  <DatePicker
+                    selected={field.value}
+                    onChange={(date: Date | null) => field.onChange(date)}
+                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
+                    dateFormat="yyyy-MM-dd"
+                  />
+                )}
+              />
+              {errors.deal_end && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.deal_end.message as string}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Color Selector */}
           <div className="mt-3 bg-white p-3 rounded-md">
@@ -700,217 +914,7 @@ const CreatePage = ({ ...props }) => {
         </div>
 
         {/* Right column - form inputs */}
-        <div className="w-[244px] px-5 py-0 rounded-none ">
-          {/* Category */}
-          <div className="mb-3 bg-white p-3 rounded-md">
-            <label className="block font-semibold text-[15px] text-gray-700 mb-1">
-              Category *
-            </label>
-            <div className="relative mb-3">
-              {isLoading ? (
-                <p className="text-gray-700">Loading Categories...</p>
-              ) : isError ? (
-                <p className="text-red-500">Failed to load categories</p>
-              ) : (
-                <Controller
-                  name="category"
-                  control={control}
-                  rules={{ required: 'Categories is required' }}
-                  render={({ field }) => (
-                    <select
-                      {...field}
-                      className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
-                    >
-                      <option value="" className="bg-gray-100 text-gray-700">
-                        Select
-                      </option>
-                      {categories?.map((category: string) => (
-                        <option
-                          value={category}
-                          key={category}
-                          className="bg-gray-200 text-gray-800"
-                        >
-                          {category}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                />
-              )}
-              {/* Custom arrow */}
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                <ChevronDown />
-              </div>
-            </div>
-            {errors.category && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.category.message as string}
-              </p>
-            )}
-          </div>
-
-          {/* Sub Categories */}
-          <div className="mb-3 bg-white p-3 rounded-md">
-            <label className="block font-semibold text-[15px] text-gray-700 mb-1">
-              Sub-category *
-            </label>
-            <div className="relative mb-2">
-              <Controller
-                name="subCategory"
-                control={control}
-                rules={{ required: 'Subcategories is required' }}
-                render={({ field }) => (
-                  <select
-                    {...field}
-                    className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
-                  >
-                    <option value="" className="bg-gray-100 text-gray-700">
-                      Select
-                    </option>
-                    {subcategories?.map((subcategory: string) => (
-                      <option
-                        value={subcategory}
-                        key={subcategory}
-                        className="bg-gray-200 text-gray-800"
-                      >
-                        {subcategory}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              />
-              {/* Custom arrow */}
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                <ChevronDown />
-              </div>
-            </div>
-
-            {errors.subCategory && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.subCategory.message as string}
-              </p>
-            )}
-          </div>
-
-          {/* Regular Price */}
-          <div className="bg-white p-3 rounded-md">
-            <p className="text-[15px] font-semibold text-gray-700 py-2">
-              Regular Price * <span className="text-xs">(KES)</span>
-            </p>
-            <Input
-              label=""
-              type="number"
-              placeholder="0"
-              className="bg-[#fff] text-[15px]"
-              {...register('regular_price', {
-                setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                min: { value: 1, message: 'Price must be at least 1' },
-                validate: (value) =>
-                  (typeof value === 'number' && !isNaN(value)) ||
-                  'Only numbers are allowed',
-              })}
-            />
-            {errors.regular_price && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.regular_price.message as string}
-              </p>
-            )}
-          </div>
-
-          {/* Sale Price (only if deal enabled) */}
-          {getValues('enableDeal') && (
-            <div className="mt-2">
-              <p className="text-[15px] font-semibold text-gray-700 py-2">
-                Sale Price <span className="text-xs">(KES)</span>
-              </p>
-              <Input
-                label=""
-                type="number"
-                placeholder="0"
-                className="bg-[#fff] text-[15px]"
-                {...register('sale_price', {
-                  setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                  min: { value: 1, message: 'Sale price must be at least 1' },
-                  validate: (value) =>
-                    (typeof value === 'number' && !isNaN(value)) ||
-                    'Only numbers are allowed',
-                })}
-              />
-              {errors.sale_price && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.sale_price.message as string}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Conditionally render deal fields */}
-          {enableDeal && (
-            <div className="flex flex-col gap-2 mt-3 pb-6 px-2 py-2 bg-gray-100 rounded-md">
-              {/* Deal Start Date */}
-              <label className="text-sm font-medium text-gray-800 mt-1">
-                Deal Start Date
-              </label>
-              <Controller
-                name="deal_start"
-                control={control}
-                rules={{ required: 'Start date is required' }}
-                render={({ field }) => (
-                  <DatePicker
-                    selected={field.value}
-                    onChange={(date: Date | null) => {
-                      field.onChange(date);
-                      if (date) {
-                        const autoEnd = new Date(date);
-                        autoEnd.setDate(autoEnd.getDate() + 7);
-                        setValue('deal_end', autoEnd);
-                      }
-                    }}
-                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
-                    dateFormat="yyyy-MM-dd"
-                  />
-                )}
-              />
-              {errors.deal_start && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.deal_start.message as string}
-                </p>
-              )}
-
-              {/* Deal End Date */}
-              <label className="text-sm font-medium text-gray-800 mt-1">
-                Deal End Date
-              </label>
-              <Controller
-                name="deal_end"
-                control={control}
-                rules={{
-                  required: 'End date is required',
-                  validate: (value) => {
-                    const start = getValues('deal_start');
-                    if (!value || !start) {
-                      return 'Both start and end dates are required';
-                    }
-                    return value > start || 'End date must be after start date';
-                  },
-                }}
-                render={({ field }) => (
-                  <DatePicker
-                    selected={field.value}
-                    onChange={(date: Date | null) => field.onChange(date)}
-                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
-                    dateFormat="yyyy-MM-dd"
-                  />
-                )}
-              />
-              {errors.deal_end && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.deal_end.message as string}
-                </p>
-              )}
-            </div>
-          )}
-
+        <div className="w-[244px] px-0 py-0 rounded-none ">
           {/* Stock */}
           <div className="mt-2 bg-white p-3 rounded-md">
             <p className="text-[15px] font-semibold text-gray-700 py-2">

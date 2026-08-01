@@ -41,9 +41,9 @@ const CustomProperties = ({ control, errors }: any) => {
             };
 
             return (
-              <div className="mt-2">
-                <label className="block font-semibold text-[14px] text-gray-700 mb-1">
-                  Custom properties
+              <div className="">
+                <label className="block text-[15px] font-semibold text-gray-700 mb-1">
+                  Custom Properties
                 </label>
 
                 <div className="flex flex-col gap-3 ">

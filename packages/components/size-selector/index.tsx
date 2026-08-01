@@ -30,8 +30,8 @@ const SizeSelector = ({ control, errors }: any) => {
                   }
                   className={`px-2 py-1 rounded-lg font-poppins transition-colors w-[70px] ${
                     isSelected
-                      ? 'bg-white text-gray-800 ring ring-gray-900 ring-offset-0'
-                      : 'bg-white text-gray-800 border border-gray-300'
+                      ? 'bg-white text-gray-700 ring ring-gray-800 ring-offset-0'
+                      : 'bg-white text-gray-700 border border-gray-300'
                   }`}
                 >
                   {size}

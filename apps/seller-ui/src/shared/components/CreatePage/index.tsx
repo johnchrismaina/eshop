@@ -367,7 +367,7 @@ const CreatePage = ({ ...props }) => {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-0 shadow-md rounded-lg text-white"
+      className="w-full mx-auto px-0 py-0 pb-4 shadow-md rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
@@ -438,54 +438,57 @@ const CreatePage = ({ ...props }) => {
         {/* Middle column - product details */}
         <div className="px-4 pb-1 prose prose-sm max-w-none">
           {/* Dropdown */}
-          <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
-            Image Aspect Ratio
-          </label>
-          <div
-            ref={dropdownRef}
-            className="relative inline-block text-left ml-0 pb-3"
-            // className="relative flex flex-col items-start justify-center text-left pb-3 w-[340px]"
-          >
-            {/* Button */}
-            <button
-              type="button"
-              onClick={() => setOpenAspectRatio(!openAspectRatio)}
-              className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
+          <div className="flex flex-col items-start justify-start gap-1 mb-3 bg-white p-3 rounded-md">
+            <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
+              Image Aspect Ratio
+            </label>
+            <div
+              ref={dropdownRef}
+              className="relative inline-block text-left ml-0 pb-3"
+              // className="relative flex flex-col items-start justify-center text-left pb-3 w-[340px]"
             >
-              Aspect Ratio:{' '}
-              {aspect === 'square'
-                ? 'Square (500 × 500)'
-                : 'Portrait (503 × 670)'}
-              <ChevronDown className="text-gray-600" />
-            </button>
+              {/* Button */}
+              <button
+                type="button"
+                onClick={() => setOpenAspectRatio(!openAspectRatio)}
+                className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
+              >
+                Aspect Ratio:{' '}
+                {aspect === 'square'
+                  ? 'Square (500 × 500)'
+                  : 'Portrait (503 × 670)'}
+                <ChevronDown className="text-gray-600" />
+              </button>
 
-            {/* Dropdown menu */}
-            {openAspectRatio && (
-              <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
-                {options.map((opt) => (
-                  <div
-                    key={opt.value}
-                    onClick={() => {
-                      setAspect(opt.value as 'square' | 'portrait');
-                      setValue('aspect', opt.value); // ✅ sync with form
-                      setOpenAspectRatio(false);
-                    }}
-                    className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
-                  >
-                    {opt.label}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {/* Hint text */}
-          {/* <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
+              {/* Dropdown menu */}
+              {openAspectRatio && (
+                <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
+                  {options.map((opt) => (
+                    <div
+                      key={opt.value}
+                      onClick={() => {
+                        setAspect(opt.value as 'square' | 'portrait');
+                        setValue('aspect', opt.value); // ✅ sync with form
+                        setOpenAspectRatio(false);
+                      }}
+                      className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Hint text */}
+            {/* <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
             Recommended size: 850×850 for square, 765×1020 for portrait
           </p> */}
+          </div>
 
           {/* Product Title */}
-          <div className="w-[500px]">
-            <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
+          <div className="w-full bg-white p-3 rounded-md">
+            <label className="block text-[15px] font-semibold  text-gray-800 mb-1">
               Product Title *
             </label>
             <AutoResizeTextarea
@@ -501,8 +504,8 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Slug */}
-          <div className="mt-3 w-[500px]">
-            <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
+          <div className="mt-3 w-full bg-white p-3 rounded-md">
+            <label className="block text-[15px] font-semibold text-gray-700 mb-1">
               Slug *
             </label>
             <Input
@@ -535,7 +538,7 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Tags */}
-          <div className="mt-4 w-[500px]">
+          <div className="mt-4 w-full bg-white p-3 rounded-md">
             <label className="block text-[15px] font-semibold text-gray-700 mb-1">
               Tags *
             </label>
@@ -617,27 +620,27 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Color Selector */}
-          <div className="mt-3 pb-6 border-b border-gray-600">
+          <div className="mt-3 bg-white p-3 rounded-md">
             <ColorSelector control={control} errors={errors} />
           </div>
 
           {/* Size Selector */}
-          <div className="mt-3 pb-6 border-b border-gray-600">
+          <div className="mt-3 bg-white p-3 rounded-md">
             <SizeSelector control={control} errors={errors} />
           </div>
 
           {/* Product Properties */}
-          <div className="mt-3">
+          <div className="mt-3 bg-white p-3 rounded-md">
             <CustomProperties control={control} errors={errors} />
           </div>
 
           {/* Product Specifications */}
-          <div className="mt-3">
+          <div className="mt-3 bg-white p-3 rounded-md">
             <CustomSpecifications control={control} errors={errors} />
           </div>
 
           {/* Short Description */}
-          <div className="mt-4">
+          <div className="mt-4 bg-white p-3 rounded-md">
             <label className="block text-[15px] font-semibold text-gray-700 pb-3">
               About this item * (Min 50 words)
             </label>
@@ -669,12 +672,12 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Product details / Accordions */}
-          <div className="mt-4 ">
+          <div className="mt-4 bg-white p-3 rounded-md">
             <CustomAccordion control={control} errors={errors} />{' '}
           </div>
 
           {/* Video Url */}
-          <div className="mt-4">
+          <div className="mt-4 bg-white p-3 rounded-md">
             <Input
               label="Video Url"
               placeholder="https://www.youtube.com/embed/xyz123"
@@ -697,9 +700,9 @@ const CreatePage = ({ ...props }) => {
         </div>
 
         {/* Right column - form inputs */}
-        <div className="bg-[#fff] border-l border-gray-200 w-[244px] px-5 py-0 rounded-none ">
+        <div className="w-[244px] px-5 py-0 rounded-none ">
           {/* Category */}
-          <div className="">
+          <div className="mb-3 bg-white p-3 rounded-md">
             <label className="block font-semibold text-[15px] text-gray-700 mb-1">
               Category *
             </label>
@@ -747,7 +750,7 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Sub Categories */}
-          <div className="mt-3">
+          <div className="mb-3 bg-white p-3 rounded-md">
             <label className="block font-semibold text-[15px] text-gray-700 mb-1">
               Sub-category *
             </label>
@@ -790,7 +793,7 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Regular Price */}
-          <div className=" ">
+          <div className="bg-white p-3 rounded-md">
             <p className="text-[15px] font-semibold text-gray-700 py-2">
               Regular Price * <span className="text-xs">(KES)</span>
             </p>
@@ -909,7 +912,7 @@ const CreatePage = ({ ...props }) => {
           )}
 
           {/* Stock */}
-          <div className="mt-2">
+          <div className="mt-2 bg-white p-3 rounded-md">
             <p className="text-[15px] font-semibold text-gray-700 py-2">
               Stock *
             </p>
@@ -917,7 +920,7 @@ const CreatePage = ({ ...props }) => {
               label=""
               placeholder="0"
               type="number"
-              className="bg-[#fdfdfd] text-[15px]"
+              className="text-[15px]"
               {...register('stock', {
                 setValueAs: (v) => (v === '' ? undefined : Number(v)),
                 min: { value: 0, message: 'Stock cannot be negative' },
@@ -934,7 +937,7 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Discount codes */}
-          <div className="mt-3">
+          <div className="mt-3 bg-white p-3 rounded-md">
             <label className="block font-semibold text-gray-700 mb-1">
               Select Discount Codes (optional)
             </label>
@@ -978,7 +981,7 @@ const CreatePage = ({ ...props }) => {
                     label=""
                     placeholder="0"
                     type="number"
-                    className="bg-[#fdfdfd] text-[15px]"
+                    className="text-[15px]"
                     {...register('total_tickets', {
                       setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
                       validate: (value) => {

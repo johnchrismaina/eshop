@@ -483,8 +483,8 @@ const Header = () => {
                 <CgShoppingCart size={18} color="#000000cc" />
                 {/* <IoCart size={20} color="#222" /> */}
                 {cart?.length > 0 && (
-                  <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full bg-[#757575] flex items-center justify-center mt-[0px]">
-                    <span className="text-white font-semibold text-[10px] leading-none">
+                  <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full bg-[#ffac30] border border-white flex items-center justify-center mt-[0px]">
+                    <span className="text-gray-800 font-semibold text-[10px] leading-none">
                       {cart.length > 99 ? '99+' : cart.length}
                     </span>
                   </div>

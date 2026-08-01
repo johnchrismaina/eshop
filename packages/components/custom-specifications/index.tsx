@@ -11,20 +11,21 @@ const CustomSpecifications = ({ control, errors }: any) => {
 
   return (
     <div>
-      <label className="block font-semibold text-[15px] text-gray-700 mb-2 ">
-        Product specifications
+      <label className="block text-[15px] font-semibold text-gray-700 mb-2 ">
+        Product Specifications
       </label>
-      <div className="flex flex-col gap-4 mt-2">
+      <div className="flex flex-col gap-2 mt-2 p-3 bg-gray-200/50 rounded-md">
+        <div></div>
         {fields.map((item, index) => (
-          <div key={item.id} className="flex gap-2 pb-4 items-center ">
+          <div key={item.id} className="flex gap-2 pb-2 items-center ">
             <Controller
               name={`custom_specifications.${index}.name`}
               control={control}
               rules={{ required: 'Specification name is required' }}
               render={({ field }) => (
                 <Input
-                  label="Name"
-                  placeholder="e.g. Brand, Material, Battery Life, Weight"
+                  label=""
+                  placeholder="Name (e.g. Brand, OS, Material, Weight)"
                   {...field}
                 />
               )}
@@ -41,8 +42,8 @@ const CustomSpecifications = ({ control, errors }: any) => {
               rules={{ required: 'Value is required' }}
               render={({ field }) => (
                 <Input
-                  label="Value"
-                  placeholder="e.g. Apple, Aluminium, 4000mAh, 1.5kg"
+                  label=""
+                  placeholder="Value (e.g. Apple, Apple A19, Titanium, 170g)"
                   {...field}
                 />
               )}
@@ -52,11 +53,10 @@ const CustomSpecifications = ({ control, errors }: any) => {
                 {errors.custom_specifications[index].value.message}
               </p>
             )}
-
-            <div className="relative ml-2 px-2 ">
+            <div className="relative ml-1 px-2 ">
               <button
                 type="button"
-                className="absolute top-1 right-0 text-red-500 hover:text-red-700"
+                className="absolute top-[-10px] right-0 text-red-500 hover:text-red-700"
                 onClick={() => remove(index)}
               >
                 <Trash2 size={20} />

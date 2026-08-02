@@ -240,7 +240,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Middle column - product details */}
-        <div className="px-4 pb-1 prose prose-sm max-w-none">
+        <div className="px-4 pt-0 pb-1 prose prose-sm max-w-none">
           {/* Title */}
           <h1 className="text-2xl text-gray-950 font-semibold">
             {productDetails?.title}

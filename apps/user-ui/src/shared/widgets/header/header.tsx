@@ -249,22 +249,22 @@ const Header = () => {
           <div className="flex items-center justify-start gap-6">
             {/* Logo */}
             <div
-              className="flex items-center justify-center font-medium font-oswald text-3xl tracking-wide pl-2"
+              className="flex items-center justify-center font-medium font-oswald text-2xl tracking-wide pl-2 -mt-[2px]"
               // style={{ fontFamily: "'Oswald', sans-serif" }}
             >
-              Sokonis<span className="text-2xl text-[#E85D1F] px-[1px]">.</span>
+              Sokonis<span className=" text-[#E85D1F] px-[1px]">.</span>
             </div>
 
             {/* Delivery location - can be dropdown in future */}
-            <div className="relative flex items-center justify-center gap-2 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors duration-100 ">
+            <div className="relative flex items-center justify-center gap-2 px-3 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors duration-300 ">
               {/* </div> */}
               <MapPin size={17} color="#000000cc" />
               <div className="flex flex-col items-start shrink-0">
-                <span className="text-xs font-normal text-[#000000cc] tracking-tight">
+                {/* <span className="text-xs font-normal text-[#000000cc] tracking-tight">
                   Deliver to:{' '}
-                </span>
-                <span className="text-[14.0px] font-semibold text-[#000] -mt-[4px] tracking-tight">
-                  Naivasha
+                </span> */}
+                <span className="text-[14.0px] font-bold text-[#000000CC] tracking-tight">
+                  Naivasha, Kenya
                 </span>
               </div>
             </div>
@@ -355,12 +355,10 @@ const Header = () => {
                 href={user?.name ? '/profile' : '/login'}
                 className="flex flex-col gap-0 items-start justify-start "
               >
-                <span className="block text-[11.0px] font-normal text-[#1c1c1c] tracking-wide">
+                <span className="block text-[14.0px] text-[#000000cc] font-bold">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
-                    <span className="text-[11.0px] text-[#000000cc] font-normal tracking-tight ">
-                      Sign in
-                    </span>
+                    <span className="">Sign in</span>
                   ) : hadSession && !hydrated ? (
                     // Had previous session, still hydrating: show skeleton
                     <span className="block w-12 h-3 bg-gray-300 rounded animate-pulse"></span>
@@ -371,18 +369,18 @@ const Header = () => {
                     </span>
                   ) : (
                     // No user or no previous session: show Log in
-                    <span className="flex items-center justify-center text-[11.0px] text-[#000000cc] font-normal tracking-tight">
+                    <span className="flex items-center justify-center ">
                       {/* <ProfileIcon size={18} color="#fff" /> */}
                       Sign in
                     </span>
                   )}
                 </span>
 
-                <span className="relative flex items-center text-[14.0px] text-[#000] font-semibold gap-0.5 -mt-1.5 tracking-tight">
-                  Account
-                  {/* <ChevronDown size={14} color="#999" /> */}
-                  <ChevronDownIcon width={9} height={20} color="#757575" />
-                </span>
+                {/* <span className="relative flex items-center text-[14.0px] text-[#000] font-semibold gap-0.5 -mt-1.5 tracking-tight">
+                  Account */}
+                {/* <ChevronDown size={14} color="#999" /> */}
+                {/* <ChevronDownIcon width={9} height={20} color="#757575" />
+                </span> */}
               </Link>
 
               {/* Backdrop */}
@@ -473,15 +471,15 @@ const Header = () => {
             </div>
 
             {/* Cart */}
-            <div className="flex items-center justify-start h-full gap-2 pr-2">
+            <div className="flex items-center justify-center h-full gap-2 pr-2 bg-white py-0 rounded-md">
               <Link
                 href="/cart"
                 className="relative flex items-center justify-center mt-[2px] cursor-pointer"
               >
-                {/* <PiShoppingCart size={22} /> */}
-                {/* <IoCartOutline size={22} color="#222" /> */}
-                <CgShoppingCart size={18} color="#000000cc" />
-                {/* <IoCart size={20} color="#222" /> */}
+                {/* <CgShoppingCart size={18} color="#000000cc" /> */}
+                <div className="-mt-[4px]">
+                  <CartIcon size={18} color="#000000cc" />
+                </div>
                 {cart?.length > 0 && (
                   <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full bg-[#ffac30] border border-white flex items-center justify-center mt-[0px]">
                     <span className="text-gray-800 font-semibold text-[10px] leading-none">
@@ -493,11 +491,11 @@ const Header = () => {
               {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
-              <div className="flex flex-col items-start justify-center">
-                <span className="font-medium text-[11px] text-[#000000cc] tracking-tight ">
+              <div className="flex items-center justify-center">
+                {/* <span className="font-medium text-[11px] text-[#000000cc] tracking-tight ">
                   Cart
-                </span>
-                <span className=" text-[12.5px] text-[#000] font-semibold -mt-1.5 tracking-tight">
+                </span> */}
+                <span className=" text-[12.5px] text-[#000] font-semibold tracking-tight">
                   KES 0.00
                 </span>
               </div>

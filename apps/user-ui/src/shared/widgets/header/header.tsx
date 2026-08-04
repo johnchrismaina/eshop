@@ -25,13 +25,10 @@ import {
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 // import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
-import { IoCartOutline } from 'react-icons/io5';
+// import { CiUser } from 'react-icons/ci';
 import { CiUser } from 'react-icons/ci';
 
-import { TbShoppingCart } from 'react-icons/tb';
-import { PiShoppingCart } from 'react-icons/pi';
-import { CgShoppingCart } from 'react-icons/cg';
-import { IoCart } from 'react-icons/io5';
+// import { CgShoppingCart } from 'react-icons/cg';
 
 import { useEffect } from 'react';
 import { Search, User, ShoppingCart, Menu } from 'lucide-react';
@@ -99,13 +96,13 @@ function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-1.5 h-10 pl-6 pr-3 text-[13px] text-gray-800 font-medium hover:text-[#14181A] bg-[#fff] transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none"
+      className="flex items-center gap-1.5 h-10 pl-6 mr-3 text-[13px] text-gray-800 font-medium hover:text-[#14181A] bg-gray-200 transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none"
     >
       {value}
       {/* <ChevronDown size={14} /> */}
-      <ChevronDownIcon width={9} height={20} color="#4c4c4c" />
+      <ChevronDownIcon width={10} height={20} color="#4c4c4c" />
       {/* divider */}
-      <div className=" w-px h-6 bg-gray-200 mx-2" />
+      <div className=" w-px h-6 bg-gray-200 mx-0" />
     </button>
   );
 }
@@ -241,7 +238,7 @@ const Header = () => {
     <>
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
-        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
+        className={`sticky top-0 z-50 bg-[#1C1C1E] transition-shadow duration-200 ${
           scrolled ? 'shadow-none' : 'shadow-none'
         }`}
       >
@@ -249,23 +246,26 @@ const Header = () => {
           <div className="flex items-center justify-start gap-6">
             {/* Logo */}
             <div
-              className="flex items-center justify-center font-medium font-oswald text-2xl tracking-wide pl-2 -mt-[2px]"
+              className="flex items-center justify-center text-[#fff] font-normal font-oswald text-3xl tracking-wide pl-2"
               // style={{ fontFamily: "'Oswald', sans-serif" }}
             >
-              Sokonis<span className=" text-[#E85D1F] px-[1px]">.</span>
+              Sokonis<span className="text-2xl text-[#E85D1F] px-[1px]">.</span>
             </div>
 
             {/* Delivery location - can be dropdown in future */}
-            <div className="relative flex items-center justify-center gap-2 px-3 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors duration-300 ">
+            <div className="relative flex items-center justify-center gap-2 px-3 py-0 rounded-md cursor-pointer transition-colors duration-100 ">
               {/* </div> */}
-              <MapPin size={17} color="#000000cc" />
-              <div className="flex flex-col items-start shrink-0">
-                {/* <span className="text-xs font-normal text-[#000000cc] tracking-tight">
-                  Deliver to:{' '}
-                </span> */}
-                <span className="text-[14.0px] font-bold text-[#000000CC] tracking-tight">
-                  Naivasha, Kenya
-                </span>
+              <div className="flex items-center justify-center gap-1 shrink-0 px-2 py-2 hover:bg-gray-700 rounded-full transition-colors duration-300">
+                <MapPin size={15} color="#fff" />
+                <p className="flex items-center justify-center gap-1">
+                  <span className="text-[14.0px] font-semibold text-gray-400 tracking-tight">
+                    Deliver to
+                  </span>
+                  <span className="text-[14.0px] font-semibold text-[#fff] -mt-[0px] tracking-tight">
+                    Naivasha
+                  </span>
+                </p>
+                <ChevronDownIcon width={10} height={20} color="#fff" />
               </div>
             </div>
 
@@ -277,7 +277,7 @@ const Header = () => {
             >
               <div
                 ref={searchContainerRef}
-                className="flex items-center h-[38px] bg-[#fff] rounded-md border border-gray-400
+                className="flex items-center h-[38px] bg-[#fff] rounded-full border border-gray-400
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out"
@@ -310,8 +310,8 @@ const Header = () => {
 
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-[38px] h-[35px] mr-[0.5px] rounded-r-md 
-                   text-[#fff] hover:text-[#fff] bg-[#262626] hover:bg-gray-950 border border-[#222]
+                  className="flex items-center justify-center w-[36px] h-[32px] mr-[4.0px] rounded-full 
+                   text-[#E85D1F] bg-[#EDEBE5] hover:text-[#E85D1F]
                    transition-colors flex-shrink-0"
                 >
                   <Search size={18} />
@@ -346,16 +346,18 @@ const Header = () => {
           <div className="flex items-center justify-end w-full h-full gap-2">
             {/* Account/Trigger */}
             <div
-              className="relative flex items-center gap-2 text-gray-600 px-3 rounded-md h-full hover:bg-gray-100 transition-colors duration-100 "
+              className="relative flex items-center gap-2 text-gray-600 px-3 rounded-md h-full transition-colors duration-100 "
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
             >
               {/* <CiUser /> */}
               <Link
                 href={user?.name ? '/profile' : '/login'}
-                className="flex flex-col gap-0 items-start justify-start "
+                className="flex gap-1 items-center justify-center "
               >
-                <span className="block text-[14.0px] text-[#000000cc] font-bold">
+                <CiUser strokeWidth={0.5} size={18} color="#fff" />
+
+                <span className="block text-[14.0px] font-semibold text-white ">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
                     <span className="">Sign in</span>
@@ -376,10 +378,10 @@ const Header = () => {
                   )}
                 </span>
 
-                {/* <span className="relative flex items-center text-[14.0px] text-[#000] font-semibold gap-0.5 -mt-1.5 tracking-tight">
+                {/* <span className="relative flex items-center text-[15.0px] text-[#fff] font-bold gap-0.5 -mt-1.5 tracking-tight">
                   Account */}
                 {/* <ChevronDown size={14} color="#999" /> */}
-                {/* <ChevronDownIcon width={9} height={20} color="#757575" />
+                {/* <ChevronDownIcon width={9} height={20} color="#fff" />
                 </span> */}
               </Link>
 
@@ -471,31 +473,30 @@ const Header = () => {
             </div>
 
             {/* Cart */}
-            <div className="flex items-center justify-center h-full gap-2 pr-2 bg-white py-0 rounded-md">
+            <div className="flex items-center justify-start h-full gap-2 pr-2">
               <Link
                 href="/cart"
-                className="relative flex items-center justify-center mt-[2px] cursor-pointer"
+                className="relative flex items-center justify-center mt-[0px] cursor-pointer"
               >
                 {/* <CgShoppingCart size={18} color="#000000cc" /> */}
-                <div className="-mt-[4px]">
-                  <CartIcon size={18} color="#000000cc" />
+                <CartIcon size={18} color="#fff" />
+
+                {/* {cart?.length > 0 && ( */}
+                <div className="absolute top-[-8px] right-[-10px] min-w-[16px] h-4 px-1 rounded-full bg-[#E85D1F] flex items-center justify-center mt-[0px]">
+                  <span className="text-white font-bold text-[11px] leading-none">
+                    {cart.length > 99 ? '99+' : cart.length}
+                  </span>
                 </div>
-                {cart?.length > 0 && (
-                  <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-1 rounded-full bg-[#ffac30] border border-white flex items-center justify-center mt-[0px]">
-                    <span className="text-gray-800 font-semibold text-[10px] leading-none">
-                      {cart.length > 99 ? '99+' : cart.length}
-                    </span>
-                  </div>
-                )}
+                {/* )} */}
               </Link>
               {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
               <div className="flex items-center justify-center">
-                {/* <span className="font-medium text-[11px] text-[#000000cc] tracking-tight ">
+                {/* <span className="font-medium text-[14.0px] text-gray-200 tracking-tight ">
                   Cart
                 </span> */}
-                <span className=" text-[12.5px] text-[#000] font-semibold tracking-tight">
+                <span className=" text-[12.5px] text-[#fff] font-semibold -mt-0 tracking-tight px-2 py-1 bg-gray-600 rounded-full">
                   KES 0.00
                 </span>
               </div>

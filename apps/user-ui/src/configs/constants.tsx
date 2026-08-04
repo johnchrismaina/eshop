@@ -24,17 +24,16 @@ export const navItems: NavItemsTypes[] = [
     href: '/groceries',
     accent: false,
   },
-
-  {
-    title: 'Customer Service',
-    href: '/contact',
-    accent: false,
-  },
-  {
-    title: 'Sell ',
-    href: `${process.env.NEXT_PUBLIC_SELLER_SERVER_URI}/signup`,
-    accent: false,
-  },
+  // {
+  //   title: 'Customer Service',
+  //   href: '/contact',
+  //   accent: false,
+  // },
+  // {
+  //   title: 'Sell ',
+  //   href: `${process.env.NEXT_PUBLIC_SELLER_SERVER_URI}/signup`,
+  //   accent: false,
+  // },
   // {
   //   title: 'Products',
   //   href: '/products',

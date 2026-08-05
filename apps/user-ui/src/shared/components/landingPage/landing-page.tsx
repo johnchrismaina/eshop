@@ -13,8 +13,10 @@ export default function LandingPage() {
   const { role } = useUser();
 
   return (
-    <div className="bg-white min-h-screen">
-      <Hero />
+    <div className="bg-[#f5f5f5] min-h-screen ">
+      <div className="px-8 pt-4">
+        <Hero />
+      </div>
       <div className="w-full px-0 pb-5 m-auto flex flex-col bg-white">
         <PromoGrid />
         <Deals />

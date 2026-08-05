@@ -38,7 +38,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
           src={item.src}
           alt={item.alt}
           key={idx}
-          className={`w-full h-full object-center object-cover transition-opacity duration-1000 ${
+          className={`w-full h-full object-top object-cover transition-opacity duration-1000 rounded-md ${
             slide === idx ? 'opacity-100' : 'opacity-0 absolute'
           }`}
         />
@@ -63,12 +63,12 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
 
         <ChevronLeft
           onClick={prevSlide}
-          className="p-1.5 rounded-full text-gray-700 w-8 h-8 bg-white/80 hover:bg-white/90 transition-colors duration-300 drop-shadow-lg cursor-pointer z-10"
+          className="p-1.5 rounded-full text-gray-700 w-8 h-8 bg-white/60 hover:bg-white/90 transition-colors duration-300 drop-shadow-lg cursor-pointer z-10"
         />
 
         <ChevronRight
           onClick={nextSlide}
-          className="p-1.5 rounded-full text-gray-700 w-8 h-8 bg-white/80 hover:bg-white/90 transition-colors duration-300 drop-shadow-lg cursor-pointer z-20 "
+          className="p-1.5 rounded-full text-gray-700 w-8 h-8 bg-white/60 hover:bg-white/90 transition-colors duration-300 drop-shadow-lg cursor-pointer z-20 "
         />
       </div>
 

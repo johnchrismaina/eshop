@@ -96,7 +96,7 @@ function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-1.5 h-10 pl-6 mr-3 text-[13px] text-gray-800 font-medium hover:text-[#14181A] bg-gray-200 transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none"
+      className=" items-center gap-1.5 h-10 pl-6 mr-3 text-[13px] text-gray-800 font-medium hover:text-[#14181A] bg-gray-200 transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none hidden"
     >
       {value}
       {/* <ChevronDown size={14} /> */}
@@ -246,7 +246,7 @@ const Header = () => {
           <div className="flex items-center justify-start gap-6">
             {/* Logo */}
             <div
-              className="flex items-center justify-center text-[#fff] font-normal font-oswald text-3xl tracking-wide pl-2"
+              className="flex items-center justify-center text-[#fff] font-normal font-oswald text-3xl tracking-wide pl-2 -mt-1"
               // style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Sokonis<span className="text-2xl text-[#E85D1F] px-[1px]">.</span>
@@ -256,7 +256,7 @@ const Header = () => {
             <div className="relative flex items-center justify-center gap-2 px-3 py-0 rounded-md cursor-pointer transition-colors duration-100 ">
               {/* </div> */}
               <div className="flex items-center justify-center gap-1 shrink-0 px-2 py-2 hover:bg-gray-700 rounded-full transition-colors duration-300">
-                <MapPin size={15} color="#fff" />
+                <MapPin size={16} color="#fff" />
                 <p className="flex items-center justify-center gap-1">
                   <span className="text-[14.0px] font-semibold text-gray-400 tracking-tight">
                     Deliver to
@@ -265,7 +265,7 @@ const Header = () => {
                     Naivasha
                   </span>
                 </p>
-                <ChevronDownIcon width={10} height={20} color="#fff" />
+                <ChevronDownIcon width={10} height={20} color="#9CA3AF" />
               </div>
             </div>
 
@@ -277,7 +277,7 @@ const Header = () => {
             >
               <div
                 ref={searchContainerRef}
-                className="flex items-center h-[38px] bg-[#fff] rounded-full border border-gray-400
+                className="flex items-center h-10 bg-[#fff] rounded-full border border-gray-400
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out"
@@ -291,8 +291,8 @@ const Header = () => {
                   type="text"
                   onFocus={() => setOpenSearchBackdrop(true)} // open backdrop when input is focused
                   placeholder="Search products, brands, categories..."
-                  className="flex-1 h-[38px] bg-transparent outline-none border-none text-[14.0px] 
-                   placeholder:font-normal placeholder:text-gray-400 pl-0 pr-4 py-0 
+                  className="flex-1 h-10 bg-transparent outline-none border-none text-[14.0px] 
+                   placeholder:font-normal placeholder:text-gray-400 pl-6 pr-4 py-0 
                    focus:border-blue-500 focus:border-2 focus:ring-0"
                 />
 
@@ -310,7 +310,7 @@ const Header = () => {
 
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-[36px] h-[32px] mr-[4.0px] rounded-full 
+                  className="flex items-center justify-center w-8 h-8 mr-[4.0px] rounded-full 
                    text-[#E85D1F] bg-[#EDEBE5] hover:text-[#E85D1F]
                    transition-colors flex-shrink-0"
                 >
@@ -355,7 +355,7 @@ const Header = () => {
                 href={user?.name ? '/profile' : '/login'}
                 className="flex gap-1 items-center justify-center "
               >
-                <CiUser strokeWidth={0.5} size={18} color="#fff" />
+                <CiUser strokeWidth={0.5} size={16} color="#fff" />
 
                 <span className="block text-[14.0px] font-semibold text-white ">
                   {!mounted ? (
@@ -473,13 +473,13 @@ const Header = () => {
             </div>
 
             {/* Cart */}
-            <div className="flex items-center justify-start h-full gap-2 pr-2">
+            <div className="flex items-center justify-start h-full gap-1 pr-2">
               <Link
                 href="/cart"
                 className="relative flex items-center justify-center mt-[0px] cursor-pointer"
               >
                 {/* <CgShoppingCart size={18} color="#000000cc" /> */}
-                <CartIcon size={18} color="#fff" />
+                <CartIcon size={16} color="#fff" />
 
                 {/* {cart?.length > 0 && ( */}
                 <div className="absolute top-[-8px] right-[-10px] min-w-[16px] h-4 px-1 rounded-full bg-[#E85D1F] flex items-center justify-center mt-[0px]">
@@ -496,7 +496,7 @@ const Header = () => {
                 {/* <span className="font-medium text-[14.0px] text-gray-200 tracking-tight ">
                   Cart
                 </span> */}
-                <span className=" text-[12.5px] text-[#fff] font-semibold -mt-0 tracking-tight px-2 py-1 bg-gray-600 rounded-full">
+                <span className=" text-[12.0px] text-[#fff] font-semibold -mt-0 tracking-tight px-2 py-1 rounded-full">
                   KES 0.00
                 </span>
               </div>

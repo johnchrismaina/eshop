@@ -18,6 +18,7 @@ const HeaderBottom = () => {
   const { user } = useUser();
 
   console.log(user);
+  // #313638
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">

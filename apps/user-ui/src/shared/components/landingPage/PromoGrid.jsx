@@ -8,9 +8,9 @@ const PromoGrid = () => {
           Happening Now
         </span>
       </div> */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 font-sans gap-4 px-8 pt-6 pb-8 bg-[#F5F5F5] text-gray-800 ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 font-sans gap-4 px-8 pt-8 pb-8 bg-[#F5F5F5] text-gray-800 ">
         {/* Card 1  */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-none">
+        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-md">
           {/* Title zone */}
           <div className="w-full px-4 pt-2 pb-6 ">
             <h3 className="text-lg font-bold text-[#1d1d1f]">Back to School</h3>
@@ -32,7 +32,7 @@ const PromoGrid = () => {
         </div>
 
         {/* Card 2  */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-none">
+        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-md">
           {/* Title zone */}
           <div className="w-full px-4 pt-2 pb-6">
             <h3 className="text-lg font-bold text-[#1d1d1f]">Gaming Week</h3>
@@ -54,7 +54,7 @@ const PromoGrid = () => {
         </div>
 
         {/* Card 3 */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-none">
+        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-md">
           {/* Title zone */}
           <div className=" w-full px-6 pt-2 pb-6 ">
             <h3 className="text-lg font-bold text-[#1d1d1f]">Fresh Fridays</h3>
@@ -76,7 +76,7 @@ const PromoGrid = () => {
         </div>
 
         {/* Card 4 */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-none">
+        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-md">
           {/* Title zone */}
           <div className="w-full px-0 pt-2 pb-6">
             <h3 className="text-lg font-bold text-[#1d1d1f]">Home Refresh</h3>

@@ -158,7 +158,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
     <div className="w-full bg-white px-8 text-[#1d1d1f]">
       {/* Breadcrumbs */}
       <div className="bg-[#fff] py-4"></div>
-      <div className="w-full bg-white pt-8 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_250px] gap-3">
+      <div className="w-full bg-white pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_240px] gap-4">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
@@ -240,7 +240,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Middle column - product details */}
-        <div className="px-4 pt-0 pb-1 prose prose-sm max-w-none">
+        <div className="px-6 pt-0 pb-1 prose prose-sm max-w-none">
           {/* Title */}
           <h1 className="text-2xl text-gray-950 font-semibold">
             {productDetails?.title}
@@ -397,7 +397,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
                 {/* Description */}
                 <div
-                  className="prose prose-sm text-[#1d1d1f] text-[15px] text-[15px]/6 max-w-none break-words pr-3"
+                  className="prose prose-sm text-[#52525B] text-[15px] text-[15px]/6 max-w-none break-words pr-3"
                   dangerouslySetInnerHTML={{
                     __html: productDetails?.short_description,
                   }}
@@ -440,9 +440,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[250px] text-[#000] px-0 py-0 bg-[#fff] border-none border-gray-200 rounded-lg">
+        <div className=" w-[240px] text-[#000] px-0 py-0 bg-[#fff] border-none border-gray-200 rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-4 bg-[#fff] px-4 py-4 rounded-lg border border-gray-300 mb-3">
+          <div className="flex flex-col gap-4 bg-[#fff] px-4 py-4 rounded-md border border-gray-200 mb-3">
             {/* Pickup location */}
             <div className="flex items-start justify-start gap-2 ">
               <Package size={18} strokeWidth="1.5" color="#1d1d1f" />
@@ -455,7 +455,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 <p className="text-sm  ">
                   Delivery <span className="font-bold">Tuesday, July 7</span>
                 </p>
-                <p className="text-sm font-normal ">
+                <p className="text-sm font-normal text-[#9CA3AF]">
                   Order within{' '}
                   <span className=" font-normal">3 hrs 18 mins </span>
                 </p>
@@ -477,7 +477,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 <p className="text-sm  ">
                   Delivery <span className="font-bold">Tuesday, July 7</span>
                 </p>
-                <p className="text-sm font-normal ">
+                <p className="text-sm font-normal text-[#9CA3AF]">
                   Order within{' '}
                   <span className="font-normal">3 hrs 18 mins </span>
                 </p>
@@ -501,7 +501,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
 
           {/* Quantity and Add to Cart */}
-          <div className="bg-[#f5f5f5] p-4 rounded-lg mb-3 border-none border-gray-200">
+          <div className="bg-[#] px-4 py-4 mb-3 rounded-md border border-gray-200">
             <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
               <div className="hidden">
@@ -529,7 +529,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
               {/* Quantity dropdown */}
               <div className="flex flex-col gap-1 w-full">
-                <span className="text-sm font-semibold  ">Quantity</span>
+                <span className="text-sm font-medium ">Quantity</span>
                 <select
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
@@ -550,7 +550,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Add to cart button */}
             <div className="flex flex-col gap-1 w-full">
               <button
-                className={`flex items-center justify-center px-[8px] py-1.5 bg-[#ffac30] hover:bg-amber-500 text-[14.0] text-[#1d1d1f] font-medium rounded-full transition ${
+                className={`flex items-center justify-center px-[8px] py-1.5 bg-[#ffac30] hover:bg-amber-500 text-[14.0] text-[#1d1d1f] font-medium rounded-md transition ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -578,25 +578,24 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 Buy Now
               </button> */}
             </div>
-            <div className="pt-4 space-y-2">
+            <div className="pt-4 space-y-2 mb-6 ">
               <span className="flex items-center justify-start gap-2 text-sm font-semibold">
-                <RotateCcw size={18} strokeWidth="2" color="#007D49" />7 Day
-                Returns
+                <RotateCcw size={16} strokeWidth="2" color="#222" />
+                <span className="text-gray-800">7 Day Returns</span>
                 <Info size={14} strokeWidth="1.5" color="#333" />
               </span>
               <span className="flex items-center justify-start gap-2 text-sm font-semibold">
-                <ShieldCheck size={18} strokeWidth="2" color="#007D49" />
-                Secure Payments
+                <ShieldCheck size={16} strokeWidth="2" color="#222" />
+                <span className="text-gray-800">Secure Payments</span>
               </span>
             </div>
-          </div>
 
-          {/* <hr className="border-t border-slate-200 pt-6" /> */}
+            <hr className="border-t border-slate-200 mb-6" />
 
-          <div className="bg-[#fff] px-4 py-6 rounded-lg border border-gray-300">
-            {/* Sold by section */}
-            <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-0 text-sm pb-0 ">
-              {/* <dt className="flex items-center gap-2 font-normal tracking-tight ">
+            <div className=" px-0 py-0 rounded-lg border-none border-gray-300">
+              {/* Sold by section */}
+              <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-0 text-sm pb-0 ">
+                {/* <dt className="flex items-center gap-2 font-normal tracking-tight ">
                   <Store size={18} strokeWidth="1.5" color="#1d1d1f" />
                   Sold by
                 </dt>
@@ -604,7 +603,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   {productDetails?.Shop?.name}
                 </dd> */}
 
-              {/* <dt className="flex items-center gap-2 font-normal tracking-tight ">
+                {/* <dt className="flex items-center gap-2 font-normal tracking-tight ">
                   <RotateCcw size={18} strokeWidth="1.5" color="#1d1d1f" />
                   Returns
                 </dt>
@@ -612,75 +611,76 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   7 day returns
                 </dd> */}
 
-              {/* <dt className="flex items-center gap-2 font-normal tracking-tight ">
+                {/* <dt className="flex items-center gap-2 font-normal tracking-tight ">
                   <ShieldCheck size={18} strokeWidth="1.5" color="#1d1d1f" />
                   Security
                 </dt>
                 <dd className="font-normal tracking-tight text-blue-600">
                   Safe Payments
                 </dd> */}
-            </dl>
+              </dl>
 
-            {/* Seller performance stats */}
-            <div className="flex flex-col items-start justify-start gap-2 py-0 mb-3">
-              {/* Seller Store */}
-              <span className="flex items-center gap-2 font-medium tracking-tight">
-                <Store size={18} strokeWidth="1.5" color="#1d1d1f" />
-                Sokonis Naivasha
-              </span>
+              {/* Seller performance stats */}
+              <div className="flex flex-col items-start justify-start gap-2 py-0 mb-3">
+                {/* Seller Store */}
+                <span className="flex items-center gap-2 text-[14.5px] font-bold tracking-tight">
+                  <Store size={18} strokeWidth="1.5" color="#1d1d1f" />
+                  Sokonis Naivasha
+                </span>
 
-              {/* Seller score */}
-              <div className="flex gap-1 text-sm">
-                <span className="">88%</span>
-                <span className="text-gray-800">Seller score</span>
+                {/* Seller score */}
+                <div className="flex gap-1 text-sm">
+                  <span className="font-semibold">88%</span>
+                  <span className="text-gray-800">Seller score</span>
+                </div>
               </div>
-            </div>
 
-            {/* <hr className="border-t border-slate-200 my-5" /> */}
+              {/* <hr className="border-t border-slate-200 my-5" /> */}
 
-            {/* Chat and Add to wishlist */}
-            <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
-              {/* Chat with seller */}
-              <Link
-                href={'#'}
-                onClick={() => handleChat()}
-                className="w-full flex items-center gap-2 text-[#1d1d1f] text-sm cursor-pointer hover:underline p-0 rounded-md"
-              >
-                <MessageSquareText size={16} />
-                Chat
-              </Link>
+              {/* Chat and Add to wishlist */}
+              <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
+                {/* Chat with seller */}
+                <Link
+                  href={'#'}
+                  onClick={() => handleChat()}
+                  className="w-full flex items-center gap-2 text-[#1d1d1f] text-sm cursor-pointer hover:underline p-0 rounded-md"
+                >
+                  <MessageSquareText size={16} />
+                  Chat
+                </Link>
 
-              {/* Add to wishlist */}
-              <div className="w-full flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-100 p-2 border border-gray-400 rounded-md transition-all duration-300">
-                <Heart
-                  size={16}
-                  fill={isWishlisted ? 'red' : 'transparent'}
-                  className="cursor-pointer"
-                  color={isWishlisted ? 'transparent' : '#333'}
-                  onClick={() =>
-                    isWishlisted
-                      ? removeFromWishlist(
-                          productDetails.id,
-                          user,
-                          location,
-                          deviceInfo
-                        )
-                      : addToWishlist(
-                          {
-                            ...productDetails,
-                            quantity,
-                            selectedOptions: {
-                              color: isSelected,
-                              size: isSizeSelected,
+                {/* Add to wishlist */}
+                <div className="w-full flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-100 p-2 border border-gray-400 rounded-md transition-all duration-300">
+                  <Heart
+                    size={16}
+                    fill={isWishlisted ? 'red' : 'transparent'}
+                    className="cursor-pointer"
+                    color={isWishlisted ? 'transparent' : '#333'}
+                    onClick={() =>
+                      isWishlisted
+                        ? removeFromWishlist(
+                            productDetails.id,
+                            user,
+                            location,
+                            deviceInfo
+                          )
+                        : addToWishlist(
+                            {
+                              ...productDetails,
+                              quantity,
+                              selectedOptions: {
+                                color: isSelected,
+                                size: isSizeSelected,
+                              },
                             },
-                          },
-                          user,
-                          location,
-                          deviceInfo
-                        )
-                  }
-                />
-                <span className="text-sm">Add to Wishlist</span>
+                            user,
+                            location,
+                            deviceInfo
+                          )
+                    }
+                  />
+                  <span className="text-sm">Add to Wishlist</span>
+                </div>
               </div>
             </div>
           </div>

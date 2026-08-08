@@ -22,8 +22,8 @@ const HeaderBottom = () => {
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
-    <div className="relative z-10 w-full transition-all duration-300 bg-[#313638] border-none border-slate-400/80 shadow-sm shadow-gray-300/10 ">
-      <div className="w-full px-12 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-center gap-8 h-full ">
+    <div className="relative z-10 w-full transition-all duration-300 bg-[#f5f5f5] border-b border-slate-200/80 shadow-none shadow-gray-300/10 ">
+      <div className="w-full px-12 mx-auto pt-0 pb-0 relative flex items-center justify-center gap-10 h-full ">
         {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 
         {/* <div className="flex items-center justify-center gap-10"> */}
@@ -31,7 +31,7 @@ const HeaderBottom = () => {
         <div>
           {/* Bottom header button */}
           <button
-            className="flex items-center text-[14.0px] font-semibold gap-2.5 text-[#fff] hover:text-[#fff] px-2 py-2 transition-colors duration-300 mr-0 flex-shrink-0 "
+            className="flex items-center text-[14.0px] font-semibold gap-2.5 text-[#222] hover:text-[#000] px-2 py-2 transition-colors duration-300 mr-0 flex-shrink-0 "
             onClick={() => setShowSidebar(true)}
           >
             <Menu size={16} />
@@ -51,8 +51,8 @@ const HeaderBottom = () => {
             <Link
               className={`flex items-center px-3 py-2 text-[14.0px] h-full transition-colors duration-100 ${
                 i.accent
-                  ? 'text-[#E85D1F] font-semibold hover:text-[#e85d1f]'
-                  : 'text-[#fff] font-medium hover:text-[#fff]'
+                  ? 'text-[#E85D1F] font-bold hover:text-[#e85d1f]'
+                  : 'text-[#222] font-medium hover:text-[#000]'
               }`}
               href={i.href}
               key={index}
@@ -63,8 +63,8 @@ const HeaderBottom = () => {
         </nav>
 
         {/* </div> */}
-        <div className="flex items-center justify-start text-[14.0px] text-[#fff] font-medium gap-3 ml-0 h-full">
-          <span className="cursor-pointer px-2 py-2 transition-colors duration-100 ">
+        <div className="flex items-center justify-start text-[14.0px] text-[#222] font-medium gap-3 ml-0 h-full">
+          <span className="cursor-pointer px-2 py-2 transition-colors duration-100 hidden">
             Sell
           </span>
           <span className="cursor-pointer px-2 py-2 transition-colors duration-100 ">

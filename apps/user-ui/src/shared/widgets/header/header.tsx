@@ -238,11 +238,11 @@ const Header = () => {
     <>
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
-        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
+        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 border-b border-slate-200/80 ${
           scrolled ? 'shadow-none' : 'shadow-none'
         }`}
       >
-        <div className="w-full px-12 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-4 ">
+        <div className="w-[1280px] px-12 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-4 ">
           <div className="flex items-center justify-start gap-6">
             {/* Logo */}
             <div
@@ -356,7 +356,7 @@ const Header = () => {
               >
                 <CiUser strokeWidth={0.5} size={16} color="#222" />
 
-                <span className="block text-[14.5px] font-bold text-[#000000CC] ">
+                <span className="block text-[14.5px] font-semibold text-[#000000CC] ">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
                     <span className="">Sign in</span>

@@ -162,7 +162,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>
-      <div className="w-full bg-white pt-0 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_240px] gap-4">
+      <div className="w-full bg-white pt-0 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_220px] gap-4">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
@@ -279,7 +279,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Product price */}
             <div className="flex flex-col">
               <div className="pt-4 text-[#333] tracking-tight">
-                <span className="text-sm font-normal">Ksh </span>
+                <span className="text-[15px] font-normal">Ksh </span>
                 <span className="text-2xl font-bold tracking-tight ">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
@@ -444,9 +444,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[240px] px-0 py-0 bg-[#fff] border-none border-gray-200 rounded-md">
+        <div className=" w-[220px] px-0 py-0 bg-[#fff] border-none border-gray-200 rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-4 bg-[#fff] px-6 py-6 rounded-md border border-[#ddd] mb-4">
+          <div className="flex flex-col gap-4 bg-[#fff] px-4 py-6 rounded-md border border-[#ddd] mb-2">
             {/* Pickup location */}
             <div className="flex items-start justify-start gap-2 ">
               <div className="shrink-0">
@@ -473,10 +473,10 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </div>
               <div className="flex flex-col items-start justify-start gap-0.5">
                 <p className="text-[15px] ">
-                  <span className="font-bold text-[#333]">Delivery by</span>
+                  <span className="font-bold text-[#333]">Delivery</span>
                 </p>
                 <p className="text-[13.5px] font-medium text-[#333]">
-                  Ksh 200. Delivery{' '}
+                  Ksh 200. Delivery by{' '}
                   <span className="font-bold">Tuesday, July 7. </span>
                   Order within <span className="font-bold">3 hrs 18 mins </span>
                 </p>
@@ -502,7 +502,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           {/* <hr className="border-t border-gray-200 mt-0" /> */}
 
           {/* Quantity and Add to Cart */}
-          <div className="bg-[#] px-0 py-4 mb-3 rounded-md ">
+          <div className="px-0 py-4 mb-0 rounded-md ">
             <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
               <div className="hidden">
@@ -520,7 +520,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
               {/* Price */}
               <div className="tracking-tight mb-2">
-                <span className="text-sm font-normal">Ksh </span>
+                <span className="text-[15px] font-normal">Ksh </span>
                 <span className="text-2xl font-bold tracking-tight text-gray-900">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
@@ -551,9 +551,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
 
             {/* Add to cart button */}
-            <div className="flex flex-col gap-1 w-full">
+            <div className="flex flex-col gap-1 w-full ">
               <button
-                className={`flex items-center justify-center px-6 py-1.5 bg-[#FCA311] hover:bg-amber-500 text-[13.5] text-[#061826] font-medium rounded-full transition ${
+                className={`flex items-center justify-center px-6 py-1.5 bg-[#FEA417] hover:bg-amber-500 text-[13.5] text-[#1C1C1E] font-medium rounded-full transition ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -581,37 +581,39 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 Buy Now
               </button> */}
             </div>
-            <div className="pt-4 space-y-2 mb-6 text-[#333]">
-              <span className="flex items-start justify-start gap-2 text-sm font-semibold">
-                <div className="shrink-0">
-                  <RotateCcw size={18} strokeWidth="2" color="#007D49" />
+            <div className="pt-2 space-y-2 mb-4 text-[#333] pb-4 border-b border-[#ddd]">
+              <div className="flex flex-col items-start gap-0">
+                <div className="flex items-start justify-between gap-2 w-full text-sm font-semibold pt-4 border-none border-[#ddd]">
+                  <div className="flex items-center gap-2 ">
+                    <div className="shrink-0 mt-1">
+                      <RotateCcw size={18} strokeWidth="2" color="#007D49" />
+                    </div>
+                    <span className="font-bold">Returns </span>
+                  </div>
+                  <span className="text-blue-600 font-normal">Details</span>
                 </div>
-                <p className="flex flex-col ">
-                  <span className="flex items-center gap-2 font-bold">
-                    <span className="font-bold">Returns Accepted</span>
-                    <Info size={14} strokeWidth="1.5" color="#333" />
-                  </span>
-                  <span className="text-sm font-normal">
-                    Enjoy 14-day returns.
-                  </span>
-                </p>
-              </span>
+                <span className="text-sm font-normal ml-6">
+                  30-day returns, quick refund.
+                </span>
+              </div>
 
-              <div className="flex items-start gap-2 ">
-                <div className="shrink-0">
-                  <ShieldCheck size={18} strokeWidth="2" color="#007D49" />
+              <div className="flex flex-col items-start gap-0 ">
+                <div className="flex items-start justify-between gap-2 w-full text-sm font-semibold border-none border-[#ddd]">
+                  <div className="flex items-center gap-2">
+                    <div className="shrink-0 mt-1">
+                      <ShieldCheck size={18} strokeWidth="2" color="#007D49" />
+                    </div>
+                    <span className="font-bold">Secure Payments </span>
+                  </div>
+                  <span className="text-blue-600 font-normal">Details</span>
                 </div>
-                <p className="flex flex-col items-start gap-0">
-                  <span className="text-sm font-bold">Secure Payments</span>
-                  <span className="text-sm font-normal">
-                    All payments are securely processed, encrypted, and
-                    protected.
-                  </span>
-                </p>
+                <span className="text-sm font-normal ml-6">
+                  All payments are securely processed, encrypted, and protected.
+                </span>
               </div>
             </div>
 
-            <hr className="border-t border-slate-200 mb-6" />
+            {/* <hr className="border-t border-slate-200 mb-6" /> */}
 
             <div className=" px-0 py-0 rounded-lg border-none border-gray-300">
               {/* Sold by section */}
@@ -642,7 +644,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </dl>
 
               {/* Seller performance stats */}
-              <div className="flex flex-col items-start justify-start gap-2 py-0 mb-3">
+              <div className="flex flex-col items-start justify-start gap-2 pb-6 mb-3 border-b border-[#ddd]">
                 {/* Seller Store */}
                 <span className="flex items-center gap-2 text-[14.5px] font-bold tracking-tight">
                   <Store size={18} strokeWidth="1.5" color="#1d1d1f" />
@@ -654,12 +656,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   <span className="font-semibold">88%</span>
                   <span className="text-gray-800">Seller score</span>
                 </div>
-              </div>
 
-              {/* <hr className="border-t border-slate-200 my-5" /> */}
-
-              {/* Chat and Add to wishlist */}
-              <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
                 {/* Chat with seller */}
                 <Link
                   href={'#'}
@@ -669,7 +666,12 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   <MessageSquareText size={16} />
                   Chat
                 </Link>
+              </div>
 
+              {/* <hr className="border-t border-slate-200 my-5" /> */}
+
+              {/* Chat and Add to wishlist */}
+              <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
                 {/* Add to wishlist */}
                 <div className="w-full flex items-center justify-center gap-2 cursor-pointer bg-[#f1f1f1] hover:bg-gray-200 p-2 border border-gray-200 rounded-md transition-all duration-300">
                   <Heart

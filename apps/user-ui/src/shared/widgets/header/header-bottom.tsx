@@ -51,7 +51,7 @@ const HeaderBottom = () => {
             <Link
               className={`flex items-center px-3 py-2 text-[14.0px] h-full transition-colors duration-100 ${
                 i.accent
-                  ? 'text-[#E85D1F] font-semibold hover:text-[#e85d1f]'
+                  ? 'text-[#FEA417] font-semibold hover:text-amber-500'
                   : 'text-[#333] font-medium hover:text-[#000]'
               }`}
               href={i.href}

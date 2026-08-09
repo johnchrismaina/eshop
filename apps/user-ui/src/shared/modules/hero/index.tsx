@@ -12,9 +12,9 @@ const bannerImages = [
     alt: 'Green electric kettle',
   },
   {
-    src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61mRzX3wg9L._SX3000_.jpg?updatedAt=1771419784274',
+    // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/61mRzX3wg9L._SX3000_.jpg?updatedAt=1771419784274',
     // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/Homepage-Promo-Model-3-Desktop-US.png?updatedAt=1783850204820',
-    // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/62620f64e0024df6a8ebfe2c7c39f56c_44167d16d5ab.avif?updatedAt=1784395763979',
+    src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/62620f64e0024df6a8ebfe2c7c39f56c_44167d16d5ab.avif?updatedAt=1784395763979',
     alt: 'Yellow toaster',
   },
   {

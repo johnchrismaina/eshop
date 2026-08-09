@@ -405,7 +405,7 @@ export default function EditProductPage() {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f5] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f1f1f1] px-8 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
         <div className="flex items-start justify-between px-0 bg-[#F5F5F5] w-[650px] h-auto mx-auto">
           {/* Images Section */}

@@ -2,7 +2,7 @@ export const navItems: NavItemsTypes[] = [
   {
     title: "Today's Deals",
     href: '/offers',
-    accent: true,
+    accent: false,
   },
   {
     title: 'Electronics',

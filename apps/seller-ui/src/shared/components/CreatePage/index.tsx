@@ -386,7 +386,7 @@ const CreatePage = ({ ...props }) => {
       </div>
 
       {/* Content layout */}
-      <div className="w-full bg-[#f5f5f5] px-7 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
+      <div className="w-full bg-[#f1f1f1] px-7 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
         {/* left column container*/}
         {/* Image upload section */}
         <div className="flex items-start justify-between px-0 bg-[#F5F5F5] w-[650px] h-auto mx-auto">
@@ -631,7 +631,7 @@ const CreatePage = ({ ...props }) => {
           </div>
 
           {/* Tags */}
-          <div className="mt-4 w-full bg-white p-3 rounded-md hidden">
+          <div className="mt-4 w-full bg-white p-3 rounded-md ">
             <label className="block text-[15px] font-semibold text-gray-700 mb-1">
               Tags *
             </label>

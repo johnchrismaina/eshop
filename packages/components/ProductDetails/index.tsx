@@ -37,6 +37,7 @@ import {
   DisclosurePanel,
 } from '@headlessui/react';
 import ZoomImage from '../HoverMagnifier/HoverMagnifier';
+import Breadcrumbs from '../breadcrumbs';
 
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   // const { user, isLoading } = useUser();
@@ -157,8 +158,11 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   return (
     <div className="w-full bg-white px-8 text-[#1d1d1f]">
       {/* Breadcrumbs */}
-      <div className="bg-[#fff] py-4"></div>
-      <div className="w-full bg-white pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_240px] gap-4">
+      <div className="bg-[#fff] py-4">
+        {/* Breadcrumbs */}
+        <Breadcrumbs />
+      </div>
+      <div className="w-full bg-white pt-0 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_240px] gap-4">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
@@ -166,7 +170,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Scroll up button */}
             {productDetails?.images?.length > 4 && (
               <button
-                className="absolute top-0 bg-white p-2 rounded-full shadow-md z-10"
+                className="absolute top-0 bg-white p-2 rounded-md shadow-md z-10"
                 onClick={prevImage}
                 disabled={currentIndex === 0}
               >
@@ -193,7 +197,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                     width={75}
                     height={thumbHeight}
                     style={{ width: 75, height: thumbHeight }} // ✅ forces exact box, overrides Preflight
-                    className={`cursor-pointer border rounded-lg object-cover flex-shrink-0 ${
+                    className={`cursor-pointer border rounded-md object-cover flex-shrink-0 ${
                       currentImage === img
                         ? 'border-blue-500'
                         : 'border-gray-300'
@@ -242,7 +246,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* Middle column - product details */}
         <div className="px-6 pt-0 pb-1 prose prose-sm max-w-none">
           {/* Title */}
-          <h1 className="text-2xl text-gray-950 font-semibold">
+          <h1 className="text-2xl text-[#333] font-semibold">
             {productDetails?.title}
           </h1>
 
@@ -274,9 +278,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           <div className="mt-1">
             {/* Product price */}
             <div className="flex flex-col">
-              <div className="pt-4 tracking-tight">
+              <div className="pt-4 text-[#333] tracking-tight">
                 <span className="text-sm font-normal">Ksh </span>
-                <span className="text-2xl font-bold tracking-tight text-gray-900">
+                <span className="text-2xl font-bold tracking-tight ">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
                     : productDetails?.regular_price}
@@ -296,21 +300,21 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               )}
             </div>
 
-            <div className="mt-2">
-              <div className="flex flex-col md:flex-row items-start gap-5 mt-4">
+            <div className="mt-4">
+              <div className="flex flex-col md:flex-col items-start gap-6 mt-6 ">
                 {/* Color options */}
                 {productDetails?.colors?.length > 0 && (
                   <div>
-                    <strong>Color:</strong>
-                    <div className="flex gap-2 mt-1">
+                    <strong className="text-[#333]">Color</strong>
+                    <div className="flex gap-2 mt-2">
                       {productDetails?.colors?.map(
                         (color: string, index: number) => (
                           <button
                             key={index}
-                            className={`w-8 h-8 cursor-pointer rounded-full border-2 transition ${
+                            className={`w-8 h-8 cursor-pointer rounded-full border-2 border-gray-200 transition ${
                               isSelected === color
                                 ? 'border-gray-400 scale-110 shadow-md'
-                                : 'border-transparent'
+                                : 'border-[#ddd]'
                             }`}
                             onClick={() => setIsSelected(color)}
                             style={{ backgroundColor: color }}
@@ -324,16 +328,16 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 {/* Size options */}
                 {productDetails?.sizes?.length > 0 && (
                   <div>
-                    <strong>Size:</strong>
-                    <div className="flex gap-2 mt-1">
+                    <strong className="text-[#333]">Size</strong>
+                    <div className="flex gap-2 mt-2">
                       {productDetails?.sizes?.map(
                         (size: string, index: number) => (
                           <button
                             key={index}
-                            className={`w-8 h-8 cursor-pointer rounded-full border-2 transition ${
+                            className={`w-24 h-8 cursor-pointer rounded-full border border-[#ddd] transition-colors duration-100 ${
                               isSelected === size
-                                ? 'border-gray-800 text-white'
-                                : 'border-gray-300 text-black'
+                                ? 'bg-[#333] text-white'
+                                : 'border border-[#ddd] text-black'
                             }`}
                             onClick={() => setIsSelected(size)}
                           >
@@ -350,7 +354,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Product description */}
             {/* <div className="w-full lg:w-full mx-auto mt-5"> */}
             <div className="bg-white py-4 ">
-              <span className="text-lg font-bold text-[#1d1d1f] ">
+              <span className="text-lg font-bold text-[#333] hidden">
                 {/* About this item {productDetails?.title} */}
                 Product details
               </span>
@@ -390,14 +394,14 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               )}
 
               <div className="flex flex-col gap-3">
-                <span className="text-base font-bold text-[#1d1d1f] ">
+                <span className="text-base font-bold text-[#333] ">
                   {/* About this item {productDetails?.title} */}
                   About this item
                 </span>
 
                 {/* Description */}
                 <div
-                  className="prose prose-sm text-[#52525B] text-[15px] text-[15px]/6 max-w-none break-words pr-3"
+                  className="prose prose-sm text-[#333] text-[15px] text-[15px]/6 max-w-none break-words pr-3"
                   dangerouslySetInnerHTML={{
                     __html: productDetails?.short_description,
                   }}
@@ -440,53 +444,49 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[240px] text-[#000] px-0 py-0 bg-[#fff] border-none border-gray-200 rounded-md">
+        <div className=" w-[240px] px-0 py-0 bg-[#fff] border-none border-gray-200 rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-4 bg-[#fff] px-4 py-4 rounded-md border border-gray-200 mb-3">
+          <div className="flex flex-col gap-4 bg-[#fff] px-6 py-6 rounded-md border border-[#ddd] mb-4">
             {/* Pickup location */}
             <div className="flex items-start justify-start gap-2 ">
-              <Package size={18} strokeWidth="1.5" color="#1d1d1f" />
-
+              <div className="shrink-0">
+                <Package size={18} strokeWidth="1.5" color="#333" />
+              </div>
               <div className="flex flex-col items-start justify-start gap-0.5">
                 <p className="text-[15px] ">
-                  <span className="text-[#000] font-bold ">Pickup: </span>
-                  <span className="font-normal">Ksh 70</span>
+                  <span className="text-[#333] font-bold ">Pickup </span>
+                  {/* <span className="font-normal"></span> */}
                 </p>
-                <p className="text-sm  ">
-                  Delivery <span className="font-bold">Tuesday, July 7</span>
-                </p>
-                <p className="text-sm font-normal text-[#9CA3AF]">
+                <p className="text-[13.5px] font-medium text-[#333]">
+                  Ksh 70. Delivery by{' '}
+                  <span className="font-bold">Tuesday, July 7. </span>
                   Order within{' '}
-                  <span className=" font-normal">3 hrs 18 mins </span>
+                  <span className=" font-bold">3 hrs 18 mins </span>
                 </p>
-                <div className="flex items-center text-blue-700 ">
-                  {/* <MapPin size={18} className="ml-[-5px]" /> */}
-                </div>
               </div>
             </div>
 
             {/* Door delivery */}
             <div className="flex items-start justify-start gap-2">
-              <Truck size={18} strokeWidth="1.5" color="#1d1d1f" />
-
+              <div className="shrink-0">
+                <Truck size={18} strokeWidth="1.5" color="#333" />
+              </div>
               <div className="flex flex-col items-start justify-start gap-0.5">
                 <p className="text-[15px] ">
-                  <span className="font-bold ">Delivery: </span>
-                  <span className="font-normal">Ksh 200</span>
+                  <span className="font-bold text-[#333]">Delivery by</span>
                 </p>
-                <p className="text-sm  ">
-                  Delivery <span className="font-bold">Tuesday, July 7</span>
-                </p>
-                <p className="text-sm font-normal text-[#9CA3AF]">
-                  Order within{' '}
-                  <span className="font-normal">3 hrs 18 mins </span>
+                <p className="text-[13.5px] font-medium text-[#333]">
+                  Ksh 200. Delivery{' '}
+                  <span className="font-bold">Tuesday, July 7. </span>
+                  Order within <span className="font-bold">3 hrs 18 mins </span>
                 </p>
               </div>
             </div>
 
-            <div className="flex items-end justify-start gap-2 my-0 ">
-              <p className="">
-                <span className="text-[15px] font-normal ">Deliver to </span>
+            <div className="flex items-center justify-start gap-2 my-0 ">
+              <MapPin size={16} />
+              <p className="flex items-center gap-1">
+                <span className="text-sm font-normal ">Deliver to </span>
                 <span className="text-sm text-blue-600 font-normal cursor-pointer hover:underline ">
                   {location?.city}
                 </span>
@@ -497,11 +497,12 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 {' ' + location?.city + ', ' + location?.country}
               </span> */}
             </div>
-            {/* <hr className="border-t border-gray-200 my-0" /> */}
           </div>
 
+          {/* <hr className="border-t border-gray-200 mt-0" /> */}
+
           {/* Quantity and Add to Cart */}
-          <div className="bg-[#] px-4 py-4 mb-3 rounded-md border border-gray-200">
+          <div className="bg-[#] px-0 py-4 mb-3 rounded-md ">
             <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
               <div className="hidden">
@@ -518,7 +519,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </div>
 
               {/* Price */}
-              <div className="tracking-tight">
+              <div className="tracking-tight mb-2">
                 <span className="text-sm font-normal">Ksh </span>
                 <span className="text-2xl font-bold tracking-tight text-gray-900">
                   {productDetails?.deal
@@ -529,11 +530,13 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
               {/* Quantity dropdown */}
               <div className="flex flex-col gap-1 w-full">
-                <span className="text-sm font-medium ">Quantity</span>
+                <span className="text-sm font-bold text-[#333] hidden">
+                  Quantity
+                </span>
                 <select
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full border border-gray-200 font-medium text-sm rounded-md px-3 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 transition-all duration-200"
+                  className="w-full border border-gray-200 bg-[#f1f1f1] font-medium text-sm rounded-md px-3 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 transition-all duration-200"
                 >
                   {/* <option value="" disabled>
                   Quantity
@@ -550,7 +553,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Add to cart button */}
             <div className="flex flex-col gap-1 w-full">
               <button
-                className={`flex items-center justify-center px-[8px] py-1.5 bg-[#ffac30] hover:bg-amber-500 text-[14.0] text-[#1d1d1f] font-medium rounded-md transition ${
+                className={`flex items-center justify-center px-6 py-1.5 bg-[#FCA311] hover:bg-amber-500 text-[13.5] text-[#061826] font-medium rounded-full transition ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -578,16 +581,34 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 Buy Now
               </button> */}
             </div>
-            <div className="pt-4 space-y-2 mb-6 ">
-              <span className="flex items-center justify-start gap-2 text-sm font-semibold">
-                <RotateCcw size={16} strokeWidth="2" color="#222" />
-                <span className="text-gray-800">7 Day Returns</span>
-                <Info size={14} strokeWidth="1.5" color="#333" />
+            <div className="pt-4 space-y-2 mb-6 text-[#333]">
+              <span className="flex items-start justify-start gap-2 text-sm font-semibold">
+                <div className="shrink-0">
+                  <RotateCcw size={18} strokeWidth="2" color="#007D49" />
+                </div>
+                <p className="flex flex-col ">
+                  <span className="flex items-center gap-2 font-bold">
+                    <span className="font-bold">Returns Accepted</span>
+                    <Info size={14} strokeWidth="1.5" color="#333" />
+                  </span>
+                  <span className="text-sm font-normal">
+                    Enjoy 14-day returns.
+                  </span>
+                </p>
               </span>
-              <span className="flex items-center justify-start gap-2 text-sm font-semibold">
-                <ShieldCheck size={16} strokeWidth="2" color="#222" />
-                <span className="text-gray-800">Secure Payments</span>
-              </span>
+
+              <div className="flex items-start gap-2 ">
+                <div className="shrink-0">
+                  <ShieldCheck size={18} strokeWidth="2" color="#007D49" />
+                </div>
+                <p className="flex flex-col items-start gap-0">
+                  <span className="text-sm font-bold">Secure Payments</span>
+                  <span className="text-sm font-normal">
+                    All payments are securely processed, encrypted, and
+                    protected.
+                  </span>
+                </p>
+              </div>
             </div>
 
             <hr className="border-t border-slate-200 mb-6" />
@@ -650,7 +671,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 </Link>
 
                 {/* Add to wishlist */}
-                <div className="w-full flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-100 p-2 border border-gray-400 rounded-md transition-all duration-300">
+                <div className="w-full flex items-center justify-center gap-2 cursor-pointer bg-[#f1f1f1] hover:bg-gray-200 p-2 border border-gray-200 rounded-md transition-all duration-300">
                   <Heart
                     size={16}
                     fill={isWishlisted ? 'red' : 'transparent'}

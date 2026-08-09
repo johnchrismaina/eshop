@@ -23,15 +23,18 @@ import {
   hadPreviousSession,
 } from 'apps/user-ui/src/store/authStore';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
-import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
+// import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
+import { CgShoppingCart } from 'react-icons/cg';
+
 // import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
 // import { CiUser } from 'react-icons/ci';
 import { CiUser } from 'react-icons/ci';
+import { HiOutlineUser } from 'react-icons/hi';
 
 // import { CgShoppingCart } from 'react-icons/cg';
 
 import { useEffect } from 'react';
-import { Search, User, ShoppingCart, Menu } from 'lucide-react';
+import { Search, User } from 'lucide-react';
 import SidebarMenu from '../../components/sidebar-menu';
 // import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
 import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
@@ -238,31 +241,29 @@ const Header = () => {
     <>
       {/* HEADER 1 — logo / search / account / cart — sticky, gets shadow on scroll */}
       <header
-        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 border-b border-slate-200/80 ${
+        className={`sticky top-0 z-50 bg-[#fff] transition-shadow duration-200 ${
           scrolled ? 'shadow-none' : 'shadow-none'
         }`}
       >
         <div className="w-[1280px] px-12 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-4 ">
-          <div className="flex items-center justify-start gap-6">
+          <div className="flex items-center justify-start gap-4">
             {/* Logo */}
             <div
-              className="flex items-center justify-center text-[#262626] font-semibold font-oswald text-3xl tracking-wide pl-2 -mt-1"
+              className="flex items-center justify-center text-[#333] font-semibold font-oswald text-3xl tracking-wide pl-2 -mt-1"
               // style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Sokonis<span className="text-2xl text-[#E85D1F] px-[1px]">.</span>
             </div>
 
             {/* Delivery location - can be dropdown in future */}
-            <div className="relative flex items-center justify-center gap-2 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors duration-100 ">
+            <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors duration-100 ">
               {/* </div> */}
-              <div className="mt-1">
-                <MapPin size={17} color="#000000cc" />
+              <div className="mt-0">
+                <MapPin size={18} color="#333" />
               </div>
-              <div className="flex flex-col items-start shrink-0">
-                <span className="text-xs font-normal text-[#000000cc] tracking-tight">
-                  Deliver to:{' '}
-                </span>
-                <span className="text-[14.0px] font-bold text-[#000] -mt-[4px] tracking-tight">
+              <div className="flex flex-col items-start shrink-0 text-[#333] tracking-tight">
+                <span className="text-xs font-normal ">Deliver to: </span>
+                <span className="text-[14.0px] font-bold -mt-[4px] ">
                   Naivasha
                 </span>
               </div>
@@ -272,11 +273,11 @@ const Header = () => {
               This is what click-outside watches, and what holds the panel. */}
             <div
               ref={searchWrapperRef}
-              className="relative w-[600px] mx-auto ml-0"
+              className="relative w-[600px] mx-auto ml-2"
             >
               <div
                 ref={searchContainerRef}
-                className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-600
+                className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-400
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out"
@@ -297,7 +298,7 @@ const Header = () => {
 
                 {/* Backdrop with synced fade */}
                 <div
-                  className={`fixed top-[95px] left-0 right-0 bottom-0 bg-black 
+                  className={`fixed top-[98px] left-0 right-0 bottom-0 bg-black 
                    transition-opacity duration-200 ease-out z-[100] 
                    ${
                      openSearchBackdrop
@@ -310,10 +311,10 @@ const Header = () => {
                 <button
                   aria-label="Search"
                   className="flex items-center justify-center w-12 h-10 mr-[-4.0px] rounded-r-md 
-                   text-[#fff] bg-[#262626] hover:text-[#fff]
+                   text-[#fff] bg-[#333] hover:text-[#fff]
                    transition-colors flex-shrink-0"
                 >
-                  <Search size={20} />
+                  <Search size={18} />
                 </button>
               </div>
               {/* dropdown panel unchanged */}
@@ -342,27 +343,25 @@ const Header = () => {
           </div>
 
           {/* Account / Cart column */}
-          <div className="flex items-center justify-end w-full h-full gap-2">
+          <div className="flex items-center justify-end w-full h-full gap-3">
             {/* Account/Trigger */}
             <div
-              className="relative flex items-center gap-2 text-gray-600 px-3 rounded-md h-full transition-colors duration-100 "
+              className="relative flex items-center gap-1 text-gray-600 px-0 h-full "
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
             >
-              {/* <CiUser /> */}
               <Link
                 href={user?.name ? '/profile' : '/login'}
-                className="flex gap-1 items-center justify-center "
+                className="flex flex-col gap-0 items-start justify-start "
               >
-                <CiUser strokeWidth={0.5} size={16} color="#222" />
-
-                <span className="block text-[14.5px] font-semibold text-[#000000CC] ">
+                {/* <UserRound size={18} /> */}
+                <span className="block text-[11.0px] font-normal text-[#333] tracking-tight">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
-                    <span className="">Sign in</span>
+                    <span className="text-[11.0px] font-normal ">Sign in</span>
                   ) : hadSession && !hydrated ? (
                     // Had previous session, still hydrating: show skeleton
-                    <span className="block w-12 h-3 bg-gray-300 rounded animate-pulse"></span>
+                    <span className="block w-12 h-3rounded animate-pulse"></span>
                   ) : user?.name ? (
                     // Hydrated with user: show username
                     <span className="font-normal">
@@ -370,18 +369,20 @@ const Header = () => {
                     </span>
                   ) : (
                     // No user or no previous session: show Log in
-                    <span className="flex items-center justify-center ">
+                    <span className="flex items-center justify-center text-[11.0px] font-normal ">
                       {/* <ProfileIcon size={18} color="#fff" /> */}
                       Sign in
                     </span>
                   )}
                 </span>
 
-                {/* <span className="relative flex items-center text-[15.0px] text-[#fff] font-bold gap-0.5 -mt-1.5 tracking-tight">
-                  Account */}
-                {/* <ChevronDown size={14} color="#999" /> */}
-                {/* <ChevronDownIcon width={9} height={20} color="#fff" />
-                </span> */}
+                <span className="relative flex items-center text-[13.5px] font-bold gap-0.5 -mt-1.5">
+                  Account
+                  {/* <ChevronDown size={14} color="#333" /> */}
+                  <div className="mt-[2px]">
+                    <ChevronDownIcon size={8} color="#333" />
+                  </div>
+                </span>
               </Link>
 
               {/* Backdrop */}
@@ -394,7 +395,7 @@ const Header = () => {
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-[0] w-64 bg-[#fff] shadow-[0_0_30px_rgba(0,0,0,0.1)] z-[110] rounded-md ">
+                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fff] z-[110] shadow-lg rounded-md ">
                   {/* Arrow pointing up */}
                   {/* <div
                     className="absolute -top-2 right-4 w-0 h-0 
@@ -477,8 +478,8 @@ const Header = () => {
                 href="/cart"
                 className="relative flex items-center justify-center mt-[0px] cursor-pointer"
               >
-                {/* <CgShoppingCart size={18} color="#000000cc" /> */}
-                <CartIcon strokeWidth={1.5} size={16} color="#222" />
+                <CgShoppingCart strokeWidth={0.0} size={22} color="#333" />
+                {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
                 {cart?.length > 0 && (
                   <div className="absolute top-[-8px] right-[-10px] min-w-[16px] h-4 px-0 rounded-full bg-[#E85D1F] flex items-center justify-center mt-[0px]">
@@ -495,7 +496,7 @@ const Header = () => {
                 {/* <span className="font-medium text-[14.0px] text-gray-200 tracking-tight ">
                   Cart
                 </span> */}
-                <span className="text-[12.0px] text-[#222] font-bold -mt-0 tracking-tight px-2 py-1 bg-[#f5f5f5] border border-gray-200 rounded-full">
+                <span className="text-[12.0px] text-[#333] font-bold -mt-0 tracking-tight px-2 py-1 bg-[#f1f1f1] rounded-full">
                   KES 0.00
                 </span>
               </div>

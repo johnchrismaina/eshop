@@ -482,7 +482,7 @@ const Header = () => {
                 {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
                 {cart?.length > 0 && (
-                  <div className="absolute top-[-5px] right-[-9px] min-w-[16px] h-4 px-0 rounded-full bg-[#FEA417] flex items-center justify-center mt-[0px]">
+                  <div className="absolute top-[-2px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#FEA417] flex items-center justify-center mt-[0px]">
                     <span className="text-[#1C1C1E] font-bold text-[11px] leading-none">
                       {cart.length > 99 ? '99+' : cart.length}
                     </span>
@@ -496,7 +496,7 @@ const Header = () => {
                 {/* <span className="font-medium text-[14.0px] text-gray-200 tracking-tight ">
                   Cart
                 </span> */}
-                <span className="text-[12.0px] text-[#333] font-bold -mt-0 tracking-tight px-2 py-1 bg-[#f1f1f1] rounded-full">
+                <span className="text-[12.0px] text-[#333] font-bold -mt-0 tracking-tight px-2 py-1 bg-[#f1f1f1]/80 rounded-md">
                   KES 0.00
                 </span>
               </div>

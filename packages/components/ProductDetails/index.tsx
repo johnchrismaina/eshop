@@ -16,7 +16,7 @@ import {
   Info,
 } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // import ReactImageMagnify from 'react-image-magnify';
 import Ratings from '../../components/ratings';
 import Link from 'next/link';
@@ -68,7 +68,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const [isSizeSelected] = useState(productDetails?.sizes?.[0] || '');
   // const [quantity, setQuantity] = useState(1);
 
-  const [quantity, setQuantity] = useState<number | ''>('');
+  // const [quantity, setQuantity] = useState<number | ''>('');
+  const [quantity, setQuantity] = useState<number>(1);
+
   // const [priceRange, setPriceRange] = useState([
   //   productDetails?.sale_price,
   //   1199,
@@ -155,6 +157,22 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
     }
   };
 
+  const [quantityOpen, setQuantityOpen] = useState(false);
+  const quantityRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        quantityRef.current &&
+        !quantityRef.current.contains(e.target as Node)
+      ) {
+        setQuantityOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <div className="w-full bg-white px-8 text-[#1d1d1f]">
       {/* Breadcrumbs */}
@@ -162,7 +180,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>
-      <div className="w-full bg-white pt-0 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_220px] gap-4">
+      <div className="w-full bg-white pt-0 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_260px] gap-4">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
@@ -279,7 +297,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Product price */}
             <div className="flex flex-col">
               <div className="pt-4 text-[#333] tracking-tight">
-                <span className="text-[15px] font-normal">Ksh </span>
+                <span className="text-[14px] font-bold">Ksh </span>
                 <span className="text-2xl font-bold tracking-tight ">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
@@ -334,7 +352,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                         (size: string, index: number) => (
                           <button
                             key={index}
-                            className={`w-24 h-8 cursor-pointer rounded-full border border-[#ddd] transition-colors duration-100 ${
+                            className={`w-20 h-10 text-[14px] font-medium cursor-pointer rounded-lg border border-[#ddd] transition-colors duration-100 ${
                               isSelected === size
                                 ? 'bg-[#333] text-white'
                                 : 'border border-[#ddd] text-black'
@@ -444,46 +462,61 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[220px] px-0 py-0 bg-[#fff] border-none border-gray-200 rounded-md">
+        <div className=" w-[260px] px-0 py-0 bg-[#fff] border-none border-[#ddd] rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-4 bg-[#fff] px-4 py-6 rounded-md border border-[#ddd] mb-2">
+          <div className="flex flex-col gap-3 bg-[#fff] px-4 py-6 rounded-md border border-[#ddd] mb-2">
             {/* Pickup location */}
-            <div className="flex items-start justify-start gap-2 ">
-              <div className="shrink-0">
-                <Package size={18} strokeWidth="1.5" color="#333" />
+            <div className="flex items-center justify-between font-medium tracking-tight ">
+              <div className="flex items-center gap-2">
+                <Package
+                  size={18}
+                  strokeWidth="1.5"
+                  color="#333"
+                  className="shrink-0"
+                />
+                <span className="text-[#52525B] text-[13.5px] font-semibold ">
+                  Pickup
+                </span>
               </div>
-              <div className="flex flex-col items-start justify-start gap-0.5">
-                <p className="text-[15px] ">
-                  <span className="text-[#333] font-bold ">Pickup </span>
-                  {/* <span className="font-normal"></span> */}
-                </p>
-                <p className="text-[13.5px] font-medium text-[#333]">
-                  Ksh 70. Delivery by{' '}
-                  <span className="font-bold">Tuesday, July 7. </span>
-                  Order within{' '}
-                  <span className=" font-bold">3 hrs 18 mins </span>
+              <div className="">
+                <p className="flex items-center gap-2 text-[13.5px] text-[#333]">
+                  <span className="font-bold">Ksh 70</span>
+                  <span className="font-bold">.</span>
+                  <span className="font-bold">Tue, Jul 7 </span>
                 </p>
               </div>
             </div>
 
             {/* Door delivery */}
-            <div className="flex items-start justify-start gap-2">
-              <div className="shrink-0">
-                <Truck size={18} strokeWidth="1.5" color="#333" />
+            <div className="flex items-center justify-between font-medium tracking-tight ">
+              <div className="flex items-center gap-2">
+                <Package
+                  size={18}
+                  strokeWidth="1.5"
+                  color="#333"
+                  className="shrink-0"
+                />
+                <span className="text-[#52525B] text-[13.5px] font-semibold ">
+                  Delivery
+                </span>
               </div>
-              <div className="flex flex-col items-start justify-start gap-0.5">
-                <p className="text-[15px] ">
-                  <span className="font-bold text-[#333]">Delivery</span>
-                </p>
-                <p className="text-[13.5px] font-medium text-[#333]">
-                  Ksh 200. Delivery by{' '}
-                  <span className="font-bold">Tuesday, July 7. </span>
-                  Order within <span className="font-bold">3 hrs 18 mins </span>
+              <div className="">
+                <p className="flex items-center gap-2 text-[13.5px]  text-[#333]">
+                  <span className="font-bold">Ksh 200</span>
+                  <span className="font-bold">.</span>
+                  <span className="font-bold">Tue, Jul 7 </span>
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center justify-start gap-2 my-0 ">
+            {/* Order timeline */}
+            <div className="pb-4 border-b border-[#ddd]">
+              <span className="text-[13.5px] font-medium text-[#9CA3AF] tracking-tight">
+                Order within 3 hrs 18 mins
+              </span>
+            </div>
+
+            <div className="flex items-center justify-start gap-2 pb-0">
               <MapPin size={16} />
               <p className="flex items-center gap-1">
                 <span className="text-sm font-normal ">Deliver to </span>
@@ -520,7 +553,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
               {/* Price */}
               <div className="tracking-tight mb-2">
-                <span className="text-[15px] font-normal">Ksh </span>
+                <span className="text-[14px] font-bold">Ksh </span>
                 <span className="text-2xl font-bold tracking-tight text-gray-900">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
@@ -529,31 +562,63 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </div>
 
               {/* Quantity dropdown */}
-              <div className="flex flex-col gap-1 w-full">
-                <span className="text-sm font-bold text-[#333] hidden">
-                  Quantity
-                </span>
-                <select
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full border border-gray-200 bg-[#f1f1f1] font-medium text-sm rounded-md px-3 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 transition-all duration-200"
+              <span className="text-sm font-semibold text-[#333] hidden ">
+                Quantity
+              </span>
+              <div
+                className="flex flex-col gap-1 w-full mb-0.5 relative"
+                ref={quantityRef}
+              >
+                <button
+                  type="button"
+                  onClick={() => setQuantityOpen((o) => !o)}
+                  className="w-full h-10 px-3 border border-gray-200 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
                 >
-                  {/* <option value="" disabled>
-                  Quantity
-                </option> */}
-                  {[1, 2, 3, 5, 10, 20, 50, 100].map((q) => (
-                    <option key={q} value={q}>
-                      {q}
-                    </option>
-                  ))}
-                </select>
+                  {quantity}
+                  <svg
+                    className="w-4 h-4 text-[#333] "
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {quantityOpen && (
+                  <ul className="absolute top-full mt-1 w-full max-h-[168px] overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg z-10">
+                    {[1, 2, 3, 4, 5, 10, 20, 50, 100].map((q) => (
+                      <li key={q}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setQuantity(q);
+                            setQuantityOpen(false);
+                          }}
+                          className={`w-full h-[34px] px-3 text-left text-sm hover:bg-gray-50 ${
+                            q === quantity
+                              ? 'bg-[#C2410C]/10 text-[#C2410C] font-medium'
+                              : 'text-[#1C1C1E]'
+                          }`}
+                        >
+                          {q}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
 
             {/* Add to cart button */}
-            <div className="flex flex-col gap-1 w-full ">
+            <div className="flex flex-col gap-2 w-full pb-4 border-b border-[#ddd]">
               <button
-                className={`flex items-center justify-center px-6 py-1.5 bg-[#FEA417] hover:bg-amber-500 text-[13.5] text-[#1C1C1E] font-medium rounded-full transition ${
+                className={`flex items-center justify-center px-6 py-1.5 bg-[#fff] hover:bg-[#f1f1f1] text-[14.0px] text-[#1C1C1E] font-semibold border border-gray-300 rounded-md transition duration-100 ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -573,43 +638,64 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   )
                 }
               >
-                Add to Cart
+                Add to cart
               </button>
 
               {/* Buy Now button */}
-              {/* <button className="flex items-center justify-center p-[8px] bg-rose-600 hover:bg-rose-500 text-sm text-gray-800 font-medium rounded-full transition">
+              <button className="flex items-center justify-center px-6 py-1.5 bg-[#FEA417] hover:bg-amber-500 text-[14.0px] text-[#333] font-semibold rounded-md transition duration-100">
                 Buy Now
-              </button> */}
+              </button>
             </div>
-            <div className="pt-2 space-y-2 mb-4 text-[#333] pb-4 border-b border-[#ddd]">
-              <div className="flex flex-col items-start gap-0">
-                <div className="flex items-start justify-between gap-2 w-full text-sm font-semibold pt-4 border-none border-[#ddd]">
-                  <div className="flex items-center gap-2 ">
-                    <div className="shrink-0 mt-1">
-                      <RotateCcw size={18} strokeWidth="2" color="#007D49" />
-                    </div>
-                    <span className="font-bold">Returns </span>
-                  </div>
-                  <span className="text-blue-600 font-normal">Details</span>
+
+            <div className="pt-4 space-y-2 mb-4 text-[#333] pb-4 border-b border-gray-200">
+              {/* Returns */}
+              <div className="flex items-center justify-between font-medium tracking-tight pt-0 ">
+                <div className="flex items-center gap-2">
+                  <RotateCcw
+                    size={18}
+                    strokeWidth="2"
+                    color="#007D49"
+                    className="shrink-0"
+                  />
+                  <span className="text-[#52525B] text-[13.5px] font-semibold ">
+                    Returns
+                  </span>
                 </div>
-                <span className="text-sm font-normal ml-6">
-                  30-day returns, quick refund.
-                </span>
+                <div className="">
+                  <p className="flex items-center gap-2 text-[#333]">
+                    <span className="font-bold text-[13.5px]">
+                      30-day returns
+                    </span>
+                    <span className="font-medium text-[12.5px] text-blue-600 underline cursor-pointer">
+                      Details
+                    </span>
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-col items-start gap-0 ">
-                <div className="flex items-start justify-between gap-2 w-full text-sm font-semibold border-none border-[#ddd]">
-                  <div className="flex items-center gap-2">
-                    <div className="shrink-0 mt-1">
-                      <ShieldCheck size={18} strokeWidth="2" color="#007D49" />
-                    </div>
-                    <span className="font-bold">Secure Payments </span>
-                  </div>
-                  <span className="text-blue-600 font-normal">Details</span>
+              {/* Secure payments */}
+              <div className="flex items-center justify-between font-medium tracking-tight ">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck
+                    size={18}
+                    strokeWidth="2"
+                    color="#007D49"
+                    className="shrink-0"
+                  />
+                  <span className="text-[#52525B] text-[13.5px] font-semibold ">
+                    Security
+                  </span>
                 </div>
-                <span className="text-sm font-normal ml-6">
-                  All payments are securely processed, encrypted, and protected.
-                </span>
+                <div className="">
+                  <p className="flex items-center gap-2 text-[#333]">
+                    <span className="font-bold text-[13.5px]">
+                      Secure payments
+                    </span>
+                    <span className="font-medium text-[12.5px] text-blue-600 underline ">
+                      Details
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
 

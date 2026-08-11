@@ -24,7 +24,7 @@ const Breadcrumbs = () => {
   };
 
   return (
-    <nav aria-label="breadcrumb" className="mb-0">
+    <nav aria-label="breadcrumb" className="px-2">
       <ol className="flex items-center gap-1 text-[13px] text-[#333]">
         <li>
           <Link href="/" className="hover:underline text-[#333]/80">

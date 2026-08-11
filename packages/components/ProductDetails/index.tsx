@@ -180,7 +180,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>
-      <div className="w-full bg-white pt-0 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_260px] gap-4">
+      <div className="w-full bg-white pt-4 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_260px] gap-4">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
@@ -616,9 +616,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
 
             {/* Add to cart button */}
-            <div className="flex flex-col gap-2 w-full pb-4 border-b border-[#ddd]">
+            <div className="flex flex-col gap-2 w-full pb-2 border-none border-[#ddd]">
               <button
-                className={`flex items-center justify-center px-6 py-1.5 bg-[#fff] hover:bg-[#f1f1f1] text-[14.0px] text-[#1C1C1E] font-semibold border border-gray-300 rounded-md transition duration-100 ${
+                className={`flex items-center justify-center px-6 h-10 bg-[#fff] hover:bg-[#f1f1f1] text-[14.0px] text-[#1C1C1E] font-semibold border border-gray-300 rounded-full transition duration-100 ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -642,12 +642,12 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </button>
 
               {/* Buy Now button */}
-              <button className="flex items-center justify-center px-6 py-1.5 bg-[#FEA417] hover:bg-amber-500 text-[14.0px] text-[#333] font-semibold rounded-md transition duration-100">
+              <button className="flex items-center justify-center px-6 h-10 bg-[#FEA417] hover:bg-amber-500 text-[14.0px] text-[#000] font-semibold rounded-full transition duration-100">
                 Buy Now
               </button>
             </div>
 
-            <div className="pt-4 space-y-2 mb-4 text-[#333] pb-4 border-b border-gray-200">
+            <div className="pt-2 space-y-2 mb-4 text-[#333] pb-4 border-b border-gray-200">
               {/* Returns */}
               <div className="flex items-center justify-between font-medium tracking-tight pt-0 ">
                 <div className="flex items-center gap-2">
@@ -759,7 +759,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               {/* Chat and Add to wishlist */}
               <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
                 {/* Add to wishlist */}
-                <div className="w-full flex items-center justify-center gap-2 cursor-pointer bg-[#f1f1f1] hover:bg-gray-200 p-2 border border-gray-200 rounded-md transition-all duration-300">
+                <div className="w-full flex items-center justify-start gap-2 cursor-pointer bg-[#f1f1f1] hover:bg-[#f1f1f1] p-2 border border-gray-300 rounded-md transition-all duration-300">
                   <Heart
                     size={16}
                     fill={isWishlisted ? 'red' : 'transparent'}
@@ -788,7 +788,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                           )
                     }
                   />
-                  <span className="text-sm">Add to Wishlist</span>
+                  <span className="text-sm font-semibold">Add to Wishlist</span>
                 </div>
               </div>
             </div>

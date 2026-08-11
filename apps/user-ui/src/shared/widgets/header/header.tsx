@@ -245,14 +245,26 @@ const Header = () => {
           scrolled ? 'shadow-none' : 'shadow-none'
         }`}
       >
-        <div className="w-[1280px] px-12 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-4 ">
-          <div className="flex items-center justify-start gap-4">
-            {/* Logo */}
-            <div
-              className="flex items-center justify-center text-[#333] font-semibold font-oswald text-3xl tracking-wide pl-2 -mt-1"
-              // style={{ fontFamily: "'Oswald', sans-serif" }}
-            >
-              Sokonis<span className="text-2xl text-[#E85D1F] px-[1px]">.</span>
+        <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-6 ">
+          <div className="flex items-center justify-start gap-6">
+            {/* logo */}
+            <div className="px-2">
+              <Link href="/">
+                {/* <span className="font-semibold text-3xl tracking-tight">
+                Sokonis
+              </span> */}
+                <Image
+                  src={
+                    layout?.logo ||
+                    'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/logo.svg'
+                  }
+                  alt="logo"
+                  width={120}
+                  height={50}
+                  className="object-contain"
+                  unoptimized
+                />
+              </Link>
             </div>
 
             {/* Delivery location - can be dropdown in future */}
@@ -261,7 +273,7 @@ const Header = () => {
               <div className="mt-0">
                 <MapPin size={18} color="#333" />
               </div>
-              <div className="flex flex-col items-start shrink-0 text-[#333] tracking-tight">
+              <div className="flex flex-col items-start shrink-0 text-[#333] ">
                 <span className="text-xs font-normal ">Deliver to: </span>
                 <span className="text-[14.0px] font-bold -mt-[4px] ">
                   Naivasha
@@ -273,11 +285,11 @@ const Header = () => {
               This is what click-outside watches, and what holds the panel. */}
             <div
               ref={searchWrapperRef}
-              className="relative w-[600px] mx-auto ml-2"
+              className="relative w-[760px] mx-auto ml-0"
             >
               <div
                 ref={searchContainerRef}
-                className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-400
+                className="flex items-center h-10 bg-[#fff] rounded-full border border-gray-400
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out"
@@ -310,7 +322,7 @@ const Header = () => {
 
                 <button
                   aria-label="Search"
-                  className="flex items-center justify-center w-12 h-10 mr-[-4.0px] rounded-r-md 
+                  className="flex items-center justify-center w-9 h-9 mr-[2.0px] rounded-full
                    text-[#fff] bg-[#333] hover:text-[#fff]
                    transition-colors flex-shrink-0"
                 >
@@ -355,7 +367,7 @@ const Header = () => {
                 className="flex flex-col gap-0 items-start justify-start "
               >
                 {/* <UserRound size={18} /> */}
-                <span className="block text-[11.0px] font-normal text-[#333] tracking-tight">
+                <span className="block text-[11.0px] font-normal text-[#333] ">
                   {!mounted ? (
                     // SSR + first client render: invisible placeholder to prevent hydration mismatch
                     <span className="text-[11.0px] font-normal ">Sign in</span>
@@ -376,7 +388,7 @@ const Header = () => {
                   )}
                 </span>
 
-                <span className="relative flex items-center text-[13.5px] font-bold gap-0.5 -mt-1.5">
+                <span className="relative flex items-center text-[13.5px] text-[#333] font-bold gap-0.5 -mt-1.5">
                   Account
                   {/* <ChevronDown size={14} color="#333" /> */}
                   <div className="mt-[2px]">
@@ -388,14 +400,14 @@ const Header = () => {
               {/* Backdrop */}
               {open && (
                 <div
-                  className="fixed top-[106px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
+                  className="fixed top-[98px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
                   onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
                 />
               )}
 
               {/* Floating Panel */}
               {open && (
-                <div className="absolute top-full right-0 mt-[0] w-64 bg-[#fff] z-[110] shadow-lg rounded-md ">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-[0] w-64 bg-[#fff] shadow-[0_0_30px_rgba(0,0,0,0.1)] z-[110] rounded-md ">
                   {/* Arrow pointing up */}
                   {/* <div
                     className="absolute -top-2 right-4 w-0 h-0 
@@ -478,7 +490,7 @@ const Header = () => {
                 href="/cart"
                 className="relative flex items-center justify-center mt-[0px] cursor-pointer"
               >
-                <CgShoppingCart strokeWidth={0.0} size={22} color="#333" />
+                <CgShoppingCart strokeWidth={0.0} size={20} color="#333" />
                 {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
                 {cart?.length > 0 && (
@@ -492,11 +504,11 @@ const Header = () => {
               {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
-              <div className="flex items-center justify-center">
-                {/* <span className="font-medium text-[14.0px] text-gray-200 tracking-tight ">
+              <div className="flex flex-col items-start justify-center">
+                <span className="text-[11.0px] font-normal text-[#333] ">
                   Cart
-                </span> */}
-                <span className="text-[12.0px] text-[#333] font-bold -mt-0 tracking-tight px-2 py-1 bg-[#f1f1f1]/80 rounded-md">
+                </span>
+                <span className="text-[12.0px] text-[#333] font-bold -mt-1.5 tracking-tight px-0 py-0 rounded-full">
                   KES 0.00
                 </span>
               </div>

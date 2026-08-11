@@ -1,12 +1,22 @@
 export const navItems: NavItemsTypes[] = [
   {
-    title: "Today's Deals",
+    title: 'Super Deals',
     href: '/offers',
     accent: false,
   },
   {
-    title: 'Electronics',
-    href: '/electronics',
+    title: 'Women',
+    href: '/women',
+    accent: false,
+  },
+  {
+    title: 'Men',
+    href: '/men',
+    accent: false,
+  },
+  {
+    title: 'Kids',
+    href: '/kids',
     accent: false,
   },
   {
@@ -24,11 +34,11 @@ export const navItems: NavItemsTypes[] = [
     href: '/groceries',
     accent: false,
   },
-  // {
-  //   title: 'Customer Service',
-  //   href: '/contact',
-  //   accent: false,
-  // },
+  {
+    title: 'Customer Service',
+    href: '/contact',
+    accent: false,
+  },
   // {
   //   title: 'Sell ',
   //   href: `${process.env.NEXT_PUBLIC_SELLER_SERVER_URI}/signup`,

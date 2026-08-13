@@ -1,8 +1,14 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {}
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "../eshop backup"
+	},
+	{
+		"path": "../eshop-resources/Modules/store-header-jsx"
+	}
+],
+  "settings": {}
 }

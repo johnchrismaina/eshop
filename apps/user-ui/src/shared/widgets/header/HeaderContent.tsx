@@ -257,16 +257,18 @@ const HeaderContent = () => {
           </div>
           <div className="flex flex-col items-start shrink-0 text-[#333] ">
             <span className="text-xs font-normal ">Deliver to: </span>
-            <span className="text-[14.0px] font-bold -mt-[2px] ">Naivasha</span>
+            <span className="text-[14.0px] font-bold -mt-[2px] ">
+              Naivasha, Kenya
+            </span>
           </div>
         </div>
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div ref={searchWrapperRef} className="relative w-[680px] mx-auto ml-0">
+        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-0">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-10 bg-[#fff] rounded-sm border border-gray-400
+            className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-400
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out"
@@ -299,7 +301,7 @@ const HeaderContent = () => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-12 h-10 mr-[-4.0px] rounded-r-sm
+              className="flex items-center justify-center w-12 h-10 mr-[-4.0px] rounded-r-md
                    text-[#fff] bg-[#333] hover:text-[#fff]
                    transition-colors flex-shrink-0"
             >

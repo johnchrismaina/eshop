@@ -462,9 +462,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[260px] px-0 py-0 bg-[#fff] border-none border-[#ddd] rounded-md">
+        <div className=" w-[260px] px-4 py-6 bg-[#fafafc] border-none border-[#ddd] rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-3 bg-[#fff] px-4 py-6 rounded-md border border-[#ddd] mb-2">
+          <div className="flex flex-col gap-3 px-0 pb-6 rounded-none border-b border-[#ddd] mb-2">
             {/* Pickup location */}
             <div className="flex items-center justify-between font-medium tracking-tight ">
               <div className="flex items-center gap-2">
@@ -535,7 +535,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           {/* <hr className="border-t border-gray-200 mt-0" /> */}
 
           {/* Quantity and Add to Cart */}
-          <div className="px-0 py-4 mb-0 rounded-md ">
+          <div className="px-0 py-6 mb-0 rounded-md ">
             <div className="flex flex-col items-start gap-2 mb-3">
               {/* In stock and out of stock */}
               <div className="hidden">
@@ -618,7 +618,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Add to cart button */}
             <div className="flex flex-col gap-2 w-full pb-2 border-none border-[#ddd]">
               <button
-                className={`flex items-center justify-center px-6 h-10 bg-[#fff] hover:bg-[#f1f1f1] text-[14.0px] text-[#1C1C1E] font-semibold border border-gray-300 rounded-full transition duration-100 ${
+                className={`flex items-center justify-center px-6 h-10 text-[14.0px] text-[#1C1C1E] font-semibold bg-[#fff] hover:bg-gray-100 border border-gray-300 rounded-full transition-colors duration-300 ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -759,7 +759,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               {/* Chat and Add to wishlist */}
               <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
                 {/* Add to wishlist */}
-                <div className="w-full flex items-center justify-start gap-2 cursor-pointer bg-[#f1f1f1] hover:bg-[#f1f1f1] p-2 border border-gray-300 rounded-md transition-all duration-300">
+                <div className="w-full flex items-center justify-start gap-2 cursor-pointer hover:bg-[#f1f1f1] p-2 border border-gray-300 rounded-md transition-all duration-300">
                   <Heart
                     size={16}
                     fill={isWishlisted ? 'red' : 'transparent'}

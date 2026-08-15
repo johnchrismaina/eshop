@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import { MapPin } from 'lucide-react';
+import { ChevronDown, MapPin } from 'lucide-react';
 // import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
@@ -88,13 +88,13 @@ function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className=" items-center gap-1.5 h-10 pl-6 mr-3 text-[13px] text-gray-800 font-medium hover:text-[#14181A] bg-gray-200 transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none hidden"
+      className="flex items-center gap-1.5 h-10 pl-4 mr-0 text-[13px] text-[#1d1d1f] font-medium hover:text-[#14181A] bg-transparent transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none "
     >
       {value}
-      {/* <ChevronDown size={14} /> */}
-      <ChevronDownIcon width={10} height={20} color="#4c4c4c" />
+      <ChevronDown size={12} color="#333" />
+      {/* <ChevronDownIcon width={10} height={20} color="#4c4c4c" /> */}
       {/* divider */}
-      <div className=" w-px h-6 bg-gray-200 mx-0" />
+      <div className=" w-px h-6 bg-gray-200 ml-2" />
     </button>
   );
 }
@@ -107,7 +107,7 @@ const HeaderContent = () => {
   // const [searchScope, setSearchScope] = useState('All');
 
   const [scrolled, setScrolled] = useState(false);
-  const [searchScope, setSearchScope] = useState('All Categories');
+  const [searchScope, setSearchScope] = useState('All');
   const [openDepartments, setOpenDepartments] = useState(false);
   const searchWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -228,7 +228,7 @@ const HeaderContent = () => {
 
   return (
     <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-6 ">
-      <div className="flex items-center justify-start gap-6">
+      <div className="flex items-center justify-start gap-4">
         {/* logo */}
         <div className="px-2">
           <Link href="/">
@@ -252,26 +252,26 @@ const HeaderContent = () => {
         {/* Delivery location - can be dropdown in future */}
         <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors duration-100 ">
           {/* </div> */}
-          <div className="mt-1">
+          <div className="-mt-0.5">
             <MapPin size={18} color="#333" />
           </div>
           <div className="flex flex-col items-start shrink-0 text-[#333] ">
             <span className="text-xs font-normal ">Deliver to: </span>
-            <span className="text-[14.0px] font-bold -mt-[2px] ">
-              Naivasha, Kenya
+            <span className="text-[14.0px] font-bold -mt-[2px] text-[#1d1d1f]">
+              Naivasha
             </span>
           </div>
         </div>
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-0">
+        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-4">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-10 bg-[#fff] rounded-md border border-gray-400
+            className="flex items-center h-10 bg-[#fff] rounded-lg border border-[#86868b]
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
-                 transition-all duration-200 ease-out"
+                 transition-all duration-200 ease-out "
           >
             <SearchScopeDropdown
               value={searchScope}
@@ -283,7 +283,7 @@ const HeaderContent = () => {
               onFocus={() => setOpenSearchBackdrop(true)} // open backdrop when input is focused
               placeholder="Search products, brands, categories..."
               className="flex-1 h-10 bg-transparent outline-none border-none text-[14.0px] 
-                   placeholder:font-normal placeholder:text-gray-400 pl-6 pr-4 py-0 
+                   placeholder:font-normal placeholder:text-[#6e6e73] pl-4 pr-4 py-0 
                    focus:border-blue-500 focus:border-2 focus:ring-0"
             />
 
@@ -301,8 +301,8 @@ const HeaderContent = () => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-12 h-10 mr-[-4.0px] rounded-r-md
-                   text-[#fff] bg-[#333] hover:text-[#fff]
+              className="flex items-center justify-center w-10 h-10 mr-[-1.0px] rounded-r-lg
+                   text-[#fff] bg-[#2C302E] hover:text-[#fff]
                    transition-colors flex-shrink-0"
             >
               <Search size={18} />
@@ -367,11 +367,12 @@ const HeaderContent = () => {
               )}
             </span>
 
-            <span className="relative flex items-center text-[13.5px] text-[#333] font-bold gap-0.5 -mt-1.5">
+            <span className="relative flex items-center text-[13.5px] text-[#1d1d1f] font-bold gap-0.5 -mt-1.5">
               Account
               {/* <ChevronDown size={14} color="#333" /> */}
-              <div className="mt-[2px]">
-                <ChevronDownIcon size={8} color="#333" />
+              <div className="mt-[0px]">
+                {/* <ChevronDownIcon size={8} color="#333" /> */}
+                <ChevronDown size={12} color="#333" />
               </div>
             </span>
           </Link>
@@ -485,7 +486,7 @@ const HeaderContent = () => {
               </span> */}
           <div className="flex flex-col items-start justify-center">
             <span className="text-[11.0px] font-normal text-[#333] ">Cart</span>
-            <span className="text-[12.0px] text-[#333] font-bold -mt-1.5 tracking-tight px-0 py-0 rounded-full">
+            <span className="text-[12.0px] text-[#1d1d1f] font-bold -mt-1.5 tracking-tight px-0 py-0 rounded-full">
               KES 0.00
             </span>
           </div>

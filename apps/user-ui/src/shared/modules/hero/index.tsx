@@ -6,8 +6,8 @@ const bannerImages = [
   {
     // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/71qcoYgEhzL._SX3000_.jpg?updatedAt=1783286369249',
     // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/Homepage-Promo-Model-Y-L-Seats-Desktop-AU-NZ.png?updatedAt=1783850203759',
-    // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/d56f0c6b88f447dba2d307d2ba8d591c_718ad30fe844.avif?updatedAt=1784395763702',
-    src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/Frame_18_2.webp',
+    src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/d56f0c6b88f447dba2d307d2ba8d591c_718ad30fe844.avif?updatedAt=1784395763702',
+    // src: 'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/Frame_18_2.webp',
 
     alt: 'Green electric kettle',
   },

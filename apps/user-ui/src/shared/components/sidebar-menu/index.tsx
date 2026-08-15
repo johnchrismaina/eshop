@@ -39,7 +39,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/40 mt-[98px] z-40"
+        className="fixed inset-0 bg-black/40 mt-[100px] z-40"
         // onMouseEnter
         onClick={() => {
           onClose();

@@ -272,7 +272,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           <div className="text-left ">
             <Link
               href={`/shop/${productDetails?.Shop?.id}`}
-              className="text-blue-600 font-medium text-sm hover:underline"
+              className="text-blue-600 font-medium text-sm hover:underline hidden"
             >
               {/* <Store size={18} /> */}
               Go to store
@@ -510,7 +510,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
 
             {/* Order timeline */}
-            <div className="pb-4 border-b border-[#ddd]">
+            <div className="pb-3 border-none border-[#ddd]">
               <span className="text-[13.5px] font-medium text-[#9CA3AF] tracking-tight">
                 Order within 3 hrs 18 mins
               </span>

@@ -28,23 +28,40 @@ const Deals = () => {
     gcTime: 5 * 60 * 1000,
   });
 
+  //---------------------------------------------------------------
+
+  // ... scroll logic
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollState = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+
+    // small buffer avoids flicker from sub-pixel rounding
+    setCanScrollLeft(scrollLeft > 4);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+  };
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
 
-    const handleScroll = () => {
-      setCanScrollLeft(el.scrollLeft > 0);
-      setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth);
-    };
+    updateScrollState(); // set initial state once deals render
 
-    handleScroll(); // 🔑 run once on mount
-    el.addEventListener('scroll', handleScroll);
-    return () => el.removeEventListener('scroll', handleScroll);
-  }, []);
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    window.addEventListener('resize', updateScrollState);
+
+    return () => {
+      el.removeEventListener('scroll', updateScrollState);
+      window.removeEventListener('resize', updateScrollState);
+    };
+  }, [deals]); // re-check when deals load/change (widths depend on content)
+
+  //---------------------------------------------------------------
 
   return (
     <div className="bg-white px-10 py-6 pb-6 ">
@@ -85,28 +102,45 @@ const Deals = () => {
             ))}
           </div>
 
-          {/* Left arrow (fade in on hover) */}
+          {/* Left arrow */}
           <button
             onClick={() =>
               scrollRef.current?.scrollBy({ left: -250, behavior: 'smooth' })
             }
-            className="absolute left-0 top-20 flex items-center justify-center 
-             w-12 h-20 bg-gray-100 bg-opacity-60 rounded-sm shadow-[0_1px_3px_1px_rgba(0,0,0,0.20)] 
-             opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+            className={`absolute left-0 top-20 flex items-center justify-center 
+    w-12 h-12 bg-gray-200 shadow-sm rounded-full 
+    transition-all duration-100 ease-in-out
+    ${
+      canScrollLeft
+        ? 'opacity-100 hover:bg-gray-100'
+        : 'opacity-0 pointer-events-none'
+    }`}
           >
-            <ChevronLeft size={30} className="text-gray-500" />
+            <ChevronLeft
+              size={30}
+              className="text-gray-500 hover:text-[#555]"
+            />
           </button>
 
-          {/* Right arrow (fade in on hover) */}
+          {/* Right arrow */}
           <button
             onClick={() =>
               scrollRef.current?.scrollBy({ left: 250, behavior: 'smooth' })
             }
-            className="absolute right-0 top-20 flex items-center justify-center 
-             w-12 h-20 bg-gray-100 bg-opacity-60 rounded-sm shadow-[1px_0_3px_1px_rgba(0,0,0,0.20)] 
-             opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+            className={`absolute right-0 top-20 flex items-center justify-center 
+    w-12 h-12 bg-gray-200 shadow-sm rounded-full 
+    transition-all duration-100 ease-in-out
+    ${
+      canScrollRight
+        ? 'opacity-100 hover:bg-gray-100'
+        : 'opacity-0 pointer-events-none'
+    }`}
           >
-            <ChevronRight size={30} className="text-gray-500" />
+            <ChevronRight
+              strokeWidth="2"
+              size={30}
+              className="text-gray-500 hover:text-[#555]"
+            />
           </button>
         </div>
       )}

@@ -421,7 +421,7 @@ const CreatePage = ({ ...props }) => {
                   alt="Product preview"
                   fill
                   onLoad={() => setImageLoaded(true)}
-                  className={`object-cover rounded-none transition-opacity duration-0 ${
+                  className={`object-center object-cover rounded-none transition-opacity duration-0 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
                   unoptimized

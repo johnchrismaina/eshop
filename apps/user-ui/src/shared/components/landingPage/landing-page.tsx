@@ -5,22 +5,22 @@ import Hero from '../../modules/hero';
 import Deals from './deals';
 import PromoGrid from './PromoGrid';
 import Products from './products';
-import LatestProducts from './latest-products';
 // import TopShops from './top-shops';
 import Footer from '../footer/Footer';
+import BestSellers from './BestSellers';
 
 export default function LandingPage() {
   const { role } = useUser();
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen ">
-      <div className="px-0 pt-0">
+    <div className="bg-[#fff] min-h-screen ">
+      <div className="px-8 pt-4">
         <Hero />
       </div>
       <div className="w-full px-0 pb-5 m-auto flex flex-col bg-white">
         <PromoGrid />
         <Deals />
-        <LatestProducts />
+        <BestSellers />
         <Products />
         {/* <TopShops /> */}
 

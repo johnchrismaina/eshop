@@ -7,7 +7,7 @@ import SectionTitle from '../section/section-title';
 import ProductCard from 'packages/components/ProductCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const LatestProducts = () => {
+const BestSellers = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const LatestProducts = () => {
   return (
     <div className="bg-white px-10 py-6 pb-6">
       <div className="pb-4 block">
-        <SectionTitle title="Featured Products" />
+        <SectionTitle title="Best Sellers" />
       </div>
 
       {isLoading && !isFetched && (
@@ -149,4 +149,4 @@ const LatestProducts = () => {
   );
 };
 
-export default LatestProducts;
+export default BestSellers;

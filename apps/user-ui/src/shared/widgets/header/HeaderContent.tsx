@@ -88,7 +88,7 @@ function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-1.5 h-10 pl-4 mr-0 text-[13px] text-[#1d1d1f] font-medium hover:text-[#14181A] bg-transparent transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none "
+      className="flex items-center gap-1.5 h-10 pl-8 mr-0 text-[13px] text-[#1d1d1f] font-medium hover:text-[#14181A] bg-transparent transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none "
     >
       {value}
       <ChevronDown size={12} color="#333" />
@@ -227,37 +227,25 @@ const HeaderContent = () => {
   };
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-6 ">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-6 bg-[#283044]">
       <div className="flex items-center justify-start gap-4">
-        {/* logo */}
-        <div className="px-2">
-          <Link href="/">
-            {/* <span className="font-semibold text-3xl tracking-tight">
-                Sokonis
-              </span> */}
-            <Image
-              src={
-                layout?.logo ||
-                'https://ik.imagekit.io/johnchrismaina/Images%20and%20Banners/logo.svg'
-              }
-              alt="logo"
-              width={120}
-              height={50}
-              className="object-contain"
-              unoptimized
-            />
-          </Link>
+        {/* Logo */}
+        <div
+          className="font-bold text-[23px] tracking-tight text-[#fff]"
+          style={{ fontFamily: "'Libre Franklin', sans-serif" }}
+        >
+          Sokonis<span className="text-[#E85D1F]">.</span>
         </div>
 
         {/* Delivery location - can be dropdown in future */}
         <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors duration-100 ">
           {/* </div> */}
           <div className="-mt-0.5">
-            <MapPin size={18} color="#333" />
+            <MapPin size={18} color="#fff" />
           </div>
-          <div className="flex flex-col items-start shrink-0 text-[#333] ">
+          <div className="flex flex-col items-start shrink-0 text-gray-200 ">
             <span className="text-xs font-normal ">Deliver to: </span>
-            <span className="text-[14.0px] font-bold -mt-[2px] text-[#1d1d1f]">
+            <span className="text-[14.0px] font-bold -mt-[2px] text-[#fff]">
               Naivasha
             </span>
           </div>
@@ -265,10 +253,10 @@ const HeaderContent = () => {
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-4">
+        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-2">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-10 bg-[#fff] rounded-lg border border-[#86868b]
+            className="flex items-center h-10 bg-[#fff] rounded-full border-none border-[#86868b]
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out "
@@ -301,8 +289,8 @@ const HeaderContent = () => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-10 h-10 mr-[-1.0px] rounded-r-lg
-                   text-[#fff] bg-[#2C302E] hover:text-[#fff]
+              className="flex items-center justify-center w-9 h-9 mr-[2.0px] rounded-full
+                   text-[#333] bg-[#FFCA8C] hover:text-[#fff]
                    transition-colors flex-shrink-0"
             >
               <Search size={18} />
@@ -310,7 +298,7 @@ const HeaderContent = () => {
           </div>
           {/* dropdown panel unchanged */}
           {openDepartments && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-gray-100 border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
+            <div className="absolute top-full left-0 mt-2 w-48 bg-[#f1f1f1] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
               {SEARCH_CATEGORIES.map((cat) => (
                 <button
                   key={cat}
@@ -346,7 +334,7 @@ const HeaderContent = () => {
             className="flex flex-col gap-0 items-start justify-start "
           >
             {/* <UserRound size={18} /> */}
-            <span className="block text-[11.0px] font-normal text-[#333] ">
+            <span className="block text-[11.0px] font-normal text-gray-300 ">
               {!mounted ? (
                 // SSR + first client render: invisible placeholder to prevent hydration mismatch
                 <span className="text-[11.0px] font-normal ">Sign in</span>
@@ -367,7 +355,7 @@ const HeaderContent = () => {
               )}
             </span>
 
-            <span className="relative flex items-center text-[13.5px] text-[#1d1d1f] font-bold gap-0.5 -mt-1.5">
+            <span className="relative flex items-center text-[14.0px] text-[#fff] font-bold gap-0.5 -mt-[2px]">
               Account
               {/* <ChevronDown size={14} color="#333" /> */}
               <div className="mt-[0px]">
@@ -470,11 +458,11 @@ const HeaderContent = () => {
             href="/cart"
             className="relative flex items-center justify-center mt-[0px] cursor-pointer"
           >
-            <CgShoppingCart strokeWidth={0.0} size={20} color="#333" />
+            <CgShoppingCart strokeWidth={0.0} size={20} color="#fff" />
             {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
             {cart?.length > 0 && (
-              <div className="absolute top-[-2px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#FEA417] flex items-center justify-center mt-[0px]">
+              <div className="absolute top-[-4px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#FEA417] flex items-center justify-center mt-[0px]">
                 <span className="text-[#1C1C1E] font-bold text-[11px] leading-none">
                   {cart.length > 99 ? '99+' : cart.length}
                 </span>
@@ -485,8 +473,10 @@ const HeaderContent = () => {
                 KES 0.00
               </span> */}
           <div className="flex flex-col items-start justify-center">
-            <span className="text-[11.0px] font-normal text-[#333] ">Cart</span>
-            <span className="text-[12.0px] text-[#1d1d1f] font-bold -mt-1.5 tracking-tight px-0 py-0 rounded-full">
+            <span className="text-[11.0px] font-normal text-gray-300 ">
+              Cart
+            </span>
+            <span className="text-[12.0px] text-[#fff] font-bold -mt-1.5 tracking-tight px-0 py-0 rounded-full">
               KES 0.00
             </span>
           </div>

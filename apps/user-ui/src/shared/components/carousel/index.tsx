@@ -32,13 +32,13 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
   }, [slide, isPaused]);
 
   return (
-    <div className="relative flex justify-center items-center w-full bg-[#f4f4f4] px-0 h-[40vh] overflow-hidden">
+    <div className="relative flex justify-center items-center w-full bg-transparent px-0 h-[40vh] overflow-hidden">
       {data.map((item, idx) => (
         <img
           src={item.src}
           alt={item.alt}
           key={idx}
-          className={`w-full h-full object-top object-cover transition-opacity duration-1000 rounded-md ${
+          className={`w-full h-full object-top object-cover transition-opacity duration-1000 rounded-lg ${
             slide === idx ? 'opacity-100' : 'opacity-0 absolute'
           }`}
         />
@@ -78,7 +78,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
             key={idx}
             onClick={() => setSlide(idx)}
             className={`h-2 w-2 rounded-full shadow-md ${
-              slide === idx ? 'bg-white' : 'bg-gray-400'
+              slide === idx ? 'bg-white' : 'bg-transparent'
             }`}
           ></button>
         ))}

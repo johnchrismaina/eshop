@@ -35,6 +35,13 @@ import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 
+const TABS = [
+  'Product Identity',
+  'Product Details',
+  'Description & Media',
+  'Pricing',
+];
+
 const RichTextEditor = dynamic(
   () => import('packages/components/rich-text-editor'),
   { ssr: false }
@@ -114,6 +121,11 @@ const CreatePage = ({ ...props }) => {
   const enableDeal = watch('enableDeal');
 
   const [openImageModal, setOpenImageModal] = useState(false);
+
+  const [openPreviewModal, setOpenPreviewModal] = useState(false);
+  const [selectedPreviewImage, setSelectedPreviewImage] = useState<
+    string | null
+  >(null);
   // const [isChanged, setIsChanged] = useState(true);
   const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
@@ -127,6 +139,8 @@ const CreatePage = ({ ...props }) => {
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
+
+  const [activeTab, setActiveTab] = useState('Products');
 
   //   Fetch categories
   const { data, isLoading, isError } = useQuery({
@@ -367,7 +381,7 @@ const CreatePage = ({ ...props }) => {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-0 pb-4 rounded-lg text-white"
+      className="w-full mx-auto px-0 py-0 rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Heading & Breadcrumbs */}
@@ -385,669 +399,742 @@ const CreatePage = ({ ...props }) => {
         </div>
       </div>
 
-      {/* Content layout */}
-      <div className="w-full bg-[#f1f1f1] px-7 pt-6 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2">
-        {/* left column container*/}
-        {/* Image upload section */}
-        <div className="flex items-start justify-between px-0 bg-[#F5F5F5] w-[650px] h-auto mx-auto">
-          {/* Thumbnails */}
-          <div className="flex flex-col gap-1">
-            {images.map((img: UploadedImage | null, index: number) => (
-              <ImagePlaceholder
-                key={index}
-                size={aspect === 'square' ? '500 x 500' : '503 x 670'}
-                small={index !== 0}
-                aspect={aspect}
-                pictureUploadingLoader={uploading[index] ?? false} // ✅ only this slot
-                images={images}
-                index={index}
-                onImageChange={handleImageChangeWithLoader}
-                onRemove={handleRemoveImage}
-                setSelectedImage={setHoveredImage}
-                setOpenImageModal={setOpenImageModal}
-              />
-            ))}
-          </div>
+      {/* --------------------------------------------------------------------------------- */}
+      {/* const TABS = [
+  'Product Identity',
+  'Product Details',
+  'Description & Media',
+  'Pricing',
+]; */}
 
-          {/* Main preview */}
-          <div className="w-[540px] rounded-lg">
-            <div
-              className={`relative mx-auto ${aspectMap[aspect].width} ${aspectMap[aspect].aspect}`}
+      {/* Tabs Section */}
+      <div className="w-full lg:w-full mx-auto bg-[#f6f6f6]">
+        {/* Tabs */}
+        <div className="flex justify-center border-b border-gray-400 overflow-hidden mx-8">
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`py-3 px-4 text-base font-semibold ${
+                activeTab === tab
+                  ? 'text-[#000] border-b-2 border-[#FEA417]'
+                  : 'text-[#1d1d1f]'
+              } transition`}
             >
-              {hoveredImage ? (
-                <Image
-                  key={hoveredImage}
-                  src={hoveredImage}
-                  alt="Product preview"
-                  fill
-                  onLoad={() => setImageLoaded(true)}
-                  className={`object-center object-cover rounded-none transition-opacity duration-0 ${
-                    imageLoaded ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  unoptimized
-                />
-              ) : (
-                <div className="flex items-center justify-center w-full h-full bg-gray-200 border border-dashed border-gray-300">
-                  <span className="text-gray-500">Upload Product Image</span>
-                </div>
-              )}
-            </div>
-          </div>
+              {tab}
+            </button>
+          ))}
         </div>
 
-        {/* Middle column - product details */}
-        <div className="px-4 pb-1 prose prose-sm max-w-none">
-          {/* Dropdown */}
-          <div className="flex flex-col items-start justify-start gap-1 mb-3 bg-white p-3 rounded-md">
-            <label className="block text-[15px] font-semibold  text-gray-700 mb-1">
-              Image Aspect Ratio
-            </label>
-            <div
-              ref={dropdownRef}
-              className="relative inline-block text-left ml-0 pb-3"
-              // className="relative flex flex-col items-start justify-center text-left pb-3 w-[340px]"
-            >
-              {/* Button */}
-              <button
-                type="button"
-                onClick={() => setOpenAspectRatio(!openAspectRatio)}
-                className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
-              >
-                Aspect Ratio:{' '}
-                {aspect === 'square'
-                  ? 'Square (500 × 500)'
-                  : 'Portrait (503 × 670)'}
-                <ChevronDown className="text-gray-600" />
-              </button>
-
-              {/* Dropdown menu */}
-              {openAspectRatio && (
-                <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
-                  {options.map((opt) => (
-                    <div
-                      key={opt.value}
-                      onClick={() => {
-                        setAspect(opt.value as 'square' | 'portrait');
-                        setValue('aspect', opt.value); // ✅ sync with form
-                        setOpenAspectRatio(false);
-                      }}
-                      className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
-                    >
-                      {opt.label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Hint text */}
-            {/* <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
-            Recommended size: 850×850 for square, 765×1020 for portrait
-          </p> */}
-          </div>
-
-          {/* Product Title */}
-          <div className="w-full bg-white p-3 rounded-md">
-            <label className="block text-[15px] font-semibold  text-gray-800 mb-1">
-              Product Title *
-            </label>
-            <AutoResizeTextarea
-              label=""
-              placeholder="Enter product title"
-              {...register('title', { required: 'Title is required' })}
-            />
-            {errors.title && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.title.message as string}
-              </p>
-            )}
-          </div>
-
-          {/* Slug */}
-          <div className="mt-3 w-full bg-white p-3 rounded-md">
-            <label className="block text-[15px] font-semibold text-gray-700 mb-1">
-              Slug *
-            </label>
-            <Input
-              label=""
-              placeholder="product_slug"
-              className="bg-[#fff]"
-              {...register('slug', {
-                required: 'Slug is required!',
-                pattern: {
-                  value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-                  message:
-                    'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
-                },
-                minLength: {
-                  value: 3,
-                  message: 'Slug must be at least 3 characters long.',
-                },
-                maxLength: {
-                  value: 50,
-                  message: 'Slug cannot be longer than 50 characters.',
-                },
-              })}
-            />
-
-            {errors.slug && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.slug.message as string}
-              </p>
-            )}
-          </div>
-
-          <div className="mt-3 flex items-center justify-between gap-4 bg-white p-3 rounded-md">
-            {/* Category */}
-            <div className="flex-1">
-              <label className="block font-semibold text-[15px] text-gray-700 mb-1">
-                Category *
-              </label>
-              <div className="relative mb-2">
-                {isLoading ? (
-                  <p className="text-gray-700">Loading Categories...</p>
-                ) : isError ? (
-                  <p className="text-red-500">Failed to load categories</p>
-                ) : (
-                  <Controller
-                    name="category"
-                    control={control}
-                    rules={{ required: 'Categories is required' }}
-                    render={({ field }) => (
-                      <select
-                        {...field}
-                        className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
-                      >
-                        <option value="" className="bg-gray-100 text-gray-700">
-                          Select
-                        </option>
-                        {categories?.map((category: string) => (
-                          <option
-                            value={category}
-                            key={category}
-                            className="bg-gray-200 text-gray-800"
-                          >
-                            {category}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  />
+        {/* Content */}
+        <div className="py-0 text-slate-700">
+          {/* Product Identity */}
+          {activeTab === 'Product Identity' && (
+            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4">
+              {/* Product Title */}
+              <div className="w-full p-0 rounded-md">
+                <label className="block text-[15px] font-semibold  text-gray-800 mb-1">
+                  Product Title *
+                </label>
+                <AutoResizeTextarea
+                  label=""
+                  placeholder="Enter product title"
+                  {...register('title', { required: 'Title is required' })}
+                />
+                {errors.title && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.title.message as string}
+                  </p>
                 )}
-                {/* Custom arrow */}
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                  <ChevronDown />
+              </div>
+
+              {/* Slug */}
+              <div className="mt-0 w-full p-0 rounded-md">
+                <label className="block text-[15px] font-semibold text-gray-700 mb-1">
+                  Slug *
+                </label>
+                <Input
+                  label=""
+                  placeholder="product_slug"
+                  className="bg-[#fff]"
+                  {...register('slug', {
+                    required: 'Slug is required!',
+                    pattern: {
+                      value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+                      message:
+                        'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
+                    },
+                    minLength: {
+                      value: 3,
+                      message: 'Slug must be at least 3 characters long.',
+                    },
+                    maxLength: {
+                      value: 50,
+                      message: 'Slug cannot be longer than 50 characters.',
+                    },
+                  })}
+                />
+
+                {errors.slug && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.slug.message as string}
+                  </p>
+                )}
+              </div>
+
+              {/* Categories */}
+              <div className="w-full mt-0 flex items-center justify-between gap-4 p-0 rounded-md">
+                {/* Category */}
+                <div className="flex-1">
+                  <label className="block font-semibold text-[15px] text-gray-700 mb-1">
+                    Category *
+                  </label>
+                  <div className="relative mb-2">
+                    {isLoading ? (
+                      <p className="text-gray-700">Loading Categories...</p>
+                    ) : isError ? (
+                      <p className="text-red-500">Failed to load categories</p>
+                    ) : (
+                      <Controller
+                        name="category"
+                        control={control}
+                        rules={{ required: 'Categories is required' }}
+                        render={({ field }) => (
+                          <select
+                            {...field}
+                            className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
+                          >
+                            <option
+                              value=""
+                              className="bg-gray-100 text-gray-700"
+                            >
+                              Select
+                            </option>
+                            {categories?.map((category: string) => (
+                              <option
+                                value={category}
+                                key={category}
+                                className="bg-gray-200 text-gray-800"
+                              >
+                                {category}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      />
+                    )}
+                    {/* Custom arrow */}
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                      <ChevronDown />
+                    </div>
+                  </div>
+                  {errors.category && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.category.message as string}
+                    </p>
+                  )}
+                </div>
+
+                {/* Sub Categories */}
+                <div className="flex-1">
+                  <label className="block font-semibold text-[15px] text-gray-700 mb-1">
+                    Sub-category *
+                  </label>
+                  <div className="relative mb-2">
+                    <Controller
+                      name="subCategory"
+                      control={control}
+                      rules={{ required: 'Subcategories is required' }}
+                      render={({ field }) => (
+                        <select
+                          {...field}
+                          className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
+                        >
+                          <option
+                            value=""
+                            className="bg-gray-100 text-gray-700"
+                          >
+                            Select
+                          </option>
+                          {subcategories?.map((subcategory: string) => (
+                            <option
+                              value={subcategory}
+                              key={subcategory}
+                              className="bg-gray-200 text-gray-800"
+                            >
+                              {subcategory}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    />
+                    {/* Custom arrow */}
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                      <ChevronDown />
+                    </div>
+                  </div>
+
+                  {errors.subCategory && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.subCategory.message as string}
+                    </p>
+                  )}
                 </div>
               </div>
-              {errors.category && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.category.message as string}
-                </p>
-              )}
-            </div>
 
-            {/* Sub Categories */}
-            <div className="flex-1">
-              <label className="block font-semibold text-[15px] text-gray-700 mb-1">
-                Sub-category *
-              </label>
-              <div className="relative mb-2">
+              {/* Tags */}
+              <div className="mb-10 w-full p-0 rounded-md ">
+                <label className="block text-[15px] font-semibold text-gray-700 mb-1">
+                  Tags *
+                </label>
                 <Controller
-                  name="subCategory"
+                  name="tags"
                   control={control}
-                  rules={{ required: 'Subcategories is required' }}
+                  rules={{
+                    required: 'Separate related product tags with a comma',
+                  }}
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
-                    >
-                      <option value="" className="bg-gray-100 text-gray-700">
-                        Select
-                      </option>
-                      {subcategories?.map((subcategory: string) => (
-                        <option
-                          value={subcategory}
-                          key={subcategory}
-                          className="bg-gray-200 text-gray-800"
-                        >
-                          {subcategory}
-                        </option>
-                      ))}
-                    </select>
+                    <Select
+                      isMulti
+                      options={[
+                        { value: 'sauce', label: 'Sauce' },
+                        { value: 'apple', label: 'Apple' },
+                        { value: 'flagship', label: 'Flagship' },
+                        // ✅ Add more options or fetch dynamically
+                      ]}
+                      value={(field.value || []).map((tag: string) => ({
+                        value: tag,
+                        label: tag,
+                      }))}
+                      onChange={(selected) =>
+                        field.onChange(selected.map((s: any) => s.value))
+                      }
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          backgroundColor: 'rgb(253 253 253)', // fdfdfd
+                          borderColor: 'rgb(156 163 175)', // border-gray-400
+                          color: 'rgb(31 41 55)', // Tailwind bg-gray-800
+                          borderRadius: '0.375rem', // rounded-md
+                          padding: '5px',
+                          boxShadow: 'none',
+                          '&:hover': { borderColor: 'rgb(107 114 128)' }, // gray-500
+                        }),
+                        menu: (base) => ({
+                          ...base,
+                          backgroundColor: 'rgb(31 41 55)', // bg-gray-800
+                          border: '1px solid rgb(75 85 99)', // border-gray-600
+                        }),
+                        option: (base, { isFocused, isSelected }) => ({
+                          ...base,
+                          backgroundColor: isSelected
+                            ? 'rgb(55 65 81)' // bg-gray-700
+                            : isFocused
+                            ? 'rgb(75 85 99)' // bg-gray-600
+                            : 'rgb(31 41 55)', // bg-gray-800
+                          color: 'white',
+                          cursor: 'pointer',
+                        }),
+                        multiValue: (base) => ({
+                          ...base,
+                          backgroundColor: 'rgb(55 65 81)', // bg-gray-700
+                          padding: '2px',
+                          borderRadius: '0.375rem',
+                        }),
+                        multiValueLabel: (base) => ({
+                          ...base,
+                          color: 'rgb(229 231 235)', // text-gray-200
+                        }),
+                        multiValueRemove: (base) => ({
+                          ...base,
+                          color: 'rgb(156 163 175)', // text-gray-400
+                          ':hover': {
+                            backgroundColor: 'rgb(239 68 68)', // red-500
+                            color: 'white',
+                          },
+                        }),
+                      }}
+                    />
                   )}
                 />
-                {/* Custom arrow */}
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                  <ChevronDown />
-                </div>
+                {errors.tags && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.tags.message as string}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Product Details */}
+          {activeTab === 'Product Details' && (
+            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
+              {/* Product Properties */}
+              <div className="w-full p-0 rounded-md">
+                <CustomProperties control={control} errors={errors} />
               </div>
 
-              {errors.subCategory && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.subCategory.message as string}
-                </p>
-              )}
+              {/* Product Specifications */}
+              <div className="w-full p-0 rounded-md">
+                <CustomSpecifications control={control} errors={errors} />
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Tags */}
-          <div className="mt-4 w-full bg-white p-3 rounded-md ">
-            <label className="block text-[15px] font-semibold text-gray-700 mb-1">
-              Tags *
-            </label>
-            <Controller
-              name="tags"
-              control={control}
-              rules={{
-                required: 'Separate related product tags with a comma',
-              }}
-              render={({ field }) => (
-                <Select
-                  isMulti
-                  options={[
-                    { value: 'sauce', label: 'Sauce' },
-                    { value: 'apple', label: 'Apple' },
-                    { value: 'flagship', label: 'Flagship' },
-                    // ✅ Add more options or fetch dynamically
-                  ]}
-                  value={(field.value || []).map((tag: string) => ({
-                    value: tag,
-                    label: tag,
-                  }))}
-                  onChange={(selected) =>
-                    field.onChange(selected.map((s: any) => s.value))
-                  }
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      backgroundColor: 'rgb(253 253 253)', // fdfdfd
-                      borderColor: 'rgb(156 163 175)', // border-gray-400
-                      color: 'rgb(31 41 55)', // Tailwind bg-gray-800
-                      borderRadius: '0.375rem', // rounded-md
-                      padding: '5px',
-                      boxShadow: 'none',
-                      '&:hover': { borderColor: 'rgb(107 114 128)' }, // gray-500
-                    }),
-                    menu: (base) => ({
-                      ...base,
-                      backgroundColor: 'rgb(31 41 55)', // bg-gray-800
-                      border: '1px solid rgb(75 85 99)', // border-gray-600
-                    }),
-                    option: (base, { isFocused, isSelected }) => ({
-                      ...base,
-                      backgroundColor: isSelected
-                        ? 'rgb(55 65 81)' // bg-gray-700
-                        : isFocused
-                        ? 'rgb(75 85 99)' // bg-gray-600
-                        : 'rgb(31 41 55)', // bg-gray-800
-                      color: 'white',
-                      cursor: 'pointer',
-                    }),
-                    multiValue: (base) => ({
-                      ...base,
-                      backgroundColor: 'rgb(55 65 81)', // bg-gray-700
-                      padding: '2px',
-                      borderRadius: '0.375rem',
-                    }),
-                    multiValueLabel: (base) => ({
-                      ...base,
-                      color: 'rgb(229 231 235)', // text-gray-200
-                    }),
-                    multiValueRemove: (base) => ({
-                      ...base,
-                      color: 'rgb(156 163 175)', // text-gray-400
-                      ':hover': {
-                        backgroundColor: 'rgb(239 68 68)', // red-500
-                        color: 'white',
-                      },
-                    }),
+          {/* Description & Media*/}
+          {activeTab === 'Description & Media' && (
+            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
+              {/* Short Description */}
+              <div className="w-full p-0 rounded-md">
+                <label className="block text-[15px] font-bold text-gray-700 pb-3">
+                  Product Description * (Min 50 words)
+                </label>
+                <Controller
+                  name="short_description"
+                  control={control}
+                  rules={{
+                    required: 'Description is required!',
+                    validate: (value) =>
+                      validateWordCount(
+                        value,
+                        50,
+                        'Description must be at least 50 words!'
+                      ),
                   }}
+                  render={({ field }) => (
+                    <RichTextEditor
+                      id="short-description-editor" // ✅ unique id
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
-              )}
-            />
-            {errors.tags && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.tags.message as string}
-              </p>
-            )}
-          </div>
+                {errors.short_description && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.short_description.message as string}
+                  </p>
+                )}
+              </div>
 
-          <div className="mt-3 flex items-center justify-between gap-4 bg-white p-3 rounded-md">
-            {/* Regular Price */}
-            <div className="flex-1">
-              <p className="text-[15px] font-semibold text-gray-700 py-2">
-                Regular Price * <span className="text-xs">(KES)</span>
-              </p>
-              <Input
-                label=""
-                type="number"
-                placeholder="0"
-                className="bg-[#fff] text-[15px]"
-                {...register('regular_price', {
-                  setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                  min: { value: 1, message: 'Price must be at least 1' },
-                  validate: (value) =>
-                    (typeof value === 'number' && !isNaN(value)) ||
-                    'Only numbers are allowed',
-                })}
-              />
-              {errors.regular_price && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.regular_price.message as string}
-                </p>
-              )}
+              {/* Product details / Accordions */}
+              <div className="w-full p-0 rounded-md">
+                <CustomAccordion control={control} errors={errors} />{' '}
+              </div>
+
+              {/* Dropdown */}
+              <div className="w-full flex flex-col items-start justify-start gap-1 mb-0 p-0 rounded-md">
+                <label className="block text-[15px] font-bold  text-gray-700 mb-1">
+                  Image Aspect Ratio
+                </label>
+                <div
+                  ref={dropdownRef}
+                  className="relative inline-block text-left ml-0 pb-3"
+                  // className="relative flex flex-col items-start justify-center text-left pb-3 w-[340px]"
+                >
+                  {/* Button */}
+                  <button
+                    type="button"
+                    onClick={() => setOpenAspectRatio(!openAspectRatio)}
+                    className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
+                  >
+                    Aspect Ratio:{' '}
+                    {aspect === 'square'
+                      ? 'Square (500 × 500)'
+                      : 'Portrait (503 × 670)'}
+                    <ChevronDown className="text-gray-600" />
+                  </button>
+
+                  {/* Dropdown menu */}
+                  {openAspectRatio && (
+                    <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
+                      {options.map((opt) => (
+                        <div
+                          key={opt.value}
+                          onClick={() => {
+                            setAspect(opt.value as 'square' | 'portrait');
+                            setValue('aspect', opt.value); // ✅ sync with form
+                            setOpenAspectRatio(false);
+                          }}
+                          className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
+                        >
+                          {opt.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Hint text */}
+                {/* <p className="mt-2 ml-14 pb-1 text-sm text-gray-500">
+                Recommended size: 850×850 for square, 765×1020 for portrait
+                </p> */}
+              </div>
+
+              {/* Image upload section */}
+              <div className="w-full mx-auto bg-[#F5F5F5] p-0">
+                <label className="block text-[15px] font-bold text-gray-700 mb-1">
+                  Images
+                </label>
+                <div className="grid grid-cols-4 gap-3">
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <ImagePlaceholder
+                      key={index}
+                      aspect={aspect}
+                      pictureUploadingLoader={uploading[index] ?? false}
+                      image={images[index]}
+                      index={index}
+                      onImageChange={handleImageChangeWithLoader}
+                      onRemove={handleRemoveImage}
+                      // ✅ pass preview modal handlers
+                      setOpenPreviewModal={setOpenPreviewModal}
+                      setSelectedPreviewImage={setSelectedPreviewImage}
+                    />
+                  ))}
+                </div>
+
+                {/* ✅ Single floating preview modal */}
+                {openPreviewModal && selectedPreviewImage && (
+                  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div
+                      className={`relative bg-white p-4 rounded-lg shadow-lg ${
+                        aspect === 'square'
+                          ? 'aspect-square w-[500px]'
+                          : 'aspect-[3/4] w-[500px]'
+                      }`}
+                    >
+                      <img
+                        src={selectedPreviewImage}
+                        alt="Preview"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                      <button
+                        className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded"
+                        onClick={() => setOpenPreviewModal(false)} // ✅ now closes correctly
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Color Selector */}
+              <div className="w-full mt-0 p-0 rounded-md">
+                <ColorSelector control={control} errors={errors} />
+              </div>
+
+              {/* Size Selector */}
+              <div className="w-full mt-0 p-0 rounded-md">
+                <SizeSelector control={control} errors={errors} />
+              </div>
+
+              {/* Video Url */}
+              <div className="w-full pt-2 rounded-md">
+                <label className="block text-[15px] font-bold text-gray-700 mb-1">
+                  Video Url *
+                </label>
+                <Input
+                  label=""
+                  placeholder="https://www.youtube.com/embed/xyz123"
+                  className="bg-[#fdfdfd]"
+                  {...register('video_url', {
+                    pattern: {
+                      value:
+                        /^https:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]+$/,
+                      message:
+                        'Invalid Youtube embed url URL! Use format: https://youtube.com/embed/xyz123',
+                    },
+                  })}
+                />
+                {errors.video_url && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.video_url.message as string}
+                  </p>
+                )}
+              </div>
+
+              {/* Detailed product description */}
+              <div className="w-full lg:w-full mx-auto px-0 pt-1">
+                {/* Detailed description */}
+                <div className="mt-4">
+                  <label className="block font-bold text-gray-700 mb-3">
+                    Detailed description * (Min 100 words)
+                  </label>
+                  <Controller
+                    name="detailed_description"
+                    control={control}
+                    rules={{
+                      required: 'Detailed description is required!',
+                      validate: (value) =>
+                        validateWordCount(
+                          value,
+                          100,
+                          'Detailed description must be at least 100 words!'
+                        ),
+                    }}
+                    render={({ field }) => (
+                      <RichTextEditor
+                        id="detailed-description-editor" // ✅ unique id
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                  {errors.detailed_description && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.detailed_description.message as string}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
+          )}
 
-            {/* Sale Price (only if deal enabled) */}
-            {getValues('enableDeal') && (
-              <div className="flex-1 mt-2">
+          {/* Pricing */}
+          {activeTab === 'Pricing' && (
+            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
+              {/* <div className="px-4 pb-1 prose prose-sm max-w-none"> */}
+              {/* Pricing */}
+              <div className="w-full flex items-center justify-between gap-4 p-0 rounded-md">
+                {/* Regular Price */}
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold text-gray-700 py-2">
+                    Regular Price * <span className="text-xs">(KES)</span>
+                  </p>
+                  <Input
+                    label=""
+                    type="number"
+                    placeholder="0"
+                    className="bg-[#fff] text-[15px]"
+                    {...register('regular_price', {
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                      min: { value: 1, message: 'Price must be at least 1' },
+                      validate: (value) =>
+                        (typeof value === 'number' && !isNaN(value)) ||
+                        'Only numbers are allowed',
+                    })}
+                  />
+                  {errors.regular_price && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.regular_price.message as string}
+                    </p>
+                  )}
+                </div>
+
+                {/* Sale Price (only if deal enabled) */}
+                {getValues('enableDeal') && (
+                  <div className="flex-1 mt-2">
+                    <p className="text-[15px] font-semibold text-gray-700 py-2">
+                      Sale Price <span className="text-xs">(KES)</span>
+                    </p>
+                    <Input
+                      label=""
+                      type="number"
+                      placeholder="0"
+                      className="bg-[#fff] text-[15px]"
+                      {...register('sale_price', {
+                        setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                        min: {
+                          value: 1,
+                          message: 'Sale price must be at least 1',
+                        },
+                        validate: (value) =>
+                          (typeof value === 'number' && !isNaN(value)) ||
+                          'Only numbers are allowed',
+                      })}
+                    />
+                    {errors.sale_price && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.sale_price.message as string}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Conditionally render deal fields */}
+              {enableDeal && (
+                <div className="w-full flex items-center justify-between gap-4 p-0 rounded-md">
+                  {/* Deal Start Date */}
+                  <label className="text-sm font-medium text-gray-800 mt-1">
+                    Deal Start
+                  </label>
+                  <Controller
+                    name="deal_start"
+                    control={control}
+                    rules={{ required: 'Start date is required' }}
+                    render={({ field }) => (
+                      <DatePicker
+                        selected={field.value}
+                        onChange={(date: Date | null) => {
+                          field.onChange(date);
+                          if (date) {
+                            const autoEnd = new Date(date);
+                            autoEnd.setDate(autoEnd.getDate() + 7);
+                            setValue('deal_end', autoEnd);
+                          }
+                        }}
+                        className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
+                        dateFormat="yyyy-MM-dd"
+                      />
+                    )}
+                  />
+                  {errors.deal_start && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.deal_start.message as string}
+                    </p>
+                  )}
+
+                  {/* Deal End Date */}
+                  <label className="text-sm font-medium text-gray-800 mt-1">
+                    Deal End
+                  </label>
+                  <Controller
+                    name="deal_end"
+                    control={control}
+                    rules={{
+                      required: 'End date is required',
+                      validate: (value) => {
+                        const start = getValues('deal_start');
+                        if (!value || !start) {
+                          return 'Both start and end dates are required';
+                        }
+                        return (
+                          value > start || 'End date must be after start date'
+                        );
+                      },
+                    }}
+                    render={({ field }) => (
+                      <DatePicker
+                        selected={field.value}
+                        onChange={(date: Date | null) => field.onChange(date)}
+                        className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
+                        dateFormat="yyyy-MM-dd"
+                      />
+                    )}
+                  />
+                  {errors.deal_end && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.deal_end.message as string}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Stock */}
+              <div className="w-full p-0 rounded-md">
                 <p className="text-[15px] font-semibold text-gray-700 py-2">
-                  Sale Price <span className="text-xs">(KES)</span>
+                  Stock *
                 </p>
                 <Input
                   label=""
-                  type="number"
                   placeholder="0"
-                  className="bg-[#fff] text-[15px]"
-                  {...register('sale_price', {
+                  type="number"
+                  className="text-[15px]"
+                  {...register('stock', {
                     setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                    min: { value: 1, message: 'Sale price must be at least 1' },
+                    min: { value: 0, message: 'Stock cannot be negative' },
                     validate: (value) =>
                       (typeof value === 'number' && !isNaN(value)) ||
                       'Only numbers are allowed',
                   })}
                 />
-                {errors.sale_price && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.sale_price.message as string}
+                {errors.stock && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.stock.message as string}
                   </p>
                 )}
               </div>
-            )}
-          </div>
 
-          {/* Conditionally render deal fields */}
-          {enableDeal && (
-            <div className="mt-3 flex items-center justify-between gap-4 bg-white p-3 rounded-md">
-              {/* Deal Start Date */}
-              <label className="text-sm font-medium text-gray-800 mt-1">
-                Deal Start
-              </label>
-              <Controller
-                name="deal_start"
-                control={control}
-                rules={{ required: 'Start date is required' }}
-                render={({ field }) => (
-                  <DatePicker
-                    selected={field.value}
-                    onChange={(date: Date | null) => {
-                      field.onChange(date);
-                      if (date) {
-                        const autoEnd = new Date(date);
-                        autoEnd.setDate(autoEnd.getDate() + 7);
-                        setValue('deal_end', autoEnd);
-                      }
-                    }}
-                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
-                    dateFormat="yyyy-MM-dd"
-                  />
-                )}
-              />
-              {errors.deal_start && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.deal_start.message as string}
-                </p>
-              )}
+              {/* Discount codes */}
+              <div className="w-full p-0 rounded-md">
+                <label className="block font-semibold text-gray-700 mb-1">
+                  Select Discount Codes (optional)
+                </label>
 
-              {/* Deal End Date */}
-              <label className="text-sm font-medium text-gray-800 mt-1">
-                Deal End
-              </label>
-              <Controller
-                name="deal_end"
-                control={control}
-                rules={{
-                  required: 'End date is required',
-                  validate: (value) => {
-                    const start = getValues('deal_start');
-                    if (!value || !start) {
-                      return 'Both start and end dates are required';
-                    }
-                    return value > start || 'End date must be after start date';
-                  },
-                }}
-                render={({ field }) => (
-                  <DatePicker
-                    selected={field.value}
-                    onChange={(date: Date | null) => field.onChange(date)}
-                    className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
-                    dateFormat="yyyy-MM-dd"
-                  />
+                {discountLoading ? (
+                  <p className="text-gray-400">Loading discount codes...</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {discountCodes?.map((code: any) => (
+                      <button
+                        key={code.id}
+                        type="button"
+                        className={`px-3 py-1 rounded-md text-sm font-semibold border ${
+                          watch('discountCodes')?.includes(code.id)
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'bg-gray-800 text-gray-300 border-gray-600 hover:border-gray-700'
+                        }`}
+                        onClick={() => {
+                          const currentSelection = watch('discountCodes') || [];
+                          const updatedSelection = currentSelection?.includes(
+                            code.id
+                          )
+                            ? currentSelection.filter(
+                                (id: string) => id !== code.id
+                              )
+                            : [...currentSelection, code.id];
+                          setValue('discountCodes', updatedSelection);
+                        }}
+                      >
+                        {code?.public_name} ({code.discountValue}
+                        {code.discountType === 'percentage' ? '%' : '$'})
+                      </button>
+                    ))}
+
+                    {/* Total Tickets  */}
+                    <div className="mt-2">
+                      <p className="text-[15px] font-semibold text-gray-700 py-2">
+                        Total Tickets
+                      </p>
+                      <Input
+                        label=""
+                        placeholder="0"
+                        type="number"
+                        className="text-[15px]"
+                        {...register('total_tickets', {
+                          setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
+                          validate: (value) => {
+                            if (value === undefined) return true; // ✅ allow empty
+                            if (typeof value === 'number' && !isNaN(value)) {
+                              if (value < 1)
+                                return 'Total tickets must be at least 1';
+                              return true;
+                            }
+                            return 'Only numbers are allowed';
+                          },
+                        })}
+                      />
+                      {errors.total_tickets && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.total_tickets.message as string}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 )}
-              />
-              {errors.deal_end && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.deal_end.message as string}
-                </p>
-              )}
+              </div>
+              {/* </div> */}
             </div>
           )}
-
-          {/* Color Selector */}
-          <div className="mt-3 bg-white p-3 rounded-md">
-            <ColorSelector control={control} errors={errors} />
-          </div>
-
-          {/* Size Selector */}
-          <div className="mt-3 bg-white p-3 rounded-md">
-            <SizeSelector control={control} errors={errors} />
-          </div>
-
-          {/* Product Properties */}
-          <div className="mt-3 bg-white p-3 rounded-md">
-            <CustomProperties control={control} errors={errors} />
-          </div>
-
-          {/* Product Specifications */}
-          <div className="mt-3 bg-white p-3 rounded-md">
-            <CustomSpecifications control={control} errors={errors} />
-          </div>
-
-          {/* Short Description */}
-          <div className="mt-4 bg-white p-3 rounded-md">
-            <label className="block text-[15px] font-semibold text-gray-700 pb-3">
-              About this item * (Min 50 words)
-            </label>
-            <Controller
-              name="short_description"
-              control={control}
-              rules={{
-                required: 'Description is required!',
-                validate: (value) =>
-                  validateWordCount(
-                    value,
-                    50,
-                    'Description must be at least 50 words!'
-                  ),
-              }}
-              render={({ field }) => (
-                <RichTextEditor
-                  id="short-description-editor" // ✅ unique id
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-            {errors.short_description && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.short_description.message as string}
-              </p>
-            )}
-          </div>
-
-          {/* Product details / Accordions */}
-          <div className="mt-4 bg-white p-3 rounded-md">
-            <CustomAccordion control={control} errors={errors} />{' '}
-          </div>
-
-          {/* Video Url */}
-          <div className="mt-4 bg-white p-3 rounded-md">
-            <Input
-              label="Video Url"
-              placeholder="https://www.youtube.com/embed/xyz123"
-              className="bg-[#fdfdfd]"
-              {...register('video_url', {
-                pattern: {
-                  value:
-                    /^https:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]+$/,
-                  message:
-                    'Invalid Youtube embed url URL! Use format: https://youtube.com/embed/xyz123',
-                },
-              })}
-            />
-            {errors.video_url && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.video_url.message as string}
-              </p>
-            )}
-          </div>
         </div>
+      </div>
+
+      {/* --------------------------------------------------------------------------------- */}
+
+      {/* Content layout */}
+      <div className="w-full bg-[#f1f1f1] px-7 pt-6 pb-6 grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2 hidden">
+        {/* left column container*/}
+
+        {/* Middle column - product details */}
+        <div className="px-4 pb-1 prose prose-sm max-w-none"></div>
 
         {/* Right column - form inputs */}
-        <div className="w-[244px] px-0 py-0 rounded-none ">
-          {/* Stock */}
-          <div className="mt-2 bg-white p-3 rounded-md">
-            <p className="text-[15px] font-semibold text-gray-700 py-2">
-              Stock *
-            </p>
-            <Input
-              label=""
-              placeholder="0"
-              type="number"
-              className="text-[15px]"
-              {...register('stock', {
-                setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                min: { value: 0, message: 'Stock cannot be negative' },
-                validate: (value) =>
-                  (typeof value === 'number' && !isNaN(value)) ||
-                  'Only numbers are allowed',
-              })}
-            />
-            {errors.stock && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.stock.message as string}
-              </p>
-            )}
-          </div>
-
-          {/* Discount codes */}
-          <div className="mt-3 bg-white p-3 rounded-md">
-            <label className="block font-semibold text-gray-700 mb-1">
-              Select Discount Codes (optional)
-            </label>
-
-            {discountLoading ? (
-              <p className="text-gray-400">Loading discount codes...</p>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {discountCodes?.map((code: any) => (
-                  <button
-                    key={code.id}
-                    type="button"
-                    className={`px-3 py-1 rounded-md text-sm font-semibold border ${
-                      watch('discountCodes')?.includes(code.id)
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-gray-800 text-gray-300 border-gray-600 hover:border-gray-700'
-                    }`}
-                    onClick={() => {
-                      const currentSelection = watch('discountCodes') || [];
-                      const updatedSelection = currentSelection?.includes(
-                        code.id
-                      )
-                        ? currentSelection.filter(
-                            (id: string) => id !== code.id
-                          )
-                        : [...currentSelection, code.id];
-                      setValue('discountCodes', updatedSelection);
-                    }}
-                  >
-                    {code?.public_name} ({code.discountValue}
-                    {code.discountType === 'percentage' ? '%' : '$'})
-                  </button>
-                ))}
-
-                {/* Total Tickets  */}
-                <div className="mt-2">
-                  <p className="text-[15px] font-semibold text-gray-700 py-2">
-                    Total Tickets
-                  </p>
-                  <Input
-                    label=""
-                    placeholder="0"
-                    type="number"
-                    className="text-[15px]"
-                    {...register('total_tickets', {
-                      setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
-                      validate: (value) => {
-                        if (value === undefined) return true; // ✅ allow empty
-                        if (typeof value === 'number' && !isNaN(value)) {
-                          if (value < 1)
-                            return 'Total tickets must be at least 1';
-                          return true;
-                        }
-                        return 'Only numbers are allowed';
-                      },
-                    })}
-                  />
-                  {errors.total_tickets && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.total_tickets.message as string}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <div className="w-[244px] px-0 py-0 rounded-none "></div>
       </div>
 
       {/* Product details */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200"></div>
-
-      {/* Detailed product description */}
-      <div className="w-full lg:w-full mx-auto px-8 pt-6">
-        {/* Detailed description */}
-        <div className="mt-4">
-          <label className="block font-semibold text-gray-700 mb-3">
-            Detailed description * (Min 100 words)
-          </label>
-          <Controller
-            name="detailed_description"
-            control={control}
-            rules={{
-              required: 'Detailed description is required!',
-              validate: (value) =>
-                validateWordCount(
-                  value,
-                  100,
-                  'Detailed description must be at least 100 words!'
-                ),
-            }}
-            render={({ field }) => (
-              <RichTextEditor
-                id="detailed-description-editor" // ✅ unique id
-                value={field.value || ''}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          {errors.detailed_description && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.detailed_description.message as string}
-            </p>
-          )}
-        </div>
-      </div>
 
       {/* Image transformation modal */}
       {openImageModal && (
@@ -1098,7 +1185,7 @@ const CreatePage = ({ ...props }) => {
         </div>
       )}
       {/* Create product */}
-      <div className="mt-6 flex justify-end gap-3 px-8">
+      <div className="px-8 pt-6 pb-8 flex justify-end gap-3 bg-[#f6f6f6]">
         {isChanged && (
           <button
             type="button"

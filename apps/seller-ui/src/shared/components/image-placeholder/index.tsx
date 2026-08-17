@@ -1,4 +1,4 @@
-import { Pencil, Trash2, WandSparkles, X } from 'lucide-react';
+import { Pencil, Eye, Plus, Trash2, WandSparkles, X } from 'lucide-react';
 import Image from 'next/image';
 import Spinner from 'packages/components/spinner';
 import React, { useState, useEffect } from 'react';
@@ -9,64 +9,44 @@ interface UploadedImage {
 }
 
 const ImagePlaceholder = ({
-  size,
-  small,
-  aspect = 'square',
-  onImageChange,
+  aspect,
   pictureUploadingLoader,
-  onRemove,
-  defaultImage = null,
+  image,
   index,
-  setSelectedImage,
-  setOpenImageModal,
-  images,
-}: {
-  size: string;
-  small?: boolean;
-  aspect?: 'square' | 'portrait';
+  onImageChange,
+  onRemove,
+  setOpenPreviewModal, // ✅ new prop
+  setSelectedPreviewImage, // ✅ new prop
+}: // setOpenImageModal,
+// setSelectedImage,
+{
+  aspect: 'square' | 'portrait';
   pictureUploadingLoader: boolean;
-  onImageChange: (file: File | null, index: number) => void;
-  onRemove?: (index: number) => void;
-  defaultImage?: string | null;
-  setSelectedImage: (e: string) => void;
-  images: (UploadedImage | null)[];
-  setOpenImageModal: (openImageModal: boolean) => void;
+  image: UploadedImage | null;
   index: number;
+  onImageChange: (file: File | null, index: number) => void;
+  onRemove: (index: number) => void;
+  setOpenPreviewModal: (open: boolean) => void;
+  setSelectedPreviewImage: (url: string) => void;
+  // setOpenImageModal: (open: boolean) => void;
+  // setSelectedImage: (url: string) => void;
 }) => {
   const [localPreview, setLocalPreview] = useState<string | null>(null);
+  const preview = image?.file_url ?? localPreview;
 
-  useEffect(() => {
-    setLocalPreview(null);
-  }, [images[index]?.file_url]);
-
-  const imagePreview = images[index]?.file_url ?? localPreview;
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       setLocalPreview(URL.createObjectURL(file));
       onImageChange(file, index);
     }
   };
 
-  // useEffect(() => {
-  //   if (index === 0) {
-  //     if (images && images[0] && images[0].file_url) {
-  //       setSelectedImage(images[0].file_url);
-  //     } else {
-  //       setSelectedImage(''); // or null, depending on setSelectedImage's type
-  //     }
-  //   }
-  // }, [images, index, setSelectedImage]);
-
   return (
     <div
-      className={`relative w-[100px] cursor-pointer bg-gray-200 border rounded-lg flex flex-col justify-center items-center
+      className={`relative bg-gray-200 border rounded-lg flex items-center justify-center cursor-pointer
         ${aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'}
       `}
-      onMouseEnter={() => {
-        if (imagePreview) setSelectedImage(imagePreview);
-      }}
     >
       <input
         type="file"
@@ -76,58 +56,44 @@ const ImagePlaceholder = ({
         onChange={handleFileChange}
       />
 
-      {imagePreview ? (
+      {preview ? (
         <>
-          <div className="absolute top-3 right-3 flex gap-2 z-10">
-            {/* Remove button */}
+          <img
+            src={preview}
+            alt="uploaded"
+            className="w-full h-full object-cover rounded-lg"
+          />
+
+          {/* Action buttons */}
+          <div className="absolute top-2 right-2 flex gap-2">
             <button
               type="button"
-              disabled={pictureUploadingLoader}
-              onClick={() => onRemove?.(index)}
-              className="p-2 !rounded bg-slate-700/80 hover:bg-slate-600 shadow-lg"
+              onClick={() => onRemove(index)}
+              className="p-2 bg-red-600 text-white rounded shadow"
             >
-              {/* <X size={16} /> */}
               <Trash2 size={16} />
             </button>
-
-            {/* Edit / Magic button */}
-            {/* <button
-              type="button"
-              disabled={pictureUploadingLoader}
-              className="p-2 !rounded bg-blue-500 shadow-lg cursor-pointer"
-              onClick={() => {
-                setOpenImageModal(true);
-                if (images[index]) {
-                  setSelectedImage(images[index]!.file_url);
-                }
-              }}
-            >
-              <WandSparkles size={16} />
-            </button> */}
-
-            {/* ✅ Pencil always visible on main preview (index === 0) */}
-            {/* {index === 0 && ( */}
             <label
               htmlFor={`image-upload-${index}`}
-              className="p-2 !rounded bg-slate-700/80 hover:bg-slate-700 text-gray-100 shadow-lg cursor-pointer"
+              className="p-2 bg-slate-700 text-white rounded shadow cursor-pointer"
             >
               <Pencil size={16} />
             </label>
-            {/* )} */}
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedPreviewImage(preview); // ✅ set image
+                setOpenPreviewModal(true); // ✅ open modal
+              }}
+              className="p-2 bg-blue-500 text-white rounded shadow"
+            >
+              <Eye size={16} />
+            </button>
           </div>
 
-          <Image
-            width={400}
-            height={300}
-            src={imagePreview}
-            alt="uploaded"
-            className="w-full h-full object-cover rounded-lg transition-all duration-300"
-          />
-
-          {/* Upload animation overlay */}
+          {/* Upload animation */}
           {pictureUploadingLoader && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/30 animate-pulse">
-              {/* <span className="text-white text-sm">Uploading...</span> */}
               <Spinner size={18} />
             </div>
           )}
@@ -135,20 +101,11 @@ const ImagePlaceholder = ({
       ) : (
         <label
           htmlFor={`image-upload-${index}`}
-          className="absolute top-3 right-3 p-2 !rounded bg-slate-700 text-gray-100 shadow-lg cursor-pointer"
+          className="flex flex-col items-center justify-center w-full h-full text-gray-500"
         >
-          <Pencil size={16} />
+          <Plus size={24} />
+          <span className="text-xs">Upload</span>
         </label>
-      )}
-
-      {!imagePreview && (
-        <p
-          className={`text-gray-600 ${
-            small ? 'text-xs' : 'text-sm'
-          } font-semibold`}
-        >
-          {size}
-        </p>
       )}
     </div>
   );

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import { ChevronDown, MapPin } from 'lucide-react';
+import { ChevronDown, MapPin, ShoppingBag } from 'lucide-react';
 // import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
@@ -27,6 +27,9 @@ import { useEffect } from 'react';
 import { Search } from 'lucide-react';
 // import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
 import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
+import { PiShoppingBag } from 'react-icons/pi';
+// import { HiOutlineUser } from 'react-icons/hi';
+import { AiOutlineUser } from 'react-icons/ai';
 
 <style>
   @import
@@ -88,7 +91,7 @@ function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-1.5 h-10 pl-8 mr-0 text-[13px] text-[#1d1d1f] font-medium hover:text-[#14181A] bg-transparent transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none "
+      className=" items-center gap-1.5 h-10 pl-8 mr-0 text-[13px] text-[#1d1d1f] font-medium hover:text-[#14181A] bg-transparent transition-colors flex-shrink-0 border-none outline-none focus:outline-none focus-visible:outline-none hidden"
     >
       {value}
       <ChevronDown size={12} color="#333" />
@@ -231,14 +234,20 @@ const HeaderContent = () => {
       <div className="flex items-center justify-start gap-4">
         {/* Logo */}
         <div
-          className="font-bold text-[23px] tracking-tight text-[#fff]"
+          className="flex items-center gap-1 px-2 font-bold text-[23px] tracking-tight text-[#fff] "
           style={{ fontFamily: "'Libre Franklin', sans-serif" }}
         >
-          Sokonis<span className="text-[#E85D1F]">.</span>
+          <div className="shrink-0">
+            <PiShoppingBag color="FEA417" size={40} />
+          </div>
+
+          <p>
+            Sokonis<span className="text-[#E85D1F] hidden">.</span>
+          </p>
         </div>
 
         {/* Delivery location - can be dropdown in future */}
-        <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors duration-100 ">
+        <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-600 transition-colors duration-100 ">
           {/* </div> */}
           <div className="-mt-0.5">
             <MapPin size={18} color="#fff" />
@@ -271,7 +280,7 @@ const HeaderContent = () => {
               onFocus={() => setOpenSearchBackdrop(true)} // open backdrop when input is focused
               placeholder="Search products, brands, categories..."
               className="flex-1 h-10 bg-transparent outline-none border-none text-[14.0px] 
-                   placeholder:font-normal placeholder:text-[#6e6e73] pl-4 pr-4 py-0 
+                   placeholder:font-normal placeholder:text-[#6e6e73] pl-6 pr-4 py-0 
                    focus:border-blue-500 focus:border-2 focus:ring-0"
             />
 
@@ -290,7 +299,7 @@ const HeaderContent = () => {
             <button
               aria-label="Search"
               className="flex items-center justify-center w-9 h-9 mr-[2.0px] rounded-full
-                   text-[#333] bg-[#FFCA8C] hover:text-[#fff]
+                   text-[#333] bg-[#FFCA8C] hover:text-[#333]
                    transition-colors flex-shrink-0"
             >
               <Search size={18} />
@@ -322,7 +331,10 @@ const HeaderContent = () => {
       </div>
 
       {/* Account / Cart column */}
-      <div className="flex items-center justify-end w-full h-full gap-3">
+      <div className="flex items-center justify-end w-full h-full gap-2">
+        {/* <HiOutlineUser size={20} color="#fff" /> */}
+        <AiOutlineUser size={20} color="#fff" />
+
         {/* Account/Trigger */}
         <div
           className="relative flex items-center gap-1 text-gray-600 px-0 h-full "
@@ -334,7 +346,7 @@ const HeaderContent = () => {
             className="flex flex-col gap-0 items-start justify-start "
           >
             {/* <UserRound size={18} /> */}
-            <span className="block text-[11.0px] font-normal text-gray-300 ">
+            <span className="block text-xs font-normal text-gray-200 ">
               {!mounted ? (
                 // SSR + first client render: invisible placeholder to prevent hydration mismatch
                 <span className="text-[11.0px] font-normal ">Sign in</span>
@@ -355,7 +367,7 @@ const HeaderContent = () => {
               )}
             </span>
 
-            <span className="relative flex items-center text-[14.0px] text-[#fff] font-bold gap-0.5 -mt-[2px]">
+            <span className="relative flex items-center text-[14.0px] text-[#fff] font-bold gap-0 -mt-[3px]">
               Account
               {/* <ChevronDown size={14} color="#333" /> */}
               <div className="mt-[0px]">
@@ -458,7 +470,7 @@ const HeaderContent = () => {
             href="/cart"
             className="relative flex items-center justify-center mt-[0px] cursor-pointer"
           >
-            <CgShoppingCart strokeWidth={0.0} size={20} color="#fff" />
+            <CgShoppingCart size={20} color="#fff" />
             {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
             {cart?.length > 0 && (
@@ -473,10 +485,8 @@ const HeaderContent = () => {
                 KES 0.00
               </span> */}
           <div className="flex flex-col items-start justify-center">
-            <span className="text-[11.0px] font-normal text-gray-300 ">
-              Cart
-            </span>
-            <span className="text-[12.0px] text-[#fff] font-bold -mt-1.5 tracking-tight px-0 py-0 rounded-full">
+            <span className="text-xs font-normal text-gray-200 ">Cart</span>
+            <span className="text-[12.0px] text-[#fff] font-bold -mt-[3px] tracking-tight px-0 py-0 rounded-full">
               KES 0.00
             </span>
           </div>

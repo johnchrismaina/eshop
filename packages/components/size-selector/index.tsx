@@ -6,7 +6,7 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
 const SizeSelector = ({ control, errors }: any) => {
   return (
     <div className="mt-2">
-      <label className="block font-semibold text-[15px] text-gray-700 mb-2">
+      <label className="block font-bold text-[15px] text-gray-700 mb-2">
         Sizes
       </label>
       <Controller

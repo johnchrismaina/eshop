@@ -22,7 +22,7 @@ const HeaderBottom = () => {
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
-    <div className="relative z-10 w-full transition-all duration-300 bg-[#F7F7F7] border-b border-gray-200 shadow-none shadow-gray-300/10 ">
+    <div className="relative z-10 w-full transition-all duration-300 bg-[#F7F7F7] border-b border-gray-300 shadow-none shadow-gray-300/10 ">
       <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-center gap-6 h-full ">
         {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
 

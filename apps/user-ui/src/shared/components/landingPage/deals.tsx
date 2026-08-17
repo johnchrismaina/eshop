@@ -64,7 +64,7 @@ const Deals = () => {
   //---------------------------------------------------------------
 
   return (
-    <div className="bg-white px-10 py-6 pb-6 ">
+    <div className="px-10 py-6 pb-6 bg-white">
       <div className="pb-2 flex justify-between">
         <SectionTitle title="Top Deals" />
         <span className="text-sm underline cursor-pointer text-blue-700 hover:text-blue-800">

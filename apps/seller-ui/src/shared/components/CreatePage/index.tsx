@@ -34,7 +34,7 @@ import DatePicker from 'react-datepicker';
 import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
-import ColorVariantsEditor from 'packages/components/ColorVariantsEditor';
+import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
 
 const TABS = [
   'Product Identity',
@@ -768,7 +768,7 @@ const CreatePage = ({ ...props }) => {
 
           {/* Description & Media*/}
           {activeTab === 'Description & Media' && (
-            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
+            <div className="w-[700px] flex flex-col mx-auto items-start justify-center gap-3 py-4 ">
               {/* Short Description */}
               <div className="w-full p-0 rounded-md">
                 <label className="block text-[15px] font-bold text-gray-700 pb-3">

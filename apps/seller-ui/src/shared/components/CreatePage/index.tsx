@@ -34,6 +34,7 @@ import DatePicker from 'react-datepicker';
 import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
+import ColorVariantsEditor from 'packages/components/ColorVariantsEditor';
 
 const TABS = [
   'Product Identity',
@@ -90,19 +91,22 @@ const CreatePage = ({ ...props }) => {
     control,
     register,
     setValue,
-    getValues, // ✅ add this
+    getValues,
     watch,
     handleSubmit,
     formState: { errors },
+    clearErrors, // ✅ add it here
   } = useForm<FormValues>({
+    mode: 'onSubmit', // ✅ validate only when submitting
+    reValidateMode: 'onChange', // ✅ after first submit, errors update live
     defaultValues: {
       title: '',
-      aspect: 'square', // ✅ default aspect ratio
-      images: [null, null, null, null, null, null, null, null], // 8 slots
+      aspect: 'square',
+      images: [null, null, null, null, null, null, null, null],
       regular_price: undefined,
       sale_price: undefined,
       short_description: '',
-      accordions: [], // ✅ initialize accordions array
+      accordions: [],
       slug: '',
       tags: [],
       category: '',
@@ -114,18 +118,20 @@ const CreatePage = ({ ...props }) => {
       stock: undefined,
       total_tickets: undefined,
       discountCodes: [],
-      enableDeal: isDealRoute, // ✅ auto-enable toggle if on /create-deal
+      enableDeal: isDealRoute,
     },
   });
 
   const enableDeal = watch('enableDeal');
 
+  const [hasColors, setHasColors] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
 
   const [openPreviewModal, setOpenPreviewModal] = useState(false);
   const [selectedPreviewImage, setSelectedPreviewImage] = useState<
     string | null
   >(null);
+
   // const [isChanged, setIsChanged] = useState(true);
   const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
@@ -140,7 +146,27 @@ const CreatePage = ({ ...props }) => {
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState('Products');
+  // const [activeTab, setActiveTab] = useState('Products');
+  const [activeTab, setActiveTab] = useState(TABS[0]);
+  // const { clearErrors } = useForm<FormValues>({ ... });
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    clearErrors(); // ✅ clears all errors when switching tabs
+  };
+
+  // ✅ Load saved tab on mount
+  useEffect(() => {
+    const savedTab = localStorage.getItem('activeTab');
+    if (savedTab && TABS.includes(savedTab)) {
+      setActiveTab(savedTab);
+    }
+  }, []);
+
+  // ✅ Save tab whenever it changes
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
 
   //   Fetch categories
   const { data, isLoading, isError } = useQuery({
@@ -195,6 +221,43 @@ const CreatePage = ({ ...props }) => {
     { value: 'portrait', label: 'Portrait (503 × 670)' },
   ];
 
+  // Load Draft on Page Mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('productDraft');
+    if (savedDraft) {
+      const parsed = JSON.parse(savedDraft);
+
+      // ✅ restore form values
+      Object.keys(parsed).forEach((key) => {
+        if (key !== 'activeTab') {
+          setValue(key as keyof FormValues, parsed[key]);
+        }
+      });
+
+      // ✅ restore tab
+      if (parsed.activeTab && TABS.includes(parsed.activeTab)) {
+        setActiveTab(parsed.activeTab);
+      }
+    }
+  }, [setValue]);
+
+  // Esc key support so the preview modal can be dismissed without clicking the Close button
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenPreviewModal(false); // ✅ closes modal on Esc
+      }
+    };
+
+    if (openPreviewModal) {
+      window.addEventListener('keydown', handleEsc);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [openPreviewModal]);
+
   // Close Aspect Ratio dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -211,6 +274,15 @@ const CreatePage = ({ ...props }) => {
     };
   }, []);
 
+  // fully lock background scrolling (so the page doesn’t move at all when the modal is open)
+  useEffect(() => {
+    if (openPreviewModal) {
+      document.body.style.overflow = 'hidden'; // ✅ lock scroll
+    } else {
+      document.body.style.overflow = 'auto'; // ✅ restore scroll
+    }
+  }, [openPreviewModal]);
+
   // console.log(categories, subCategoriesData);
 
   // const convertFiletoBase64 = (file: File) => {
@@ -222,45 +294,36 @@ const CreatePage = ({ ...props }) => {
   //   });
   // };
 
-  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    setImageLoaded(false); // reset every time the source changes, including first upload
-  }, [hoveredImage]);
-  // ];
-
-  useEffect(() => {
-    const stillExists = images.some((img) => img?.file_url === hoveredImage);
-    if (!stillExists) {
-      setHoveredImage(images.find((img) => img?.file_url)?.file_url ?? null);
-    }
-  }, [images]);
-
   //-----------------------------------------------
 
   const handleImageChange = async (file: File | null, index: number) => {
-    if (!file) return;
+    if (!file) {
+      console.log('⚠️ No file provided at index:', index);
+      return;
+    }
+
+    console.log(
+      '🟢 handleImageChange called with file:',
+      file.name,
+      'at index:',
+      index
+    );
     setPictureUploadingLoader(true);
 
     try {
       const formData = new FormData();
-      formData.append('image', file); // 'image' must match multer's field name
+      formData.append('image', file);
 
+      console.log('📤 Uploading file to backend...');
       const response = await axiosProduct.post(
         '/upload-product-image',
         formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
 
-      // const uploadedImage: UploadedImage = {
-      //   fileId: response.data.fileId,
-      //   file_url: response.data.file_url,
-      // };
+      console.log('📥 Upload response:', response.data);
 
       const uploadedImage: UploadedImage = {
         fileId: response.data.fileId ?? response.data.file_id,
@@ -268,33 +331,27 @@ const CreatePage = ({ ...props }) => {
       };
 
       const updatedImages = [...images];
+      console.log('📸 Images before insert:', updatedImages);
 
       updatedImages[index] = uploadedImage;
 
       if (index === images.length - 1 && updatedImages.length < 8) {
         updatedImages.push(null);
+        console.log(
+          '➕ Added trailing empty slot after upload:',
+          updatedImages
+        );
       }
 
       setImages(updatedImages);
       setValue('images', updatedImages);
+
+      console.log('✅ Final images state after upload:', updatedImages);
     } catch (error) {
-      console.log(error);
+      console.error('❌ Upload error:', error);
     } finally {
       setPictureUploadingLoader(false);
     }
-
-    console.log('Incoming images:', images);
-
-    // const updatedImages = [...images];
-
-    // updatedImages[index] = file;
-
-    // if (index === images.length - 1 && images.length < 8) {
-    //   updatedImages.push(null);
-    // }
-
-    // setImages(updatedImages);
-    // setValue('images', updatedImages);
   };
 
   const handleImageChangeWithLoader = async (
@@ -308,26 +365,36 @@ const CreatePage = ({ ...props }) => {
   };
 
   const handleRemoveImage = (index: number) => {
-    const currentImages = images; // use the same source of truth handleImageChange uses
+    console.log('🟢 handleRemoveImage called with index:', index);
+
+    const currentImages = [...images];
+    console.log('📸 Current images before removal:', currentImages);
+
     const image = currentImages[index];
+    console.log('🔍 Image at index to remove:', image);
 
-    setRemovedImageIds((prev) => [
-      ...prev,
-      ...(image?.fileId ? [image.fileId] : []),
-    ]);
-
-    const updatedImages = currentImages.filter((_, i) => i !== index);
-
-    // Keep a trailing empty slot for uploading, same rule as handleImageChange
-    if (
-      updatedImages.length < 8 &&
-      updatedImages[updatedImages.length - 1] !== null
-    ) {
-      updatedImages.push(null);
+    if (image?.fileId) {
+      console.log('🗑️ Removing fileId:', image.fileId);
+      setRemovedImageIds((prev) => {
+        const updated = [...prev, image.fileId];
+        console.log('📦 Updated removedImageIds:', updated);
+        return updated;
+      });
     }
 
-    setImages(updatedImages);
-    setValue('images', updatedImages);
+    // ✅ Reset slot to null instead of removing it
+    currentImages[index] = null;
+    console.log('📸 Images after reset:', currentImages);
+
+    // Always keep 8 slots
+    while (currentImages.length < 8) {
+      currentImages.push(null);
+    }
+
+    setImages(currentImages);
+    setValue('images', currentImages);
+
+    console.log('✅ Final images state set:', currentImages);
   };
 
   const applyTransformation = async (transformation: string) => {
@@ -377,7 +444,29 @@ const CreatePage = ({ ...props }) => {
     }
   };
 
-  const handleSaveDraft = () => {};
+  // ✅ Save Draft (no validation)
+  const handleSaveDraft = () => {
+    const draftData = getValues(); // ✅ grab all current form values
+    localStorage.setItem(
+      'productDraft',
+      JSON.stringify({
+        ...draftData,
+        activeTab, // ✅ also save which tab they were on
+      })
+    );
+    console.log('Draft saved:', draftData);
+  };
+
+  // load the draft from localStorage and set it as default values
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('productDraft');
+    if (savedDraft) {
+      const parsed = JSON.parse(savedDraft);
+      Object.keys(parsed).forEach((key) => {
+        setValue(key as keyof FormValues, parsed[key]);
+      });
+    }
+  }, [setValue]);
 
   return (
     <form
@@ -400,12 +489,6 @@ const CreatePage = ({ ...props }) => {
       </div>
 
       {/* --------------------------------------------------------------------------------- */}
-      {/* const TABS = [
-  'Product Identity',
-  'Product Details',
-  'Description & Media',
-  'Pricing',
-]; */}
 
       {/* Tabs Section */}
       <div className="w-full lg:w-full mx-auto bg-[#f6f6f6]">
@@ -414,7 +497,9 @@ const CreatePage = ({ ...props }) => {
           {TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              type="button" // ✅ prevents accidental form submission
+              // onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`py-3 px-4 text-base font-semibold ${
                 activeTab === tab
                   ? 'text-[#000] border-b-2 border-[#FEA417]'
@@ -771,52 +856,61 @@ const CreatePage = ({ ...props }) => {
               </div>
 
               {/* Image upload section */}
-              <div className="w-full mx-auto bg-[#F5F5F5] p-0">
-                <label className="block text-[15px] font-bold text-gray-700 mb-1">
-                  Images
-                </label>
-                <div className="grid grid-cols-4 gap-3">
-                  {Array.from({ length: 8 }).map((_, index) => (
-                    <ImagePlaceholder
-                      key={index}
-                      aspect={aspect}
-                      pictureUploadingLoader={uploading[index] ?? false}
-                      image={images[index]}
-                      index={index}
-                      onImageChange={handleImageChangeWithLoader}
-                      onRemove={handleRemoveImage}
-                      // ✅ pass preview modal handlers
-                      setOpenPreviewModal={setOpenPreviewModal}
-                      setSelectedPreviewImage={setSelectedPreviewImage}
-                    />
-                  ))}
-                </div>
-
-                {/* ✅ Single floating preview modal */}
-                {openPreviewModal && selectedPreviewImage && (
-                  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div
-                      className={`relative bg-white p-4 rounded-lg shadow-lg ${
-                        aspect === 'square'
-                          ? 'aspect-square w-[500px]'
-                          : 'aspect-[3/4] w-[500px]'
-                      }`}
-                    >
-                      <img
-                        src={selectedPreviewImage}
-                        alt="Preview"
-                        className="w-full h-full object-cover rounded-lg"
+              {!hasColors && (
+                <div className="w-full mx-auto bg-[#F5F5F5] p-0">
+                  <label className="block text-[15px] font-bold text-gray-700 mb-1">
+                    Main Images
+                  </label>
+                  <div className="grid grid-cols-4 gap-3">
+                    {Array.from({ length: 8 }).map((_, index) => (
+                      <ImagePlaceholder
+                        key={index} // ✅ stable key
+                        aspect={aspect}
+                        pictureUploadingLoader={uploading[index] ?? false}
+                        image={images[index] ?? null} // ✅ pull from images array
+                        index={index}
+                        onImageChange={handleImageChangeWithLoader}
+                        onRemove={handleRemoveImage}
+                        setOpenPreviewModal={setOpenPreviewModal}
+                        setSelectedPreviewImage={setSelectedPreviewImage}
                       />
-                      <button
-                        className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded"
-                        onClick={() => setOpenPreviewModal(false)} // ✅ now closes correctly
-                      >
-                        Close
-                      </button>
-                    </div>
+                    ))}
                   </div>
-                )}
-              </div>
+
+                  {/* ✅ Single floating preview modal */}
+                  {openPreviewModal && selectedPreviewImage && (
+                    <div
+                      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-hidden"
+                      style={{ overscrollBehavior: 'contain' }} // ✅ prevent background scroll
+                    >
+                      {/* Close button */}
+                      <button
+                        className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
+                        onClick={() => setOpenPreviewModal(false)}
+                      >
+                        <X />
+                      </button>
+
+                      {/* Modal content */}
+                      <div
+                        className={`relative bg-white p-4 rounded-lg shadow-lg overflow-hidden ${
+                          aspect === 'square'
+                            ? 'aspect-square w-[500px]'
+                            : 'aspect-[3/4] w-[500px]'
+                        }`}
+                      >
+                        <img
+                          src={selectedPreviewImage}
+                          alt="Preview"
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <ColorVariantsEditor />
 
               {/* Color Selector */}
               <div className="w-full mt-0 p-0 rounded-md">
@@ -1122,17 +1216,6 @@ const CreatePage = ({ ...props }) => {
 
       {/* --------------------------------------------------------------------------------- */}
 
-      {/* Content layout */}
-      <div className="w-full bg-[#f1f1f1] px-7 pt-6 pb-6 grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_244px] gap-2 hidden">
-        {/* left column container*/}
-
-        {/* Middle column - product details */}
-        <div className="px-4 pb-1 prose prose-sm max-w-none"></div>
-
-        {/* Right column - form inputs */}
-        <div className="w-[244px] px-0 py-0 rounded-none "></div>
-      </div>
-
       {/* Product details */}
       <div className="w-full lg:w-full mx-auto border-t border-y-gray-200"></div>
 
@@ -1206,6 +1289,7 @@ const CreatePage = ({ ...props }) => {
           type="submit"
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
           disabled={loading}
+          // onClick={handleSubmit(onSubmit)}
         >
           {/* Keep the text in DOM but hide it when loading */}
           <span className={loading ? 'opacity-0' : 'opacity-100'}>Create</span>

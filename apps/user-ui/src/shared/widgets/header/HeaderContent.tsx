@@ -238,7 +238,7 @@ const HeaderContent = () => {
           style={{ fontFamily: "'Libre Franklin', sans-serif" }}
         >
           <div className="shrink-0">
-            <PiShoppingBag color="FEA417" size={40} />
+            <PiShoppingBag color="FEA417" size={30} />
           </div>
 
           <p>

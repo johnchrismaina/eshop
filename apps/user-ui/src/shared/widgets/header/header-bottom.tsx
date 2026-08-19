@@ -22,16 +22,13 @@ const HeaderBottom = () => {
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
-    <div className="relative z-10 w-full transition-all duration-300 bg-[#F7F7F7] border-b border-gray-300 shadow-none shadow-gray-300/10 ">
-      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-center gap-6 h-full ">
-        {/* <div className="max-w-[1280px] mx-auto px-10 pt-1 pb-2.5 flex items-center justify-between gap-2"> */}
-
-        {/* <div className="flex items-center justify-center gap-10"> */}
+    <div className="relative z-10 w-full transition-all duration-300 bg-[#f6f6f6] border-b border-gray-300 shadow-sm shadow-gray-300/10 ">
+      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-0 h-full ">
         {/* All Dropdowns */}
         <div>
           {/* Bottom header button */}
           <button
-            className="flex items-center justify-center gap-2.5 pl-2 pr-4 py-2 text-[14.0px] font-bold text-[#1d1d1f] hover:bg-[#f1f1f1] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0 "
+            className=" items-center justify-center gap-2.5 pl-2 pr-0 py-2 text-[14.0px] font-bold text-[#1d1d1f] hover:bg-[#f1f1f1] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0 hidden"
             onClick={() => setShowSidebar(true)}
           >
             <Menu size={16} color="#333" />
@@ -46,7 +43,7 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex flex-1 items-center justify-start gap-2 ml-0 ">
+        <nav className="flex flex-1 items-center justify-center gap-2 ml-0 ">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
               className={`flex items-center px-4 py-2 text-[14.0px] h-full hover:bg-[#f1f1f1] transition-colors duration-100 ${
@@ -67,7 +64,7 @@ const HeaderBottom = () => {
           <span className="cursor-pointer px-2 py-2 transition-colors duration-100 hidden">
             Sell
           </span>
-          <span className="cursor-pointer px-2 py-2 transition-colors duration-100 ">
+          <span className="cursor-pointer px-2 py-2 transition-colors duration-100 hidden">
             Customer Service
           </span>
         </div>

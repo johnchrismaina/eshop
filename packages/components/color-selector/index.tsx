@@ -1,7 +1,7 @@
 // import React from 'react';
 import { useState } from 'react';
 import { Controller } from 'react-hook-form';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 
 const defaultColors = [
   '#000000', // Black
@@ -20,7 +20,7 @@ const ColorSelector = ({ control, errors }: any) => {
   const [newColor, setNewColor] = useState('#ffffff');
 
   return (
-    <div className="mt-2">
+    <div className="mt-2 ">
       <label className="block font-bold text-[15px] text-gray-700 mb-1">
         Colors
       </label>
@@ -28,7 +28,7 @@ const ColorSelector = ({ control, errors }: any) => {
         name="colors"
         control={control}
         render={({ field }) => (
-          <div className="flex gap-3 flex-wrap ">
+          <div className="flex items-center justify-start gap-3 flex-wrap ">
             {[...defaultColors, ...customColors].map((color) => {
               const isSelected = (field.value || []).includes(color);
               const isLightColor = ['#ffffff', '#ffff00'].includes(color);
@@ -44,26 +44,19 @@ const ColorSelector = ({ control, errors }: any) => {
                         : [...(field.value || []), color]
                     )
                   }
-                  className={`w-7 h-7 p-2 rounded-none my-1 flex items-center justify-center transition ${
-                    isSelected ? 'ring-2 ring-gray-950 ring-offset-2' : 'ring-0'
+                  className={`w-8 h-8 p-2 rounded-full my-1 flex items-center justify-center transition ${
+                    isSelected
+                      ? 'ring-2 ring-slate-600 ring-offset-2'
+                      : 'ring-0'
                   } ${
                     isLightColor
-                      ? 'border border-gray-600'
+                      ? 'border border-slate-600'
                       : 'border border-transparent'
                   }`}
                   style={{ backgroundColor: color }}
                 />
               );
             })}
-
-            {/* Add new color */}
-            <button
-              type="button"
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition"
-              onClick={() => setShowColorPicker(!showColorPicker)}
-            >
-              <Plus size={16} color="white" />
-            </button>
 
             {/* Color picker */}
             {showColorPicker && (
@@ -75,7 +68,7 @@ const ColorSelector = ({ control, errors }: any) => {
                   // onChange={(e) =>
                   //   setNewColor((e.target as HTMLInputElement).value)
                   // }
-                  className="w-10 h-10 p-0 rounded-sm border-none cursor-pointer "
+                  className="w-8 h-8 rounded-md border border-green-700 cursor-pointer appearance-none p-0 ml-4"
                 />
                 <button
                   type="button"
@@ -83,12 +76,23 @@ const ColorSelector = ({ control, errors }: any) => {
                     setCustomColors([...customColors, newColor]);
                     setShowColorPicker(false);
                   }}
-                  className="px-3 py-1 bg-gray-700 text-white rounded-md text-sm"
+                  className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md text-sm"
                 >
-                  Add
+                  Add color
                 </button>
               </div>
             )}
+
+            {/* Add new color */}
+            <button
+              type="button"
+              className={`flex items-center justify-center gap-2 rounded-full w-9 h-9 py-1 ml-2 text-gray-700 hover:bg-text-[#000] border border-gray-400 transition-all duration-150 ${
+                showColorPicker ? 'bg-red-200 ' : 'bg-blue-200'
+              }`}
+              onClick={() => setShowColorPicker(!showColorPicker)}
+            >
+              {showColorPicker ? <X size={20} /> : <Plus size={20} />}
+            </button>
           </div>
         )}
       />

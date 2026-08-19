@@ -183,8 +183,8 @@ model products {
   aspect                 String        @default("square") // default at DB level too
   slug                   String        @unique
   tags                   String[]
-  colors                 String[]
-  sizes                  String[]
+  colors                 String[]      @default([]) // ✅ optional array
+  sizes                  String[]      @default([])
   category               String
   subCategory            String?
   short_description      String
@@ -228,6 +228,9 @@ model products {
 
   // ✅ Opposite side of ProductDeal
   deals deals[] @relation("ProductDeal")
+
+  // ✅ Optional relation to color variants
+  colorVariants color_variants[] @relation("ProductColorVariants")
 
   @@index([createdAt])
 }
@@ -295,6 +298,24 @@ model Deal {
   dealScore Float @default(0)
 
   category String
+}
+
+model color_variants {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  hex       String
+  title     String
+  price     Float
+  isDefault Boolean @default(false)
+
+  // ✅ Store up to 8 image URLs per variant
+  images String[] @default([])
+
+  productId String   @db.ObjectId
+  product   products @relation("ProductColorVariants", fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Define an embedded type for actions

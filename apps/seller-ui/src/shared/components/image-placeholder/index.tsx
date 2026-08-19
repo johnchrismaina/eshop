@@ -87,7 +87,7 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
       onDragLeave={() => setDragActive(false)}
       className={`relative border rounded-lg flex items-center justify-center cursor-pointer
         ${aspect === 'square' ? 'aspect-square' : 'aspect-[3/4]'}
-        ${dragActive ? 'border-blue-500 bg-blue-50' : 'bg-gray-200'}
+        ${dragActive ? 'border-blue-500 bg-blue-50' : 'bg-gray-50'}
         ${className ?? ''}
       `}
     >

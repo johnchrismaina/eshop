@@ -23,7 +23,7 @@ const CustomAccordion = ({ control, errors }: any) => {
 
   return (
     <div>
-      <label className="block text-[15px] font-bold text-gray-700 mb-2">
+      <label className="block font-bold text-gray-700 mb-2">
         Product Details - Accordions (max 3)
       </label>
 

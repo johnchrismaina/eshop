@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import HeaderBottom from './header-bottom';
 import HeaderContent from './HeaderContent';
+import SidebarMenu from '../../components/sidebar-menu';
 
 const Header = () => {
   function clamp(value: number, min: number, max: number): number {
@@ -86,28 +87,32 @@ const Header = () => {
   }
 
   const headerRef = useDraggableHeader();
+  const [showSidebar, setShowSidebar] = useState(false);
 
   return (
     <>
       {/* HEADER 1 — logo / search / account / cart */}
       {/* IN-FLOW HEADER — lives in normal document flow, scrolls away with the page */}
-      <header className="relative z-50 bg-white ">
-        <HeaderContent />
+      <header className="relative z-30 bg-white ">
+        <HeaderContent setShowSidebar={setShowSidebar} />{' '}
       </header>
 
       {/* FLOATING HEADER — fixed, off-screen by default, slides down on scroll-up */}
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-white "
+        className="fixed top-0 left-0 right-0 z-30 bg-white "
         style={{ willChange: 'transform' }}
       >
-        <HeaderContent />
+        <HeaderContent setShowSidebar={setShowSidebar} />{' '}
       </header>
 
       {/* HEADER 2 — categories — normal flow, not sticky, no shadow */}
       <div className="">
         <HeaderBottom />
       </div>
+
+      {/* ✅ Sidebar lives OUTSIDE header */}
+      <SidebarMenu isOpen={showSidebar} onClose={() => setShowSidebar(false)} />
     </>
   );
 };

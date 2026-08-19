@@ -30,6 +30,7 @@ import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
 import { PiShoppingBag } from 'react-icons/pi';
 // import { HiOutlineUser } from 'react-icons/hi';
 import { AiOutlineUser } from 'react-icons/ai';
+import SidebarMenu from '../../components/sidebar-menu';
 
 <style>
   @import
@@ -68,6 +69,11 @@ const SEARCH_CATEGORIES = [
 
 // ----------------------------------
 
+// HeaderContent.tsx
+interface HeaderContentProps {
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 // Define the props type
 interface SearchScopeDropdownProps {
   value: string; // or whatever type your SEARCH_CATEGORIES values are
@@ -104,7 +110,7 @@ function SearchScopeDropdown({
 
 // ----------------------------------
 
-const HeaderContent = () => {
+const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   //Image and layout used by logo
   // const scrolled = useScrolled();
   // const [searchScope, setSearchScope] = useState('All');
@@ -116,6 +122,8 @@ const HeaderContent = () => {
 
   const [openSearchBackdrop, setOpenSearchBackdrop] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
@@ -230,8 +238,8 @@ const HeaderContent = () => {
   };
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-6 bg-[#283044]">
-      <div className="flex items-center justify-start gap-4">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-6 bg-[#283044] ">
+      <div className="flex items-center justify-start gap-6">
         {/* Logo */}
         <div
           className="flex items-center gap-1 px-2 font-bold text-[23px] tracking-tight text-[#fff] "
@@ -246,23 +254,27 @@ const HeaderContent = () => {
           </p>
         </div>
 
-        {/* Delivery location - can be dropdown in future */}
-        <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-600 transition-colors duration-100 ">
-          {/* </div> */}
-          <div className="-mt-0.5">
-            <MapPin size={18} color="#fff" />
-          </div>
-          <div className="flex flex-col items-start shrink-0 text-gray-200 ">
-            <span className="text-xs font-normal ">Deliver to: </span>
-            <span className="text-[14.0px] font-bold -mt-[2px] text-[#fff]">
-              Naivasha
-            </span>
-          </div>
+        <div>
+          {/* Bottom header button */}
+          <button
+            className="flex items-center justify-center px-3 py-1 rounded-md gap-1 hover:bg-gray-600 transition-colors duration-300 mr-0 flex-shrink-0 "
+            onClick={() => setShowSidebar(true)}
+          >
+            <div className="flex flex-col items-start shrink-0 text-gray-200 ">
+              <span className="text-[11.0px] font-normal ">Shop </span>
+              <span className="text-[14.0px] font-bold -mt-[4px] text-[#fff]">
+                Categories
+              </span>
+            </div>
+            <div className="mt-4">
+              <ChevronDown size={12} color="#fff" />
+            </div>
+          </button>
         </div>
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-2">
+        <div ref={searchWrapperRef} className="relative w-full mx-auto ml-2">
           <div
             ref={searchContainerRef}
             className="flex items-center h-10 bg-[#fff] rounded-full border-none border-[#86868b]
@@ -332,15 +344,28 @@ const HeaderContent = () => {
 
       {/* Account / Cart column */}
       <div className="flex items-center justify-end w-full h-full gap-2">
-        {/* <HiOutlineUser size={20} color="#fff" /> */}
-        <AiOutlineUser size={20} color="#fff" />
+        {/* Delivery location - can be dropdown in future */}
+        <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-600 transition-colors duration-100 ">
+          {/* </div> */}
+          <div className="-mt-0.5">
+            <MapPin size={18} color="#fff" />
+          </div>
+          <div className="flex flex-col items-start shrink-0 text-gray-200 ">
+            <span className="text-xs font-normal ">Deliver to: </span>
+            <span className="text-[14.0px] font-bold -mt-[2px] text-[#fff]">
+              Naivasha
+            </span>
+          </div>
+        </div>
 
         {/* Account/Trigger */}
         <div
-          className="relative flex items-center gap-1 text-gray-600 px-0 h-full "
+          className="relative flex items-center gap-2 text-gray-600 px-0 h-full "
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
         >
+          {/* <HiOutlineUser size={20} color="#fff" /> */}
+          <AiOutlineUser size={20} color="#fff" />
           <Link
             href={user?.name ? '/profile' : '/login'}
             className="flex flex-col gap-0 items-start justify-start "
@@ -487,7 +512,7 @@ const HeaderContent = () => {
           <div className="flex flex-col items-start justify-center">
             <span className="text-xs font-normal text-gray-200 ">Cart</span>
             <span className="text-[12.0px] text-[#fff] font-bold -mt-[3px] tracking-tight px-0 py-0 rounded-full">
-              KES 0.00
+              Ksh 0.00
             </span>
           </div>
         </div>

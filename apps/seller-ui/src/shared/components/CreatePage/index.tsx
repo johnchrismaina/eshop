@@ -4,15 +4,7 @@ import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-import {
-  ArrowLeft,
-  ChevronDown,
-  ChevronLeft,
-  PlusIcon,
-  Wand,
-  X,
-  XIcon,
-} from 'lucide-react';
+import { ChevronDown, ChevronLeft, Info, Wand, X } from 'lucide-react';
 import Image from 'next/image';
 // import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -523,6 +515,7 @@ const CreatePage = ({ ...props }) => {
                 </label>
                 <AutoResizeTextarea
                   label=""
+                  rows={2}
                   placeholder="Enter product title"
                   {...register('title', { required: 'Title is required' })}
                 />
@@ -770,8 +763,8 @@ const CreatePage = ({ ...props }) => {
           {activeTab === 'Description & Media' && (
             <div className="w-[700px] flex flex-col mx-auto items-start justify-center gap-3 py-4 ">
               {/* Short Description */}
-              <div className="w-full p-0 rounded-md">
-                <label className="block text-[15px] font-bold text-gray-700 pb-3">
+              <div className="w-full p-0 rounded-md ">
+                <label className="block font-bold text-gray-700 pb-3">
                   Product Description * (Min 50 words)
                 </label>
                 <Controller
@@ -791,6 +784,7 @@ const CreatePage = ({ ...props }) => {
                       id="short-description-editor" // ✅ unique id
                       value={field.value || ''}
                       onChange={field.onChange}
+                      className="bg-white"
                     />
                   )}
                 />
@@ -808,7 +802,7 @@ const CreatePage = ({ ...props }) => {
 
               {/* Dropdown */}
               <div className="w-full flex flex-col items-start justify-start gap-1 mb-0 p-0 rounded-md">
-                <label className="block text-[15px] font-bold  text-gray-700 mb-1">
+                <label className="block font-bold  text-gray-700 mb-1">
                   Image Aspect Ratio
                 </label>
                 <div
@@ -820,7 +814,7 @@ const CreatePage = ({ ...props }) => {
                   <button
                     type="button"
                     onClick={() => setOpenAspectRatio(!openAspectRatio)}
-                    className="border rounded-md px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
+                    className="border rounded-md px-4 py-2 text-[15px] bg-white text-gray-700 hover:bg-gray-100 w-[320px] flex justify-between items-center"
                   >
                     Aspect Ratio:{' '}
                     {aspect === 'square'
@@ -856,61 +850,71 @@ const CreatePage = ({ ...props }) => {
               </div>
 
               {/* Image upload section */}
-              {!hasColors && (
-                <div className="w-full mx-auto bg-[#F5F5F5] p-0">
-                  <label className="block text-[15px] font-bold text-gray-700 mb-1">
-                    Main Images
-                  </label>
-                  <div className="grid grid-cols-4 gap-3">
-                    {Array.from({ length: 8 }).map((_, index) => (
-                      <ImagePlaceholder
-                        key={index} // ✅ stable key
-                        aspect={aspect}
-                        pictureUploadingLoader={uploading[index] ?? false}
-                        image={images[index] ?? null} // ✅ pull from images array
-                        index={index}
-                        onImageChange={handleImageChangeWithLoader}
-                        onRemove={handleRemoveImage}
-                        setOpenPreviewModal={setOpenPreviewModal}
-                        setSelectedPreviewImage={setSelectedPreviewImage}
-                      />
-                    ))}
-                  </div>
-
-                  {/* ✅ Single floating preview modal */}
-                  {openPreviewModal && selectedPreviewImage && (
-                    <div
-                      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-hidden"
-                      style={{ overscrollBehavior: 'contain' }} // ✅ prevent background scroll
-                    >
-                      {/* Close button */}
-                      <button
-                        className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
-                        onClick={() => setOpenPreviewModal(false)}
-                      >
-                        <X />
-                      </button>
-
-                      {/* Modal content */}
-                      <div
-                        className={`relative bg-white p-4 rounded-lg shadow-lg overflow-hidden ${
-                          aspect === 'square'
-                            ? 'aspect-square w-[500px]'
-                            : 'aspect-[3/4] w-[500px]'
-                        }`}
-                      >
-                        <img
-                          src={selectedPreviewImage}
-                          alt="Preview"
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      </div>
-                    </div>
+              {/* Main Images section always visible */}
+              <div
+                className={`relative w-full mx-auto bg-[#F5F5F5] p-0 rounded-md mt-0 ${
+                  hasColors ? 'opacity-50 pointer-events-none' : ''
+                }`}
+              >
+                <h2 className="flex items-center gap-2 font-bold text-gray-700 pb-2">
+                  {hasColors ? (
+                    <>
+                      <Info className="w-4 h-4 text-yellow-600" />
+                      <span className="text-yellow-800">
+                        Main images disabled, color swatches are active
+                      </span>
+                    </>
+                  ) : (
+                    'Main Images'
                   )}
+                </h2>
+                <div className="grid grid-cols-4 gap-3">
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <ImagePlaceholder
+                      key={index}
+                      aspect={aspect}
+                      pictureUploadingLoader={uploading[index] ?? false}
+                      image={images[index] ?? null}
+                      index={index}
+                      onImageChange={handleImageChangeWithLoader}
+                      onRemove={handleRemoveImage}
+                      setOpenPreviewModal={setOpenPreviewModal}
+                      setSelectedPreviewImage={setSelectedPreviewImage}
+                    />
+                  ))}
                 </div>
-              )}
 
-              <ColorVariantsEditor />
+                {/* ✅ Single floating preview modal */}
+                {openPreviewModal && selectedPreviewImage && (
+                  <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-hidden"
+                    style={{ overscrollBehavior: 'contain' }}
+                  >
+                    <button
+                      className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
+                      onClick={() => setOpenPreviewModal(false)}
+                    >
+                      <X />
+                    </button>
+                    <div
+                      className={`relative bg-white p-4 rounded-lg shadow-lg overflow-hidden ${
+                        aspect === 'square'
+                          ? 'aspect-square w-[500px]'
+                          : 'aspect-[3/4] w-[500px]'
+                      }`}
+                    >
+                      <img
+                        src={selectedPreviewImage}
+                        alt="Preview"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Color Variants Editor */}
+              <ColorVariantsEditor onHasColorsChange={setHasColors} />
 
               {/* Color Selector */}
               <div className="w-full mt-0 p-0 rounded-md">
@@ -930,7 +934,7 @@ const CreatePage = ({ ...props }) => {
                 <Input
                   label=""
                   placeholder="https://www.youtube.com/embed/xyz123"
-                  className="bg-[#fdfdfd]"
+                  className="bg-[#fff]"
                   {...register('video_url', {
                     pattern: {
                       value:
@@ -971,6 +975,7 @@ const CreatePage = ({ ...props }) => {
                         id="detailed-description-editor" // ✅ unique id
                         value={field.value || ''}
                         onChange={field.onChange}
+                        className="bg-white"
                       />
                     )}
                   />

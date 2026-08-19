@@ -49,7 +49,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
 
       {/* Dropdown container */}
       <div
-        className="absolute left-0 h-[500px] top-full mt-0 py-4 ml-[-20] flex bg-white rounded-br-lg rounded-bl-lg z-50"
+        className="absolute left-0 top-[100px] h-[500px] flex bg-white rounded-b-lg z-50"
         onClick={() => setHovered(null)} // 👈 attach here, not on the first panel (onMouseEnter - other option)
       >
         {/* First window */}

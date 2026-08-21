@@ -174,15 +174,15 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   }, []);
 
   return (
-    <div className="w-full bg-white px-8 text-[#1d1d1f]">
+    <div className="w-full bg-[#fff] px-8 text-[#1d1d1f]">
       {/* Breadcrumbs */}
-      <div className="bg-[#fff] py-4">
+      <div className=" py-4">
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>
-      <div className="w-full bg-white pt-4 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_260px] gap-4">
+      <div className="w-full pt-2 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_260px] gap-4">
         {/* left column - product images */}
-        <div className="flex items-start justify-between px-0 bg-white w-[650px] h-auto mx-auto">
+        <div className="flex items-start justify-between px-0 w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
           <div className=" flex flex-col items-center gap-2">
             {/* Scroll up button */}
@@ -232,7 +232,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Scroll up button */}
             {(productDetails?.images?.length ?? 0) > 4 && (
               <button
-                className="absolute bottom-0 bg-white p-2 rounded-full shadow-md z-10"
+                className="absolute bottom-0 p-2 rounded-full shadow-md z-10"
                 onClick={nextImage}
                 disabled={currentIndex === productDetails?.images.length - 1}
               >
@@ -371,7 +371,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
             {/* Product description */}
             {/* <div className="w-full lg:w-full mx-auto mt-5"> */}
-            <div className="bg-white py-4 ">
+            <div className=" py-4 ">
               <span className="text-lg font-bold text-[#333] hidden">
                 {/* About this item {productDetails?.title} */}
                 Product details

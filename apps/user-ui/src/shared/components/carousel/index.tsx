@@ -38,7 +38,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
           src={item.src}
           alt={item.alt}
           key={idx}
-          className={`w-full h-full object-top object-cover transition-opacity duration-1000 rounded-md ${
+          className={`w-full h-full object-top object-cover transition-opacity duration-1000 rounded-none ${
             slide === idx ? 'opacity-100' : 'opacity-0 absolute'
           }`}
         />
@@ -51,7 +51,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
         {/* Pause/Play button */}
         <button
           onClick={() => setIsPaused(!isPaused)}
-          className="  bg-gray-800/40 flex items-center justify-center w-9 h-9 rounded-full text-gray-700 z-30 hover:bg-gray-800/60 transition-colors duration-300"
+          className="  bg-gray-800/40 flex items-center justify-center w-9 h-9 rounded-full text-gray-700 z-10 hover:bg-gray-800/60 transition-colors duration-300"
         >
           {isPaused ? (
             <Play size={14} color="#fff" fill="#fff" />

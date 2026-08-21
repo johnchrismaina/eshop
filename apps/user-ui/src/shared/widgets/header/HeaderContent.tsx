@@ -238,31 +238,45 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   };
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-6 bg-[#283044] ">
-      <div className="flex items-center justify-start gap-6">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-3 bg-[#fff] ">
+      <div className="flex items-center justify-start gap-3">
         {/* Logo */}
         <div
-          className="flex items-center gap-1 px-2 font-bold text-[23px] tracking-tight text-[#fff] "
-          style={{ fontFamily: "'Libre Franklin', sans-serif" }}
+          className="flex items-center gap-1.5 px-2 font-semibold text-[26px] tracking-wide text-[#1d1d1f] -mt-[6px]"
+          style={{ fontFamily: "'Oswald', sans-serif" }}
         >
-          <div className="shrink-0">
-            <PiShoppingBag color="FEA417" size={30} />
+          <div className="shrink-0 mt-1">
+            <PiShoppingBag color="E85D1F" size={30} />
           </div>
 
-          <p>
+          <p className="">
             Sokonis<span className="text-[#E85D1F] hidden">.</span>
           </p>
+        </div>
+
+        {/* Delivery location - can be dropdown in future */}
+        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-[#f4f4f4] rounded-full cursor-pointer transition-colors duration-150 ">
+          {/* </div> */}
+          <div className="">
+            <MapPin size={16} color="#1d1d1f" />
+          </div>
+          <div className="flex items-center justify-center gap-[4px]">
+            <span className="text-[14.0px] font-semibold text-[#1d1d1f] hover:text-[#000] mt-0">
+              Deliver to Naivasha
+            </span>
+            <ChevronDown size={12} color="#333" />
+          </div>
         </div>
 
         <div>
           {/* Bottom header button */}
           <button
-            className="flex items-center justify-center px-3 py-1 rounded-md gap-1 hover:bg-gray-600 transition-colors duration-300 mr-0 flex-shrink-0 "
+            className=" items-center justify-center px-3 py-1 rounded-md gap-1 hover:bg-gray-600 transition-colors duration-300 mr-0 flex-shrink-0 hidden"
             onClick={() => setShowSidebar(true)}
           >
-            <div className="flex flex-col items-start shrink-0 text-gray-200 ">
+            <div className="flex flex-col items-start shrink-0 text-[#5B6265] ">
               <span className="text-[11.0px] font-normal ">Shop </span>
-              <span className="text-[14.0px] font-bold -mt-[4px] text-[#fff]">
+              <span className="text-[14.0px] font-bold -mt-[4px] text-[#1d1d1f]">
                 Categories
               </span>
             </div>
@@ -274,10 +288,10 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div ref={searchWrapperRef} className="relative w-full mx-auto ml-2">
+        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-0">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-10 bg-[#fff] rounded-full border-none border-[#86868b]
+            className="flex items-center h-10 bg-[#f4f4f4] rounded-full border border-gray-200
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out "
@@ -310,8 +324,8 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-9 h-9 mr-[2.0px] rounded-full
-                   text-[#333] bg-[#FFCA8C] hover:text-[#333]
+              className="flex items-center justify-center w-9 h-9 mr-[4.0px] rounded-full
+                   text-[#333] bg-[#f4f4f4] hover:text-[#1d1d1f]
                    transition-colors flex-shrink-0"
             >
               <Search size={18} />
@@ -343,58 +357,43 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
       </div>
 
       {/* Account / Cart column */}
-      <div className="flex items-center justify-end w-full h-full gap-2">
-        {/* Delivery location - can be dropdown in future */}
-        <div className="relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-md cursor-pointer hover:bg-gray-600 transition-colors duration-100 ">
-          {/* </div> */}
-          <div className="-mt-0.5">
-            <MapPin size={18} color="#fff" />
-          </div>
-          <div className="flex flex-col items-start shrink-0 text-gray-200 ">
-            <span className="text-xs font-normal ">Deliver to: </span>
-            <span className="text-[14.0px] font-bold -mt-[2px] text-[#fff]">
-              Naivasha
-            </span>
-          </div>
-        </div>
-
+      <div className="flex items-center justify-end w-full h-full gap-4">
         {/* Account/Trigger */}
         <div
-          className="relative flex items-center gap-2 text-gray-600 px-0 h-full "
+          className="relative flex items-center gap-1.5 text-gray-600 px-0 h-full "
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
         >
           {/* <HiOutlineUser size={20} color="#fff" /> */}
-          <AiOutlineUser size={20} color="#fff" />
+          <AiOutlineUser size={16} color="#1d1d1f" />
           <Link
             href={user?.name ? '/profile' : '/login'}
             className="flex flex-col gap-0 items-start justify-start "
           >
             {/* <UserRound size={18} /> */}
-            <span className="block text-xs font-normal text-gray-200 ">
+            <span className="block text-[14.0px] font-semibold text-[#1d1d1f] mt-[0px]">
               {!mounted ? (
                 // SSR + first client render: invisible placeholder to prevent hydration mismatch
-                <span className="text-[11.0px] font-normal ">Sign in</span>
+                <span className="">Sign in</span>
               ) : hadSession && !hydrated ? (
                 // Had previous session, still hydrating: show skeleton
                 <span className="block w-12 h-3rounded animate-pulse"></span>
               ) : user?.name ? (
                 // Hydrated with user: show username
-                <span className="font-normal">
+                <span className="">
                   {`Hi, ${capitalizeWords(user.name.split(' ')[0])}`}
                 </span>
               ) : (
                 // No user or no previous session: show Log in
-                <span className="flex items-center justify-center text-[11.0px] font-normal ">
+                <span className="flex items-center justify-center ">
                   {/* <ProfileIcon size={18} color="#fff" /> */}
                   Sign in
                 </span>
               )}
             </span>
 
-            <span className="relative flex items-center text-[14.0px] text-[#fff] font-bold gap-0 -mt-[3px]">
+            <span className="relative items-center text-[14.0px] text-[#1d1d1f] font-bold gap-1 -mt-[4px] hidden">
               Account
-              {/* <ChevronDown size={14} color="#333" /> */}
               <div className="mt-[0px]">
                 {/* <ChevronDownIcon size={8} color="#333" /> */}
                 <ChevronDown size={12} color="#333" />
@@ -490,16 +489,16 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         </div>
 
         {/* Cart */}
-        <div className="flex items-center justify-start h-full gap-2 pr-2">
+        <div className="flex items-center justify-start h-full gap-1.5 pr-2 cursor-pointer">
           <Link
             href="/cart"
-            className="relative flex items-center justify-center mt-[0px] cursor-pointer"
+            className="relative flex items-center justify-center mt-[0px] "
           >
-            <CgShoppingCart size={20} color="#fff" />
+            <CgShoppingCart size={16} color="#1d1d1f" />
             {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
             {cart?.length > 0 && (
-              <div className="absolute top-[-4px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#FEA417] flex items-center justify-center mt-[0px]">
+              <div className="absolute top-[-6px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#FEA417] flex items-center justify-center mt-[0px]">
                 <span className="text-[#1C1C1E] font-bold text-[11px] leading-none">
                   {cart.length > 99 ? '99+' : cart.length}
                 </span>
@@ -509,9 +508,8 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
-          <div className="flex flex-col items-start justify-center">
-            <span className="text-xs font-normal text-gray-200 ">Cart</span>
-            <span className="text-[12.0px] text-[#fff] font-bold -mt-[3px] tracking-tight px-0 py-0 rounded-full">
+          <div className="flex items-end justify-center">
+            <span className="text-[12.0px] text-[#1d1d1f] font-bold tracking-tight px-2 py-1 bg-[#f4f4f4] rounded-full">
               Ksh 0.00
             </span>
           </div>

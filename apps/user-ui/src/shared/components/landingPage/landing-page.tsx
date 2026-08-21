@@ -13,8 +13,8 @@ export default function LandingPage() {
   const { role } = useUser();
 
   return (
-    <div className="bg-[#f6f6f6] min-h-screen ">
-      <div className="px-10 pt-6 ">
+    <div className="bg-[#f4f4f4] min-h-screen ">
+      <div className="px-0 pt-0 ">
         <Hero />
       </div>
       <div className="w-full px-10 pb-5 m-auto flex flex-col bg-transparent">

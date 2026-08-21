@@ -1,0 +1,303 @@
+{
+  "categories": [
+    {
+      "value": "clothing",
+      "label": "Clothing & Apparel",
+      "subCategories": [
+        "Men's Clothing",
+        "Women's Clothing",
+        "Kids' Clothing",
+        "Footwear",
+        "Accessories",
+        "Outerwear",
+        "Activewear",
+        "Traditional Wear"
+      ]
+    },
+    {
+      "value": "electronics",
+      "label": "Electronics & Gadgets",
+      "subCategories": [
+        "Mobiles",
+        "Laptops",
+        "Tablets",
+        "Cameras",
+        "Audio Devices",
+        "Wearables",
+        "Gaming Consoles",
+        "Accessories"
+      ]
+    },
+    {
+      "value": "grocery",
+      "label": "Grocery & Food",
+      "subCategories": [
+        "Fresh Produce",
+        "Dairy & Eggs",
+        "Meat & Seafood",
+        "Beverages",
+        "Snacks",
+        "Pantry Staples",
+        "Frozen Foods"
+      ]
+    },
+    {
+      "value": "restaurant",
+      "label": "Restaurants & Cafes",
+      "subCategories": [
+        "Fast Food",
+        "Fine Dining",
+        "Cafes",
+        "Takeaway",
+        "Buffet",
+        "Street Food"
+      ]
+    },
+    {
+      "value": "beauty",
+      "label": "Beauty & Personal Care",
+      "subCategories": [
+        "Skincare",
+        "Haircare",
+        "Makeup",
+        "Fragrances",
+        "Personal Hygiene",
+        "Wellness"
+      ]
+    },
+    {
+      "value": "furniture",
+      "label": "Furniture & Home Decor",
+      "subCategories": [
+        "Living Room",
+        "Bedroom",
+        "Office Furniture",
+        "Outdoor Furniture",
+        "Lighting",
+        "Decor Items"
+      ]
+    },
+    {
+      "value": "automotive",
+      "label": "Automotive & Accessories",
+      "subCategories": [
+        "Car Parts",
+        "Motorbike Accessories",
+        "Car Care",
+        "Tools & Equipment",
+        "Tyres & Wheels"
+      ]
+    },
+    {
+      "value": "books",
+      "label": "Books & Stationery",
+      "subCategories": [
+        "Fiction",
+        "Non-Fiction",
+        "Children's Books",
+        "Educational",
+        "Stationery",
+        "Office Supplies"
+      ]
+    },
+    {
+      "value": "toys",
+      "label": "Toys & Games",
+      "subCategories": [
+        "Action Figures",
+        "Board Games",
+        "Educational Toys",
+        "Outdoor Play",
+        "Puzzles",
+        "Dolls"
+      ]
+    },
+    {
+      "value": "sports",
+      "label": "Sports & Fitness",
+      "subCategories": [
+        "Gym Equipment",
+        "Outdoor Sports",
+        "Team Sports",
+        "Wearables",
+        "Fitness Accessories"
+      ]
+    },
+    {
+      "value": "hardware",
+      "label": "Hardware & Tools",
+      "subCategories": [
+        "Hand Tools",
+        "Power Tools",
+        "Building Materials",
+        "Plumbing",
+        "Electrical Supplies"
+      ]
+    },
+    {
+      "value": "pet",
+      "label": "Pet Supplies & Services",
+      "subCategories": [
+        "Pet Food",
+        "Pet Toys",
+        "Pet Grooming",
+        "Pet Health",
+        "Pet Accessories"
+      ]
+    },
+    {
+      "value": "medical",
+      "label": "Medical & Pharmacy",
+      "subCategories": [
+        "Prescription Drugs",
+        "OTC Medicines",
+        "Medical Equipment",
+        "Health Supplements",
+        "First Aid"
+      ]
+    },
+    {
+      "value": "jewelry",
+      "label": "Jewelry & Watches",
+      "subCategories": [
+        "Necklaces",
+        "Rings",
+        "Bracelets",
+        "Earrings",
+        "Watches",
+        "Luxury Jewelry"
+      ]
+    },
+    {
+      "value": "florist",
+      "label": "Florists & Gift Shops",
+      "subCategories": [
+        "Fresh Flowers",
+        "Bouquets",
+        "Gift Hampers",
+        "Cards",
+        "Decorative Plants"
+      ]
+    },
+    {
+      "value": "baby",
+      "label": "Baby & Kids Store",
+      "subCategories": [
+        "Baby Clothing",
+        "Toys",
+        "Baby Gear",
+        "Kids Furniture",
+        "School Supplies"
+      ]
+    },
+    {
+      "value": "art",
+      "label": "Art & Craft Supplies",
+      "subCategories": [
+        "Paints",
+        "Brushes",
+        "Canvas",
+        "Craft Kits",
+        "DIY Materials"
+      ]
+    },
+    {
+      "value": "music",
+      "label": "Music Instruments & Stores",
+      "subCategories": [
+        "Guitars",
+        "Keyboards",
+        "Drums",
+        "Wind Instruments",
+        "Accessories",
+        "Sheet Music"
+      ]
+    },
+    {
+      "value": "technology",
+      "label": "Software & Technology Services",
+      "subCategories": [
+        "Software",
+        "Cloud Services",
+        "IT Support",
+        "Web Development",
+        "Cybersecurity"
+      ]
+    },
+    {
+      "value": "garden",
+      "label": "Garden & Outdoor Equipment",
+      "subCategories": [
+        "Plants",
+        "Gardening Tools",
+        "Outdoor Furniture",
+        "Grills",
+        "Landscaping Supplies"
+      ]
+    },
+    {
+      "value": "bakery",
+      "label": "Bakery & Confectionery",
+      "subCategories": ["Bread", "Cakes", "Pastries", "Cookies", "Chocolates"]
+    },
+    {
+      "value": "optical",
+      "label": "Optical & Eyewear",
+      "subCategories": [
+        "Prescription Glasses",
+        "Sunglasses",
+        "Contact Lenses",
+        "Eye Care Accessories"
+      ]
+    },
+    {
+      "value": "mobile",
+      "label": "Mobile Phones & Accessories",
+      "subCategories": [
+        "Smartphones",
+        "Feature Phones",
+        "Chargers",
+        "Cases & Covers",
+        "Headphones",
+        "Screen Protectors"
+      ]
+    },
+    {
+      "value": "real_estate",
+      "label": "Real Estate & Property Services",
+      "subCategories": [
+        "Residential",
+        "Commercial",
+        "Land",
+        "Rental Services",
+        "Property Management"
+      ]
+    },
+    {
+      "value": "fitness",
+      "label": "Fitness & Wellness Centers",
+      "subCategories": [
+        "Gyms",
+        "Yoga Studios",
+        "Spa & Massage",
+        "Wellness Programs"
+      ]
+    },
+    {
+      "value": "entertainment",
+      "label": "Entertainment & Gaming",
+      "subCategories": [
+        "Movies",
+        "Music",
+        "Video Games",
+        "Streaming Services",
+        "Events"
+      ]
+    },
+    {
+      "value": "other",
+      "label": "Other",
+      "subCategories": ["Miscellaneous"]
+    }
+  ]
+}

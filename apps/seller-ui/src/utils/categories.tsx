@@ -1,7 +1,7 @@
 export const shopCategories = [
   { value: 'clothing', label: 'Clothing & Apparel' },
   { value: 'electronics', label: 'Electronics & Gadgets' },
-  { value: 'grocery', label: 'Grocery & Supermarkets' },
+  { value: 'grocery', label: 'Grocery & Food' },
   { value: 'restaurant', label: 'Restaurants & Cafes' },
   { value: 'beauty', label: 'Beauty & Personal Care' },
   { value: 'furniture', label: 'Furniture & Home Decor' },
@@ -12,7 +12,7 @@ export const shopCategories = [
   { value: 'hardware', label: 'Hardware & Tools' },
   { value: 'pet', label: 'Pet Supplies & Services' },
   { value: 'medical', label: 'Medical & Pharmacy' },
-  { value: 'jewerly', label: 'Jewerly & Watches' },
+  { value: 'jewelry', label: 'jewelry & Watches' },
   { value: 'florist', label: 'Florists & Gift Shops' },
   { value: 'baby', label: 'Baby & Kids Store' },
   { value: 'art', label: 'Art & Craft Supplies' },

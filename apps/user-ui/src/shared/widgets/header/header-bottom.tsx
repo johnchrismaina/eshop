@@ -23,7 +23,7 @@ const HeaderBottom = () => {
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
     <div className="relative z-10 w-full transition-all duration-300 bg-[#fff] border-b border-gray-200 shadow-sm shadow-gray-300/10 ">
-      <div className="w-full px-8 mx-auto pt-0 pb-0 relative flex items-center justify-between gap-6 h-full ">
+      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-6 h-full ">
         {/* All Dropdowns */}
         <div>
           {/* Bottom header button */}
@@ -49,7 +49,7 @@ const HeaderBottom = () => {
               className={`flex items-center px-4 py-2 text-[14.0px] h-full hover:bg-[#f1f1f1] transition-colors duration-150 ${
                 i.accent
                   ? 'text-[#FEA417] font-semibold hover:text-amber-500'
-                  : 'text-[#000] font-medium hover:text-[#000]'
+                  : 'text-[#000] font-semibold hover:text-[#000]'
               }`}
               href={i.href}
               key={index}
@@ -60,7 +60,7 @@ const HeaderBottom = () => {
         </nav>
 
         {/* </div> */}
-        <div className="flex items-center justify-end gap-3 ml-0 h-full text-[14.0px] font-medium text-[#000] hover:text-[#000] transition-colors duration-100 ">
+        <div className="flex items-center justify-end gap-3 ml-0 h-full text-[14.0px] font-semibold text-[#000] hover:text-[#000] transition-colors duration-100 ">
           <span className="cursor-pointer px-2 py-2 transition-colors duration-100 hidden">
             Sell
           </span>

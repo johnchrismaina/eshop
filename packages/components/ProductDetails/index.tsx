@@ -176,7 +176,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   return (
     <div className="w-full bg-[#fff] px-8 text-[#1d1d1f]">
       {/* Breadcrumbs */}
-      <div className=" py-4">
+      <div className=" py-3">
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>

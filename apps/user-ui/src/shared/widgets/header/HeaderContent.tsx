@@ -238,7 +238,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   };
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_240px] items-center justify-start gap-3 bg-[#fff] ">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_400px] items-center justify-start gap-3 bg-[#fff] ">
       <div className="flex items-center justify-start gap-3">
         {/* Logo */}
         <div
@@ -255,21 +255,26 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         </div>
 
         {/* Delivery location - can be dropdown in future */}
-        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-[#f4f4f4] rounded-full cursor-pointer transition-colors duration-150 ">
+        <div className=" flex items-center justify-center gap-1.5 px-3 py-0 hover:bg-[#f4f4f4] rounded-full cursor-pointer transition-colors duration-150 shrink-0">
           {/* </div> */}
           <div className="">
             <MapPin size={16} color="#1d1d1f" />
           </div>
-          <div className="flex items-center justify-center gap-[4px]">
-            <span className="text-[14.0px] font-semibold text-[#1d1d1f] hover:text-[#000] mt-0">
-              Deliver to Naivasha
+          <div className="flex flex-col items-start justify-center gap-0">
+            <span className="text-[11.0px] font-semibold text-[#5B6265] hover:text-[#000] mt-0">
+              Deliver to
             </span>
-            <ChevronDown size={12} color="#333" />
+            <span className="text-[14.0px] font-semibold text-[#1d1d1f] hover:text-[#000] -mt-[6px]">
+              Naivasha
+            </span>
+            <div className="shrink-0 mt-[0px]">
+              {/* <ChevronDown size={12} color="#333" /> */}
+            </div>
           </div>
         </div>
 
         <div>
-          {/* Bottom header button */}
+          {/* Categories */}
           <button
             className=" items-center justify-center px-3 py-1 rounded-md gap-1 hover:bg-gray-600 transition-colors duration-300 mr-0 flex-shrink-0 hidden"
             onClick={() => setShowSidebar(true)}
@@ -288,7 +293,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div ref={searchWrapperRef} className="relative w-[700px] mx-auto ml-0">
+        <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
           <div
             ref={searchContainerRef}
             className="flex items-center h-10 bg-[#f4f4f4] rounded-full border border-gray-200
@@ -509,7 +514,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
                 KES 0.00
               </span> */}
           <div className="flex items-end justify-center">
-            <span className="text-[12.0px] text-[#1d1d1f] font-bold tracking-tight px-2 py-1 bg-[#f4f4f4] rounded-full">
+            <span className="text-[13.0px] text-[#1d1d1f] font-semibold tracking-tight px-2 py-1 bg-[#f4f4f4] rounded-full">
               Ksh 0.00
             </span>
           </div>

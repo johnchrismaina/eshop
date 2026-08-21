@@ -1,6 +1,5 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
@@ -190,9 +189,18 @@ const CreatePage = ({ ...props }) => {
   const selectedCategory = watch('category');
   const regularPrice = watch('regular_price');
 
+  // const subcategories = useMemo(() => {
+  //   return selectedCategory ? subCategoriesData[selectedCategory] || [] : [];
+  // }, [selectedCategory, subCategoriesData]);
+
+  // derive subcategories from API data
   const subcategories = useMemo(() => {
-    return selectedCategory ? subCategoriesData[selectedCategory] || [] : [];
-  }, [selectedCategory, subCategoriesData]);
+    if (!selectedCategory || !data?.categories) return [];
+    const category = data.categories.find(
+      (cat: any) => cat.name === selectedCategory
+    );
+    return category?.subCategories?.map((sub: any) => sub.name) || [];
+  }, [selectedCategory, data?.categories]);
 
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -588,13 +596,13 @@ const CreatePage = ({ ...props }) => {
                             >
                               Select
                             </option>
-                            {categories?.map((category: string) => (
+                            {data?.categories?.map((c: any) => (
                               <option
-                                value={category}
-                                key={category}
+                                key={c.id}
+                                value={c.name}
                                 className="bg-gray-200 text-gray-800"
                               >
-                                {category}
+                                {c.name}
                               </option>
                             ))}
                           </select>
@@ -634,10 +642,10 @@ const CreatePage = ({ ...props }) => {
                           >
                             Select
                           </option>
-                          {subcategories?.map((subcategory: string) => (
+                          {subcategories.map((subcategory: string) => (
                             <option
-                              value={subcategory}
                               key={subcategory}
+                              value={subcategory}
                               className="bg-gray-200 text-gray-800"
                             >
                               {subcategory}
@@ -646,6 +654,7 @@ const CreatePage = ({ ...props }) => {
                         </select>
                       )}
                     />
+
                     {/* Custom arrow */}
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
                       <ChevronDown />

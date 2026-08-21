@@ -283,6 +283,23 @@ model deals {
   deletedAt DateTime?
 }
 
+model category {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String         @unique
+  subCategories sub_category[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model sub_category {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String   @unique // globally unique
+  categoryId String   @db.ObjectId
+  category   category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model Deal {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   title         String

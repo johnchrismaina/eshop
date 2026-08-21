@@ -24,7 +24,8 @@
     "reset:cache": "rm -rf node_modules/.prisma && npx prisma generate --schema=packages/libs/prisma/schema.prisma",
     "start:product": "node --inspect=9230 dist/apps/product-service/main.js",
     "start:order": "node --inspect=9231 dist/apps/order-service/main.js",
-    "start:auth": "node --inspect=9232 dist/apps/auth-service/main.js"
+    "start:auth": "node --inspect=9232 dist/apps/auth-service/main.js",
+    "sync:categories": "tsc -p packages/utils/tsconfig.sync.json && node dist-sync/packages/utils/syncCategories.js"
   },
   "prisma": {
     "seed": "tsx packages/libs/prisma/seed.ts"
@@ -150,6 +151,7 @@
     "tailwindcss": "3.4.3",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "tslib": "^2.3.0",
     "tsx": "^4.20.6",
     "typescript": "~5.9.2",

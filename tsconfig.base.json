@@ -10,6 +10,7 @@
     "lib": ["dom", "es2022"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "esModuleInterop": true, // fixes fs/path import errors
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,

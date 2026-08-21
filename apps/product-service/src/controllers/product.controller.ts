@@ -9,6 +9,8 @@ import { imagekit } from '@packages/libs/imagekit';
 import { NextFunction, Request, Response } from 'express';
 import Stripe from 'stripe';
 import { products, deals } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
 // import { parse } from 'path';
 // import { ApiVersion } from 'stripe/types/apiVersion';
 
@@ -19,10 +21,28 @@ export const getCategories = async (
   next: NextFunction
 ) => {
   try {
-    // const config = await prisma.site_config.findFirst();
-    const config = await prisma.site_config.findFirst();
-    console.log('Config:', config);
+    // 1. Try DB first
+    const categories = await prisma.category.findMany({
+      include: { subCategories: true },
+    });
 
+    if (categories.length > 0) {
+      return res.status(200).json({ categories });
+    }
+
+    // 2. Fallback to JSON
+    const jsonPath = path.join(
+      __dirname,
+      '../packages/utils/shopCategories.json'
+    );
+    if (fs.existsSync(jsonPath)) {
+      const raw = fs.readFileSync(jsonPath, 'utf-8');
+      const parsed = JSON.parse(raw);
+      return res.status(200).json(parsed);
+    }
+
+    // 3. Fallback to site_config
+    const config = await prisma.site_config.findFirst();
     if (!config) {
       return res.status(404).json({ message: 'Categories not found' });
     }

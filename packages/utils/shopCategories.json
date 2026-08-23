@@ -6,7 +6,6 @@
       "subCategories": [
         "Men's Clothing",
         "Women's Clothing",
-        "Kids' Clothing",
         "Footwear",
         "Accessories",
         "Outerwear",
@@ -15,17 +14,24 @@
       ]
     },
     {
+      "value": "computers",
+      "label": "Computers",
+      "subCategories": [
+        "Computers",
+        "Laptops",
+        "Tablets",
+        "Computer Accessories"
+      ]
+    },
+    {
       "value": "electronics",
       "label": "Electronics & Gadgets",
       "subCategories": [
-        "Mobiles",
-        "Laptops",
-        "Tablets",
         "Cameras",
+        "Camera Accessories",
         "Audio Devices",
         "Wearables",
-        "Gaming Consoles",
-        "Accessories"
+        "Drones"
       ]
     },
     {
@@ -39,18 +45,6 @@
         "Snacks",
         "Pantry Staples",
         "Frozen Foods"
-      ]
-    },
-    {
-      "value": "restaurant",
-      "label": "Restaurants & Cafes",
-      "subCategories": [
-        "Fast Food",
-        "Fine Dining",
-        "Cafes",
-        "Takeaway",
-        "Buffet",
-        "Street Food"
       ]
     },
     {
@@ -118,8 +112,6 @@
       "subCategories": [
         "Gym Equipment",
         "Outdoor Sports",
-        "Team Sports",
-        "Wearables",
         "Fitness Accessories"
       ]
     },
@@ -136,7 +128,7 @@
     },
     {
       "value": "pet",
-      "label": "Pet Supplies & Services",
+      "label": "Pet Supplies",
       "subCategories": [
         "Pet Food",
         "Pet Toys",
@@ -169,76 +161,91 @@
       ]
     },
     {
-      "value": "florist",
-      "label": "Florists & Gift Shops",
+      "value": "gifts",
+      "label": "Gifts & Packaging",
       "subCategories": [
-        "Fresh Flowers",
-        "Bouquets",
         "Gift Hampers",
         "Cards",
-        "Decorative Plants"
+        "Decorative Items",
+        "Packaging Materials"
       ]
     },
     {
       "value": "baby",
       "label": "Baby & Kids Store",
+      "subCategories": ["Clothing", "Shoes", "Gear", "Furniture", "Feeding"]
+    },
+    {
+      "value": "boys",
+      "label": "Boy's Fashion",
       "subCategories": [
-        "Baby Clothing",
-        "Toys",
-        "Baby Gear",
-        "Kids Furniture",
-        "School Supplies"
+        "Clothing",
+        "Shoes",
+        "Jewelry",
+        "Watches",
+        "Accessories",
+        "School Uniforms"
+      ]
+    },
+    {
+      "value": "girls",
+      "label": "Girls's Fashion",
+      "subCategories": [
+        "Clothing",
+        "Shoes",
+        "Jewelry",
+        "Watches",
+        "Accessories",
+        "School Uniforms"
       ]
     },
     {
       "value": "art",
       "label": "Art & Craft Supplies",
       "subCategories": [
-        "Paints",
-        "Brushes",
-        "Canvas",
+        "Paintings",
+        "Paints & Colors",
+        "Brushes & Tools",
+        "Paper & Canvas",
         "Craft Kits",
-        "DIY Materials"
+        "DIY Supplies"
       ]
     },
     {
       "value": "music",
       "label": "Music Instruments & Stores",
       "subCategories": [
-        "Guitars",
-        "Keyboards",
-        "Drums",
+        "String Instruments",
+        "Percussion Instruments",
         "Wind Instruments",
-        "Accessories",
-        "Sheet Music"
+        "Electronic Instruments",
+        "Music Accessories"
       ]
     },
     {
-      "value": "technology",
-      "label": "Software & Technology Services",
-      "subCategories": [
-        "Software",
-        "Cloud Services",
-        "IT Support",
-        "Web Development",
-        "Cybersecurity"
-      ]
+      "value": "software",
+      "label": "Software & Technology",
+      "subCategories": ["Software", "Cybersecurity"]
     },
     {
       "value": "garden",
       "label": "Garden & Outdoor Equipment",
       "subCategories": [
-        "Plants",
+        "Seeds",
         "Gardening Tools",
-        "Outdoor Furniture",
-        "Grills",
+        "Outdoor Equipment & Gear",
         "Landscaping Supplies"
       ]
     },
     {
       "value": "bakery",
       "label": "Bakery & Confectionery",
-      "subCategories": ["Bread", "Cakes", "Pastries", "Cookies", "Chocolates"]
+      "subCategories": [
+        "Bread",
+        "Cakes & Pastries",
+        "Cookies & Biscuits",
+        "Chocolates & Sweets"
+      ]
     },
     {
       "value": "optical",
@@ -247,7 +254,8 @@
         "Prescription Glasses",
         "Sunglasses",
         "Contact Lenses",
-        "Eye Care Accessories"
+        "Frames",
+        "Eyewear Accessories"
       ]
     },
     {
@@ -255,49 +263,26 @@
       "label": "Mobile Phones & Accessories",
       "subCategories": [
         "Smartphones",
-        "Feature Phones",
-        "Chargers",
-        "Cases & Covers",
-        "Headphones",
+        "Chargers & Cables",
+        "Phone Cases & Covers",
+        "Headphones & Earphones",
         "Screen Protectors"
-      ]
-    },
-    {
-      "value": "real_estate",
-      "label": "Real Estate & Property Services",
-      "subCategories": [
-        "Residential",
-        "Commercial",
-        "Land",
-        "Rental Services",
-        "Property Management"
-      ]
-    },
-    {
-      "value": "fitness",
-      "label": "Fitness & Wellness Centers",
-      "subCategories": [
-        "Gyms",
-        "Yoga Studios",
-        "Spa & Massage",
-        "Wellness Programs"
       ]
     },
     {
       "value": "entertainment",
       "label": "Entertainment & Gaming",
-      "subCategories": [
-        "Movies",
-        "Music",
-        "Video Games",
-        "Streaming Services",
-        "Events"
-      ]
+      "subCategories": ["Video Games", "Gaming Consoles", "Gaming Accessories"]
     },
     {
       "value": "other",
       "label": "Other",
-      "subCategories": ["Miscellaneous"]
+      "subCategories": [
+        "Miscellaneous Products",
+        "Custom Orders",
+        "Seasonal Items",
+        "Promotional Items"
+      ]
     }
   ]
 }

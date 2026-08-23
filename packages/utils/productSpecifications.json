@@ -1,0 +1,2653 @@
+{
+  "categories": [
+    {
+      "value": "clothing",
+      "label": "Clothing & Apparel",
+      "subCategories": [
+        {
+          "name": "Men's Clothing",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Fabric Type", "value": "" },
+            { "label": "Fit", "value": "" },
+            { "label": "Sleeve Type", "value": "" },
+            { "label": "Neck Type", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Women's Clothing",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Fabric Type", "value": "" },
+            { "label": "Fit", "value": "" },
+            { "label": "Sleeve Type", "value": "" },
+            { "label": "Neck Type", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Footwear",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Gender", "value": "" },
+            { "label": "Shoe Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Outer Material", "value": "" },
+            { "label": "Inner Material", "value": "" },
+            { "label": "Sole Material", "value": "" },
+            { "label": "Closure Type", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Sport Type", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Water Resistance Level", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Outerwear",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Fabric Type", "value": "" },
+            { "label": "Fit", "value": "" },
+            { "label": "Sleeve Type", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Activewear",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Fabric Type", "value": "" },
+            { "label": "Fit", "value": "" },
+            { "label": "Sleeve Type", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Traditional Wear",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Fabric Type", "value": "" },
+            { "label": "Fit", "value": "" },
+            { "label": "Sleeve Type", "value": "" },
+            { "label": "Neck Type", "value": "" },
+            { "label": "Style", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "electronics",
+      "label": "Electronics & Gadgets",
+      "subCategories": [
+        {
+          "name": "Computers",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Storage", "value": "" },
+            { "label": "RAM", "value": "" },
+            { "label": "Processor", "value": "" },
+            { "label": "Operating System", "value": "" },
+            { "label": "Screen Size", "value": "" },
+            { "label": "Battery", "value": "" },
+            { "label": "Ports", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Graphics Card", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Laptops",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Storage", "value": "" },
+            { "label": "RAM", "value": "" },
+            { "label": "Processor", "value": "" },
+            { "label": "Operating System", "value": "" },
+            { "label": "Screen Size", "value": "" },
+            { "label": "Battery", "value": "" },
+            { "label": "Ports", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Graphics Card", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Tablets",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Storage", "value": "" },
+            { "label": "RAM", "value": "" },
+            { "label": "Processor", "value": "" },
+            { "label": "Operating System", "value": "" },
+            { "label": "Screen Size", "value": "" },
+            { "label": "Battery", "value": "" },
+            { "label": "Camera Specs", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Ports", "value": "" },
+            { "label": "Sensors", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Computer Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "electronics",
+      "label": "Electronics & Gadgets",
+      "subCategories": [
+        {
+          "name": "Cameras",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Sensor Type", "value": "" },
+            { "label": "Lens Mount", "value": "" },
+            { "label": "Resolution", "value": "" },
+            { "label": "ISO Range", "value": "" },
+            { "label": "Battery", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Ports", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Camera Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Audio Devices",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Driver Size", "value": "" },
+            { "label": "Frequency Response", "value": "" },
+            { "label": "Impedance", "value": "" },
+            { "label": "Battery Life", "value": "" },
+            { "label": "Noise Cancellation", "value": "" },
+            { "label": "Microphone", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Wearables",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Display Type", "value": "" },
+            { "label": "Battery Life", "value": "" },
+            { "label": "Sensors", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Drones",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Storage", "value": "" },
+            { "label": "RAM", "value": "" },
+            { "label": "Processor", "value": "" },
+            { "label": "Operating System", "value": "" },
+            { "label": "Screen Size", "value": "" },
+            { "label": "Battery", "value": "" },
+            { "label": "Camera Specs", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Ports", "value": "" },
+            { "label": "Sensors", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "grocery",
+      "label": "Grocery & Food",
+      "subCategories": [
+        {
+          "name": "Fresh Produce",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Variety", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Size/Count", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Organic/Non-Organic", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Dairy & Eggs",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Fat Content", "value": "" },
+            { "label": "Weight/Volume", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Organic/Non-Organic", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Meat & Seafood",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Cut/Variety", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Fresh/Frozen", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Beverages",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Flavor", "value": "" },
+            { "label": "Volume", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Sugar Content", "value": "" },
+            { "label": "Caffeine Content", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Snacks",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Flavor", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Pantry Staples",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Weight/Volume", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Frozen Foods",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "beauty",
+      "label": "Beauty & Personal Care",
+      "subCategories": [
+        {
+          "name": "Skincare",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Skin Type", "value": "" },
+            { "label": "Formulation", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Haircare",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Hair Type", "value": "" },
+            { "label": "Formulation", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Makeup",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Shade/Color", "value": "" },
+            { "label": "Formulation", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Fragrances",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Fragrance Name", "value": "" },
+            { "label": "Fragrance Type", "value": "" },
+            { "label": "Notes", "value": "" },
+            { "label": "Volume", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Personal Hygiene",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Wellness",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "furniture",
+      "label": "Furniture & Home Decor",
+      "subCategories": [
+        {
+          "name": "Living Room",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Seating Capacity", "value": "" },
+            { "label": "Assembly Required", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Bedroom",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Bed Size", "value": "" },
+            { "label": "Storage Included", "value": "" },
+            { "label": "Assembly Required", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Office Furniture",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Ergonomic Features", "value": "" },
+            { "label": "Assembly Required", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Outdoor Furniture",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Weather Resistance Level", "value": "" },
+            { "label": "Assembly Required", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Lighting",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Light Type", "value": "" },
+            { "label": "Bulb Type", "value": "" },
+            { "label": "Wattage", "value": "" },
+            { "label": "Voltage", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Decor Items",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "automotive",
+      "label": "Automotive & Accessories",
+      "subCategories": [
+        {
+          "name": "Car Parts",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Part Name", "value": "" },
+            { "label": "Part Number", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Installation Type", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Motorbike Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Accessory Name", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Installation Type", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Car Care",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Ingredients/Composition", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Tools & Equipment",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Tool Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Power Source", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Tyres & Wheels",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Tyre/Wheel Type", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Load Index", "value": "" },
+            { "label": "Speed Rating", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "books",
+      "label": "Books & Stationery",
+      "subCategories": [
+        {
+          "name": "Fiction",
+          "product_specifications": [
+            { "label": "Title", "value": "" },
+            { "label": "Author", "value": "" },
+            { "label": "Publisher", "value": "" },
+            { "label": "ISBN", "value": "" },
+            { "label": "Edition", "value": "" },
+            { "label": "Language", "value": "" },
+            { "label": "Genre", "value": "" },
+            { "label": "Pages", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Format (Hardcover/Paperback/eBook)", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Publication Date", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Non-Fiction",
+          "product_specifications": [
+            { "label": "Title", "value": "" },
+            { "label": "Author", "value": "" },
+            { "label": "Publisher", "value": "" },
+            { "label": "ISBN", "value": "" },
+            { "label": "Edition", "value": "" },
+            { "label": "Language", "value": "" },
+            { "label": "Subject/Category", "value": "" },
+            { "label": "Pages", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Format", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Publication Date", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Children's Books",
+          "product_specifications": [
+            { "label": "Title", "value": "" },
+            { "label": "Author", "value": "" },
+            { "label": "Illustrator", "value": "" },
+            { "label": "Publisher", "value": "" },
+            { "label": "ISBN", "value": "" },
+            { "label": "Edition", "value": "" },
+            { "label": "Language", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Pages", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Format", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Publication Date", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Educational",
+          "product_specifications": [
+            { "label": "Title", "value": "" },
+            { "label": "Author", "value": "" },
+            { "label": "Publisher", "value": "" },
+            { "label": "ISBN", "value": "" },
+            { "label": "Edition", "value": "" },
+            { "label": "Language", "value": "" },
+            { "label": "Subject", "value": "" },
+            { "label": "Level (Primary/Secondary/College)", "value": "" },
+            { "label": "Pages", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Format", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Publication Date", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Stationery",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Quantity per Pack", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Office Supplies",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Quantity per Pack", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "toys",
+      "label": "Toys & Games",
+      "subCategories": [
+        {
+          "name": "Action Figures",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Character Name", "value": "" },
+            { "label": "Franchise/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Board Games",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Game Title", "value": "" },
+            { "label": "Number of Players", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Play Time", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Educational Toys",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Learning Objective", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Outdoor Play",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Puzzles",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Puzzle Title", "value": "" },
+            { "label": "Number of Pieces", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Design", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Dolls",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Doll Name/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Accessories Included", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "sports",
+      "label": "Sports & Fitness",
+      "subCategories": [
+        {
+          "name": "Gym Equipment",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Equipment Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Resistance/Weight Capacity", "value": "" },
+            { "label": "Power Source (if applicable)", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Outdoor Sports",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Sport Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Weather Resistance Level", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Fitness Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Accessory Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "hardware",
+      "label": "Hardware & Tools",
+      "subCategories": [
+        {
+          "name": "Hand Tools",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Tool Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Grip Type", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Power Tools",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Tool Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Power Source", "value": "" },
+            { "label": "Voltage", "value": "" },
+            { "label": "Wattage", "value": "" },
+            { "label": "Speed Settings", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Building Materials",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Material Type", "value": "" },
+            { "label": "Grade/Quality", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Plumbing",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Installation Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Electrical Supplies",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Voltage", "value": "" },
+            { "label": "Wattage", "value": "" },
+            { "label": "Current Rating", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Installation Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "pet",
+      "label": "Pet Supplies",
+      "subCategories": [
+        {
+          "name": "Pet Food",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Pet Type", "value": "" },
+            { "label": "Breed Size", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Flavor", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Nutritional Information", "value": "" },
+            { "label": "Weight/Volume", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Pet Toys",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Toy Name", "value": "" },
+            { "label": "Pet Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Durability Level", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Pet Grooming",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Pet Type", "value": "" },
+            { "label": "Type (Shampoo/Brush/Clippers)", "value": "" },
+            { "label": "Ingredients/Material", "value": "" },
+            { "label": "Volume/Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Pet Health",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Pet Type", "value": "" },
+            { "label": "Form (Tablet/Liquid/Powder)", "value": "" },
+            { "label": "Ingredients/Composition", "value": "" },
+            { "label": "Dosage Instructions", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Pet Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Accessory Name", "value": "" },
+            { "label": "Pet Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Durability Level", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "medical",
+      "label": "Medical & Pharmacy",
+      "subCategories": [
+        {
+          "name": "Prescription Drugs",
+          "product_specifications": [
+            { "label": "Brand Name", "value": "" },
+            { "label": "Generic Name", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Drug Class", "value": "" },
+            { "label": "Form (Tablet/Capsule/Liquid)", "value": "" },
+            { "label": "Strength/Dosage", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Quantity per Pack", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Expiry Date", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "OTC Medicines",
+          "product_specifications": [
+            { "label": "Brand Name", "value": "" },
+            { "label": "Generic Name", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Drug Class", "value": "" },
+            { "label": "Form (Tablet/Capsule/Liquid)", "value": "" },
+            { "label": "Strength/Dosage", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Quantity per Pack", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Expiry Date", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Medical Equipment",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Equipment Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Power Source (if applicable)", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Health Supplements",
+          "product_specifications": [
+            { "label": "Brand Name", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Supplement Name", "value": "" },
+            { "label": "Form (Tablet/Capsule/Powder/Liquid)", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Dosage Instructions", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Quantity per Pack", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Expiry Date", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "First Aid",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Kit Name", "value": "" },
+            { "label": "Contents Included", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Expiry Date (for consumables)", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "jewelry",
+      "label": "Jewelry & Watches",
+      "subCategories": [
+        {
+          "name": "Necklaces",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Metal Type", "value": "" },
+            { "label": "Gemstone Type", "value": "" },
+            { "label": "Length", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Clasp Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Certification", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Rings",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Metal Type", "value": "" },
+            { "label": "Gemstone Type", "value": "" },
+            { "label": "Ring Size", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Certification", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Bracelets",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Metal Type", "value": "" },
+            { "label": "Gemstone Type", "value": "" },
+            { "label": "Length", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Clasp Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Certification", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Earrings",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Metal Type", "value": "" },
+            { "label": "Gemstone Type", "value": "" },
+            { "label": "Length", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Backing Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Certification", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Watches",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name/Number", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Movement Type", "value": "" },
+            { "label": "Dial Color", "value": "" },
+            { "label": "Case Material", "value": "" },
+            { "label": "Band Material", "value": "" },
+            { "label": "Band Color", "value": "" },
+            { "label": "Case Diameter", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Water Resistance Level", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Luxury Jewelry",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Metal Type", "value": "" },
+            { "label": "Gemstone Type", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Certification", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "gifts",
+      "label": "Gift Shops",
+      "subCategories": [
+        {
+          "name": "Gift Hampers",
+          "product_specifications": [
+            { "label": "Vendor/Brand", "value": "" },
+            { "label": "Hamper Name", "value": "" },
+            { "label": "Contents Included", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life (for consumables)", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Cards",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Card Title", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Color/Design Theme", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Decorative Items",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style/Theme", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Packaging Materials",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style/Theme", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "baby",
+      "label": "Baby & Kids Store",
+      "subCategories": [
+        {
+          "name": "Clothing",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Shoes",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Gear",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type (Stroller/Carrier/Car Seat)", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Weight Capacity", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Assembly Required", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Furniture",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Furniture Type", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Assembly Required", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Feeding",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type (Bottle/Utensils/High Chair)", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Capacity/Size", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "boys",
+      "label": "Boy's Fashion",
+      "subCategories": [
+        {
+          "name": "Clothing",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Shoes",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Jewelry",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Metal Type", "value": "" },
+            { "label": "Gemstone Type", "value": "" },
+            { "label": "Length", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Clasp Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Certification", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Watches",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name/Number", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Movement Type", "value": "" },
+            { "label": "Dial Color", "value": "" },
+            { "label": "Case Material", "value": "" },
+            { "label": "Band Material", "value": "" },
+            { "label": "Band Color", "value": "" },
+            { "label": "Case Diameter", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Water Resistance Level", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Accessory Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "School Uniforms",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "girls",
+      "label": "Girl's Fashion",
+      "subCategories": [
+        {
+          "name": "Clothing",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Shoes",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Jewelry",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Designer/Manufacturer", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Metal Type", "value": "" },
+            { "label": "Gemstone Type", "value": "" },
+            { "label": "Length", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Clasp Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Certification", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Watches",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name/Number", "value": "" },
+            { "label": "Collection/Series", "value": "" },
+            { "label": "Movement Type", "value": "" },
+            { "label": "Dial Color", "value": "" },
+            { "label": "Case Material", "value": "" },
+            { "label": "Band Material", "value": "" },
+            { "label": "Band Color", "value": "" },
+            { "label": "Case Diameter", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Water Resistance Level", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Accessory Name", "value": "" },
+            { "label": "Type", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "School Uniforms",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Material/Fabric", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "art",
+      "label": "Art & Craft Supplies",
+      "subCategories": [
+        {
+          "name": "Paintings",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Color Type (Acrylic/Oil/Watercolor)", "value": "" },
+            { "label": "Shade/Color", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Finish (Gloss/Matte)", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Safety Information", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Paints & Colors",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Color Type (Acrylic/Oil/Watercolor)", "value": "" },
+            { "label": "Shade/Color", "value": "" },
+            { "label": "Volume/Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Finish (Gloss/Matte)", "value": "" },
+            { "label": "Usage Instructions", "value": "" },
+            { "label": "Safety Information", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Brushes & Tools",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Tool Name", "value": "" },
+            { "label": "Brush Type (Round/Flat/Fan)", "value": "" },
+            { "label": "Material (Bristle/Wood/Plastic)", "value": "" },
+            { "label": "Size", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Paper & Canvas",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Product Type (Canvas/Sketchbook/Sheets)", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight/Thickness (GSM)", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Craft Kits",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Kit Name", "value": "" },
+            { "label": "Contents Included", "value": "" },
+            { "label": "Age Group", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Theme", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "DIY Supplies",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type (Glue/Scissors/Markers)", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "music",
+      "label": "Music Instruments & Stores",
+      "subCategories": [
+        {
+          "name": "String Instruments",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Instrument Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material (Body/Strings)", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Tuning Type", "value": "" },
+            { "label": "Accessories Included", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Percussion Instruments",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Instrument Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material (Body/Head)", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Sound Type", "value": "" },
+            { "label": "Accessories Included", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Wind Instruments",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Instrument Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material (Body/Keys)", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Tuning Type", "value": "" },
+            { "label": "Accessories Included", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Electronic Instruments",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Instrument Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Power Source", "value": "" },
+            { "label": "Connectivity Options", "value": "" },
+            { "label": "Sound Features", "value": "" },
+            { "label": "Accessories Included", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Music Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Accessory Name", "value": "" },
+            { "label": "Type (Strings/Stands/Cases)", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "technology",
+      "label": "Software & Technology",
+      "subCategories": [
+        {
+          "name": "Software",
+          "product_specifications": [
+            { "label": "Brand/Developer", "value": "" },
+            { "label": "Software Name", "value": "" },
+            { "label": "Version", "value": "" },
+            { "label": "Category (ERP/CRM/Accounting)", "value": "" },
+            { "label": "Supported Platforms (Windows/Mac/Linux)", "value": "" },
+            { "label": "License Type", "value": "" },
+            { "label": "Number of Users", "value": "" },
+            { "label": "Features", "value": "" },
+            { "label": "Integration Options", "value": "" },
+            { "label": "System Requirements", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Support", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Cybersecurity",
+          "product_specifications": [
+            { "label": "Provider", "value": "" },
+            { "label": "Product Name", "value": "" },
+            {
+              "label": "Category (Firewall/Antivirus/Monitoring)",
+              "value": ""
+            },
+            { "label": "Supported Platforms", "value": "" },
+            { "label": "Features", "value": "" },
+            { "label": "Integration Options", "value": "" },
+            { "label": "Security Certifications", "value": "" },
+            { "label": "Pricing Model", "value": "" },
+            { "label": "Support Availability", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Guarantee", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "garden",
+      "label": "Garden & Outdoor",
+      "subCategories": [
+        {
+          "name": "Seeds",
+          "product_specifications": [
+            { "label": "Vendor/Brand", "value": "" },
+            { "label": "Seed Name", "value": "" },
+            { "label": "Variety", "value": "" },
+            { "label": "Category (Flower/Vegetable/Tree)", "value": "" },
+            { "label": "Growth Requirements (Sun/Water/Soil)", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Quantity per Pack", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life (for seeds)", "value": "" },
+            { "label": "Care Instructions", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Gardening Tools",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Tool Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Grip Type", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Outdoor Equipment & Gear",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Tool Name", "value": "" },
+            { "label": "Model Number", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Grip Type", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Landscaping Supplies",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Grip Type", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Safety Features", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "bakery",
+      "label": "Bakery & Confectionery",
+      "subCategories": [
+        {
+          "name": "Bread",
+          "product_specifications": [
+            { "label": "Brand/Bakery Name", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type (White/Whole Wheat/Multigrain)", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Allergen Information", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Cakes & Pastries",
+          "product_specifications": [
+            { "label": "Brand/Bakery Name", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type (Cake/Pastry)", "value": "" },
+            { "label": "Flavor", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Occasion", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Allergen Information", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Cookies & Biscuits",
+          "product_specifications": [
+            { "label": "Brand/Bakery Name", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type (Cookie/Biscuit)", "value": "" },
+            { "label": "Flavor", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Allergen Information", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Chocolates & Sweets",
+          "product_specifications": [
+            { "label": "Brand/Manufacturer", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Type (Chocolate/Toffee/Candy)", "value": "" },
+            { "label": "Flavor", "value": "" },
+            { "label": "Ingredients", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Shelf Life", "value": "" },
+            { "label": "Storage Instructions", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Allergen Information", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "optical",
+      "label": "Optical & Eyewear",
+      "subCategories": [
+        {
+          "name": "Prescription Glasses",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer/Optician", "value": "" },
+            { "label": "Frame Material", "value": "" },
+            { "label": "Frame Shape", "value": "" },
+            { "label": "Frame Color/Finish", "value": "" },
+            {
+              "label": "Lens Type (Single Vision/Bifocal/Progressive)",
+              "value": ""
+            },
+            { "label": "Lens Material", "value": "" },
+            { "label": "Lens Coating (Anti-glare/UV/Blue Light)", "value": "" },
+            { "label": "Prescription Strength", "value": "" },
+            { "label": "Dimensions (Lens Width/Bridge/Temple)", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Sunglasses",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Frame Material", "value": "" },
+            { "label": "Frame Shape", "value": "" },
+            { "label": "Frame Color/Finish", "value": "" },
+            { "label": "Lens Type (Polarized/Non-Polarized)", "value": "" },
+            { "label": "Lens Material", "value": "" },
+            { "label": "Lens Color", "value": "" },
+            { "label": "UV Protection Level", "value": "" },
+            { "label": "Dimensions (Lens Width/Bridge/Temple)", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Contact Lenses",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Lens Type (Daily/Monthly/Extended Wear)", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Water Content", "value": "" },
+            { "label": "Oxygen Permeability", "value": "" },
+            { "label": "Prescription Strength", "value": "" },
+            { "label": "Lens Diameter", "value": "" },
+            { "label": "Base Curve", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Quantity per Pack", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Expiry Date", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Frames",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer/Optician", "value": "" },
+            { "label": "Frame Material", "value": "" },
+            { "label": "Frame Shape", "value": "" },
+            { "label": "Frame Color/Finish", "value": "" },
+            { "label": "Dimensions (Lens Width/Bridge/Temple)", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Style", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Eyewear Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Supplier/Manufacturer", "value": "" },
+            { "label": "Accessory Name", "value": "" },
+            { "label": "Type (Case/Cleaning Cloth/Strap)", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "mobile",
+      "label": "Mobile Phones & Accessories",
+      "subCategories": [
+        {
+          "name": "Smartphones",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Model Name/Number", "value": "" },
+            { "label": "Operating System", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Processor", "value": "" },
+            { "label": "RAM", "value": "" },
+            { "label": "Storage Capacity", "value": "" },
+            { "label": "Expandable Storage", "value": "" },
+            { "label": "Screen Size", "value": "" },
+            { "label": "Display Type", "value": "" },
+            { "label": "Camera Specs", "value": "" },
+            { "label": "Battery Capacity", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color Options", "value": "" },
+            { "label": "Ports", "value": "" },
+            { "label": "Sensors", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Chargers & Cables",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Type (Wall Charger/Car Charger/Cable)", "value": "" },
+            {
+              "label": "Connector Type (USB-C/Lightning/Micro-USB)",
+              "value": ""
+            },
+            { "label": "Cable Length", "value": "" },
+            { "label": "Power Output (Wattage)", "value": "" },
+            { "label": "Fast Charging Support", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Durability Level", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Phone Cases & Covers",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Case Type (Hard/Soft/Folio)", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Compatible Models", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Durability Level", "value": "" },
+            {
+              "label": "Special Features (Shockproof/Waterproof)",
+              "value": ""
+            },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" }
+          ]
+        },
+        {
+          "name": "Headphones & Earphones",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Type (Wired/Wireless)", "value": "" },
+            { "label": "Model Name/Number", "value": "" },
+            { "label": "Driver Size", "value": "" },
+            { "label": "Frequency Response", "value": "" },
+            { "label": "Connectivity Options", "value": "" },
+            { "label": "Battery Life (Wireless)", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Compatibility", "value": "" },
+            { "label": "Noise Cancellation", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Screen Protectors",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Type (Tempered Glass/Film)", "value": "" },
+            { "label": "Compatible Models", "value": "" },
+            { "label": "Thickness", "value": "" },
+            { "label": "Transparency Level", "value": "" },
+            { "label": "Durability Level", "value": "" },
+            { "label": "Installation Type", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            {
+              "label": "Special Features (Anti-glare/Anti-fingerprint)",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "entertainment",
+      "label": "Entertainment & Gaming",
+      "subCategories": [
+        {
+          "name": "Video Games",
+          "product_specifications": [
+            { "label": "Title", "value": "" },
+            { "label": "Publisher", "value": "" },
+            { "label": "Developer", "value": "" },
+            { "label": "Platform (PC/Console/Mobile)", "value": "" },
+            { "label": "Genre", "value": "" },
+            { "label": "Release Date", "value": "" },
+            { "label": "Age Rating", "value": "" },
+            { "label": "Game Mode (Single/Multi/Online)", "value": "" },
+            { "label": "Language Options", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features (DLC/VR Support)", "value": "" }
+          ]
+        },
+        {
+          "name": "Gaming Consoles",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer", "value": "" },
+            { "label": "Model Name", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color", "value": "" },
+            { "label": "Storage", "value": "" },
+            { "label": "Processor", "value": "" },
+            { "label": "RAM", "value": "" },
+            { "label": "Graphics", "value": "" },
+            { "label": "Connectivity", "value": "" },
+            { "label": "Ports", "value": "" },
+            { "label": "Controllers Included", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Gaming Accessories",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Model Name/Number", "value": "" },
+            { "label": "Platform", "value": "" },
+            { "label": "Storage Capacity", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Connectivity Options", "value": "" },
+            { "label": "Accessories Included", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "other",
+      "label": "Other",
+      "subCategories": [
+        {
+          "name": "Miscellaneous Products",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer/Supplier", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Category", "value": "" },
+            { "label": "Material/Composition", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Usage/Application", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Custom Orders",
+          "product_specifications": [
+            { "label": "Customer Name", "value": "" },
+            { "label": "Order Description", "value": "" },
+            { "label": "Category", "value": "" },
+            { "label": "Material/Composition", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Delivery Timeline", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty/Guarantee", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Seasonal Items",
+          "product_specifications": [
+            { "label": "Brand", "value": "" },
+            { "label": "Manufacturer/Supplier", "value": "" },
+            { "label": "Product Name", "value": "" },
+            { "label": "Season/Event", "value": "" },
+            { "label": "Material/Composition", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Shelf Life (if consumable)", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        },
+        {
+          "name": "Promotional Items",
+          "product_specifications": [
+            { "label": "Brand/Company", "value": "" },
+            { "label": "Item Name", "value": "" },
+            { "label": "Category", "value": "" },
+            { "label": "Material", "value": "" },
+            { "label": "Dimensions", "value": "" },
+            { "label": "Weight", "value": "" },
+            { "label": "Color/Finish", "value": "" },
+            { "label": "Customization Options", "value": "" },
+            { "label": "Packaging Type", "value": "" },
+            { "label": "Country of Origin", "value": "" },
+            { "label": "Warranty", "value": "" },
+            { "label": "Special Features", "value": "" }
+          ]
+        }
+      ]
+    }
+  ]
+}

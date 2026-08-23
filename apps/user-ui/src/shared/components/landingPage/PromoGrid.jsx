@@ -8,13 +8,13 @@ const PromoGrid = () => {
           Happening Now
         </span>
       </div> */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 font-sans gap-4 px-0 mt-8 mb-8 text-gray-800 rounded-lg ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 font-sans gap-4 px-10 py-0 mt-8 mb-8 text-gray-800 rounded-none bg-[#fff]">
         {/* Card 1  */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-lg">
+        <div className="flex flex-col items-center justify-start bg-gray-50 px-5 py-4 rounded-lg">
           {/* Title zone */}
-          <div className="w-full px-4 pt-2 pb-6 ">
-            <h3 className="text-lg font-bold text-[#1d1d1f]">Back to School</h3>
-            <span className="text-sm">Bags, stationery & more</span>
+          <div className="w-full px-4 pt-2 pb-4 ">
+            <h3 className="text-xl font-bold text-[#1d1d1f]">Back to School</h3>
+            <span className="text-[15px]">Bags, stationery & more</span>
           </div>
 
           <div className="bg-blue-50 h-[300px] overflow-hidden rounded-none cursor-pointer flex flex-col ">
@@ -32,9 +32,9 @@ const PromoGrid = () => {
         </div>
 
         {/* Card 2  */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-lg">
+        <div className="flex flex-col items-center justify-start bg-gray-50 px-5 py-4 rounded-lg">
           {/* Title zone */}
-          <div className="w-full px-4 pt-2 pb-6">
+          <div className="w-full px-4 pt-2 pb-4">
             <h3 className="text-lg font-bold text-[#1d1d1f]">Gaming Week</h3>
             <span className="text-sm">Consoles & accessories</span>
           </div>
@@ -54,9 +54,9 @@ const PromoGrid = () => {
         </div>
 
         {/* Card 3 */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-lg">
+        <div className="flex flex-col items-center justify-start bg-gray-50 px-5 py-4 rounded-lg">
           {/* Title zone */}
-          <div className=" w-full px-6 pt-2 pb-6 ">
+          <div className=" w-full px-6 pt-2 pb-4 ">
             <h3 className="text-lg font-bold text-[#1d1d1f]">Fresh Fridays</h3>
             <span className="text-sm">Groceries restocked weekly</span>{' '}
           </div>
@@ -76,9 +76,9 @@ const PromoGrid = () => {
         </div>
 
         {/* Card 4 */}
-        <div className="flex flex-col items-center justify-start bg-[#fff] p-5 rounded-lg">
+        <div className="flex flex-col items-center justify-start bg-gray-50 px-5 py-4 rounded-lg">
           {/* Title zone */}
-          <div className="w-full px-0 pt-2 pb-6">
+          <div className="w-full px-0 pt-2 pb-4">
             <h3 className="text-lg font-bold text-[#1d1d1f]">Home Refresh</h3>
             <span className="text-sm">20% off selected decor</span>
           </div>

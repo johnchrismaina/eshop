@@ -100,8 +100,8 @@ const CreatePage = ({ ...props }) => {
       accordions: [],
       slug: '',
       tags: [],
-      category: '',
-      subCategory: '',
+      category: 'Clothing & Apparel',
+      subCategory: "Women's Clothing",
       detailed_description: '',
       video_url: '',
       deal_start: null,
@@ -199,8 +199,17 @@ const CreatePage = ({ ...props }) => {
     const category = data.categories.find(
       (cat: any) => cat.name === selectedCategory
     );
+    // console.log(data.categories);
     return category?.subCategories?.map((sub: any) => sub.name) || [];
   }, [selectedCategory, data?.categories]);
+
+  useEffect(() => {
+    if (data?.categories?.length) {
+      setValue('category', 'Clothing & Apparel');
+      setValue('subCategory', "Women's Clothing");
+      clearErrors(['category', 'subCategory']); // optional: clear validation errors
+    }
+  }, [data?.categories, setValue, clearErrors]);
 
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

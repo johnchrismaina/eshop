@@ -26,6 +26,8 @@ import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
+import productSpecifications from 'packages/utils/productSpecifications.json';
+import { useAutoSeedSpecifications } from 'apps/seller-ui/src/hooks/useAutoSeedSpecifications';
 
 const TABS = [
   'Product Identity',
@@ -55,6 +57,10 @@ type FormValues = {
   tags: string[];
   category: string;
   subCategory: string;
+  product_specifications: {
+    label: string;
+    value: string;
+  }[];
   detailed_description: string;
   video_url: string;
   deal_start: Date | null;
@@ -102,6 +108,7 @@ const CreatePage = ({ ...props }) => {
       tags: [],
       category: 'Clothing & Apparel',
       subCategory: "Women's Clothing",
+      product_specifications: [], // will be auto‑filled
       detailed_description: '',
       video_url: '',
       deal_start: null,
@@ -137,9 +144,21 @@ const CreatePage = ({ ...props }) => {
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
 
-  // const [activeTab, setActiveTab] = useState('Products');
   const [activeTab, setActiveTab] = useState(TABS[0]);
-  // const { clearErrors } = useForm<FormValues>({ ... });
+
+  const handleNext = () => {
+    const currentIndex = TABS.indexOf(activeTab);
+    if (currentIndex < TABS.length - 1) {
+      setActiveTab(TABS[currentIndex + 1]);
+    }
+  };
+
+  const handleBack = () => {
+    const currentIndex = TABS.indexOf(activeTab);
+    if (currentIndex > 0) {
+      setActiveTab(TABS[currentIndex - 1]);
+    }
+  };
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -187,6 +206,8 @@ const CreatePage = ({ ...props }) => {
   const subCategoriesData = data?.subCategories || {};
 
   const selectedCategory = watch('category');
+  const specs = watch('product_specifications');
+
   const regularPrice = watch('regular_price');
 
   // const subcategories = useMemo(() => {
@@ -210,6 +231,14 @@ const CreatePage = ({ ...props }) => {
       clearErrors(['category', 'subCategory']); // optional: clear validation errors
     }
   }, [data?.categories, setValue, clearErrors]);
+
+  // Import your seeded JSON templates (the big category/specs file)
+
+  useAutoSeedSpecifications({
+    control,
+    setValue,
+    templates: productSpecifications,
+  });
 
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -479,26 +508,9 @@ const CreatePage = ({ ...props }) => {
 
   return (
     <form
-      className="w-full mx-auto px-0 py-0 rounded-lg text-white"
+      className="w-full mx-auto px-0 py-4 rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* Heading & Breadcrumbs */}
-      <div className="grid grid-cols-[500px_minmax(300px,1fr)] gap-2 py-0 bg-[#fff] border-b border-gray-200">
-        {/* Dashboard button & Heading */}
-        <div className="flex items-center justify-start gap-6 w-full px-8 py-2">
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="flex items-center gap-1 text-gray-800 bg-gray-200 hover:bg-gray-300 transition px-4 py-2 rounded-full text-sm"
-          >
-            <ChevronLeft size={20} />
-            <span className="font-medium ">Dashboard</span>
-          </button>
-          <h2 className="text-[18px] font-bold text-gray-800">{title}</h2>
-        </div>
-      </div>
-
-      {/* --------------------------------------------------------------------------------- */}
-
       {/* Tabs Section */}
       <div className="w-full lg:w-full mx-auto bg-[#f6f6f6]">
         {/* Tabs */}
@@ -765,13 +777,33 @@ const CreatePage = ({ ...props }) => {
           {/* Product Details */}
           {activeTab === 'Product Details' && (
             <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
+              {/* Product Specifications */}
+              {specs?.map((spec, idx) => (
+                <div key={idx} className="mb-2 w-full">
+                  <label className="block text-[15px] font-semibold">
+                    {spec.label}
+                  </label>
+                  <input
+                    type="text"
+                    value={spec.value || ''}
+                    onChange={(e) =>
+                      setValue(
+                        `product_specifications.${idx}.value`,
+                        e.target.value
+                      )
+                    }
+                    className="w-full border border-gray-300 rounded-md px-2 py-1"
+                  />
+                </div>
+              ))}
+
               {/* Product Properties */}
-              <div className="w-full p-0 rounded-md">
+              <div className="w-full p-0 rounded-md hidden">
                 <CustomProperties control={control} errors={errors} />
               </div>
 
               {/* Product Specifications */}
-              <div className="w-full p-0 rounded-md">
+              <div className="w-full p-0 rounded-md hidden">
                 <CustomSpecifications control={control} errors={errors} />
               </div>
             </div>
@@ -814,7 +846,7 @@ const CreatePage = ({ ...props }) => {
               </div>
 
               {/* Product details / Accordions */}
-              <div className="w-full p-0 rounded-md">
+              <div className="w-full p-0 rounded-md ">
                 <CustomAccordion control={control} errors={errors} />{' '}
               </div>
 
@@ -1009,71 +1041,79 @@ const CreatePage = ({ ...props }) => {
 
           {/* Pricing */}
           {activeTab === 'Pricing' && (
-            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
+            <div className="w-[700px] flex flex-col mx-auto items-start justify-center gap-2 py-4 ">
               {/* <div className="px-4 pb-1 prose prose-sm max-w-none"> */}
               {/* Pricing */}
-              <div className="w-full flex items-center justify-between gap-4 p-0 rounded-md">
-                {/* Regular Price */}
-                <div className="flex-1">
-                  <p className="text-[15px] font-semibold text-gray-700 py-2">
-                    Regular Price * <span className="text-xs">(KES)</span>
+              {/* Regular Price */}
+              <div className="flex-1 w-full">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  Regular Price * <span className="text-sm">(Ksh)</span>
+                </p>
+                <Input
+                  label=""
+                  type="number"
+                  placeholder="0"
+                  className="bg-[#fff] text-[15px] "
+                  {...register('regular_price', {
+                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                    min: { value: 1, message: 'Price must be at least 1' },
+                    validate: (value) =>
+                      (typeof value === 'number' && !isNaN(value)) ||
+                      'Only numbers are allowed',
+                  })}
+                />
+                {errors.regular_price && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.regular_price.message as string}
                   </p>
-                  <Input
-                    label=""
-                    type="number"
-                    placeholder="0"
-                    className="bg-[#fff] text-[15px]"
-                    {...register('regular_price', {
-                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                      min: { value: 1, message: 'Price must be at least 1' },
-                      validate: (value) =>
-                        (typeof value === 'number' && !isNaN(value)) ||
-                        'Only numbers are allowed',
-                    })}
-                  />
-                  {errors.regular_price && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.regular_price.message as string}
-                    </p>
-                  )}
-                </div>
+                )}
+              </div>
 
-                {/* Sale Price (only if deal enabled) */}
-                {getValues('enableDeal') && (
-                  <div className="flex-1 mt-2">
-                    <p className="text-[15px] font-semibold text-gray-700 py-2">
-                      Sale Price <span className="text-xs">(KES)</span>
-                    </p>
-                    <Input
-                      label=""
-                      type="number"
-                      placeholder="0"
-                      className="bg-[#fff] text-[15px]"
-                      {...register('sale_price', {
-                        setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                        min: {
-                          value: 1,
-                          message: 'Sale price must be at least 1',
-                        },
-                        validate: (value) =>
-                          (typeof value === 'number' && !isNaN(value)) ||
-                          'Only numbers are allowed',
-                      })}
-                    />
-                    {errors.sale_price && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.sale_price.message as string}
-                      </p>
-                    )}
-                  </div>
+              {/* Checkbox to toggle deal */}
+              <label className="flex items-center gap-2 font-semibold mt-2">
+                <input
+                  id="deal-checkbox"
+                  type="checkbox"
+                  checked={enableDeal}
+                  onChange={(e) => setValue('enableDeal', e.target.checked)}
+                />
+                Add a Deal
+              </label>
+
+              {/* Sale Price input (always rendered, disabled when not a deal) */}
+              <div className="flex-1 w-full">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  Sale Price <span className="text-sm">(Ksh)</span>
+                </p>
+                <Input
+                  label=""
+                  type="number"
+                  placeholder="0"
+                  className="bg-[#fff] text-[15px]"
+                  disabled={!enableDeal} // ✅ disable when not a deal
+                  {...register('sale_price', {
+                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                    min: {
+                      value: 1,
+                      message: 'Sale price must be at least 1',
+                    },
+                    validate: (value) =>
+                      (typeof value === 'number' && !isNaN(value)) ||
+                      'Only numbers are allowed',
+                  })}
+                />
+                {errors.sale_price && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.sale_price.message as string}
+                  </p>
                 )}
               </div>
 
               {/* Conditionally render deal fields */}
-              {enableDeal && (
-                <div className="w-full flex items-center justify-between gap-4 p-0 rounded-md">
-                  {/* Deal Start Date */}
-                  <label className="text-sm font-medium text-gray-800 mt-1">
+              <div className="flex items-start justify-center p-0 gap-4 rounded-md">
+                {/* Deal Start Date */}
+                <div className="w-full flex flex-col items-start justify-center p-0 rounded-md">
+                  <label className="text-[15px] font-medium text-gray-800 mt-1">
                     Deal Start
                   </label>
                   <Controller
@@ -1091,7 +1131,8 @@ const CreatePage = ({ ...props }) => {
                             setValue('deal_end', autoEnd);
                           }
                         }}
-                        className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
+                        className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
+                        disabled={!enableDeal} // ✅ disable when not a deal
                         dateFormat="yyyy-MM-dd"
                       />
                     )}
@@ -1101,8 +1142,10 @@ const CreatePage = ({ ...props }) => {
                       {errors.deal_start.message as string}
                     </p>
                   )}
+                </div>
 
-                  {/* Deal End Date */}
+                {/* Deal End Date */}
+                <div className="w-full flex flex-col items-start justify-center gap-1 p-0 rounded-md">
                   <label className="text-sm font-medium text-gray-800 mt-1">
                     Deal End
                   </label>
@@ -1125,7 +1168,8 @@ const CreatePage = ({ ...props }) => {
                       <DatePicker
                         selected={field.value}
                         onChange={(date: Date | null) => field.onChange(date)}
-                        className="border border-gray-500 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 w-full"
+                        className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
+                        disabled={!enableDeal} // ✅ disable when not a deal
                         dateFormat="yyyy-MM-dd"
                       />
                     )}
@@ -1136,7 +1180,7 @@ const CreatePage = ({ ...props }) => {
                     </p>
                   )}
                 </div>
-              )}
+              </div>
 
               {/* Stock */}
               <div className="w-full p-0 rounded-md">
@@ -1165,7 +1209,7 @@ const CreatePage = ({ ...props }) => {
 
               {/* Discount codes */}
               <div className="w-full p-0 rounded-md">
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-gray-700 py-2">
                   Select Discount Codes (optional)
                 </label>
 
@@ -1200,7 +1244,7 @@ const CreatePage = ({ ...props }) => {
                     ))}
 
                     {/* Total Tickets  */}
-                    <div className="mt-2">
+                    <div className="mt-2 mb-4">
                       <p className="text-[15px] font-semibold text-gray-700 py-2">
                         Total Tickets
                       </p>
@@ -1240,7 +1284,7 @@ const CreatePage = ({ ...props }) => {
       {/* --------------------------------------------------------------------------------- */}
 
       {/* Product details */}
-      <div className="w-full lg:w-full mx-auto border-t border-y-gray-200"></div>
+      {/* <div className="w-full lg:w-full mx-auto border-t border-y-gray-200"></div> */}
 
       {/* Image transformation modal */}
       {openImageModal && (
@@ -1290,40 +1334,63 @@ const CreatePage = ({ ...props }) => {
           </div>
         </div>
       )}
+
       {/* Create product */}
-      <div className="px-8 pt-6 pb-8 flex justify-end gap-3 bg-[#f6f6f6]">
-        {isChanged && (
+      <div className="w-[700px] mx-auto flex items-center justify-start gap-6 mt-6 mb-8 bg-[#f6f6f6]">
+        {/* Back button */}
+        <button
+          type="button"
+          onClick={handleBack}
+          disabled={activeTab === TABS[0]}
+          className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md disabled:opacity-50"
+        >
+          Back
+        </button>
+
+        {/* Next or Submit button */}
+        {activeTab === TABS[TABS.length - 1] ? (
+          <div className="flex gap-6">
+            {isChanged && (
+              <button
+                type="button"
+                onClick={handleSaveDraft}
+                className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
+              >
+                Save Draft
+              </button>
+            )}
+
+            {/* Create product button */}
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+              disabled={loading}
+              // onClick={handleSubmit(onSubmit)}
+            >
+              {/* Keep the text in DOM but hide it when loading */}
+              <span className={loading ? 'opacity-0' : 'opacity-100'}>
+                Create
+              </span>
+
+              {/* Spinner centered absolutely */}
+              {loading && (
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <Spinner size={16} borderColor="border-gray-200" />
+                </span>
+              )}
+            </button>
+          </div>
+        ) : (
           <button
             type="button"
-            onClick={handleSaveDraft}
-            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
+            onClick={handleNext}
+            className="px-6 py-2 bg-blue-600 text-white rounded-md"
           >
-            Save Draft
+            Next
           </button>
         )}
-        {/* <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-          disabled={loading}
-        >
-          {loading ? 'Creating...' : 'Create'}
-        </button> */}
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-          disabled={loading}
-          // onClick={handleSubmit(onSubmit)}
-        >
-          {/* Keep the text in DOM but hide it when loading */}
-          <span className={loading ? 'opacity-0' : 'opacity-100'}>Create</span>
 
-          {/* Spinner centered absolutely */}
-          {loading && (
-            <span className="absolute inset-0 flex items-center justify-center">
-              <Spinner size={16} borderColor="border-gray-200" />
-            </span>
-          )}
-        </button>
+        {/* ---------------------------------- */}
       </div>
     </form>
   );

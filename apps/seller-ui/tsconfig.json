@@ -37,6 +37,7 @@
     ".next/types/**/*.ts",
     "../../packages/**/*.ts",
     "../../packages/**/*.tsx",
+    "../../packages/**/*.json",
     "../../user-ui/src/assets/svgs"
   ],
   "exclude": [

@@ -61,7 +61,7 @@ const HeaderBottom = () => {
 
         {/* </div> */}
         <div className="flex items-center justify-end gap-1 ml-0 h-full text-[14.0px] font-medium text-[#000] rounded-sm transition-colors duration-150 ">
-          <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:bg-[#f1f1f1]">
+          <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:bg-[#f1f1f1] hidden">
             Sell
           </span>
           <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:bg-[#f1f1f1]">

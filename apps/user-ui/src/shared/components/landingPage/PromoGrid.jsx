@@ -13,8 +13,8 @@ const PromoGrid = () => {
         <div className="flex flex-col items-center justify-start bg-gray-50 px-5 py-4 rounded-lg">
           {/* Title zone */}
           <div className="w-full px-4 pt-2 pb-4 ">
-            <h3 className="text-xl font-bold text-[#1d1d1f]">Back to School</h3>
-            <span className="text-[15px]">Bags, stationery & more</span>
+            <h3 className="text-lg font-bold text-[#1d1d1f]">Back to School</h3>
+            <span className="text-sm">Bags, stationery & more</span>
           </div>
 
           <div className="bg-blue-50 h-[300px] overflow-hidden rounded-none cursor-pointer flex flex-col ">

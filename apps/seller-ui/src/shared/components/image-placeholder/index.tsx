@@ -93,7 +93,7 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
     >
       <input
         type="file"
-        accept="image/*"
+        accept="image/*" // ✅ restrict to images only
         className="hidden"
         id={`image-upload-${index}`}
         onChange={handleInputChange}

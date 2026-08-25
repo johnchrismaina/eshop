@@ -1,6 +1,7 @@
 // app/dashboard/create-deal/page.tsx
-import CreatePage from 'apps/seller-ui/src/shared/components/CreatePage';
+import ProductForm from 'apps/seller-ui/src/shared/components/ProductForm';
 
-export default function Page() {
-  return <CreatePage />;
+// create-deal.tsx
+export default function CreateDealPage() {
+  return <ProductForm mode="create" />;
 }

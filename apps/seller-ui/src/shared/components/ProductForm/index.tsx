@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-import { ChevronDown, ChevronLeft, Info, Wand, X } from 'lucide-react';
+import { ChevronDown, Info, Wand, X } from 'lucide-react';
 import Image from 'next/image';
 // import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -48,41 +48,37 @@ interface UploadedImage {
 
 type FormValues = {
   title: string;
-  aspect: string;
+  aspect: 'square' | 'portrait';
   images: (UploadedImage | null)[];
-  regular_price: number;
-  sale_price: number;
+  regular_price: number | undefined;
+  sale_price: number | undefined;
   short_description: string;
   slug: string;
   tags: string[];
   category: string;
   subCategory: string;
-  product_specifications: {
-    label: string;
-    value: string;
-  }[];
+  product_specifications: { label: string; value: string }[];
   detailed_description: string;
   video_url: string;
   deal_start: Date | null;
   deal_end: Date | null;
-  stock: number;
-  total_tickets: number;
+  stock: number | undefined;
+  total_tickets: number | undefined;
   discountCodes: string[];
   enableDeal: boolean;
-  // ✅ Add accordions
-  accordions?: {
-    title: string;
-    content: string;
-  }[];
+  accordions?: { title: string; content: string }[];
 };
 
-const CreatePage = ({ ...props }) => {
+export default function ProductForm({
+  mode = 'create',
+  product,
+}: {
+  mode: 'create' | 'edit';
+  product?: FormValues;
+}) {
+  const router = useRouter();
   const pathname = usePathname();
   const isDealRoute = pathname.includes('create-deal');
-
-  // Detect which route we're on
-  const isDeal = pathname.includes('create-deal');
-  const title = isDeal ? 'Create Deal' : 'Create Product';
 
   const {
     control,
@@ -91,60 +87,87 @@ const CreatePage = ({ ...props }) => {
     getValues,
     watch,
     handleSubmit,
+    reset,
     formState: { errors },
-    clearErrors, // ✅ add it here
+    clearErrors,
   } = useForm<FormValues>({
-    mode: 'onSubmit', // ✅ validate only when submitting
-    reValidateMode: 'onChange', // ✅ after first submit, errors update live
-    defaultValues: {
-      title: '',
-      aspect: 'square',
-      images: [null, null, null, null, null, null, null, null],
-      regular_price: undefined,
-      sale_price: undefined,
-      short_description: '',
-      accordions: [],
-      slug: '',
-      tags: [],
-      category: 'Clothing & Apparel',
-      subCategory: "Women's Clothing",
-      product_specifications: [], // will be auto‑filled
-      detailed_description: '',
-      video_url: '',
-      deal_start: null,
-      deal_end: null,
-      stock: undefined,
-      total_tickets: undefined,
-      discountCodes: [],
-      enableDeal: isDealRoute,
-    },
+    defaultValues:
+      product ??
+      ({
+        title: '',
+        aspect: 'square',
+        images: Array(8).fill(null),
+        regular_price: undefined,
+        sale_price: undefined,
+        short_description: '',
+        accordions: [],
+        slug: '',
+        tags: [],
+        category: 'Clothing & Apparel',
+        subCategory: "Women's Clothing",
+        product_specifications: [],
+        detailed_description: '',
+        video_url: '',
+        deal_start: null,
+        deal_end: null,
+        stock: undefined,
+        total_tickets: undefined,
+        discountCodes: [],
+        enableDeal: isDealRoute,
+      } as FormValues),
   });
+
+  useEffect(() => {
+    if (mode === 'edit' && product) {
+      reset(product);
+    }
+  }, [mode, product, reset]);
 
   const enableDeal = watch('enableDeal');
 
   const [hasColors, setHasColors] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
 
-  const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  const [selectedPreviewImage, setSelectedPreviewImage] = useState<
-    string | null
-  >(null);
-
   // const [isChanged, setIsChanged] = useState(true);
   const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
-  const [uploading, setUploading] = useState<{ [key: number]: boolean }>({});
 
   const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
 
   const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
-  const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(TABS[0]);
+  // const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
+
+  // const [images, setImages] = useState<(UploadedImage | null)[]>(
+  //   Array(8).fill(null)
+  // );
+
+  // const [uploading, setUploading] = useState<{ [key: number]: boolean }>({});
+  // instead of useState<Record<number, boolean>>({})
+  // const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const [images, setImages] = useState<(UploadedImage | null)[]>(
+    Array(8).fill(null)
+  );
+  const [mainImages, setMainImages] = useState<(UploadedImage | null)[]>(
+    Array(8).fill(null)
+  );
+  const [mainUploading, setMainUploading] = useState<boolean[]>(
+    Array(8).fill(false)
+  );
+
+  // Main images preview state
+  const [mainPreviewImage, setMainPreviewImage] = useState<string | null>(null);
+  const [openMainPreviewModal, setOpenMainPreviewModal] = useState(false);
+
+  // const [selectedPreviewImage, setSelectedPreviewImage] = useState<
+  //   string | null
+  // >(null);
+  // const [openPreviewModal, setOpenPreviewModal] = useState(false);
 
   const handleNext = () => {
     const currentIndex = TABS.indexOf(activeTab);
@@ -210,10 +233,6 @@ const CreatePage = ({ ...props }) => {
 
   const regularPrice = watch('regular_price');
 
-  // const subcategories = useMemo(() => {
-  //   return selectedCategory ? subCategoriesData[selectedCategory] || [] : [];
-  // }, [selectedCategory, subCategoriesData]);
-
   // derive subcategories from API data
   const subcategories = useMemo(() => {
     if (!selectedCategory || !data?.categories) return [];
@@ -242,10 +261,6 @@ const CreatePage = ({ ...props }) => {
 
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // const options: { value: 'square' | 'portrait'; label: string }[] = [
-  //   { value: 'square', label: 'Square (850 × 850)' },
-  //   { value: 'portrait', label: 'Portrait (765 × 1020)' },
 
   const [aspect, setAspect] = useState<'square' | 'portrait'>('square');
 
@@ -283,18 +298,18 @@ const CreatePage = ({ ...props }) => {
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpenPreviewModal(false); // ✅ closes modal on Esc
+        setOpenMainPreviewModal(false); // ✅ closes modal on Esc
       }
     };
 
-    if (openPreviewModal) {
+    if (openMainPreviewModal) {
       window.addEventListener('keydown', handleEsc);
     }
 
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [openPreviewModal]);
+  }, [openMainPreviewModal]);
 
   // Close Aspect Ratio dropdown when clicking outside
   useEffect(() => {
@@ -314,12 +329,12 @@ const CreatePage = ({ ...props }) => {
 
   // fully lock background scrolling (so the page doesn’t move at all when the modal is open)
   useEffect(() => {
-    if (openPreviewModal) {
+    if (openMainPreviewModal) {
       document.body.style.overflow = 'hidden'; // ✅ lock scroll
     } else {
       document.body.style.overflow = 'auto'; // ✅ restore scroll
     }
-  }, [openPreviewModal]);
+  }, [openMainPreviewModal]);
 
   // console.log(categories, subCategoriesData);
 
@@ -334,25 +349,20 @@ const CreatePage = ({ ...props }) => {
 
   //-----------------------------------------------
 
+  const handleMainImageUpload = (index: number, file: File | null) => {
+    const updated = [...mainImages];
+    updated[index] = file
+      ? { fileId: crypto.randomUUID(), file_url: URL.createObjectURL(file) }
+      : null;
+    setMainImages(updated);
+  };
+
   const handleImageChange = async (file: File | null, index: number) => {
-    if (!file) {
-      console.log('⚠️ No file provided at index:', index);
-      return;
-    }
-
-    console.log(
-      '🟢 handleImageChange called with file:',
-      file.name,
-      'at index:',
-      index
-    );
-    setPictureUploadingLoader(true);
-
+    if (!file) return;
+    setMainUploading((prev) => ({ ...prev, [index]: true }));
     try {
       const formData = new FormData();
       formData.append('image', file);
-
-      console.log('📤 Uploading file to backend...');
       const response = await axiosProduct.post(
         '/upload-product-image',
         formData,
@@ -360,79 +370,71 @@ const CreatePage = ({ ...props }) => {
           headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
-
-      console.log('📥 Upload response:', response.data);
-
       const uploadedImage: UploadedImage = {
         fileId: response.data.fileId ?? response.data.file_id,
         file_url: response.data.file_url ?? response.data.url,
       };
-
-      const updatedImages = [...images];
-      console.log('📸 Images before insert:', updatedImages);
-
+      const updatedImages = [...mainImages];
       updatedImages[index] = uploadedImage;
-
-      if (index === images.length - 1 && updatedImages.length < 8) {
-        updatedImages.push(null);
-        console.log(
-          '➕ Added trailing empty slot after upload:',
-          updatedImages
-        );
-      }
-
       setImages(updatedImages);
       setValue('images', updatedImages);
-
-      console.log('✅ Final images state after upload:', updatedImages);
     } catch (error) {
-      console.error('❌ Upload error:', error);
+      toast.error('Image upload failed');
     } finally {
-      setPictureUploadingLoader(false);
+      setMainUploading((prev) => ({ ...prev, [index]: false }));
     }
   };
 
+  // const handleImageChangeWithLoader = async (
+  //   file: File | null,
+  //   idx: number
+  // ) => {
+  //   if (!file) return;
+  //   setUploading((prev) => ({ ...prev, [idx]: true }));
+  //   await handleImageChange(file, idx); // your existing upload logic
+  //   setUploading((prev) => ({ ...prev, [idx]: false }));
+  // };
+
+  // const handleRemoveImage = (index: number) => {
+  //   const updated = [...images];
+  //   updated[index] = null;
+  //   setImages(updated);
+  // };
+
   const handleImageChangeWithLoader = async (
-    file: File | null,
-    idx: number
+    index: number,
+    file: File | null
   ) => {
-    if (!file) return;
-    setUploading((prev) => ({ ...prev, [idx]: true }));
-    await handleImageChange(file, idx); // your existing upload logic
-    setUploading((prev) => ({ ...prev, [idx]: false }));
+    setMainUploading((prev) => {
+      const copy = [...prev];
+      copy[index] = true;
+      return copy;
+    });
+
+    if (file) {
+      const updated = [...mainImages];
+      updated[index] = {
+        fileId: crypto.randomUUID(),
+        file_url: URL.createObjectURL(file),
+      };
+      setImages(updated);
+    } else {
+      const updated = [...mainImages];
+      updated[index] = null;
+      setImages(updated);
+    }
+
+    setMainUploading((prev) => {
+      const copy = [...prev];
+      copy[index] = false;
+      return copy;
+    });
   };
 
   const handleRemoveImage = (index: number) => {
-    console.log('🟢 handleRemoveImage called with index:', index);
-
-    const currentImages = [...images];
-    console.log('📸 Current images before removal:', currentImages);
-
-    const image = currentImages[index];
-    console.log('🔍 Image at index to remove:', image);
-
-    if (image?.fileId) {
-      console.log('🗑️ Removing fileId:', image.fileId);
-      setRemovedImageIds((prev) => {
-        const updated = [...prev, image.fileId];
-        console.log('📦 Updated removedImageIds:', updated);
-        return updated;
-      });
-    }
-
-    // ✅ Reset slot to null instead of removing it
-    currentImages[index] = null;
-    console.log('📸 Images after reset:', currentImages);
-
-    // Always keep 8 slots
-    while (currentImages.length < 8) {
-      currentImages.push(null);
-    }
-
-    setImages(currentImages);
-    setValue('images', currentImages);
-
-    console.log('✅ Final images state set:', currentImages);
+    const updated = [...mainImages];
+    updated[index] = null;
+    setImages(updated);
   };
 
   const applyTransformation = async (transformation: string) => {
@@ -450,35 +452,29 @@ const CreatePage = ({ ...props }) => {
     }
   };
 
-  //   Create product function
   // Unified submit function
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormValues) => {
     try {
-      setLoading(true);
-
-      // ✅ Clean up images before sending
       const payload = {
         ...data,
         images: (data.images || []).filter(
-          (img: any) => img && img.file_url && img.fileId
+          (img) => img && img.file_url && img.fileId
         ),
       };
-
-      if (isDealRoute || data.enableDeal) {
-        // 👉 Creating a deal
-        await axiosProduct.post('/create-deal', payload);
-        router.push('/dashboard/all-deals');
+      if (mode === 'create') {
+        if (isDealRoute || data.enableDeal) {
+          await axiosProduct.post('/create-deal', payload);
+          router.push('/dashboard/all-deals');
+        } else {
+          await axiosProduct.post('/create-product', payload);
+          router.push('/dashboard/all-products');
+        }
       } else {
-        // 👉 Creating a product
-        await axiosProduct.post('/create-product', payload);
+        await axiosProduct.put(`/update-product/${product?.slug}`, payload);
         router.push('/dashboard/all-products');
       }
-
-      console.log('➡️ Submitting images:', payload.images);
     } catch (error: any) {
       toast.error(error?.response?.data?.message ?? 'Something went wrong');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -486,25 +482,30 @@ const CreatePage = ({ ...props }) => {
   const handleSaveDraft = () => {
     const draftData = getValues(); // ✅ grab all current form values
     localStorage.setItem(
-      'productDraft',
+      mode === 'create' ? 'productDraft' : `editDraft-${product?.slug}`,
       JSON.stringify({
         ...draftData,
         activeTab, // ✅ also save which tab they were on
       })
     );
-    console.log('Draft saved:', draftData);
+    toast.success('Draft saved!');
   };
 
   // load the draft from localStorage and set it as default values
   useEffect(() => {
-    const savedDraft = localStorage.getItem('productDraft');
+    const savedDraft = localStorage.getItem(
+      mode === 'create' ? 'productDraft' : `editDraft-${product?.slug}`
+    );
     if (savedDraft) {
       const parsed = JSON.parse(savedDraft);
       Object.keys(parsed).forEach((key) => {
         setValue(key as keyof FormValues, parsed[key]);
       });
+      if (parsed.activeTab && TABS.includes(parsed.activeTab)) {
+        setActiveTab(parsed.activeTab);
+      }
     }
-  }, [setValue]);
+  }, [mode, product?.slug, setValue]);
 
   return (
     <form
@@ -872,16 +873,16 @@ const CreatePage = ({ ...props }) => {
                       : 'Portrait (503 × 670)'}
                     <ChevronDown className="text-gray-600" />
                   </button>
-
-                  {/* Dropdown menu */}
                   {openAspectRatio && (
                     <div className="absolute mt-0 py-1 w-[320px] bg-white text-gray-700 border rounded-md shadow-lg z-10">
                       {options.map((opt) => (
                         <div
                           key={opt.value}
                           onClick={() => {
-                            setAspect(opt.value as 'square' | 'portrait');
-                            setValue('aspect', opt.value); // ✅ sync with form
+                            setValue(
+                              'aspect',
+                              opt.value as 'square' | 'portrait'
+                            ); // ✅ update form only
                             setOpenAspectRatio(false);
                           }}
                           className="px-4 py-2 text-[15px] cursor-pointer hover:bg-gray-100"
@@ -918,31 +919,35 @@ const CreatePage = ({ ...props }) => {
                     'Main Images'
                   )}
                 </h2>
-                <div className="grid grid-cols-4 gap-3">
-                  {Array.from({ length: 8 }).map((_, index) => (
+
+                {/* Main Image Upload Section */}
+                <div className="grid grid-cols-4 gap-3 mt-6">
+                  {mainImages.map((img, index) => (
                     <ImagePlaceholder
                       key={index}
-                      aspect={aspect}
-                      pictureUploadingLoader={uploading[index] ?? false}
-                      image={images[index] ?? null}
+                      aspect={watch('aspect')}
+                      pictureUploadingLoader={mainUploading[index]}
+                      image={img}
                       index={index}
-                      onImageChange={handleImageChangeWithLoader}
-                      onRemove={handleRemoveImage}
-                      setOpenPreviewModal={setOpenPreviewModal}
-                      setSelectedPreviewImage={setSelectedPreviewImage}
+                      onImageChange={(file) =>
+                        handleMainImageUpload(index, file)
+                      }
+                      onRemove={() => handleMainImageUpload(index, null)}
+                      setOpenPreviewModal={setOpenMainPreviewModal}
+                      setSelectedPreviewImage={setMainPreviewImage}
                     />
                   ))}
                 </div>
 
                 {/* ✅ Single floating preview modal */}
-                {openPreviewModal && selectedPreviewImage && (
+                {openMainPreviewModal && mainPreviewImage && (
                   <div
                     className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-hidden"
                     style={{ overscrollBehavior: 'contain' }}
                   >
                     <button
                       className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
-                      onClick={() => setOpenPreviewModal(false)}
+                      onClick={() => setOpenMainPreviewModal(false)}
                     >
                       <X />
                     </button>
@@ -954,7 +959,7 @@ const CreatePage = ({ ...props }) => {
                       }`}
                     >
                       <img
-                        src={selectedPreviewImage}
+                        src={mainPreviewImage}
                         alt="Preview"
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -1335,21 +1340,30 @@ const CreatePage = ({ ...props }) => {
         </div>
       )}
 
-      {/* Create product */}
+      {/* Navigation Section */}
       <div className="w-[700px] mx-auto flex items-center justify-start gap-6 mt-6 mb-8 bg-[#f6f6f6]">
         {/* Back button */}
         <button
           type="button"
           onClick={handleBack}
-          disabled={activeTab === TABS[0]}
+          disabled={TABS.indexOf(activeTab) === 0}
           className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md disabled:opacity-50"
         >
           Back
         </button>
 
-        {/* Next or Submit button */}
-        {activeTab === TABS[TABS.length - 1] ? (
-          <div className="flex gap-6">
+        {/* Next / Submit */}
+        {TABS.indexOf(activeTab) < TABS.length - 1 ? (
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={TABS.indexOf(activeTab) === TABS.length - 1}
+            className="px-6 py-2 bg-blue-600 text-white rounded-md disabled:opacity-50"
+          >
+            Next
+          </button>
+        ) : (
+          <div className="flex gap-6 relative">
             {isChanged && (
               <button
                 type="button"
@@ -1360,19 +1374,15 @@ const CreatePage = ({ ...props }) => {
               </button>
             )}
 
-            {/* Create product button */}
+            {/* Submit button */}
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md relative"
               disabled={loading}
-              // onClick={handleSubmit(onSubmit)}
             >
-              {/* Keep the text in DOM but hide it when loading */}
               <span className={loading ? 'opacity-0' : 'opacity-100'}>
-                Create
+                {mode === 'create' ? 'Create Product' : 'Update Product'}
               </span>
-
-              {/* Spinner centered absolutely */}
               {loading && (
                 <span className="absolute inset-0 flex items-center justify-center">
                   <Spinner size={16} borderColor="border-gray-200" />
@@ -1380,20 +1390,8 @@ const CreatePage = ({ ...props }) => {
               )}
             </button>
           </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleNext}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md"
-          >
-            Next
-          </button>
         )}
-
-        {/* ---------------------------------- */}
       </div>
     </form>
   );
-};
-
-export default CreatePage;
+}

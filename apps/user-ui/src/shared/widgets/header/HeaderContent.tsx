@@ -331,11 +331,11 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-10 h-10 mr-[0.0px] rounded-full
-                   text-[#333] bg-[#FFCA8C] hover:text-[#1d1d1f]
+              className="flex items-center justify-center w-14 h-10 mr-[0px] rounded-r-full
+                   text-[#E85D1F] bg-[#EDEBE5] hover:text-[#E85D1F]
                    transition-colors flex-shrink-0"
             >
-              <Search size={18} />
+              <Search strokeWidth={2} size={20} />
             </button>
           </div>
           {/* dropdown panel unchanged */}

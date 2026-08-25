@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { X } from 'lucide-react';
@@ -24,14 +24,25 @@ interface Props {
 
 export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
   const [variants, setVariants] = useState<ColorVariant[]>([]);
-  const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  const [selectedPreviewImage, setSelectedPreviewImage] = useState<
-    string | null
-  >(null);
+  const [variantUploading, setVariantUploading] = useState<
+    Record<string, boolean>
+  >({});
+
+  // Variant images preview state
+  const [variantPreviewImage, setVariantPreviewImage] = useState<string | null>(
+    null
+  );
+  const [openVariantPreviewModal, setOpenVariantPreviewModal] = useState(false);
+
+  //  const [openPreviewModal, setOpenPreviewModal] = useState(false);
+  // const [selectedPreviewImage, setSelectedPreviewImage] = useState<
+  //   string | null
+  // >(null);
 
   // ✅ Hook form setup
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -70,6 +81,19 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
   };
 
   // Handle image upload
+  const handleVariantImageUpload = (
+    variantIndex: number,
+    imageIndex: number,
+    file: File | null
+  ) => {
+    const updated = [...variants];
+    updated[variantIndex].images[imageIndex] = file
+      ? { fileId: crypto.randomUUID(), file_url: URL.createObjectURL(file) }
+      : null;
+    setVariants(updated);
+  };
+
+  // Handle image upload
   const handleImageUpload = (
     variantIndex: number,
     imageIndex: number,
@@ -104,6 +128,37 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
     if (updated.length === 0) {
       onHasColorsChange?.(false); // ✅ re-enable main images
     }
+  };
+
+  // This ensures every edit — adding a swatch, uploading/removing an image, changing hex/name/title/price — is persisted
+  useEffect(() => {
+    if (variants.length > 0) {
+      localStorage.setItem('colorVariantsDraft', JSON.stringify(variants));
+    }
+  }, [variants]);
+
+  // Restore variants from localStorage
+  // On mount, check if a draft exists and load it
+  useEffect(() => {
+    const saved = localStorage.getItem('colorVariantsDraft');
+    if (saved) {
+      try {
+        const parsed: ColorVariant[] = JSON.parse(saved);
+        setVariants(parsed);
+        if (parsed.length > 0) {
+          onHasColorsChange?.(true); // ✅ disable main images if variants exist
+        }
+      } catch (err) {
+        console.error('Failed to parse saved color variants:', err);
+      }
+    }
+  }, []);
+
+  // Color swatch reset function
+  const resetVariants = () => {
+    setVariants([]); // clear state
+    localStorage.removeItem('colorVariantsDraft'); // clear draft
+    onHasColorsChange?.(false); // ✅ re-enable main images
   };
 
   return (
@@ -183,21 +238,29 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
             </div>
           </div>
 
-          {/* Image grid */}
+          {/* Color Variant Image Grid */}
           <div className="grid grid-cols-4 gap-3">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <ImagePlaceholder
-                key={i}
-                aspect="square"
-                pictureUploadingLoader={false}
-                image={variant.images[i]}
-                index={i}
-                onImageChange={(file) => handleImageUpload(vIndex, i, file)}
-                onRemove={() => handleImageUpload(vIndex, i, null)}
-                setOpenPreviewModal={setOpenPreviewModal}
-                setSelectedPreviewImage={setSelectedPreviewImage}
-              />
-            ))}
+            {Array.from({ length: 8 }).map((_, i) => {
+              const key = `${vIndex}-${i}`;
+              return (
+                <ImagePlaceholder
+                  key={i}
+                  aspect={watch('aspect')} // ✅ square or portrait thumbnails
+                  pictureUploadingLoader={variantUploading[key] ?? false} // ✅ per-slot loader
+                  image={variant.images[i]} // ✅ scoped to this variant only
+                  index={i}
+                  onImageChange={async (file) => {
+                    if (!file) return;
+                    setVariantUploading((prev) => ({ ...prev, [key]: true }));
+                    await handleVariantImageUpload(vIndex, i, file); // ✅ use variant-specific handler
+                    setVariantUploading((prev) => ({ ...prev, [key]: false }));
+                  }}
+                  onRemove={() => handleVariantImageUpload(vIndex, i, null)} // ✅ remove only from this variant
+                  setOpenPreviewModal={setOpenVariantPreviewModal}
+                  setSelectedPreviewImage={setVariantPreviewImage}
+                />
+              );
+            })}
           </div>
 
           {/* Default toggle */}
@@ -214,13 +277,42 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
         </div>
       ))}
 
-      <button
-        type="button"
-        onClick={addVariant}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 mt-4 rounded-lg "
-      >
-        + Add Color Swatch
-      </button>
+      <div className="flex items-center justify-start gap-4">
+        <button
+          type="button"
+          onClick={addVariant}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 mt-4 rounded-lg "
+        >
+          + Add Color Swatch
+        </button>
+
+        <button
+          type="button"
+          onClick={resetVariants}
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 mt-2 rounded-lg"
+        >
+          Reset Variants
+        </button>
+      </div>
+
+      {openVariantPreviewModal && variantPreviewImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="relative bg-white p-4 rounded-lg shadow-lg">
+            <img
+              src={variantPreviewImage}
+              alt="Preview"
+              className="max-w-[500px] max-h-[600px] object-contain rounded-md"
+            />
+            <button
+              type="button"
+              onClick={() => setOpenVariantPreviewModal(false)}
+              className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-md"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

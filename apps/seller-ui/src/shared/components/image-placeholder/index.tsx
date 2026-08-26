@@ -13,6 +13,7 @@ interface ImagePlaceholderProps {
   pictureUploadingLoader: boolean;
   image: UploadedImage | null;
   index: number;
+  idPrefix: string; // ✅ new — makes the DOM id unique per grid instance
   onImageChange: (file: File | null, index: number) => void;
   onRemove: (index: number) => void;
   setOpenPreviewModal: (open: boolean) => void;
@@ -25,12 +26,14 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
   pictureUploadingLoader,
   image,
   index,
+  idPrefix, // ✅
   onImageChange,
   onRemove,
   setOpenPreviewModal,
   setSelectedPreviewImage,
   className,
 }) => {
+  const inputId = `${idPrefix}-image-upload-${index}`; // ✅ unique across the whole page
   const [localPreview, setLocalPreview] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -95,7 +98,8 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
         type="file"
         accept="image/*" // ✅ restrict to images only
         className="hidden"
-        id={`image-upload-${index}`}
+        id={inputId} // ✅
+        // id={`image-upload-${index}`}
         onChange={handleInputChange}
       />
 
@@ -120,7 +124,8 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
             </button>
 
             <label
-              htmlFor={`image-upload-${index}`}
+              // htmlFor={`image-upload-${index}`}
+              htmlFor={inputId} /* ✅ */
               className="p-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded shadow cursor-pointer"
             >
               <Pencil size={16} />
@@ -146,7 +151,8 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
         </>
       ) : (
         <label
-          htmlFor={`image-upload-${index}`}
+          // htmlFor={`image-upload-${index}`}
+          htmlFor={inputId} /* ✅ */
           className="flex flex-col items-center justify-center w-full h-full text-gray-500"
         >
           <Plus size={24} />

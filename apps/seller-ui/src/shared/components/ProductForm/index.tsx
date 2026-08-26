@@ -159,15 +159,15 @@ export default function ProductForm({
   const [mainUploading, setMainUploading] = useState<boolean[]>(
     Array(8).fill(false)
   );
-
   // Main images preview state
   const [mainPreviewImage, setMainPreviewImage] = useState<string | null>(null);
   const [openMainPreviewModal, setOpenMainPreviewModal] = useState(false);
 
-  // const [selectedPreviewImage, setSelectedPreviewImage] = useState<
-  //   string | null
-  // >(null);
-  // const [openPreviewModal, setOpenPreviewModal] = useState(false);
+  // Inside ProductForm, alongside `mode`, `isDealRoute`, `product` (whatever these are already destructured from)
+  const draftKey =
+    mode === 'edit'
+      ? `colorVariantsDraft-edit-${product?.slug}`
+      : `colorVariantsDraft-create-${isDealRoute ? 'deal' : 'product'}`;
 
   const handleNext = () => {
     const currentIndex = TABS.indexOf(activeTab);
@@ -376,7 +376,7 @@ export default function ProductForm({
       };
       const updatedImages = [...mainImages];
       updatedImages[index] = uploadedImage;
-      setImages(updatedImages);
+      setMainImages(updatedImages);
       setValue('images', updatedImages);
     } catch (error) {
       toast.error('Image upload failed');
@@ -417,11 +417,11 @@ export default function ProductForm({
         fileId: crypto.randomUUID(),
         file_url: URL.createObjectURL(file),
       };
-      setImages(updated);
+      setMainImages(updated);
     } else {
       const updated = [...mainImages];
       updated[index] = null;
-      setImages(updated);
+      setMainImages(updated);
     }
 
     setMainUploading((prev) => {
@@ -434,7 +434,7 @@ export default function ProductForm({
   const handleRemoveImage = (index: number) => {
     const updated = [...mainImages];
     updated[index] = null;
-    setImages(updated);
+    setMainImages(updated);
   };
 
   const applyTransformation = async (transformation: string) => {
@@ -464,13 +464,16 @@ export default function ProductForm({
       if (mode === 'create') {
         if (isDealRoute || data.enableDeal) {
           await axiosProduct.post('/create-deal', payload);
+          localStorage.removeItem(draftKey); // ✅
           router.push('/dashboard/all-deals');
         } else {
           await axiosProduct.post('/create-product', payload);
+          localStorage.removeItem(draftKey); // ✅
           router.push('/dashboard/all-products');
         }
       } else {
         await axiosProduct.put(`/update-product/${product?.slug}`, payload);
+        localStorage.removeItem(draftKey); // ✅
         router.push('/dashboard/all-products');
       }
     } catch (error: any) {
@@ -781,7 +784,7 @@ export default function ProductForm({
               {/* Product Specifications */}
               {specs?.map((spec, idx) => (
                 <div key={idx} className="mb-2 w-full">
-                  <label className="block text-[15px] font-semibold">
+                  <label className="block text-[15px] font-semibold mb-0.5">
                     {spec.label}
                   </label>
                   <input
@@ -921,14 +924,15 @@ export default function ProductForm({
                 </h2>
 
                 {/* Main Image Upload Section */}
-                <div className="grid grid-cols-4 gap-3 mt-6">
+                <div className="grid grid-cols-4 gap-3 mt-0">
                   {mainImages.map((img, index) => (
                     <ImagePlaceholder
                       key={index}
+                      idPrefix="main"
+                      index={index}
                       aspect={watch('aspect')}
                       pictureUploadingLoader={mainUploading[index]}
                       image={img}
-                      index={index}
                       onImageChange={(file) =>
                         handleMainImageUpload(index, file)
                       }
@@ -953,7 +957,7 @@ export default function ProductForm({
                     </button>
                     <div
                       className={`relative bg-white p-4 rounded-lg shadow-lg overflow-hidden ${
-                        aspect === 'square'
+                        watch('aspect') === 'square'
                           ? 'aspect-square w-[500px]'
                           : 'aspect-[3/4] w-[500px]'
                       }`}
@@ -969,7 +973,11 @@ export default function ProductForm({
               </div>
 
               {/* Color Variants Editor */}
-              <ColorVariantsEditor onHasColorsChange={setHasColors} />
+              <ColorVariantsEditor
+                draftKey={draftKey}
+                aspect={watch('aspect')} // ✅
+                onHasColorsChange={setHasColors}
+              />
 
               {/* Color Selector */}
               <div className="w-full mt-0 p-0 rounded-md">

@@ -18,26 +18,28 @@ type ColorVariant = {
   isDefault: boolean;
 };
 
-interface Props {
+interface ColorVariantsEditorProps {
+  draftKey: string; // ✅ new
+  aspect: 'square' | 'portrait'; // ✅
   onHasColorsChange?: (hasColors: boolean) => void; // ✅ notify parent
 }
 
-export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
+const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
+  draftKey, // ✅
+  aspect, // ✅
+  onHasColorsChange,
+}) => {
   const [variants, setVariants] = useState<ColorVariant[]>([]);
   const [variantUploading, setVariantUploading] = useState<
     Record<string, boolean>
   >({});
-
   // Variant images preview state
   const [variantPreviewImage, setVariantPreviewImage] = useState<string | null>(
     null
   );
   const [openVariantPreviewModal, setOpenVariantPreviewModal] = useState(false);
 
-  //  const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  // const [selectedPreviewImage, setSelectedPreviewImage] = useState<
-  //   string | null
-  // >(null);
+  // const draftKey = `colorVariantsDraft-${productId ?? 'new'}`;
 
   // ✅ Hook form setup
   const {
@@ -130,29 +132,30 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
     }
   };
 
-  // This ensures every edit — adding a swatch, uploading/removing an image, changing hex/name/title/price — is persisted
+  // Load
   useEffect(() => {
-    if (variants.length > 0) {
-      localStorage.setItem('colorVariantsDraft', JSON.stringify(variants));
-    }
-  }, [variants]);
-
-  // Restore variants from localStorage
-  // On mount, check if a draft exists and load it
-  useEffect(() => {
-    const saved = localStorage.getItem('colorVariantsDraft');
+    const saved = localStorage.getItem(draftKey);
     if (saved) {
       try {
         const parsed: ColorVariant[] = JSON.parse(saved);
         setVariants(parsed);
         if (parsed.length > 0) {
-          onHasColorsChange?.(true); // ✅ disable main images if variants exist
+          onHasColorsChange?.(true);
         }
       } catch (err) {
         console.error('Failed to parse saved color variants:', err);
       }
     }
-  }, []);
+  }, [draftKey]);
+
+  // Save (and clear when empty)
+  useEffect(() => {
+    if (variants.length > 0) {
+      localStorage.setItem(draftKey, JSON.stringify(variants));
+    } else {
+      localStorage.removeItem(draftKey);
+    }
+  }, [variants, draftKey]);
 
   // Color swatch reset function
   const resetVariants = () => {
@@ -245,10 +248,11 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
               return (
                 <ImagePlaceholder
                   key={i}
-                  aspect={watch('aspect')} // ✅ square or portrait thumbnails
+                  idPrefix={`variant-${vIndex}`}
+                  index={i}
+                  aspect={aspect} // ✅ pass it through, not hardcoded
                   pictureUploadingLoader={variantUploading[key] ?? false} // ✅ per-slot loader
                   image={variant.images[i]} // ✅ scoped to this variant only
-                  index={i}
                   onImageChange={async (file) => {
                     if (!file) return;
                     setVariantUploading((prev) => ({ ...prev, [key]: true }));
@@ -277,11 +281,11 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
         </div>
       ))}
 
-      <div className="flex items-center justify-start gap-4">
+      <div className="flex items-center justify-start pt-2 gap-6">
         <button
           type="button"
           onClick={addVariant}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 mt-4 rounded-lg "
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg "
         >
           + Add Color Swatch
         </button>
@@ -289,30 +293,41 @@ export default function ColorVariantsEditor({ onHasColorsChange }: Props) {
         <button
           type="button"
           onClick={resetVariants}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 mt-2 rounded-lg"
+          className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg"
         >
           Reset Variants
         </button>
       </div>
 
+      {/* Variant preview modal */}
       {openVariantPreviewModal && variantPreviewImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="relative bg-white p-4 rounded-lg shadow-lg">
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-hidden"
+          style={{ overscrollBehavior: 'contain' }}
+        >
+          <button
+            className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
+            onClick={() => setOpenVariantPreviewModal(false)}
+          >
+            <X />
+          </button>
+          <div
+            className={`relative bg-white p-4 rounded-lg shadow-lg overflow-hidden ${
+              aspect === 'square'
+                ? 'aspect-square w-[500px]'
+                : 'aspect-[3/4] w-[500px]'
+            }`}
+          >
             <img
               src={variantPreviewImage}
               alt="Preview"
-              className="max-w-[500px] max-h-[600px] object-contain rounded-md"
+              className="w-full h-full object-cover rounded-lg"
             />
-            <button
-              type="button"
-              onClick={() => setOpenVariantPreviewModal(false)}
-              className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-md"
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
     </div>
   );
-}
+};
+
+export default ColorVariantsEditor;

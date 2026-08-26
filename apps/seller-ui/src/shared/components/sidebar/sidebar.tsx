@@ -124,7 +124,7 @@ const SidebarWrapper = () => {
           </Link>
           <button
             onClick={() => router.push('/')}
-            className="flex w-full items-center justify-center gap-1 text-gray-300 bg-gray-800 hover:bg-gray-700 transition mt-4 px-4 py-2 rounded-lg text-sm"
+            className="flex w-full items-center justify-center gap-1 text-white bg-gray-800 hover:bg-gray-700 transition mt-4 px-4 py-2 rounded-lg text-sm"
           >
             <span className="font-normal ">View Shop Profile</span>
           </button>

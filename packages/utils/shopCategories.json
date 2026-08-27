@@ -7,949 +7,370 @@
         {
           "value": "men_clothing",
           "label": "Men's Clothing",
+          "filterLibrary": {
+            "material": {
+              "label": "Material",
+              "type": "enum",
+              "options": [
+                "Cotton",
+                "Polyester",
+                "Wool",
+                "Linen",
+                "Leather",
+                "Faux Leather",
+                "Cashmere",
+                "Nylon",
+                "Polycotton",
+                "Acrylic",
+                "Spandex",
+                "Silk",
+                "Rayon"
+              ],
+              "multiSelect": true,
+              "render": "dropdown",
+              "sellerInput": "single"
+            },
+            "pattern": {
+              "label": "Pattern",
+              "type": "enum",
+              "options": [
+                "Solid",
+                "Striped",
+                "Floral",
+                "Checkered",
+                "Geometric",
+                "Camouflage",
+                "Animal Print",
+                "Letter Print",
+                "Polka Dots",
+                "Hearts",
+                "Plaid",
+                "Stars",
+                "Chevron",
+                "Argyle",
+                "Fruits",
+                "Herringbone",
+                "Houndstooth",
+                "Paisley"
+              ],
+              "multiSelect": true,
+              "render": "dropdown",
+              "sellerInput": "single"
+            }
+          },
           "subCategories": [
             {
-              "value": "men_tops",
-              "label": "Men Tops",
-              "subCategories": [
+              "value": "men_shirts",
+              "label": "Men Shirts",
+              "filterGroups": [
                 {
-                  "value": "men_shirts",
-                  "label": "Men Shirts",
-                  "filterGroups": [
+                  "title": "Features & Specs",
+                  "filters": [
                     {
-                      "title": "Style",
-                      "fit_type": [
-                        { "value": "regular", "label": "Regular" },
-                        { "value": "fitted", "label": "Fitted" },
-                        { "value": "athletic", "label": "Athletic" },
-                        { "value": "slim", "label": "Slim" },
-                        { "value": "oversized", "label": "Oversized" },
-                        { "value": "straight", "label": "Straight" },
-                        { "value": "relaxed", "label": "Relaxed" },
-                        { "value": "tailored", "label": "Tailored" }
+                      "label": "Fit Type",
+                      "value": "fit_type",
+                      "type": "enum",
+                      "options": [
+                        "Regular",
+                        "Fitted",
+                        "Slim",
+                        "Athletic",
+                        "Oversized",
+                        "Straight",
+                        "Relaxed",
+                        "Tailored"
                       ],
-                      "sleeve_type": [
-                        { "value": "cap_sleeve", "label": "Cap Sleeve" },
-                        { "value": "bell_sleeve", "label": "Bell Sleeve" },
-                        { "value": "cuff_sleeve", "label": "Cuff Sleeve" },
-                        { "value": "puff_sleeve", "label": "Puff Sleeve" },
-                        { "value": "raglan_sleeve", "label": "Raglan Sleeve" },
-                        { "value": "split_sleeve", "label": "Split Sleeve" },
-                        { "value": "balloon_sleeve", "label": "Balloon Sleeve" }
+                      "multiSelect": true,
+                      "render": "checkbox",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Collar Style",
+                      "value": "collar_style",
+                      "type": "enum",
+                      "options": [
+                        "Polo Collar",
+                        "Button Down Collar",
+                        "Flat Collar",
+                        "Hidden Button Down Collar",
+                        "Mandarin Collar",
+                        "Spread Collar",
+                        "Collarless",
+                        "Band Collar",
+                        "Lapel Collar",
+                        "Cutaway Collar",
+                        "Point Collar",
+                        "Club Collar",
+                        "Camp Collar",
+                        "Eyelet Collar"
                       ],
-                      "material": [
-                        { "value": "cotton", "label": "Cotton" },
-                        { "value": "polyester", "label": "Polyester" },
-                        { "value": "linen", "label": "Linen" },
-                        { "value": "leather", "label": "Leather" },
-                        { "value": "faux_leather", "label": "Faux Leather" },
-                        { "value": "cashmere", "label": "Cashmere" },
-                        { "value": "nylon", "label": "Nylon" },
-                        { "value": "polycotton", "label": "Polycotton" },
-                        { "value": "acrylic", "label": "Acrylic" },
-                        { "value": "spandex", "label": "Spandex" },
-                        { "value": "silk", "label": "Silk" },
-                        { "value": "wool", "label": "Wool" },
-                        { "value": "rayon", "label": "Rayon" }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Neck Style",
+                      "value": "neck_style",
+                      "type": "enum",
+                      "options": [
+                        "Round Neck",
+                        "Scoop Neck",
+                        "Notch Neck",
+                        "Square Neck",
+                        "Turtle Neck",
+                        "V-Neck",
+                        "Boat Neck",
+                        "Crew Neck",
+                        "Asymmetric Neck",
+                        "Choker Neck",
+                        "Collared Neck",
+                        "High Neck",
+                        "Cowl Neck",
+                        "Mock Neck",
+                        "Hooded Neck",
+                        "Henley Neck",
+                        "Tie Neck"
                       ],
-                      "pattern": [
-                        { "value": "solid", "label": "Solid" },
-                        { "value": "striped", "label": "Striped" },
-                        { "value": "geometric", "label": "Geometric" },
-                        { "value": "floral", "label": "Floral" },
-                        { "value": "checkered", "label": "Checkered" },
-                        { "value": "camouflage", "label": "Camouflage" },
-                        { "value": "animal_print", "label": "Animal Print" },
-                        { "value": "letter_print", "label": "Letter Print" },
-                        { "value": "polka_dots", "label": "Polka Dots" },
-                        { "value": "hearts", "label": "Hearts" },
-                        { "value": "plaid", "label": "Plaid" },
-                        { "value": "stars", "label": "Stars" },
-                        { "value": "chevron", "label": "Chevron" },
-                        { "value": "argyle", "label": "Argyle" },
-                        { "value": "fruits", "label": "Fruits" },
-                        { "value": "herringbone", "label": "Herringbone" },
-                        { "value": "houndstooth", "label": "Houndstooth" },
-                        { "value": "paisley", "label": "Paisley" }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Sleeve Type",
+                      "value": "sleeve_type",
+                      "type": "enum",
+                      "options": [
+                        "Short Sleeve",
+                        "Half Sleeve",
+                        "Long Sleeve",
+                        "Sleeveless",
+                        "3/4 Sleeve"
                       ],
-                      "special_features": [
-                        { "value": "lightweight", "label": "Lightweight" },
-                        {
-                          "value": "fade_resistant",
-                          "label": "Fade Resistant"
-                        },
-                        { "value": "breathable", "label": "Breathable" },
-                        { "value": "quick_dry", "label": "Quick Dry" },
-                        {
-                          "value": "sun_protection",
-                          "label": "Sun Protection"
-                        },
-                        { "value": "skin_friendly", "label": "Skin Friendly" },
-                        {
-                          "value": "stain_resistant",
-                          "label": "Stain Resistant"
-                        },
-                        { "value": "wrinkle_free", "label": "Wrinkle Free" },
-                        { "value": "stretchable", "label": "Stretchable" },
-                        { "value": "adjustable", "label": "Adjustable" },
-                        { "value": "thermal", "label": "Thermal" },
-                        { "value": "absorbent", "label": "Absorbent" },
-                        {
-                          "value": "moisture_wicking",
-                          "label": "Moisture Wicking"
-                        },
-                        { "value": "reversible", "label": "Reversible" },
-                        { "value": "convertible", "label": "Convertible" },
-                        { "value": "pocket", "label": "Pocket" }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Sport Type",
+                      "value": "sport_type",
+                      "type": "enum",
+                      "options": ["Basketball", "Football", "Baseball"],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "multi"
+                    },
+                    {
+                      "label": "Lifestyle",
+                      "value": "lifestyle",
+                      "type": "enum",
+                      "options": [
+                        "Casual",
+                        "Business Casual",
+                        "Business Professional",
+                        "Formal",
+                        "Comfort",
+                        "Dress",
+                        "Evening",
+                        "Themed",
+                        "Work Utility"
                       ],
-                      "closure_type": [
-                        { "value": "button", "label": "Button" },
-                        { "value": "pull_on", "label": "Pull On" },
-                        { "value": "zipper", "label": "Zipper" },
-                        { "value": "drawstring", "label": "Drawstring" },
-                        { "value": "snap", "label": "Snap" },
-                        { "value": "buckle", "label": "Buckle" }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "multi"
+                    },
+                    {
+                      "label": "Seasons",
+                      "value": "seasons",
+                      "type": "enum",
+                      "options": [
+                        "All",
+                        "Summer",
+                        "Autumn",
+                        "Winter",
+                        "Spring"
                       ],
-                      "care_instructions": [
-                        { "value": "dry_clean", "label": "Dry Clean Only" },
-                        { "value": "hand_wash", "label": "Hand Wash Only" },
-                        { "value": "machine_wash", "label": "Machine Wash" }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "multi"
+                    },
+                    {
+                      "label": "Closure Type",
+                      "value": "closure_type",
+                      "type": "enum",
+                      "options": [
+                        "Button",
+                        "Pull On",
+                        "Zipper",
+                        "Drawstring",
+                        "Snap",
+                        "Buckle"
                       ],
-                      "neckline": [
-                        { "value": "boat_neck", "label": "Boat Neck" },
-                        { "value": "crew_neck", "label": "Crew Neck" },
-                        {
-                          "value": "asymmetric_neck",
-                          "label": "Asymmetric Neck"
-                        },
-                        { "value": "round_neck", "label": "Round Neck" },
-                        { "value": "scoop_neck", "label": "Scoop Neck" },
-                        { "value": "notch_neck", "label": "Notch Neck" },
-                        { "value": "square_neck", "label": "Square Neck" },
-                        { "value": "turtle_neck", "label": "Turtle Neck" },
-                        { "value": "v_neck", "label": "V-Neck" },
-                        { "value": "choker_neck", "label": "Choker Neck" },
-                        { "value": "collared_neck", "label": "Collared Neck" },
-                        { "value": "high_neck", "label": "High Neck" },
-                        { "value": "cowl_neck", "label": "Cowl Neck" },
-                        { "value": "mock_neck", "label": "Mock Neck" },
-                        { "value": "hooded_neck", "label": "Hooded Neck" },
-                        { "value": "henley_neck", "label": "Henley Neck" },
-                        { "value": "tie_neck", "label": "Tie Neck" }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Cuff Type",
+                      "value": "cuff_type",
+                      "type": "enum",
+                      "options": [
+                        "Angled Cuffs",
+                        "Round Cuffs",
+                        "Convertible Square Cuffs",
+                        "Adjustable 2-Button Cuffs",
+                        "French Cuffs",
+                        "2-Buttonhole Cuffs",
+                        "Straight Cuffs",
+                        "Short Straight Cuffs"
                       ],
-                      "lifestyle": [
-                        { "value": "casual", "label": "Casual" },
-                        {
-                          "value": "business_casual",
-                          "label": "Business Casual"
-                        },
-                        {
-                          "value": "business_professional",
-                          "label": "Business Professional"
-                        },
-                        { "value": "formal", "label": "Formal" },
-                        { "value": "comfort", "label": "Comfort" },
-                        { "value": "dress", "label": "Dress" },
-                        { "value": "evening", "label": "Evening" },
-                        { "value": "themed", "label": "Themed" },
-                        { "value": "work_utility", "label": "Work Utility" }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Occasion",
+                      "value": "occasion",
+                      "type": "enum",
+                      "options": [
+                        "Birthday",
+                        "Anniversary",
+                        "Father's Day",
+                        "Mother's Day",
+                        "Easter",
+                        "Baptism",
+                        "Communion",
+                        "Christmas",
+                        "Valentine's Day",
+                        "Bachelor Party",
+                        "Bachelorette Party",
+                        "Wedding",
+                        "Honeymoon",
+                        "Graduation",
+                        "Vacation"
                       ],
-                      "Sustainability_features": [
-                        {
-                          "value": "organic_content",
-                          "label": "Organic Content"
-                        },
-                        {
-                          "value": "safer_chemicals",
-                          "label": "Safer Chemicals"
-                        },
-                        {
-                          "value": "recycled_materials",
-                          "label": "Recycled Materials"
-                        },
-                        {
-                          "value": "animal_welfare",
-                          "label": "Animal Welfare"
-                        },
-                        {
-                          "value": "farming_practices",
-                          "label": "Farming Practices"
-                        },
-                        {
-                          "value": "worker_wellbeing",
-                          "label": "Worker Wellbeing"
-                        }
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "multi"
+                    },
+                    {
+                      "label": "Age Description",
+                      "value": "age",
+                      "type": "enum",
+                      "options": ["Adults"],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Pocket Description",
+                      "value": "pockets",
+                      "type": "enum",
+                      "options": ["Pocket", "No Pockets"],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Sustainability Features",
+                      "value": "sustainability",
+                      "type": "enum",
+                      "options": [
+                        "Organic Content",
+                        "Safer Chemicals",
+                        "Recycled Materials",
+                        "Animal Welfare",
+                        "Farming Practices",
+                        "Worker Wellbeing"
                       ],
-                      "collar_style": [
-                        { "value": "polo_collar", "label": "Polo Collar" },
-                        { "value": "flat_collar", "label": "Flat Collar" },
-                        { "value": "collarless", "label": "Collarless" },
-                        {
-                          "value": "button_down",
-                          "label": "Button Down Collar"
-                        },
-                        {
-                          "value": "hidden_button",
-                          "label": "Hidden Button Down Collar"
-                        },
-                        { "value": "band_collar", "label": "Band Collar" },
-                        { "value": "lapel_collar", "label": "Lapel Collar" },
-                        { "value": "spread_collar", "label": "Spread Collar" },
-                        {
-                          "value": "cutaway_collar",
-                          "label": "Cutaway Collar"
-                        },
-                        {
-                          "value": "mandarin_collar",
-                          "label": "Mandarin Collar"
-                        },
-                        { "value": "point_collar", "label": "Point Collar" },
-                        { "value": "club_collar", "label": "Club Collar" },
-                        { "value": "camp_collar", "label": "Camp Collar" },
-                        { "value": "eyelet_collar", "label": "Eyelet Collar" }
-                      ],
-                      "occasion": [
-                        { "value": "birthday", "label": "Birthday" },
-                        { "value": "anniversary", "label": "Anniversary" },
-                        { "value": "fathers_day", "label": "Father's Day" },
-                        { "value": "mothers_day", "label": "Mother's Day" },
-                        { "value": "easter", "label": "Easter" },
-                        { "value": "baptism", "label": "Baptism" },
-                        { "value": "communion", "label": "Communion" },
-                        { "value": "christmas", "label": "Christmas" },
-                        {
-                          "value": "valentines_day",
-                          "label": "Valentine's Day"
-                        },
-                        {
-                          "value": "bachelor_party",
-                          "label": "Bachelor Party"
-                        },
-                        {
-                          "value": "bachelorette_party",
-                          "label": "Bachelorette Party"
-                        },
-                        { "value": "wedding", "label": "Wedding" },
-                        { "value": "honeymoon", "label": "Honeymoon" },
-                        { "value": "graduation", "label": "Graduation" }
-                      ],
-                      "sleeve_length": [
-                        { "value": "short_sleeve", "label": "Short Sleeve" },
-                        { "value": "half_sleeve", "label": "Half Sleeve" },
-                        { "value": "long_sleeve", "label": "Long Sleeve" },
-                        { "value": "sleeveless", "label": "Sleeveless" },
-                        { "value": "34_Sleeve", "label": "3/4 Sleeve" }
-                      ],
-                      "customizable_product": [
-                        { "value": "customizable", "label": "Customizable" }
-                      ],
-                      "specifications": [
-                        {
-                          "label": "Fabric Elasticity",
-                          "type": "enum",
-                          "options": ["None", "Low", "Medium", "High"]
-                        },
-                        { "label": "Material Type", "type": "text" },
-                        { "label": "Measurements", "type": "text" },
-                        { "label": "Care Instructions", "type": "text" }
-                      ],
-                      "highlights": [
-                        {
-                          "label": "Fit Type",
-                          "type": "enum",
-                          "options": ["Slim", "Regular", "Loose"]
-                        },
-                        {
-                          "label": "Sleeve Length",
-                          "type": "enum",
-                          "options": ["Short", "Long", "Sleeveless"]
-                        },
-                        {
-                          "label": "Neck Type",
-                          "type": "enum",
-                          "options": ["Crew Neck", "V-Neck", "Collar"]
-                        }
-                      ]
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
+                    },
+                    {
+                      "label": "Customizable Product",
+                      "value": "customizable_product",
+                      "type": "enum",
+                      "options": ["Customizable"],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
                     }
                   ]
                 },
                 {
-                  "value": "men_outerwear",
-                  "label": "Men Outerwear",
-                  "category": [
-                    { "value": "men_activewear", "label": "Men's Activewear" },
+                  "title": "Materials & Care",
+                  "filters": [
                     {
-                      "value": "traditional_wear",
-                      "label": "Traditional Wear"
-                    },
-                    { "value": "men_polo_shirts", "label": "Men Polo Shirts" },
-                    { "value": "men_tshirts", "label": "Men T-Shirts" },
-                    { "value": "men_tank_tops", "label": "Men Tank Tops" }
-                  ],
-                  "fit_type": [
-                    { "value": "regular", "label": "Regular" },
-                    { "value": "fitted", "label": "Fitted" },
-                    { "value": "athletic", "label": "Athletic" },
-                    { "value": "slim", "label": "Slim" },
-                    { "value": "oversized", "label": "Oversized" },
-                    { "value": "straight", "label": "Straight" },
-                    { "value": "relaxed", "label": "Relaxed" },
-                    { "value": "tailored", "label": "Tailored" }
-                  ],
-                  "sleeve_type": [
-                    { "value": "cap_sleeve", "label": "Cap Sleeve" },
-                    { "value": "bell_sleeve", "label": "Bell Sleeve" },
-                    { "value": "cuff_sleeve", "label": "Cuff Sleeve" },
-                    { "value": "puff_sleeve", "label": "Puff Sleeve" },
-                    { "value": "raglan_sleeve", "label": "Raglan Sleeve" },
-                    { "value": "split_sleeve", "label": "Split Sleeve" },
-                    { "value": "balloon_sleeve", "label": "Balloon Sleeve" }
-                  ],
-                  "material": [
-                    { "value": "cotton", "label": "Cotton" },
-                    { "value": "polyester", "label": "Polyester" },
-                    { "value": "linen", "label": "Linen" },
-                    { "value": "leather", "label": "Leather" },
-                    { "value": "faux_leather", "label": "Faux Leather" },
-                    { "value": "cashmere", "label": "Cashmere" },
-                    { "value": "nylon", "label": "Nylon" },
-                    { "value": "polycotton", "label": "Polycotton" },
-                    { "value": "acrylic", "label": "Acrylic" },
-                    { "value": "spandex", "label": "Spandex" },
-                    { "value": "silk", "label": "Silk" },
-                    { "value": "wool", "label": "Wool" },
-                    { "value": "rayon", "label": "Rayon" }
-                  ],
-                  "pattern": [
-                    { "value": "solid", "label": "Solid" },
-                    { "value": "striped", "label": "Striped" },
-                    { "value": "geometric", "label": "Geometric" },
-                    { "value": "floral", "label": "Floral" },
-                    { "value": "checkered", "label": "Checkered" },
-                    { "value": "camouflage", "label": "Camouflage" },
-                    { "value": "animal_print", "label": "Animal Print" },
-                    { "value": "letter_print", "label": "Letter Print" },
-                    { "value": "polka_dots", "label": "Polka Dots" },
-                    { "value": "hearts", "label": "Hearts" },
-                    { "value": "plaid", "label": "Plaid" },
-                    { "value": "stars", "label": "Stars" },
-                    { "value": "chevron", "label": "Chevron" },
-                    { "value": "argyle", "label": "Argyle" },
-                    { "value": "fruits", "label": "Fruits" },
-                    { "value": "herringbone", "label": "Herringbone" },
-                    { "value": "houndstooth", "label": "Houndstooth" },
-                    { "value": "paisley", "label": "Paisley" }
-                  ],
-                  "special_features": [
-                    { "value": "lightweight", "label": "Lightweight" },
-                    { "value": "fade_resistant", "label": "Fade Resistant" },
-                    { "value": "breathable", "label": "Breathable" },
-                    { "value": "quick_dry", "label": "Quick Dry" },
-                    { "value": "sun_protection", "label": "Sun Protection" },
-                    { "value": "skin_friendly", "label": "Skin Friendly" },
-                    { "value": "stain_resistant", "label": "Stain Resistant" },
-                    { "value": "wrinkle_free", "label": "Wrinkle Free" },
-                    { "value": "stretchable", "label": "Stretchable" },
-                    { "value": "adjustable", "label": "Adjustable" },
-                    { "value": "thermal", "label": "Thermal" },
-                    { "value": "absorbent", "label": "Absorbent" },
-                    {
-                      "value": "moisture_wicking",
-                      "label": "Moisture Wicking"
-                    },
-                    { "value": "reversible", "label": "Reversible" },
-                    { "value": "convertible", "label": "Convertible" },
-                    { "value": "pocket", "label": "Pocket" }
-                  ],
-                  "closure_type": [
-                    { "value": "button", "label": "Button" },
-                    { "value": "pull_on", "label": "Pull On" },
-                    { "value": "zipper", "label": "Zipper" },
-                    { "value": "drawstring", "label": "Drawstring" },
-                    { "value": "snap", "label": "Snap" },
-                    { "value": "buckle", "label": "Buckle" }
-                  ],
-                  "care_instructions": [
-                    { "value": "dry_clean", "label": "Dry Clean Only" },
-                    { "value": "hand_wash", "label": "Hand Wash Only" },
-                    { "value": "machine_wash", "label": "Machine Wash" }
-                  ],
-                  "neckline": [
-                    { "value": "boat_neck", "label": "Boat Neck" },
-                    { "value": "crew_neck", "label": "Crew Neck" },
-                    { "value": "asymmetric_neck", "label": "Asymmetric Neck" },
-                    { "value": "round_neck", "label": "Round Neck" },
-                    { "value": "scoop_neck", "label": "Scoop Neck" },
-                    { "value": "notch_neck", "label": "Notch Neck" },
-                    { "value": "square_neck", "label": "Square Neck" },
-                    { "value": "turtle_neck", "label": "Turtle Neck" },
-                    { "value": "v_neck", "label": "V-Neck" },
-                    { "value": "choker_neck", "label": "Choker Neck" },
-                    { "value": "collared_neck", "label": "Collared Neck" },
-                    { "value": "high_neck", "label": "High Neck" },
-                    { "value": "cowl_neck", "label": "Cowl Neck" },
-                    { "value": "mock_neck", "label": "Mock Neck" },
-                    { "value": "hooded_neck", "label": "Hooded Neck" },
-                    { "value": "henley_neck", "label": "Henley Neck" },
-                    { "value": "tie_neck", "label": "Tie Neck" }
-                  ],
-                  "lifestyle": [
-                    { "value": "casual", "label": "Casual" },
-                    { "value": "business_casual", "label": "Business Casual" },
-                    {
-                      "value": "business_professional",
-                      "label": "Business Professional"
-                    },
-                    { "value": "formal", "label": "Formal" },
-                    { "value": "comfort", "label": "Comfort" },
-                    { "value": "dress", "label": "Dress" },
-                    { "value": "evening", "label": "Evening" },
-                    { "value": "themed", "label": "Themed" },
-                    { "value": "work_utility", "label": "Work Utility" }
-                  ],
-                  "Sustainability_features": [
-                    { "value": "organic_content", "label": "Organic Content" },
-                    { "value": "safer_chemicals", "label": "Safer Chemicals" },
-                    {
-                      "value": "recycled_materials",
-                      "label": "Recycled Materials"
-                    },
-                    { "value": "animal_welfare", "label": "Animal Welfare" },
-                    {
-                      "value": "farming_practices",
-                      "label": "Farming Practices"
-                    },
-                    { "value": "worker_wellbeing", "label": "Worker Wellbeing" }
-                  ],
-                  "collar_style": [
-                    { "value": "polo_collar", "label": "Polo Collar" },
-                    { "value": "flat_collar", "label": "Flat Collar" },
-                    { "value": "collarless", "label": "Collarless" },
-                    { "value": "button_down", "label": "Button Down Collar" },
-                    {
-                      "value": "hidden_button",
-                      "label": "Hidden Button Down Collar"
-                    },
-                    { "value": "band_collar", "label": "Band Collar" },
-                    { "value": "lapel_collar", "label": "Lapel Collar" },
-                    { "value": "spread_collar", "label": "Spread Collar" },
-                    { "value": "cutaway_collar", "label": "Cutaway Collar" },
-                    { "value": "mandarin_collar", "label": "Mandarin Collar" },
-                    { "value": "point_collar", "label": "Point Collar" },
-                    { "value": "club_collar", "label": "Club Collar" },
-                    { "value": "camp_collar", "label": "Camp Collar" },
-                    { "value": "eyelet_collar", "label": "Eyelet Collar" }
-                  ],
-                  "occasion": [
-                    { "value": "birthday", "label": "Birthday" },
-                    { "value": "anniversary", "label": "Anniversary" },
-                    { "value": "fathers_day", "label": "Father's Day" },
-                    { "value": "mothers_day", "label": "Mother's Day" },
-                    { "value": "easter", "label": "Easter" },
-                    { "value": "baptism", "label": "Baptism" },
-                    { "value": "communion", "label": "Communion" },
-                    { "value": "christmas", "label": "Christmas" },
-                    { "value": "valentines_day", "label": "Valentine's Day" },
-                    { "value": "bachelor_party", "label": "Bachelor Party" },
-                    {
-                      "value": "bachelorette_party",
-                      "label": "Bachelorette Party"
-                    },
-                    { "value": "wedding", "label": "Wedding" },
-                    { "value": "honeymoon", "label": "Honeymoon" },
-                    { "value": "graduation", "label": "Graduation" }
-                  ],
-                  "sleeve_length": [
-                    { "value": "short_sleeve", "label": "Short Sleeve" },
-                    { "value": "half_sleeve", "label": "Half Sleeve" },
-                    { "value": "long_sleeve", "label": "Long Sleeve" },
-                    { "value": "sleeveless", "label": "Sleeveless" },
-                    { "value": "34_Sleeve", "label": "3/4 Sleeve" }
-                  ],
-                  "customizable_product": [
-                    { "value": "customizable", "label": "Customizable" }
-                  ],
-                  "specifications": [
-                    {
-                      "label": "Fabric Elasticity",
+                      "label": "Product Care Instructions",
+                      "value": "product_care",
                       "type": "enum",
-                      "options": ["None", "Low", "Medium", "High"]
-                    },
-                    { "label": "Material Type", "type": "text" },
-                    { "label": "Measurements", "type": "text" },
-                    { "label": "Care Instructions", "type": "text" }
-                  ],
-                  "highlights": [
-                    {
-                      "label": "Fit Type",
-                      "type": "enum",
-                      "options": ["Slim", "Regular", "Loose"]
+                      "options": ["Dry Clean", "Hand Wash", "Machine Wash"],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "multi"
                     },
                     {
-                      "label": "Sleeve Length",
+                      "label": "Special Features",
+                      "value": "special_features",
                       "type": "enum",
-                      "options": ["Short", "Long", "Sleeveless"]
+                      "options": [
+                        "Lightweight",
+                        "Fade Resistant",
+                        "Breathable",
+                        "Quick Dry",
+                        "Sun Protection",
+                        "Skin Friendly",
+                        "Stain Resistant",
+                        "Wrinkle Free",
+                        "Stretchable",
+                        "Adjustable",
+                        "Thermal",
+                        "Absorbent",
+                        "Moisture Wicking",
+                        "Reversible",
+                        "Convertible"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "multi"
                     },
                     {
-                      "label": "Neck Type",
+                      "label": "Fabric Weight Class",
+                      "value": "fabric_weight",
                       "type": "enum",
-                      "options": ["Crew Neck", "V-Neck", "Collar"]
+                      "options": [
+                        "Light Weight",
+                        "Medium Weight",
+                        "Heavy Weight"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "value": "men_footwear",
-              "label": "Men's Footwear",
-              "subCategories": [
+                },
                 {
-                  "value": "men_tops",
-                  "label": "Men Tops",
-                  "category": [
-                    { "value": "men_shirts", "label": "Men Shirts" },
-                    { "value": "men_polo_shirts", "label": "Men Polo Shirts" },
-                    { "value": "men_tshirts", "label": "Men T-Shirts" },
-                    { "value": "men_tank_tops", "label": "Men Tank Tops" }
-                  ],
-                  "fit_type": [
-                    { "value": "regular", "label": "Regular" },
-                    { "value": "fitted", "label": "Fitted" },
-                    { "value": "athletic", "label": "Athletic" },
-                    { "value": "slim", "label": "Slim" },
-                    { "value": "oversized", "label": "Oversized" },
-                    { "value": "straight", "label": "Straight" },
-                    { "value": "relaxed", "label": "Relaxed" },
-                    { "value": "tailored", "label": "Tailored" }
-                  ],
-                  "sleeve_type": [
-                    { "value": "cap_sleeve", "label": "Cap Sleeve" },
-                    { "value": "bell_sleeve", "label": "Bell Sleeve" },
-                    { "value": "cuff_sleeve", "label": "Cuff Sleeve" },
-                    { "value": "puff_sleeve", "label": "Puff Sleeve" },
-                    { "value": "raglan_sleeve", "label": "Raglan Sleeve" },
-                    { "value": "split_sleeve", "label": "Split Sleeve" },
-                    { "value": "balloon_sleeve", "label": "Balloon Sleeve" }
-                  ],
-                  "material": [
-                    { "value": "cotton", "label": "Cotton" },
-                    { "value": "polyester", "label": "Polyester" },
-                    { "value": "linen", "label": "Linen" },
-                    { "value": "leather", "label": "Leather" },
-                    { "value": "faux_leather", "label": "Faux Leather" },
-                    { "value": "cashmere", "label": "Cashmere" },
-                    { "value": "nylon", "label": "Nylon" },
-                    { "value": "polycotton", "label": "Polycotton" },
-                    { "value": "acrylic", "label": "Acrylic" },
-                    { "value": "spandex", "label": "Spandex" },
-                    { "value": "silk", "label": "Silk" },
-                    { "value": "wool", "label": "Wool" },
-                    { "value": "rayon", "label": "Rayon" }
-                  ],
-                  "pattern": [
-                    { "value": "solid", "label": "Solid" },
-                    { "value": "striped", "label": "Striped" },
-                    { "value": "geometric", "label": "Geometric" },
-                    { "value": "floral", "label": "Floral" },
-                    { "value": "checkered", "label": "Checkered" },
-                    { "value": "camouflage", "label": "Camouflage" },
-                    { "value": "animal_print", "label": "Animal Print" },
-                    { "value": "letter_print", "label": "Letter Print" },
-                    { "value": "polka_dots", "label": "Polka Dots" },
-                    { "value": "hearts", "label": "Hearts" },
-                    { "value": "plaid", "label": "Plaid" },
-                    { "value": "stars", "label": "Stars" },
-                    { "value": "chevron", "label": "Chevron" },
-                    { "value": "argyle", "label": "Argyle" },
-                    { "value": "fruits", "label": "Fruits" },
-                    { "value": "herringbone", "label": "Herringbone" },
-                    { "value": "houndstooth", "label": "Houndstooth" },
-                    { "value": "paisley", "label": "Paisley" }
-                  ],
-                  "special_features": [
-                    { "value": "lightweight", "label": "Lightweight" },
-                    { "value": "fade_resistant", "label": "Fade Resistant" },
-                    { "value": "breathable", "label": "Breathable" },
-                    { "value": "quick_dry", "label": "Quick Dry" },
-                    { "value": "sun_protection", "label": "Sun Protection" },
-                    { "value": "skin_friendly", "label": "Skin Friendly" },
-                    { "value": "stain_resistant", "label": "Stain Resistant" },
-                    { "value": "wrinkle_free", "label": "Wrinkle Free" },
-                    { "value": "stretchable", "label": "Stretchable" },
-                    { "value": "adjustable", "label": "Adjustable" },
-                    { "value": "thermal", "label": "Thermal" },
-                    { "value": "absorbent", "label": "Absorbent" },
+                  "title": "Measurements",
+                  "filters": [
                     {
-                      "value": "moisture_wicking",
-                      "label": "Moisture Wicking"
-                    },
-                    { "value": "reversible", "label": "Reversible" },
-                    { "value": "convertible", "label": "Convertible" },
-                    { "value": "pocket", "label": "Pocket" }
-                  ],
-                  "closure_type": [
-                    { "value": "button", "label": "Button" },
-                    { "value": "pull_on", "label": "Pull On" },
-                    { "value": "zipper", "label": "Zipper" },
-                    { "value": "drawstring", "label": "Drawstring" },
-                    { "value": "snap", "label": "Snap" },
-                    { "value": "buckle", "label": "Buckle" }
-                  ],
-                  "care_instructions": [
-                    { "value": "dry_clean", "label": "Dry Clean Only" },
-                    { "value": "hand_wash", "label": "Hand Wash Only" },
-                    { "value": "machine_wash", "label": "Machine Wash" }
-                  ],
-                  "neckline": [
-                    { "value": "boat_neck", "label": "Boat Neck" },
-                    { "value": "crew_neck", "label": "Crew Neck" },
-                    { "value": "asymmetric_neck", "label": "Asymmetric Neck" },
-                    { "value": "round_neck", "label": "Round Neck" },
-                    { "value": "scoop_neck", "label": "Scoop Neck" },
-                    { "value": "notch_neck", "label": "Notch Neck" },
-                    { "value": "square_neck", "label": "Square Neck" },
-                    { "value": "turtle_neck", "label": "Turtle Neck" },
-                    { "value": "v_neck", "label": "V-Neck" },
-                    { "value": "choker_neck", "label": "Choker Neck" },
-                    { "value": "collared_neck", "label": "Collared Neck" },
-                    { "value": "high_neck", "label": "High Neck" },
-                    { "value": "cowl_neck", "label": "Cowl Neck" },
-                    { "value": "mock_neck", "label": "Mock Neck" },
-                    { "value": "hooded_neck", "label": "Hooded Neck" },
-                    { "value": "henley_neck", "label": "Henley Neck" },
-                    { "value": "tie_neck", "label": "Tie Neck" }
-                  ],
-                  "lifestyle": [
-                    { "value": "casual", "label": "Casual" },
-                    { "value": "business_casual", "label": "Business Casual" },
-                    {
-                      "value": "business_professional",
-                      "label": "Business Professional"
-                    },
-                    { "value": "formal", "label": "Formal" },
-                    { "value": "comfort", "label": "Comfort" },
-                    { "value": "dress", "label": "Dress" },
-                    { "value": "evening", "label": "Evening" },
-                    { "value": "themed", "label": "Themed" },
-                    { "value": "work_utility", "label": "Work Utility" }
-                  ],
-                  "Sustainability_features": [
-                    { "value": "organic_content", "label": "Organic Content" },
-                    { "value": "safer_chemicals", "label": "Safer Chemicals" },
-                    {
-                      "value": "recycled_materials",
-                      "label": "Recycled Materials"
-                    },
-                    { "value": "animal_welfare", "label": "Animal Welfare" },
-                    {
-                      "value": "farming_practices",
-                      "label": "Farming Practices"
-                    },
-                    { "value": "worker_wellbeing", "label": "Worker Wellbeing" }
-                  ],
-                  "collar_style": [
-                    { "value": "polo_collar", "label": "Polo Collar" },
-                    { "value": "flat_collar", "label": "Flat Collar" },
-                    { "value": "collarless", "label": "Collarless" },
-                    { "value": "button_down", "label": "Button Down Collar" },
-                    {
-                      "value": "hidden_button",
-                      "label": "Hidden Button Down Collar"
-                    },
-                    { "value": "band_collar", "label": "Band Collar" },
-                    { "value": "lapel_collar", "label": "Lapel Collar" },
-                    { "value": "spread_collar", "label": "Spread Collar" },
-                    { "value": "cutaway_collar", "label": "Cutaway Collar" },
-                    { "value": "mandarin_collar", "label": "Mandarin Collar" },
-                    { "value": "point_collar", "label": "Point Collar" },
-                    { "value": "club_collar", "label": "Club Collar" },
-                    { "value": "camp_collar", "label": "Camp Collar" },
-                    { "value": "eyelet_collar", "label": "Eyelet Collar" }
-                  ],
-                  "occasion": [
-                    { "value": "birthday", "label": "Birthday" },
-                    { "value": "anniversary", "label": "Anniversary" },
-                    { "value": "fathers_day", "label": "Father's Day" },
-                    { "value": "mothers_day", "label": "Mother's Day" },
-                    { "value": "easter", "label": "Easter" },
-                    { "value": "baptism", "label": "Baptism" },
-                    { "value": "communion", "label": "Communion" },
-                    { "value": "christmas", "label": "Christmas" },
-                    { "value": "valentines_day", "label": "Valentine's Day" },
-                    { "value": "bachelor_party", "label": "Bachelor Party" },
-                    {
-                      "value": "bachelorette_party",
-                      "label": "Bachelorette Party"
-                    },
-                    { "value": "wedding", "label": "Wedding" },
-                    { "value": "honeymoon", "label": "Honeymoon" },
-                    { "value": "graduation", "label": "Graduation" }
-                  ],
-                  "sleeve_length": [
-                    { "value": "short_sleeve", "label": "Short Sleeve" },
-                    { "value": "half_sleeve", "label": "Half Sleeve" },
-                    { "value": "long_sleeve", "label": "Long Sleeve" },
-                    { "value": "sleeveless", "label": "Sleeveless" },
-                    { "value": "34_Sleeve", "label": "3/4 Sleeve" }
-                  ],
-                  "customizable_product": [
-                    { "value": "customizable", "label": "Customizable" }
-                  ],
-                  "specifications": [
-                    {
-                      "label": "Fabric Elasticity",
+                      "label": "Item Size Country",
+                      "value": "size_country",
                       "type": "enum",
-                      "options": ["None", "Low", "Medium", "High"]
-                    },
-                    { "label": "Material Type", "type": "text" },
-                    { "label": "Measurements", "type": "text" },
-                    { "label": "Care Instructions", "type": "text" }
-                  ],
-                  "highlights": [
-                    {
-                      "label": "Fit Type",
-                      "type": "enum",
-                      "options": ["Slim", "Regular", "Loose"]
-                    },
-                    {
-                      "label": "Sleeve Length",
-                      "type": "enum",
-                      "options": ["Short", "Long", "Sleeveless"]
-                    },
-                    {
-                      "label": "Neck Type",
-                      "type": "enum",
-                      "options": ["Crew Neck", "V-Neck", "Collar"]
+                      "options": ["UK", "United States"],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single"
                     }
                   ]
                 }
-              ]
-            },
-            {
-              "value": "men_accessories",
-              "label": "Men's Accessories",
+              ],
               "subCategories": [
-                {
-                  "value": "men_tops",
-                  "label": "Men Tops",
-                  "category": [
-                    { "value": "men_shirts", "label": "Men Shirts" },
-                    { "value": "men_polo_shirts", "label": "Men Polo Shirts" },
-                    { "value": "men_tshirts", "label": "Men T-Shirts" },
-                    { "value": "men_tank_tops", "label": "Men Tank Tops" }
-                  ],
-                  "fit_type": [
-                    { "value": "regular", "label": "Regular" },
-                    { "value": "fitted", "label": "Fitted" },
-                    { "value": "athletic", "label": "Athletic" },
-                    { "value": "slim", "label": "Slim" },
-                    { "value": "oversized", "label": "Oversized" },
-                    { "value": "straight", "label": "Straight" },
-                    { "value": "relaxed", "label": "Relaxed" },
-                    { "value": "tailored", "label": "Tailored" }
-                  ],
-                  "sleeve_type": [
-                    { "value": "cap_sleeve", "label": "Cap Sleeve" },
-                    { "value": "bell_sleeve", "label": "Bell Sleeve" },
-                    { "value": "cuff_sleeve", "label": "Cuff Sleeve" },
-                    { "value": "puff_sleeve", "label": "Puff Sleeve" },
-                    { "value": "raglan_sleeve", "label": "Raglan Sleeve" },
-                    { "value": "split_sleeve", "label": "Split Sleeve" },
-                    { "value": "balloon_sleeve", "label": "Balloon Sleeve" }
-                  ],
-                  "material": [
-                    { "value": "cotton", "label": "Cotton" },
-                    { "value": "polyester", "label": "Polyester" },
-                    { "value": "linen", "label": "Linen" },
-                    { "value": "leather", "label": "Leather" },
-                    { "value": "faux_leather", "label": "Faux Leather" },
-                    { "value": "cashmere", "label": "Cashmere" },
-                    { "value": "nylon", "label": "Nylon" },
-                    { "value": "polycotton", "label": "Polycotton" },
-                    { "value": "acrylic", "label": "Acrylic" },
-                    { "value": "spandex", "label": "Spandex" },
-                    { "value": "silk", "label": "Silk" },
-                    { "value": "wool", "label": "Wool" },
-                    { "value": "rayon", "label": "Rayon" }
-                  ],
-                  "pattern": [
-                    { "value": "solid", "label": "Solid" },
-                    { "value": "striped", "label": "Striped" },
-                    { "value": "geometric", "label": "Geometric" },
-                    { "value": "floral", "label": "Floral" },
-                    { "value": "checkered", "label": "Checkered" },
-                    { "value": "camouflage", "label": "Camouflage" },
-                    { "value": "animal_print", "label": "Animal Print" },
-                    { "value": "letter_print", "label": "Letter Print" },
-                    { "value": "polka_dots", "label": "Polka Dots" },
-                    { "value": "hearts", "label": "Hearts" },
-                    { "value": "plaid", "label": "Plaid" },
-                    { "value": "stars", "label": "Stars" },
-                    { "value": "chevron", "label": "Chevron" },
-                    { "value": "argyle", "label": "Argyle" },
-                    { "value": "fruits", "label": "Fruits" },
-                    { "value": "herringbone", "label": "Herringbone" },
-                    { "value": "houndstooth", "label": "Houndstooth" },
-                    { "value": "paisley", "label": "Paisley" }
-                  ],
-                  "special_features": [
-                    { "value": "lightweight", "label": "Lightweight" },
-                    { "value": "fade_resistant", "label": "Fade Resistant" },
-                    { "value": "breathable", "label": "Breathable" },
-                    { "value": "quick_dry", "label": "Quick Dry" },
-                    { "value": "sun_protection", "label": "Sun Protection" },
-                    { "value": "skin_friendly", "label": "Skin Friendly" },
-                    { "value": "stain_resistant", "label": "Stain Resistant" },
-                    { "value": "wrinkle_free", "label": "Wrinkle Free" },
-                    { "value": "stretchable", "label": "Stretchable" },
-                    { "value": "adjustable", "label": "Adjustable" },
-                    { "value": "thermal", "label": "Thermal" },
-                    { "value": "absorbent", "label": "Absorbent" },
-                    {
-                      "value": "moisture_wicking",
-                      "label": "Moisture Wicking"
-                    },
-                    { "value": "reversible", "label": "Reversible" },
-                    { "value": "convertible", "label": "Convertible" },
-                    { "value": "pocket", "label": "Pocket" }
-                  ],
-                  "closure_type": [
-                    { "value": "button", "label": "Button" },
-                    { "value": "pull_on", "label": "Pull On" },
-                    { "value": "zipper", "label": "Zipper" },
-                    { "value": "drawstring", "label": "Drawstring" },
-                    { "value": "snap", "label": "Snap" },
-                    { "value": "buckle", "label": "Buckle" }
-                  ],
-                  "care_instructions": [
-                    { "value": "dry_clean", "label": "Dry Clean Only" },
-                    { "value": "hand_wash", "label": "Hand Wash Only" },
-                    { "value": "machine_wash", "label": "Machine Wash" }
-                  ],
-                  "neckline": [
-                    { "value": "boat_neck", "label": "Boat Neck" },
-                    { "value": "crew_neck", "label": "Crew Neck" },
-                    { "value": "asymmetric_neck", "label": "Asymmetric Neck" },
-                    { "value": "round_neck", "label": "Round Neck" },
-                    { "value": "scoop_neck", "label": "Scoop Neck" },
-                    { "value": "notch_neck", "label": "Notch Neck" },
-                    { "value": "square_neck", "label": "Square Neck" },
-                    { "value": "turtle_neck", "label": "Turtle Neck" },
-                    { "value": "v_neck", "label": "V-Neck" },
-                    { "value": "choker_neck", "label": "Choker Neck" },
-                    { "value": "collared_neck", "label": "Collared Neck" },
-                    { "value": "high_neck", "label": "High Neck" },
-                    { "value": "cowl_neck", "label": "Cowl Neck" },
-                    { "value": "mock_neck", "label": "Mock Neck" },
-                    { "value": "hooded_neck", "label": "Hooded Neck" },
-                    { "value": "henley_neck", "label": "Henley Neck" },
-                    { "value": "tie_neck", "label": "Tie Neck" }
-                  ],
-                  "lifestyle": [
-                    { "value": "casual", "label": "Casual" },
-                    { "value": "business_casual", "label": "Business Casual" },
-                    {
-                      "value": "business_professional",
-                      "label": "Business Professional"
-                    },
-                    { "value": "formal", "label": "Formal" },
-                    { "value": "comfort", "label": "Comfort" },
-                    { "value": "dress", "label": "Dress" },
-                    { "value": "evening", "label": "Evening" },
-                    { "value": "themed", "label": "Themed" },
-                    { "value": "work_utility", "label": "Work Utility" }
-                  ],
-                  "Sustainability_features": [
-                    { "value": "organic_content", "label": "Organic Content" },
-                    { "value": "safer_chemicals", "label": "Safer Chemicals" },
-                    {
-                      "value": "recycled_materials",
-                      "label": "Recycled Materials"
-                    },
-                    { "value": "animal_welfare", "label": "Animal Welfare" },
-                    {
-                      "value": "farming_practices",
-                      "label": "Farming Practices"
-                    },
-                    { "value": "worker_wellbeing", "label": "Worker Wellbeing" }
-                  ],
-                  "collar_style": [
-                    { "value": "polo_collar", "label": "Polo Collar" },
-                    { "value": "flat_collar", "label": "Flat Collar" },
-                    { "value": "collarless", "label": "Collarless" },
-                    { "value": "button_down", "label": "Button Down Collar" },
-                    {
-                      "value": "hidden_button",
-                      "label": "Hidden Button Down Collar"
-                    },
-                    { "value": "band_collar", "label": "Band Collar" },
-                    { "value": "lapel_collar", "label": "Lapel Collar" },
-                    { "value": "spread_collar", "label": "Spread Collar" },
-                    { "value": "cutaway_collar", "label": "Cutaway Collar" },
-                    { "value": "mandarin_collar", "label": "Mandarin Collar" },
-                    { "value": "point_collar", "label": "Point Collar" },
-                    { "value": "club_collar", "label": "Club Collar" },
-                    { "value": "camp_collar", "label": "Camp Collar" },
-                    { "value": "eyelet_collar", "label": "Eyelet Collar" }
-                  ],
-                  "occasion": [
-                    { "value": "birthday", "label": "Birthday" },
-                    { "value": "anniversary", "label": "Anniversary" },
-                    { "value": "fathers_day", "label": "Father's Day" },
-                    { "value": "mothers_day", "label": "Mother's Day" },
-                    { "value": "easter", "label": "Easter" },
-                    { "value": "baptism", "label": "Baptism" },
-                    { "value": "communion", "label": "Communion" },
-                    { "value": "christmas", "label": "Christmas" },
-                    { "value": "valentines_day", "label": "Valentine's Day" },
-                    { "value": "bachelor_party", "label": "Bachelor Party" },
-                    {
-                      "value": "bachelorette_party",
-                      "label": "Bachelorette Party"
-                    },
-                    { "value": "wedding", "label": "Wedding" },
-                    { "value": "honeymoon", "label": "Honeymoon" },
-                    { "value": "graduation", "label": "Graduation" }
-                  ],
-                  "sleeve_length": [
-                    { "value": "short_sleeve", "label": "Short Sleeve" },
-                    { "value": "half_sleeve", "label": "Half Sleeve" },
-                    { "value": "long_sleeve", "label": "Long Sleeve" },
-                    { "value": "sleeveless", "label": "Sleeveless" },
-                    { "value": "34_Sleeve", "label": "3/4 Sleeve" }
-                  ],
-                  "customizable_product": [
-                    { "value": "customizable", "label": "Customizable" }
-                  ],
-                  "specifications": [
-                    {
-                      "label": "Fabric Elasticity",
-                      "type": "enum",
-                      "options": ["None", "Low", "Medium", "High"]
-                    },
-                    { "label": "Material Type", "type": "text" },
-                    { "label": "Measurements", "type": "text" },
-                    { "label": "Care Instructions", "type": "text" }
-                  ],
-                  "highlights": [
-                    {
-                      "label": "Fit Type",
-                      "type": "enum",
-                      "options": ["Slim", "Regular", "Loose"]
-                    },
-                    {
-                      "label": "Sleeve Length",
-                      "type": "enum",
-                      "options": ["Short", "Long", "Sleeveless"]
-                    },
-                    {
-                      "label": "Neck Type",
-                      "type": "enum",
-                      "options": ["Crew Neck", "V-Neck", "Collar"]
-                    }
-                  ]
-                }
-              ]
+                { "value": "polo_shirt", "label": "Polo Shirt" },
+                { "value": "sport_jersey", "label": "Sport Jersey" },
+                { "value": "tshirt", "label": "T-Shirt" },
+                { "value": "tuxedo_shirt", "label": "Tuxedo Shirt" }
+              ],
+              "highlights": [{ "ref": "fit_type" }, { "ref": "material" }]
             }
           ]
         },

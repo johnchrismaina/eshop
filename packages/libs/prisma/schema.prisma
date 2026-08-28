@@ -289,6 +289,11 @@ model category {
   subCategories sub_category[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+
+  // Self relation for hierarchy
+  parentId String?
+  parent   category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children category[] @relation("CategoryHierarchy")
 }
 
 model sub_category {

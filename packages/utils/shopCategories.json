@@ -1,15 +1,16 @@
 {
   "categories": [
     {
-      "value": "men",
+      "value": "men_fashion",
       "label": "Men's Fashion",
       "subCategories": [
         {
           "value": "men_clothing",
           "label": "Men's Clothing",
-          "filterLibrary": {
-            "material": {
+          "filterLibrary": [
+            {
               "label": "Material",
+              "value": "material",
               "type": "enum",
               "options": [
                 "Cotton",
@@ -28,10 +29,13 @@
               ],
               "multiSelect": true,
               "render": "dropdown",
-              "sellerInput": "single"
+              "sellerInput": "single",
+              "required": true,
+              "tooltip": "Select the main fabric material used in the product."
             },
-            "pattern": {
+            {
               "label": "Pattern",
+              "value": "pattern",
               "type": "enum",
               "options": [
                 "Solid",
@@ -55,9 +59,11 @@
               ],
               "multiSelect": true,
               "render": "dropdown",
-              "sellerInput": "single"
+              "sellerInput": "single",
+              "required": true,
+              "tooltip": "Choose the main pattern used in the product."
             }
-          },
+          ],
           "subCategories": [
             {
               "value": "men_shirts",
@@ -82,7 +88,9 @@
                       ],
                       "multiSelect": true,
                       "render": "checkbox",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Choose the fit style that best describes the product."
                     },
                     {
                       "label": "Collar Style",
@@ -91,10 +99,12 @@
                       "options": [
                         "Polo Collar",
                         "Button Down Collar",
+                        "Laydown Collar",
                         "Flat Collar",
-                        "Hidden Button Down Collar",
                         "Mandarin Collar",
+                        "Hidden Button Down Collar",
                         "Spread Collar",
+                        "Wingtip Collar",
                         "Collarless",
                         "Band Collar",
                         "Lapel Collar",
@@ -106,7 +116,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the collar design that best matches the product (e.g., Spread, Mandarin, Wingtip)."
                     },
                     {
                       "label": "Neck Style",
@@ -133,7 +145,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
                     },
                     {
                       "label": "Sleeve Type",
@@ -148,7 +162,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the sleeve design that best describes the product (e.g., Short Sleeve, Sleeveless, Three-Quarter Sleeve)."
                     },
                     {
                       "label": "Sport Type",
@@ -157,11 +173,13 @@
                       "options": ["Basketball", "Football", "Baseball"],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Select the sport or activity the product is best suited for (e.g., Running, Swimming, Yoga)."
                     },
                     {
-                      "label": "Style",
-                      "value": "style",
+                      "label": "Lifestyle",
+                      "value": "lifestyle",
                       "type": "enum",
                       "options": [
                         "Casual",
@@ -176,7 +194,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": true,
+                      "tooltip": "Select the lifestyle or dress code the product is best suited for (e.g., Casual, Business Casual, Formal)."
                     },
                     {
                       "label": "Seasons",
@@ -191,7 +211,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Select the season(s) during which the product is most suitable for wear (e.g., Summer, Winter)."
                     },
                     {
                       "label": "Closure Type",
@@ -207,7 +229,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the fastening method used to close the product (e.g., Button, Zipper, Velcro)."
                     },
                     {
                       "label": "Cuff Type",
@@ -225,7 +249,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the cuff design or fastening style used on the product (e.g., Button Cuff, French Cuff, Elastic Cuff)."
                     },
                     {
                       "label": "Occasion",
@@ -250,60 +276,93 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Select the occasion or event where the product is most suitable to wear (e.g., Anniversary, Graduation, Wedding)."
                     },
                     {
                       "label": "Origin",
                       "value": "origin",
                       "type": "enum",
-                      "options": ["Imported", "Handmade"],
+                      "options": [
+                        "Made in Kenya",
+                        "Made in USA",
+                        "Made in China",
+                        "Made in India",
+                        "Imported",
+                        "Handmade"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the country or region where the product was manufactured or sourced (e.g., Made in Kenya, Imported)."
                     },
                     {
                       "label": "Age Description",
                       "value": "age",
                       "type": "enum",
-                      "options": ["Adults"],
+                      "options": ["Adults", "Senior"],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the age group the product is designed for (e.g., Adult, Senior)."
                     },
                     {
                       "label": "Pocket Description",
                       "value": "pockets",
                       "type": "enum",
-                      "options": ["Pocket", "No Pockets"],
+                      "options": [
+                        "Chest Pocket",
+                        "Side Pockets",
+                        "Cargo Pockets",
+                        "No Pockets"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the type and placement of pockets on the product (e.g., Side Pockets, Chest Pocket, Cargo Pockets)."
                     },
                     {
                       "label": "Sustainability Features",
-                      "value": "sustainability",
+                      "value": "sustainability_features",
                       "type": "enum",
                       "options": [
-                        "Organic Content",
-                        "Safer Chemicals",
+                        "Organic Material",
                         "Carbon Impact",
-                        "Recycled Materials",
+                        "Recycled Fabric",
+                        "Eco-Friendly Fabric",
+                        "Eco-Friendly Dye",
+                        "Biodegradable",
+                        "Energy Efficient Production",
                         "Animal Welfare",
                         "Farming Practices",
                         "Worker Wellbeing"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Highlight any eco-friendly or sustainable qualities of the product (e.g., Organic Material, Recycled Fabric, Biodegradable)."
                     },
                     {
                       "label": "Customizable Product",
                       "value": "customizable_product",
                       "type": "enum",
-                      "options": ["Customizable"],
+                      "options": [
+                        "Yes",
+                        "No",
+                        "Personalized Text",
+                        "Custom Size",
+                        "Custom Color"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Indicate whether the product can be customized (e.g., Personalized Text, Custom Size, Custom Color)."
                     }
                   ]
                 },
@@ -314,22 +373,28 @@
                       "label": "Brand Name",
                       "value": "brand_name",
                       "type": "text",
-                      "multiSelect": false,
-                      "sellerInput": "single"
+                      "multiSelect": true,
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official brand name associated with the product."
                     },
                     {
                       "label": "Model Name",
                       "value": "model_name",
                       "type": "text",
                       "multiSelect": false,
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
                     },
                     {
                       "label": "Manufacturer",
                       "value": "manufacturer",
                       "type": "text",
-                      "multiSelect": false,
-                      "sellerInput": "single"
+                      "multiSelect": true,
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official manufacturer name associated with the product."
                     }
                   ]
                 },
@@ -340,18 +405,26 @@
                       "label": "Fabric Type",
                       "value": "fabric_type",
                       "type": "text",
-                      "multiSelect": false,
-                      "sellerInput": "single"
+                      "multiSelect": true,
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the fabric type used in the product (e.g., Denim, Silk, Jersey, 50% Polyester, 50% Cotton)."
                     },
 
                     {
                       "label": "Product Care Instructions",
                       "value": "product_care",
                       "type": "enum",
-                      "options": ["Dry Clean", "Hand Wash", "Machine Wash"],
+                      "options": [
+                        "Hand Wash",
+                        "Dry Clean Only",
+                        "Machine Wash"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": true,
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
                     },
                     {
                       "label": "Special Features",
@@ -359,6 +432,7 @@
                       "type": "enum",
                       "options": [
                         "Lightweight",
+                        "Water Resistant",
                         "Fade Resistant",
                         "Breathable",
                         "Quick Dry",
@@ -376,20 +450,24 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
                     },
                     {
                       "label": "Fabric Weight Class",
                       "value": "fabric_weight",
                       "type": "enum",
                       "options": [
-                        "Light Weight",
+                        "Lightweight",
                         "Medium Weight",
-                        "Heavy Weight"
+                        "Heavyweight"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Select the fabric weight category that best describes the product (e.g., Lightweight for summer wear, Heavyweight for winter wear)."
                     }
                   ]
                 },
@@ -409,23 +487,36 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Describe how the product fits compared to standard sizing (e.g., True to Size, Runs Small, Runs Large)."
                     },
                     {
                       "label": "Weight",
                       "value": "weight",
                       "type": "text",
                       "multiSelect": false,
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the product’s weight, including units (e.g., 500g, 2kg, 1.5 lbs)."
                     },
                     {
                       "label": "Item Size Country",
                       "value": "size_country",
                       "type": "enum",
-                      "options": ["UK", "United States"],
+                      "options": [
+                        "United States",
+                        "UK",
+                        "EU",
+                        "Japan",
+                        "China",
+                        "India"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the sizing standard or country reference used for the product (e.g., US sizes, UK sizes, EU sizes)."
                     }
                   ]
                 }
@@ -5736,13 +5827,20 @@
               ]
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "value": "women_fashion",
+      "label": "Women's Fashion",
+      "subCategories": [
         {
           "value": "women_clothing",
           "label": "Women's Clothing",
-          "filterLibrary": {
-            "material": {
+          "filterLibrary": [
+            {
               "label": "Material",
+              "value": "material",
               "type": "enum",
               "options": [
                 "Cotton",
@@ -5761,10 +5859,13 @@
               ],
               "multiSelect": true,
               "render": "dropdown",
-              "sellerInput": "single"
+              "sellerInput": "single",
+              "required": true,
+              "tooltip": "Select the main fabric material used in the product."
             },
-            "pattern": {
+            {
               "label": "Pattern",
+              "value": "pattern",
               "type": "enum",
               "options": [
                 "Solid",
@@ -5788,9 +5889,11 @@
               ],
               "multiSelect": true,
               "render": "dropdown",
-              "sellerInput": "single"
+              "sellerInput": "single",
+              "required": true,
+              "tooltip": "Choose the main pattern used in the product."
             }
-          },
+          ],
           "subCategories": [
             {
               "value": "dresses",
@@ -5815,7 +5918,9 @@
                       ],
                       "multiSelect": true,
                       "render": "checkbox",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Choose the fit style that best describes the product."
                     },
                     {
                       "label": "Collar Style",
@@ -5824,10 +5929,12 @@
                       "options": [
                         "Polo Collar",
                         "Button Down Collar",
+                        "Laydown Collar",
                         "Flat Collar",
-                        "Hidden Button Down Collar",
                         "Mandarin Collar",
+                        "Hidden Button Down Collar",
                         "Spread Collar",
+                        "Wingtip Collar",
                         "Collarless",
                         "Band Collar",
                         "Lapel Collar",
@@ -5839,7 +5946,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the collar design that best matches the product (e.g., Spread, Mandarin, Wingtip)."
                     },
                     {
                       "label": "Neck Style",
@@ -5866,7 +5975,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
                     },
                     {
                       "label": "Sleeve Type",
@@ -5881,20 +5992,13 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the sleeve design that best describes the product (e.g., Short Sleeve, Sleeveless, Three-Quarter Sleeve)."
                     },
                     {
-                      "label": "Sport Type",
-                      "value": "sport_type",
-                      "type": "enum",
-                      "options": ["Basketball", "Football", "Baseball"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi"
-                    },
-                    {
-                      "label": "Style",
-                      "value": "style",
+                      "label": "Lifestyle",
+                      "value": "lifestyle",
                       "type": "enum",
                       "options": [
                         "Casual",
@@ -5909,7 +6013,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": true,
+                      "tooltip": "Select the lifestyle or dress code the product is best suited for (e.g., Casual, Business Casual, Formal)."
                     },
                     {
                       "label": "Seasons",
@@ -5924,7 +6030,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Select the season(s) during which the product is most suitable for wear (e.g., Summer, Winter)."
                     },
                     {
                       "label": "Closure Type",
@@ -5940,25 +6048,9 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
-                    },
-                    {
-                      "label": "Cuff Type",
-                      "value": "cuff_type",
-                      "type": "enum",
-                      "options": [
-                        "Angled Cuffs",
-                        "Round Cuffs",
-                        "Convertible Square Cuffs",
-                        "Adjustable 2-Button Cuffs",
-                        "French Cuffs",
-                        "2-Buttonhole Cuffs",
-                        "Straight Cuffs",
-                        "Short Straight Cuffs"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the fastening method used to close the product (e.g., Button, Zipper, Pull On )."
                     },
                     {
                       "label": "Occasion",
@@ -5983,25 +6075,38 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Select the occasion or event where the product is most suitable to wear (e.g., Anniversary, Graduation, Wedding)."
                     },
                     {
                       "label": "Origin",
                       "value": "origin",
                       "type": "enum",
-                      "options": ["Imported", "Handmade"],
+                      "options": [
+                        "Made in Kenya",
+                        "Made in USA",
+                        "Made in China",
+                        "Made in India",
+                        "Imported",
+                        "Handmade"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the country or region where the product was manufactured or sourced (e.g., Made in Kenya, Imported, Handmade)."
                     },
                     {
                       "label": "Age Description",
                       "value": "age",
                       "type": "enum",
-                      "options": ["Adults"],
+                      "options": ["Adults", "Senior"],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the age group the product is designed for (e.g., Adult, Senior)."
                     },
                     {
                       "label": "Pocket Description",
@@ -6010,33 +6115,48 @@
                       "options": ["Pocket", "No Pockets"],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the type and placement of pockets on the product (e.g., Pockets, No Pockets)."
                     },
                     {
                       "label": "Sustainability Features",
-                      "value": "sustainability",
+                      "value": "sustainability_features",
                       "type": "enum",
                       "options": [
-                        "Organic Content",
-                        "Safer Chemicals",
+                        "Organic Material",
                         "Carbon Impact",
-                        "Recycled Materials",
+                        "Recycled Fabric",
+                        "Eco-Friendly Fabric",
+                        "Eco-Friendly Dye",
+                        "Biodegradable",
+                        "Energy Efficient Production",
                         "Animal Welfare",
                         "Farming Practices",
                         "Worker Wellbeing"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Highlight any eco-friendly or sustainable qualities of the product (e.g., Organic Material, Recycled Fabric, Biodegradable)."
                     },
                     {
                       "label": "Customizable Product",
                       "value": "customizable_product",
                       "type": "enum",
-                      "options": ["Customizable"],
+                      "options": [
+                        "Yes",
+                        "No",
+                        "Personalized Text",
+                        "Custom Size",
+                        "Custom Color"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Indicate whether the product can be customized (e.g., Personalized Text, Custom Size, Custom Color)."
                     }
                   ]
                 },
@@ -6048,21 +6168,27 @@
                       "value": "brand_name",
                       "type": "text",
                       "multiSelect": false,
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official brand name associated with the product."
                     },
                     {
                       "label": "Model Name",
                       "value": "model_name",
                       "type": "text",
                       "multiSelect": false,
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
                     },
                     {
                       "label": "Manufacturer",
                       "value": "manufacturer",
                       "type": "text",
                       "multiSelect": false,
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official manufacturer name associated with the product."
                     }
                   ]
                 },
@@ -6074,17 +6200,21 @@
                       "value": "fabric_type",
                       "type": "text",
                       "multiSelect": false,
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the fabric type used in the product (e.g., Denim, Silk, Jersey, 50% Polyester, 50% Cotton )."
                     },
 
                     {
                       "label": "Product Care Instructions",
-                      "value": "product_care",
+                      "value": "product_care_instructions",
                       "type": "enum",
                       "options": ["Dry Clean", "Hand Wash", "Machine Wash"],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": true,
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash, Dry Clean, Machine Wash )."
                     },
                     {
                       "label": "Special Features",
@@ -6092,6 +6222,7 @@
                       "type": "enum",
                       "options": [
                         "Lightweight",
+                        "Water Resistant",
                         "Fade Resistant",
                         "Breathable",
                         "Quick Dry",
@@ -6109,20 +6240,24 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi"
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
                     },
                     {
                       "label": "Fabric Weight Class",
                       "value": "fabric_weight",
                       "type": "enum",
                       "options": [
-                        "Light Weight",
+                        "Lightweight",
                         "Medium Weight",
-                        "Heavy Weight"
+                        "Heavyweight"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the fabric weight category that best describes the product (e.g., Lightweight, Heavyweight)."
                     }
                   ]
                 },
@@ -6142,23 +6277,36 @@
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Describe how the product fits compared to standard sizing (e.g., True to Size, Runs Slightly small, Runs Slightly Large)."
                     },
                     {
                       "label": "Weight",
                       "value": "weight",
                       "type": "text",
                       "multiSelect": false,
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the product’s weight, including units (e.g., 500g, 2kg, 1.5 lbs)."
                     },
                     {
                       "label": "Item Size Country",
                       "value": "size_country",
                       "type": "enum",
-                      "options": ["UK", "United States"],
+                      "options": [
+                        "United Stated",
+                        "UK",
+                        "EU",
+                        "Japan",
+                        "China",
+                        "India"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single"
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the sizing standard or country reference used for the product (e.g., US sizes, UK sizes, EU sizes)."
                     }
                   ]
                 }
@@ -11471,277 +11619,6 @@
             }
           ]
         }
-      ]
-    },
-    {
-      "value": "computers",
-      "label": "Computers",
-      "subCategories": [
-        "Computers",
-        "Laptops",
-        "Tablets",
-        "Computer Accessories"
-      ]
-    },
-    {
-      "value": "electronics",
-      "label": "Electronics & Gadgets",
-      "subCategories": [
-        "Cameras",
-        "Camera Accessories",
-        "Audio Devices",
-        "Wearables",
-        "Drones"
-      ]
-    },
-    {
-      "value": "grocery",
-      "label": "Grocery & Food",
-      "subCategories": [
-        "Fresh Produce",
-        "Dairy & Eggs",
-        "Meat & Seafood",
-        "Beverages",
-        "Snacks",
-        "Pantry Staples",
-        "Frozen Foods"
-      ]
-    },
-    {
-      "value": "beauty",
-      "label": "Beauty & Personal Care",
-      "subCategories": [
-        "Skincare",
-        "Haircare",
-        "Makeup",
-        "Fragrances",
-        "Personal Hygiene",
-        "Wellness"
-      ]
-    },
-    {
-      "value": "furniture",
-      "label": "Furniture & Home Decor",
-      "subCategories": [
-        "Living Room",
-        "Bedroom",
-        "Office Furniture",
-        "Outdoor Furniture",
-        "Lighting",
-        "Decor Items"
-      ]
-    },
-    {
-      "value": "automotive",
-      "label": "Automotive & Accessories",
-      "subCategories": [
-        "Car Parts",
-        "Motorbike Accessories",
-        "Car Care",
-        "Tools & Equipment",
-        "Tyres & Wheels"
-      ]
-    },
-    {
-      "value": "books",
-      "label": "Books & Stationery",
-      "subCategories": [
-        "Fiction",
-        "Non-Fiction",
-        "Children's Books",
-        "Educational",
-        "Stationery",
-        "Office Supplies"
-      ]
-    },
-    {
-      "value": "toys",
-      "label": "Toys & Games",
-      "subCategories": [
-        "Action Figures",
-        "Board Games",
-        "Educational Toys",
-        "Outdoor Play",
-        "Puzzles",
-        "Dolls"
-      ]
-    },
-    {
-      "value": "sports",
-      "label": "Sports & Fitness",
-      "subCategories": [
-        "Gym Equipment",
-        "Outdoor Sports",
-        "Fitness Accessories"
-      ]
-    },
-    {
-      "value": "hardware",
-      "label": "Hardware & Tools",
-      "subCategories": [
-        "Hand Tools",
-        "Power Tools",
-        "Building Materials",
-        "Plumbing",
-        "Electrical Supplies"
-      ]
-    },
-    {
-      "value": "pet",
-      "label": "Pet Supplies",
-      "subCategories": [
-        "Pet Food",
-        "Pet Toys",
-        "Pet Grooming",
-        "Pet Health",
-        "Pet Accessories"
-      ]
-    },
-    {
-      "value": "medical",
-      "label": "Medical & Pharmacy",
-      "subCategories": [
-        "Prescription Drugs",
-        "OTC Medicines",
-        "Medical Equipment",
-        "Health Supplements",
-        "First Aid"
-      ]
-    },
-    {
-      "value": "jewelry",
-      "label": "Jewelry & Watches",
-      "subCategories": [
-        "Necklaces",
-        "Rings",
-        "Bracelets",
-        "Earrings",
-        "Watches",
-        "Luxury Jewelry"
-      ]
-    },
-    {
-      "value": "gifts",
-      "label": "Gifts & Packaging",
-      "subCategories": [
-        "Gift Hampers",
-        "Cards",
-        "Decorative Items",
-        "Packaging Materials"
-      ]
-    },
-    {
-      "value": "baby",
-      "label": "Baby & Kids Store",
-      "subCategories": ["Clothing", "Shoes", "Gear", "Furniture", "Feeding"]
-    },
-    {
-      "value": "boys",
-      "label": "Boy's Fashion",
-      "subCategories": [
-        "Clothing",
-        "Shoes",
-        "Jewelry",
-        "Watches",
-        "Accessories",
-        "School Uniforms"
-      ]
-    },
-    {
-      "value": "girls",
-      "label": "Girls's Fashion",
-      "subCategories": [
-        "Clothing",
-        "Shoes",
-        "Jewelry",
-        "Watches",
-        "Accessories",
-        "School Uniforms"
-      ]
-    },
-    {
-      "value": "art",
-      "label": "Art & Craft Supplies",
-      "subCategories": [
-        "Paintings",
-        "Paints & Colors",
-        "Brushes & Tools",
-        "Paper & Canvas",
-        "Craft Kits",
-        "DIY Supplies"
-      ]
-    },
-    {
-      "value": "music",
-      "label": "Music Instruments & Stores",
-      "subCategories": [
-        "String Instruments",
-        "Percussion Instruments",
-        "Wind Instruments",
-        "Electronic Instruments",
-        "Music Accessories"
-      ]
-    },
-    {
-      "value": "software",
-      "label": "Software & Technology",
-      "subCategories": ["Software", "Cybersecurity"]
-    },
-    {
-      "value": "garden",
-      "label": "Garden & Outdoor Equipment",
-      "subCategories": [
-        "Seeds",
-        "Gardening Tools",
-        "Outdoor Equipment & Gear",
-        "Landscaping Supplies"
-      ]
-    },
-    {
-      "value": "bakery",
-      "label": "Bakery & Confectionery",
-      "subCategories": [
-        "Bread",
-        "Cakes & Pastries",
-        "Cookies & Biscuits",
-        "Chocolates & Sweets"
-      ]
-    },
-    {
-      "value": "optical",
-      "label": "Optical & Eyewear",
-      "subCategories": [
-        "Prescription Glasses",
-        "Sunglasses",
-        "Contact Lenses",
-        "Frames",
-        "Eyewear Accessories"
-      ]
-    },
-    {
-      "value": "mobile",
-      "label": "Mobile Phones & Accessories",
-      "subCategories": [
-        "Smartphones",
-        "Chargers & Cables",
-        "Phone Cases & Covers",
-        "Headphones & Earphones",
-        "Screen Protectors"
-      ]
-    },
-    {
-      "value": "entertainment",
-      "label": "Entertainment & Gaming",
-      "subCategories": ["Video Games", "Gaming Consoles", "Gaming Accessories"]
-    },
-    {
-      "value": "other",
-      "label": "Other",
-      "subCategories": [
-        "Miscellaneous Products",
-        "Custom Orders",
-        "Seasonal Items",
-        "Promotional Items"
       ]
     }
   ]

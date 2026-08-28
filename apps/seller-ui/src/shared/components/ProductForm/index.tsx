@@ -46,6 +46,12 @@ interface UploadedImage {
   file_url: string;
 }
 
+interface ShopCategory {
+  value: string;
+  label: string;
+  subCategories?: ShopCategory[];
+}
+
 type FormValues = {
   title: string;
   aspect: 'square' | 'portrait';
@@ -225,39 +231,51 @@ export default function ProductForm({
     },
   });
 
-  const categories = data?.categories || [];
-  const subCategoriesData = data?.subCategories || {};
+  // const categories = data?.categories || [];
+  // const subCategoriesData = data?.subCategories || {};
 
   const selectedCategory = watch('category');
   const specs = watch('product_specifications');
 
   const regularPrice = watch('regular_price');
 
-  // derive subcategories from API data
-  const subcategories = useMemo(() => {
-    if (!selectedCategory || !data?.categories) return [];
-    const category = data.categories.find(
-      (cat: any) => cat.name === selectedCategory
-    );
-    // console.log(data.categories);
-    return category?.subCategories?.map((sub: any) => sub.name) || [];
-  }, [selectedCategory, data?.categories]);
+  // const [categories, setCategories] = useState<ShopCategory[]>([]);
+  const [categories, setCategories] = useState<ShopCategory[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
-  useEffect(() => {
-    if (data?.categories?.length) {
-      setValue('category', 'Clothing & Apparel');
-      setValue('subCategory', "Women's Clothing");
-      clearErrors(['category', 'subCategory']); // optional: clear validation errors
-    }
-  }, [data?.categories, setValue, clearErrors]);
+  const [openCategories, setOpenCategories] = useState(false);
+  const [selectedPath, setSelectedPath] = useState<string[]>([]);
+  const [currentLevel, setCurrentLevel] = useState<ShopCategory[]>([]);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+
+  // path leading TO the level currently being displayed (never includes a leaf label)
+  const [levelPath, setLevelPath] = useState<string[]>([]);
+
+  // derive subcategories from API data
+  // const subcategories = useMemo(() => {
+  //   if (!selectedCategory || !data?.categories) return [];
+  //   const category = data.categories.find(
+  //     (cat: any) => cat.name === selectedCategory
+  //   );
+  // console.log(data.categories);
+  //   return category?.subCategories?.map((sub: any) => sub.name) || [];
+  // }, [selectedCategory, data?.categories]);
+
+  // useEffect(() => {
+  //   if (data?.categories?.length) {
+  //     setValue('category', 'Clothing & Apparel');
+  //     setValue('subCategory', "Women's Clothing");
+  //     clearErrors(['category', 'subCategory']);
+  //   }
+  // }, [data?.categories, setValue, clearErrors]);
 
   // Import your seeded JSON templates (the big category/specs file)
 
-  useAutoSeedSpecifications({
-    control,
-    setValue,
-    templates: productSpecifications,
-  });
+  // useAutoSeedSpecifications({
+  //   control,
+  //   setValue,
+  //   templates: productSpecifications,
+  // });
 
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -273,6 +291,54 @@ export default function ProductForm({
     { value: 'square', label: 'Square (500 × 500)' },
     { value: 'portrait', label: 'Portrait (503 × 670)' },
   ];
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch('/api/categories');
+        const data = await res.json();
+        setCategories(data);
+        setCurrentLevel(data); // start at root
+      } catch (err) {
+        console.error('Failed to load categories', err);
+      } finally {
+        setLoadingCategories(false);
+      }
+    }
+    fetchCategories();
+  }, []);
+
+  function handleSelect(cat: ShopCategory) {
+    const newPath = [...levelPath, cat.label];
+
+    if (cat.subCategories && cat.subCategories.length > 0) {
+      // drill down into children
+      setLevelPath(newPath);
+      setSelectedPath(newPath);
+      setCurrentLevel(cat.subCategories);
+    } else {
+      // leaf selected → radio choice
+      setSelectedPath(newPath);
+      setSelectedValue(cat.value);
+      setOpenCategories(false);
+      // levelPath intentionally NOT updated here — re-clicking the same
+      // leaf again reproduces the same newPath instead of duplicating it
+    }
+  }
+
+  function handleBreadcrumbClick(index: number) {
+    const newPath = selectedPath.slice(0, index + 1);
+    setSelectedPath(newPath);
+    setLevelPath(newPath); // keep in sync with the level we're navigating to
+
+    let level = categories;
+    for (let i = 0; i <= index; i++) {
+      const node = level.find((c) => c.label === newPath[i]);
+      level = node?.subCategories ?? [];
+    }
+    setCurrentLevel(level);
+    setOpenCategories(true);
+  }
 
   // Load Draft on Page Mount
   useEffect(() => {
@@ -384,22 +450,6 @@ export default function ProductForm({
       setMainUploading((prev) => ({ ...prev, [index]: false }));
     }
   };
-
-  // const handleImageChangeWithLoader = async (
-  //   file: File | null,
-  //   idx: number
-  // ) => {
-  //   if (!file) return;
-  //   setUploading((prev) => ({ ...prev, [idx]: true }));
-  //   await handleImageChange(file, idx); // your existing upload logic
-  //   setUploading((prev) => ({ ...prev, [idx]: false }));
-  // };
-
-  // const handleRemoveImage = (index: number) => {
-  //   const updated = [...images];
-  //   updated[index] = null;
-  //   setImages(updated);
-  // };
 
   const handleImageChangeWithLoader = async (
     index: number,
@@ -540,7 +590,7 @@ export default function ProductForm({
         <div className="py-0 text-slate-700">
           {/* Product Identity */}
           {activeTab === 'Product Identity' && (
-            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4">
+            <div className="w-[700px] flex flex-col mx-auto items-center justify-start gap-3 py-4">
               {/* Product Title */}
               <div className="w-full p-0 rounded-md">
                 <label className="block text-[15px] font-semibold  text-gray-800 mb-1">
@@ -593,6 +643,84 @@ export default function ProductForm({
                 )}
               </div>
 
+              {/* --- DROPDOWN --- */}
+              <label className="w-full flex items-center justify-start gap-2">
+                <span className="text-gray-700">Choose Category: </span>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setOpenCategories((o) => !o)}
+                    className="w-[320px] h-10 px-3 border border-gray-200 rounded-md text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+                  >
+                    {selectedPath.length > 0
+                      ? selectedPath[selectedPath.length - 1]
+                      : 'Select Category'}
+                    <svg
+                      className="w-4 h-4 text-[#333]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {openCategories && (
+                    <div className="absolute z-10 mt-1 w-full max-h-80 overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg">
+                      {currentLevel.map((cat) => (
+                        <div
+                          key={cat.value}
+                          className="flex items-center px-3 py-2 hover:bg-gray-100"
+                        >
+                          {(!cat.subCategories ||
+                            cat.subCategories.length === 0) && (
+                            <input
+                              type="radio"
+                              name="category"
+                              value={cat.value}
+                              checked={selectedValue === cat.value}
+                              onChange={() => handleSelect(cat)}
+                              className="mr-2"
+                            />
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleSelect(cat)}
+                            className="flex-1 text-left"
+                          >
+                            {cat.label}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </label>
+
+              {/* Breadcrumb rail */}
+              <div className="w-full flex items-center justify-start gap-2 px-4 py-1 border border-gray-300 rounded-lg">
+                <span>Breadcrumbs: </span>
+                {selectedPath.length > 0 && (
+                  <div className="flex flex-wrap gap-1 text-sm text-gray-600">
+                    {selectedPath.map((crumb, i) => (
+                      <span
+                        key={i}
+                        onClick={() => handleBreadcrumbClick(i)}
+                        className="cursor-pointer hover:underline"
+                      >
+                        {crumb}
+                        {i < selectedPath.length - 1 && ' > '}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Categories */}
               <div className="w-full mt-0 flex items-center justify-between gap-4 p-0 rounded-md">
                 {/* Category */}
@@ -621,7 +749,7 @@ export default function ProductForm({
                             >
                               Select
                             </option>
-                            {data?.categories?.map((c: any) => (
+                            {/* {data?.categories?.map((c: any) => (
                               <option
                                 key={c.id}
                                 value={c.name}
@@ -629,7 +757,7 @@ export default function ProductForm({
                               >
                                 {c.name}
                               </option>
-                            ))}
+                            ))} */}
                           </select>
                         )}
                       />
@@ -667,7 +795,7 @@ export default function ProductForm({
                           >
                             Select
                           </option>
-                          {subcategories.map((subcategory: string) => (
+                          {/* {subcategories.map((subcategory: string) => (
                             <option
                               key={subcategory}
                               value={subcategory}
@@ -675,7 +803,7 @@ export default function ProductForm({
                             >
                               {subcategory}
                             </option>
-                          ))}
+                          ))} */}
                         </select>
                       )}
                     />

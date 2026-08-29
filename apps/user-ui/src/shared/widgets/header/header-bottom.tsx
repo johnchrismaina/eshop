@@ -23,7 +23,7 @@ const HeaderBottom = () => {
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
     <div className="relative z-10 w-full transition-all duration-300 bg-[#fff] border-b border-gray-200 shadow-none shadow-gray-300/10 ">
-      <div className="w-full px-8 mx-auto pt-1 pb-1 relative flex items-center justify-between gap-4 h-full ">
+      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-4 h-full ">
         {/* All Dropdowns */}
         <div>
           {/* Bottom header button */}

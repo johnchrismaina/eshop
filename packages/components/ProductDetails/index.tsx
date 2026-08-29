@@ -462,9 +462,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[260px] px-4 py-6 bg-[#fafafc] border-none border-[#ddd] rounded-md">
+        <div className=" w-[260px] px-0 py-0 bg-[#fff] border-none border-[#ddd] rounded-md">
           {/* Delivery options */}
-          <div className="flex flex-col gap-3 px-0 pb-6 rounded-none border-b border-[#ddd] mb-2">
+          <div className="flex flex-col gap-3 px-4 py-6 rounded-lg border border-[#ddd] mb-2">
             {/* Pickup location */}
             <div className="flex items-center justify-between font-medium tracking-tight ">
               <div className="flex items-center gap-2">

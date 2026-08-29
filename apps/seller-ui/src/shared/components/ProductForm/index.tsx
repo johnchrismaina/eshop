@@ -26,8 +26,8 @@ import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
-import productSpecifications from 'packages/utils/productSpecifications.json';
-import { useAutoSeedSpecifications } from 'apps/seller-ui/src/hooks/useAutoSeedSpecifications';
+// import productSpecifications from 'packages/utils/productSpecifications.json';
+// import { useAutoSeedSpecifications } from 'apps/seller-ui/src/hooks/useAutoSeedSpecifications';
 
 const TABS = [
   'Product Identity',
@@ -147,15 +147,7 @@ export default function ProductForm({
   // const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(TABS[0]);
-  // const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
 
-  // const [images, setImages] = useState<(UploadedImage | null)[]>(
-  //   Array(8).fill(null)
-  // );
-
-  // const [uploading, setUploading] = useState<{ [key: number]: boolean }>({});
-  // instead of useState<Record<number, boolean>>({})
-  // const [uploading, setUploading] = useState<Record<string, boolean>>({});
   const [images, setImages] = useState<(UploadedImage | null)[]>(
     Array(8).fill(null)
   );
@@ -251,6 +243,10 @@ export default function ProductForm({
   // path leading TO the level currently being displayed (never includes a leaf label)
   const [levelPath, setLevelPath] = useState<string[]>([]);
 
+  //---------------------------
+
+  const categoryButtonRef = useRef<HTMLDivElement>(null);
+
   // derive subcategories from API data
   // const subcategories = useMemo(() => {
   //   if (!selectedCategory || !data?.categories) return [];
@@ -308,28 +304,58 @@ export default function ProductForm({
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if (!openCategories) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        categoryButtonRef.current &&
+        !categoryButtonRef.current.contains(e.target as Node)
+      ) {
+        setOpenCategories(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openCategories]);
+
+  // handleSelect
   function handleSelect(cat: ShopCategory) {
+    console.log('selected:', cat.label, 'subCategories:', cat.subCategories);
+
     const newPath = [...levelPath, cat.label];
 
     if (cat.subCategories && cat.subCategories.length > 0) {
-      // drill down into children
       setLevelPath(newPath);
       setSelectedPath(newPath);
       setCurrentLevel(cat.subCategories);
     } else {
-      // leaf selected → radio choice
       setSelectedPath(newPath);
       setSelectedValue(cat.value);
-      setOpenCategories(false);
-      // levelPath intentionally NOT updated here — re-clicking the same
-      // leaf again reproduces the same newPath instead of duplicating it
+      // no auto-close here anymore — panel stays open until the user
+      // taps Confirm, X, or the backdrop
     }
   }
 
+  // handleBackCategories
+  function handleBackCategories() {
+    if (levelPath.length === 0) return;
+    const parentPath = levelPath.slice(0, -1);
+    setLevelPath(parentPath);
+    setSelectedPath(parentPath);
+
+    let level = categories;
+    for (const label of parentPath) {
+      const node = level.find((c) => c.label === label);
+      level = node?.subCategories ?? [];
+    }
+    setCurrentLevel(level);
+  }
+
+  // handleBreadcrumbClick
   function handleBreadcrumbClick(index: number) {
     const newPath = selectedPath.slice(0, index + 1);
     setSelectedPath(newPath);
-    setLevelPath(newPath); // keep in sync with the level we're navigating to
+    setLevelPath(newPath);
 
     let level = categories;
     for (let i = 0; i <= index; i++) {
@@ -338,6 +364,71 @@ export default function ProductForm({
     }
     setCurrentLevel(level);
     setOpenCategories(true);
+
+    if (index < selectedPath.length - 1) {
+      setSelectedValue(null);
+    }
+  }
+
+  // handleRootClick
+  function handleRootClick() {
+    setSelectedPath([]);
+    setLevelPath([]);
+    setCurrentLevel(categories);
+    setSelectedValue(null);
+    setOpenCategories(true);
+  }
+
+  // renderOptions — shared row list, used by both dropdown and sheet
+  function renderOptions() {
+    return currentLevel.map((cat) => {
+      const isLeaf = !cat.subCategories || cat.subCategories.length === 0;
+      const isSelected = isLeaf && selectedValue === cat.value;
+
+      return (
+        <button
+          key={cat.value}
+          type="button"
+          onClick={() => handleSelect(cat)}
+          className={`w-full flex items-center justify-between px-4 py-3 text-sm text-left border-b border-gray-100 last:border-b-0 ${
+            isSelected ? 'bg-orange-50 text-[#C2410C]' : 'hover:bg-gray-50'
+          }`}
+        >
+          {cat.label}
+          {isLeaf ? (
+            isSelected && (
+              <svg
+                className="w-4 h-4 text-[#C2410C]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            )
+          ) : (
+            <svg
+              className="w-4 h-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          )}
+        </button>
+      );
+    });
   }
 
   // Load Draft on Page Mount
@@ -608,7 +699,6 @@ export default function ProductForm({
                   </p>
                 )}
               </div>
-
               {/* Slug */}
               <div className="mt-0 w-full p-0 rounded-md">
                 <label className="block text-[15px] font-semibold text-gray-700 mb-1">
@@ -642,87 +732,141 @@ export default function ProductForm({
                   </p>
                 )}
               </div>
-
               {/* --- DROPDOWN --- */}
-              <label className="w-full flex items-center justify-start gap-2">
-                <span className="text-gray-700">Choose Category: </span>
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setOpenCategories((o) => !o)}
-                    className="w-[320px] h-10 px-3 border border-gray-200 rounded-md text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+              <div className="relative w-full flex flex-col items-center justify-start gap-3">
+                <label className="w-full flex items-center justify-start gap-3">
+                  <span className="block text-sm font-medium mb-1">
+                    Category:
+                  </span>
+                  <div
+                    className="flex flex-col gap-1 w-full relative"
+                    ref={categoryButtonRef}
                   >
-                    {selectedPath.length > 0
-                      ? selectedPath[selectedPath.length - 1]
-                      : 'Select Category'}
-                    <svg
-                      className="w-4 h-4 text-[#333]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                    <button
+                      type="button"
+                      onClick={() => setOpenCategories(true)}
+                      className="w-[400px] h-10 px-3 border border-gray-200 rounded-md text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
+                      {selectedPath.length > 0
+                        ? selectedPath[selectedPath.length - 1]
+                        : 'Select Category'}
+                      <svg
+                        className="w-4 h-4 text-[#333]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
 
-                  {openCategories && (
-                    <div className="absolute z-10 mt-1 w-full max-h-80 overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg">
-                      {currentLevel.map((cat) => (
-                        <div
-                          key={cat.value}
-                          className="flex items-center px-3 py-2 hover:bg-gray-100"
-                        >
-                          {(!cat.subCategories ||
-                            cat.subCategories.length === 0) && (
-                            <input
-                              type="radio"
-                              name="category"
-                              value={cat.value}
-                              checked={selectedValue === cat.value}
-                              onChange={() => handleSelect(cat)}
-                              className="mr-2"
-                            />
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => handleSelect(cat)}
-                            className="flex-1 text-left"
-                          >
-                            {cat.label}
-                          </button>
+                    {openCategories && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white w-full max-w-md h-full flex flex-col">
+                          {/* Header */}
+                          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+                            <h2 className="text-lg font-medium">
+                              Choose Category
+                            </h2>
+                            <button
+                              type="button"
+                              onClick={() => setOpenCategories(false)}
+                              className="p-1"
+                            >
+                              <svg
+                                className="w-5 h-5 text-gray-500"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+
+                          {/* Scrollable category list */}
+                          <div className="flex-1 overflow-y-auto p-4">
+                            {levelPath.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={handleBackCategories}
+                                className="w-full flex items-center gap-2 px-3 py-2 mb-2 text-sm font-medium text-[#C2410C] hover:bg-gray-50 rounded-md"
+                              >
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 19l-7-7 7-7"
+                                  />
+                                </svg>
+                                Back
+                                {levelPath.length > 1
+                                  ? ` to ${levelPath[levelPath.length - 2]}`
+                                  : ' to Categories'}
+                              </button>
+                            )}
+                            {renderOptions()}
+                          </div>
+
+                          {/* Confirm button */}
+                          <div className="p-4 border-t border-gray-200">
+                            <button
+                              type="button"
+                              onClick={() => setOpenCategories(false)}
+                              disabled={!selectedValue}
+                              className="w-full h-11 rounded-md text-sm font-medium bg-[#C2410C] text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                              Confirm Category
+                            </button>
+                          </div>
                         </div>
+                      </div>
+                    )}
+                  </div>
+                </label>
+
+                {/* Breadcrumb rail */}
+                <div className="w-full flex items-center justify-start gap-2 px-4 py-1 border border-gray-300 rounded-lg">
+                  <span
+                    onClick={handleRootClick}
+                    className="cursor-pointer hover:underline text-sm font-medium text-[#C2410C] shrink-0"
+                  >
+                    Home{selectedPath.length > 0 && ' >'}
+                  </span>
+                  {selectedPath.length > 0 && (
+                    <div className="flex flex-wrap gap-1 text-sm text-gray-600">
+                      {selectedPath.map((crumb, i) => (
+                        <span
+                          key={i}
+                          onClick={() => handleBreadcrumbClick(i)}
+                          className="cursor-pointer hover:underline"
+                        >
+                          {crumb}
+                          {i < selectedPath.length - 1 && ' > '}
+                        </span>
                       ))}
                     </div>
                   )}
                 </div>
-              </label>
-
-              {/* Breadcrumb rail */}
-              <div className="w-full flex items-center justify-start gap-2 px-4 py-1 border border-gray-300 rounded-lg">
-                <span>Breadcrumbs: </span>
-                {selectedPath.length > 0 && (
-                  <div className="flex flex-wrap gap-1 text-sm text-gray-600">
-                    {selectedPath.map((crumb, i) => (
-                      <span
-                        key={i}
-                        onClick={() => handleBreadcrumbClick(i)}
-                        className="cursor-pointer hover:underline"
-                      >
-                        {crumb}
-                        {i < selectedPath.length - 1 && ' > '}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
-
               {/* Categories */}
-              <div className="w-full mt-0 flex items-center justify-between gap-4 p-0 rounded-md">
+              <div className="w-full mt-0 items-center justify-between gap-4 p-0 rounded-md hidden">
                 {/* Category */}
                 <div className="flex-1">
                   <label className="block font-semibold text-[15px] text-gray-700 mb-1">
@@ -821,9 +965,8 @@ export default function ProductForm({
                   )}
                 </div>
               </div>
-
               {/* Tags */}
-              <div className="mb-10 w-full p-0 rounded-md ">
+              <div className="mb-10 w-full p-0 rounded-md hidden">
                 <label className="block text-[15px] font-semibold text-gray-700 mb-1">
                   Tags *
                 </label>

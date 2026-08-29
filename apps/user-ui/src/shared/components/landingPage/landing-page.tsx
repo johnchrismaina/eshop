@@ -14,7 +14,7 @@ export default function LandingPage() {
 
   return (
     <div className="bg-[#fff] min-h-screen ">
-      <div className="px-10 pt-3 bg-[#fff]">
+      <div className="px-10 pt-4 bg-[#fff]">
         <Hero />
       </div>
       <div className="w-full px-0 pb-5 m-auto flex flex-col bg-transparent">

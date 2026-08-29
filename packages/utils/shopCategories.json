@@ -87,7 +87,7 @@
                         "Tailored"
                       ],
                       "multiSelect": true,
-                      "render": "checkbox",
+                      "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
                       "tooltip": "Choose the fit style that best describes the product."

@@ -46,10 +46,39 @@ interface UploadedImage {
   file_url: string;
 }
 
+// interface ShopCategory {
+//   value: string;
+//   label: string;
+//   subCategories?: ShopCategory[];
+// }
+
+// A single filter definition
+interface Filter {
+  label: string;
+  value: string;
+  type: 'enum' | 'text'; // extend as needed
+  options?: string[];
+  multiSelect?: boolean;
+  render: 'dropdown' | 'checkbox' | 'text';
+  sellerInput: 'single' | 'multi';
+  required?: boolean;
+  tooltip?: string;
+}
+
+// A group of filters (subcategory-specific)
+interface FilterGroup {
+  title: string;
+  filters: Filter[];
+}
+
+// Category structure
 interface ShopCategory {
   value: string;
   label: string;
+  filterLibrary?: Filter[]; // reusable filters defined at parent level
+  filterGroups?: FilterGroup[]; // grouped filters defined at child level
   subCategories?: ShopCategory[];
+  highlights?: { ref: string }[];
 }
 
 type FormValues = {
@@ -243,35 +272,12 @@ export default function ProductForm({
   // path leading TO the level currently being displayed (never includes a leaf label)
   const [levelPath, setLevelPath] = useState<string[]>([]);
 
+  // const filters = getFiltersForCategory(selectedPath, categories);
+  const { inherited, groups } = getFiltersGrouped(selectedPath, categories);
+
   //---------------------------
 
   const categoryButtonRef = useRef<HTMLDivElement>(null);
-
-  // derive subcategories from API data
-  // const subcategories = useMemo(() => {
-  //   if (!selectedCategory || !data?.categories) return [];
-  //   const category = data.categories.find(
-  //     (cat: any) => cat.name === selectedCategory
-  //   );
-  // console.log(data.categories);
-  //   return category?.subCategories?.map((sub: any) => sub.name) || [];
-  // }, [selectedCategory, data?.categories]);
-
-  // useEffect(() => {
-  //   if (data?.categories?.length) {
-  //     setValue('category', 'Clothing & Apparel');
-  //     setValue('subCategory', "Women's Clothing");
-  //     clearErrors(['category', 'subCategory']);
-  //   }
-  // }, [data?.categories, setValue, clearErrors]);
-
-  // Import your seeded JSON templates (the big category/specs file)
-
-  // useAutoSeedSpecifications({
-  //   control,
-  //   setValue,
-  //   templates: productSpecifications,
-  // });
 
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -429,6 +435,96 @@ export default function ProductForm({
         </button>
       );
     });
+  }
+
+  // Extract filters from JSON
+  function getFiltersGrouped(
+    selectedPath: string[],
+    categories: ShopCategory[]
+  ) {
+    let inherited: Filter[] = [];
+    let groups: FilterGroup[] = [];
+    let level = categories;
+
+    for (const label of selectedPath) {
+      const node = level.find((c) => c.label === label);
+      if (!node) break;
+
+      if (node.filterLibrary) {
+        inherited = [...inherited, ...node.filterLibrary];
+      }
+      if (node.filterGroups) {
+        groups = [...groups, ...node.filterGroups];
+      }
+
+      level = node.subCategories ?? [];
+    }
+
+    return { inherited, groups };
+  }
+
+  function FilterDropdown({
+    // label,
+    options,
+    // tooltip,
+    required,
+  }: {
+    // label: string;
+    options: string[];
+    // tooltip?: string;
+    required?: boolean;
+  }) {
+    const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState<string | null>(null);
+    const ref = useRef<HTMLDivElement>(null);
+
+    return (
+      <div className="flex flex-col gap-1 w-full mb-0.5 relative" ref={ref}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className="w-full h-10 px-3 border border-gray-200 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+        >
+          {selected || 'Select'}
+          <svg
+            className="w-4 h-4 text-[#333]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+
+        {open && (
+          <ul className="absolute top-full mt-1 w-full max-h-[168px] overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg z-10">
+            {options.map((opt) => (
+              <li key={opt}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelected(opt);
+                    setOpen(false);
+                  }}
+                  className={`w-full h-[34px] px-3 text-left text-sm hover:bg-gray-50 ${
+                    opt === selected
+                      ? 'bg-[#C2410C]/10 text-[#C2410C] font-medium'
+                      : 'text-[#1C1C1E]'
+                  }`}
+                >
+                  {opt}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
   }
 
   // Load Draft on Page Mount
@@ -1053,30 +1149,122 @@ export default function ProductForm({
           {activeTab === 'Product Details' && (
             <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
               {/* Product Specifications */}
-              {specs?.map((spec, idx) => (
-                <div key={idx} className="mb-2 w-full">
-                  <label className="block text-[15px] font-semibold mb-0.5">
-                    {spec.label}
-                  </label>
-                  <input
-                    type="text"
-                    value={spec.value || ''}
-                    onChange={(e) =>
-                      setValue(
-                        `product_specifications.${idx}.value`,
-                        e.target.value
-                      )
-                    }
-                    className="w-full border border-gray-300 rounded-md px-2 py-1"
-                  />
+              {/* General Attributes (inherited filters) */}
+              {inherited.length > 0 && (
+                <div className="w-full mb-4">
+                  <h3 className="text-lg font-bold pb-2">General Attributes</h3>
+                  {inherited.map((filter) => (
+                    <div
+                      key={filter.value}
+                      className="flex flex-col gap-1 mb-2"
+                    >
+                      <label className=" items-center gap-1 text-sm font-medium ">
+                        {filter.label}
+                        {filter.tooltip && (
+                          <span
+                            className="text-gray-400 cursor-pointer"
+                            title={filter.tooltip}
+                          >
+                            ℹ️
+                          </span>
+                        )}
+                      </label>
+
+                      {filter.render === 'dropdown' && (
+                        <FilterDropdown
+                          // label={filter.label}
+                          options={filter.options ?? []}
+                          // tooltip={filter.tooltip}
+                          required={filter.required}
+                        />
+                      )}
+
+                      {filter.render === 'checkbox' && (
+                        <div className="flex flex-wrap gap-2">
+                          {filter.options?.map((opt) => (
+                            <label
+                              key={opt}
+                              className="flex items-center gap-1"
+                            >
+                              <input type="checkbox" value={opt} />
+                              {opt}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+
+                      {filter.render === 'text' && (
+                        <input
+                          type="text"
+                          placeholder={`Enter ${filter.label}`}
+                          className="border rounded px-2 py-1 h-10 text-sm"
+                          required={filter.required}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* Category-specific filter groups */}
+              {groups.map((group) => (
+                <div key={group.title} className="w-full mb-4">
+                  <h3 className="text-lg font-bold pb-2">{group.title}</h3>
+                  {group.filters.map((filter) => (
+                    <div
+                      key={filter.value}
+                      className="flex flex-col gap-1 mb-2"
+                    >
+                      <label className=" items-center gap-1 text-sm font-medium ">
+                        {filter.label}
+                        {filter.tooltip && (
+                          <span
+                            className="text-gray-400 cursor-pointer"
+                            title={filter.tooltip}
+                          >
+                            ℹ️
+                          </span>
+                        )}
+                      </label>
+
+                      {filter.render === 'dropdown' && (
+                        <FilterDropdown
+                          // label={filter.label}
+                          options={filter.options ?? []}
+                          // tooltip={filter.tooltip}
+                          required={filter.required}
+                        />
+                      )}
+
+                      {filter.render === 'checkbox' && (
+                        <div className="flex flex-wrap gap-2">
+                          {filter.options?.map((opt) => (
+                            <label
+                              key={opt}
+                              className="flex items-center gap-1"
+                            >
+                              <input type="checkbox" value={opt} />
+                              {opt}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+
+                      {filter.render === 'text' && (
+                        <input
+                          type="text"
+                          placeholder={`Enter ${filter.label}`}
+                          className="border rounded px-2 py-1 h-10 text-sm"
+                          required={filter.required}
+                        />
+                      )}
+                    </div>
+                  ))}
                 </div>
               ))}
-
               {/* Product Properties */}
               <div className="w-full p-0 rounded-md hidden">
                 <CustomProperties control={control} errors={errors} />
               </div>
-
               {/* Product Specifications */}
               <div className="w-full p-0 rounded-md hidden">
                 <CustomSpecifications control={control} errors={errors} />

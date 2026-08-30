@@ -15,7 +15,7 @@ import Input from 'packages/components/input';
 import SizeSelector from 'packages/components/size-selector';
 import Spinner from 'packages/components/spinner';
 // import { Spinner } from 'packages/components/spinner';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
@@ -26,8 +26,8 @@ import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
-// import productSpecifications from 'packages/utils/productSpecifications.json';
-// import { useAutoSeedSpecifications } from 'apps/seller-ui/src/hooks/useAutoSeedSpecifications';
+import { splitSchema } from 'packages/utils/filtersUtils';
+import { categories } from 'packages/utils/shopCategories.json';
 
 const TABS = [
   'Product Identity',
@@ -279,6 +279,8 @@ export default function ProductForm({
 
   const categoryButtonRef = useRef<HTMLDivElement>(null);
 
+  const { sellerFilters } = splitSchema(categories);
+
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -464,19 +466,39 @@ export default function ProductForm({
   }
 
   function FilterDropdown({
-    // label,
+    label,
     options,
-    // tooltip,
+    multiSelect = false,
     required,
   }: {
-    // label: string;
+    label: string;
     options: string[];
-    // tooltip?: string;
+    multiSelect?: boolean;
     required?: boolean;
   }) {
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState<string | null>(null);
+    const [selected, setSelected] = useState<string[]>([]);
     const ref = useRef<HTMLDivElement>(null);
+
+    const toggleOption = (opt: string) => {
+      if (multiSelect) {
+        setSelected((prev) =>
+          prev.includes(opt) ? prev.filter((o) => o !== opt) : [...prev, opt]
+        );
+      } else {
+        setSelected([opt]);
+        setOpen(false);
+      }
+    };
+
+    const clearSelection = () => {
+      setSelected([]);
+      if (!multiSelect) setOpen(false);
+    };
+
+    const selectAll = () => {
+      setSelected([...options]);
+    };
 
     return (
       <div className="flex flex-col gap-1 w-full mb-0.5 relative" ref={ref}>
@@ -485,7 +507,11 @@ export default function ProductForm({
           onClick={() => setOpen((o) => !o)}
           className="w-full h-10 px-3 border border-gray-200 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
         >
-          {selected || 'Select'}
+          {selected.length > 0 ? (
+            selected.join(', ')
+          ) : (
+            <span className="text-gray-400">{`Select ${label}`}</span>
+          )}
           <svg
             className="w-4 h-4 text-[#333]"
             fill="none"
@@ -503,20 +529,55 @@ export default function ProductForm({
 
         {open && (
           <ul className="absolute top-full mt-1 w-full max-h-[168px] overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg z-10">
+            {/* Multi-select helpers */}
+            {multiSelect && (
+              <>
+                {selected.length > 0 && (
+                  <li>
+                    <button
+                      type="button"
+                      onClick={clearSelection}
+                      className="w-full h-[34px] px-3 text-left text-sm text-red-600 hover:bg-red-50 font-medium"
+                    >
+                      Clear selection
+                    </button>
+                  </li>
+                )}
+                {selected.length < options.length && (
+                  <li>
+                    <button
+                      type="button"
+                      onClick={selectAll}
+                      className="w-full h-[34px] px-3 text-left text-sm text-green-600 hover:bg-green-50 font-medium"
+                    >
+                      Select all
+                    </button>
+                  </li>
+                )}
+                <li className="border-t border-gray-200"></li>
+              </>
+            )}
+
+            {/* Options */}
             {options.map((opt) => (
               <li key={opt}>
                 <button
                   type="button"
-                  onClick={() => {
-                    setSelected(opt);
-                    setOpen(false);
-                  }}
-                  className={`w-full h-[34px] px-3 text-left text-sm hover:bg-gray-50 ${
-                    opt === selected
+                  onClick={() => toggleOption(opt)}
+                  className={`w-full h-[34px] px-3 text-left text-sm hover:bg-gray-50 flex items-center ${
+                    selected.includes(opt)
                       ? 'bg-[#C2410C]/10 text-[#C2410C] font-medium'
                       : 'text-[#1C1C1E]'
                   }`}
                 >
+                  {multiSelect && (
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(opt)}
+                      onChange={() => toggleOption(opt)}
+                      className="mr-2"
+                    />
+                  )}
                   {opt}
                 </button>
               </li>
@@ -1153,114 +1214,155 @@ export default function ProductForm({
               {inherited.length > 0 && (
                 <div className="w-full mb-4">
                   <h3 className="text-lg font-bold pb-2">General Attributes</h3>
-                  {inherited.map((filter) => (
-                    <div
-                      key={filter.value}
-                      className="flex flex-col gap-1 mb-2"
-                    >
-                      <label className=" items-center gap-1 text-sm font-medium ">
-                        {filter.label}
-                        {filter.tooltip && (
-                          <span
-                            className="text-gray-400 cursor-pointer"
-                            title={filter.tooltip}
-                          >
-                            ℹ️
-                          </span>
-                        )}
-                      </label>
+                  {inherited.map((filter, idx) => {
+                    const isFirst = idx === 0;
+                    const isLast = idx === inherited.length - 1;
 
-                      {filter.render === 'dropdown' && (
-                        <FilterDropdown
-                          // label={filter.label}
-                          options={filter.options ?? []}
-                          // tooltip={filter.tooltip}
-                          required={filter.required}
-                        />
-                      )}
-
-                      {filter.render === 'checkbox' && (
-                        <div className="flex flex-wrap gap-2">
-                          {filter.options?.map((opt) => (
-                            <label
-                              key={opt}
-                              className="flex items-center gap-1"
+                    return (
+                      <div
+                        key={filter.value}
+                        className={`flex items-center justify-end gap-3 bg-white px-4 py-2 
+                        ${isFirst ? 'rounded-t-md pt-4' : ''} 
+                        ${isLast ? 'rounded-b-md pb-4' : ''}`}
+                      >
+                        {/* Label + Tooltip */}
+                        <label className="flex items-center gap-1 text-sm font-bold">
+                          {filter.label}
+                          {filter.tooltip && (
+                            <span
+                              className="text-gray-400 cursor-pointer"
+                              title={filter.tooltip}
                             >
-                              <input type="checkbox" value={opt} />
-                              {opt}
-                            </label>
-                          ))}
-                        </div>
-                      )}
+                              <Info size={18} color="#0078D7" />
+                            </span>
+                          )}
+                        </label>
 
-                      {filter.render === 'text' && (
-                        <input
-                          type="text"
-                          placeholder={`Enter ${filter.label}`}
-                          className="border rounded px-2 py-1 h-10 text-sm"
-                          required={filter.required}
-                        />
-                      )}
-                    </div>
-                  ))}
+                        {/* Seller dropdown logic */}
+                        {filter.render === 'dropdown' && (
+                          <FilterDropdown
+                            label={filter.label}
+                            options={filter.options ?? []}
+                            multiSelect={filter.sellerInput === 'multi'} // ✅ sellerInput decides
+                            required={filter.required}
+                          />
+                        )}
+
+                        {/* Seller checkbox logic */}
+                        {filter.render === 'checkbox' && (
+                          <div className="flex flex-wrap gap-2">
+                            {filter.options?.map((opt) => (
+                              <label
+                                key={opt}
+                                className="flex items-center gap-1"
+                              >
+                                <input
+                                  type={
+                                    filter.sellerInput === 'multi'
+                                      ? 'checkbox'
+                                      : 'radio'
+                                  } // ✅ sellerInput decides
+                                  name={filter.value}
+                                  value={opt}
+                                />
+                                {opt}
+                              </label>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Seller text input */}
+                        {filter.render === 'text' && (
+                          <input
+                            type="text"
+                            placeholder={`Enter ${filter.label}`}
+                            className="w-[500px] border border-gray-200 rounded-md px-4 py-2 h-10 text-sm text-[#1C1C1E] placeholder-gray-400 focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+                            required={filter.required}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
+
               {/* Category-specific filter groups */}
               {groups.map((group) => (
                 <div key={group.title} className="w-full mb-4">
                   <h3 className="text-lg font-bold pb-2">{group.title}</h3>
-                  {group.filters.map((filter) => (
-                    <div
-                      key={filter.value}
-                      className="flex flex-col gap-1 mb-2"
-                    >
-                      <label className=" items-center gap-1 text-sm font-medium ">
-                        {filter.label}
-                        {filter.tooltip && (
-                          <span
-                            className="text-gray-400 cursor-pointer"
-                            title={filter.tooltip}
-                          >
-                            ℹ️
-                          </span>
-                        )}
-                      </label>
+                  {group.filters.map((filter, idx) => {
+                    const isFirst = idx === 0;
+                    const isLast = idx === group.filters.length - 1;
 
-                      {filter.render === 'dropdown' && (
-                        <FilterDropdown
-                          // label={filter.label}
-                          options={filter.options ?? []}
-                          // tooltip={filter.tooltip}
-                          required={filter.required}
-                        />
-                      )}
-
-                      {filter.render === 'checkbox' && (
-                        <div className="flex flex-wrap gap-2">
-                          {filter.options?.map((opt) => (
-                            <label
-                              key={opt}
-                              className="flex items-center gap-1"
+                    return (
+                      <div
+                        key={filter.value}
+                        className={`flex items-center justify-end gap-3 bg-white px-4 py-2  
+                        ${isFirst ? 'rounded-t-md pt-4' : ''} 
+                        ${isLast ? 'rounded-b-md pb-4' : ''}`}
+                      >
+                        {/* Label + Tooltip */}
+                        <label className="flex items-center gap-1 shrink-0 text-[14px] font-bold">
+                          {filter.label}
+                          {filter.tooltip && (
+                            <span
+                              className="text-gray-400 cursor-pointer"
+                              title={filter.tooltip}
                             >
-                              <input type="checkbox" value={opt} />
-                              {opt}
-                            </label>
-                          ))}
-                        </div>
-                      )}
+                              <Info size={18} color="#0078D7" />
+                            </span>
+                          )}
+                        </label>
 
-                      {filter.render === 'text' && (
-                        <input
-                          type="text"
-                          placeholder={`Enter ${filter.label}`}
-                          className="border rounded px-2 py-1 h-10 text-sm"
-                          required={filter.required}
-                        />
-                      )}
-                    </div>
-                  ))}
+                        {/* Seller dropdown logic */}
+                        {filter.render === 'dropdown' && (
+                          <FilterDropdown
+                            label={filter.label}
+                            options={filter.options ?? []}
+                            multiSelect={filter.sellerInput === 'multi'} // ✅ sellerInput decides
+                            required={filter.required}
+                          />
+                        )}
+
+                        {/* Seller checkbox logic (rare, but supported) */}
+                        {filter.render === 'checkbox' && (
+                          <div className="flex flex-wrap gap-2">
+                            {filter.options?.map((opt) => (
+                              <label
+                                key={opt}
+                                className="flex items-center gap-1"
+                              >
+                                <input
+                                  type={
+                                    filter.sellerInput === 'multi'
+                                      ? 'checkbox'
+                                      : 'radio'
+                                  } // ✅ sellerInput decides
+                                  name={filter.value}
+                                  value={opt}
+                                />
+                                {opt}
+                              </label>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Seller text input */}
+                        {filter.render === 'text' && (
+                          <input
+                            type="text"
+                            placeholder={`Enter ${filter.label}`}
+                            className="w-[500px] border border-gray-300 rounded-md px-4 py-2 h-10 text-sm text-[#1C1C1E] placeholder-gray-400 focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+                            required={filter.required}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
+
+              {/* ))} */}
               {/* Product Properties */}
               <div className="w-full p-0 rounded-md hidden">
                 <CustomProperties control={control} errors={errors} />

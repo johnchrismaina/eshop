@@ -372,8 +372,8 @@
                     {
                       "label": "Brand Name",
                       "value": "brand_name",
-                      "type": "text",
                       "multiSelect": true,
+                      "render": "text",
                       "sellerInput": "single",
                       "required": false,
                       "tooltip": "Enter the official brand name associated with the product."
@@ -381,8 +381,8 @@
                     {
                       "label": "Model Name",
                       "value": "model_name",
-                      "type": "text",
                       "multiSelect": false,
+                      "render": "text",
                       "sellerInput": "single",
                       "required": true,
                       "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
@@ -390,8 +390,8 @@
                     {
                       "label": "Manufacturer",
                       "value": "manufacturer",
-                      "type": "text",
                       "multiSelect": true,
+                      "render": "text",
                       "sellerInput": "single",
                       "required": false,
                       "tooltip": "Enter the official manufacturer name associated with the product."
@@ -404,8 +404,8 @@
                     {
                       "label": "Fabric Type",
                       "value": "fabric_type",
-                      "type": "text",
                       "multiSelect": true,
+                      "render": "text",
                       "sellerInput": "single",
                       "required": true,
                       "tooltip": "Specify the fabric type used in the product (e.g., Denim, Silk, Jersey, 50% Polyester, 50% Cotton)."
@@ -494,8 +494,8 @@
                     {
                       "label": "Weight",
                       "value": "weight",
-                      "type": "text",
                       "multiSelect": false,
+                      "render": "text",
                       "sellerInput": "single",
                       "required": false,
                       "tooltip": "Specify the product’s weight, including units (e.g., 500g, 2kg, 1.5 lbs)."

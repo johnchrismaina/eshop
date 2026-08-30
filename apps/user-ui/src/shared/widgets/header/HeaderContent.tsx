@@ -239,7 +239,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   };
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_260px] items-center justify-start gap-3 bg-[#272d3a] ">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_260px] items-center justify-start gap-3 bg-[#293241] ">
       <div className="flex items-center justify-start gap-2">
         {/* Logo */}
         <div
@@ -248,7 +248,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         >
           <div className="shrink-0 mt-1">
             {/* <PiShoppingBag color="FEA417" size={30} /> */}
-            <CgShoppingBag color="FEA417" size={30} />
+            <CgShoppingBag color="FF9F1C" size={30} />
           </div>
 
           <p className="">
@@ -332,7 +332,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
             <button
               aria-label="Search"
               className="flex items-center justify-center w-14 h-10 mr-[0px] rounded-r-full
-                   text-[#E85D1F] bg-[#EDEBE5] hover:text-[#E85D1F]
+                   text-[#E85D1F] bg-gray-50 hover:text-[#E85D1F]
                    transition-colors flex-shrink-0"
             >
               <Search strokeWidth={2} size={20} />

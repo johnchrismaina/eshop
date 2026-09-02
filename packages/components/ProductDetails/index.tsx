@@ -180,7 +180,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>
-      <div className="w-full pt-2 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_260px] gap-4">
+      <div className="w-full pt-2 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_280px] gap-4">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 w-[650px] h-auto mx-auto">
           {/* Thumbnail images array */}
@@ -296,9 +296,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           <div className="mt-1">
             {/* Product price */}
             <div className="flex flex-col">
-              <div className="pt-4 text-[#333] tracking-tight">
-                <span className="text-[14px] font-bold">Ksh </span>
-                <span className="text-2xl font-bold tracking-tight ">
+              <div className="pt-4 text-[#52525B] space-x-0.5">
+                <span className="text-[15px] font-semibold">KSh</span>
+                <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight ">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
                     : productDetails?.regular_price}
@@ -462,66 +462,149 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[260px] px-0 py-0 bg-[#fff] border-none border-[#ddd] rounded-md">
-          {/* Delivery options */}
-          <div className="flex flex-col gap-3 px-4 py-6 rounded-lg border border-[#ddd] mb-2">
-            {/* Pickup location */}
-            <div className="flex items-center justify-between font-medium tracking-tight ">
-              <div className="flex items-center gap-2">
-                <Package
-                  size={18}
-                  strokeWidth="1.5"
-                  color="#333"
-                  className="shrink-0"
-                />
-                <span className="text-[#52525B] text-[13.5px] font-semibold ">
-                  Pickup
+        <div className=" w-[280px] px-4 py-4 bg-[#fff] border border-[#ddd] rounded-lg ">
+          {/* Price */}
+          <div className="space-x-0.5 mb-4 ">
+            <span className="text-[15px] text-[#52525B] font-semibold">
+              KSh
+            </span>
+            <span className="text-3xl text-[#1C1C1E] font-semibold">
+              {productDetails?.deal
+                ? productDetails.deal.sale_price
+                : productDetails?.regular_price}
+            </span>
+          </div>
+
+          {/* Quantity */}
+          <div className="flex flex-col items-start gap-1 pb-4 mb-6 border-b border-gray-200">
+            {/* In stock and out of stock */}
+            <div className="hidden">
+              {productDetails?.stock > 0 ? (
+                <span className="text-[15px] text-green-600 font-medium">
+                  In Stock{' '}
+                  {/* <span className="text-gray-500 font-medium">
+                    (Stock {productDetails?.stock})
+                  </span> */}
                 </span>
-              </div>
-              <div className="">
-                <p className="flex items-center gap-2 text-[13.5px] text-[#333]">
+              ) : (
+                <span className="text-red-600 font-medium">Out of Stock</span>
+              )}
+            </div>
+
+            {/* Quantity dropdown */}
+            <span className="text-sm font-bold text-[#333] ">Quantity</span>
+            <div
+              className="flex flex-col gap-1 w-[180px] mb-0.5 relative"
+              ref={quantityRef}
+            >
+              <button
+                type="button"
+                onClick={() => setQuantityOpen((o) => !o)}
+                className="w-full h-[36px] px-3 border border-gray-300 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+              >
+                {quantity}
+                <svg
+                  className="w-4 h-4 text-[#333] "
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {quantityOpen && (
+                <ul className="absolute top-full mt-1 w-full max-h-[168px] overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg z-10">
+                  {[1, 2, 3, 4, 5, 10, 20, 50, 100].map((q) => (
+                    <li key={q}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setQuantity(q);
+                          setQuantityOpen(false);
+                        }}
+                        className={`w-full h-[34px] px-3 text-left text-sm hover:bg-gray-50 ${
+                          q === quantity
+                            ? 'bg-[#C2410C]/10 text-[#C2410C] font-medium'
+                            : 'text-[#1C1C1E]'
+                        }`}
+                      >
+                        {q}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          {/* Delivery options */}
+          <div className="flex flex-col gap-3 px-0 mb-6">
+            {/* Pickup location */}
+            <div className="flex items-start justify-start font-medium tracking-tight gap-1.5">
+              <Package
+                size={18}
+                strokeWidth="1.5"
+                color="#333"
+                className="shrink-0"
+              />
+
+              <div className="flex flex-col items-start gap-1 text-[13.5px] text-[#1C1C1E]">
+                <div className="w-full flex items-center justify-start gap-1.5">
+                  <span className=" text-[14.0px] font-bold ">
+                    Pickup Station -
+                  </span>
                   <span className="font-bold">Ksh 70</span>
-                  <span className="font-bold">.</span>
-                  <span className="font-bold">Tue, Jul 7 </span>
-                </p>
+                </div>
+                <span className="font-semibold text-[#52525B]">
+                  Wed, Sept 2 - Thur, Sept 3
+                </span>
+                <span className="font-semibold hidden">
+                  {' '}
+                  Order within 1 hr 55 min{' '}
+                </span>
               </div>
             </div>
 
             {/* Door delivery */}
-            <div className="flex items-center justify-between font-medium tracking-tight ">
-              <div className="flex items-center gap-2">
-                <Package
-                  size={18}
-                  strokeWidth="1.5"
-                  color="#333"
-                  className="shrink-0"
-                />
-                <span className="text-[#52525B] text-[13.5px] font-semibold ">
-                  Delivery
-                </span>
-              </div>
-              <div className="">
-                <p className="flex items-center gap-2 text-[13.5px]  text-[#333]">
+            <div className="flex items-start justify-start font-medium tracking-tight gap-1.5">
+              <Truck
+                size={18}
+                strokeWidth="1.5"
+                color="#333"
+                className="shrink-0"
+              />
+
+              <div className="flex flex-col items-start gap-1 text-[13.5px] text-[#1C1C1E]">
+                <div className="w-full flex items-center justify-start gap-1.5">
+                  <span className=" text-[14.0px] font-bold ">
+                    Door Delivery -
+                  </span>
                   <span className="font-bold">Ksh 200</span>
-                  <span className="font-bold">.</span>
-                  <span className="font-bold">Tue, Jul 7 </span>
-                </p>
+                </div>
+                <span className="font-semibold text-[#52525B]">
+                  Wed, Sept 2 - Thur, Sept 3
+                </span>
+                <span className="font-semibold hidden">
+                  {' '}
+                  Order within 1 hr 55 min{' '}
+                </span>
               </div>
             </div>
 
             {/* Order timeline */}
-            <div className="pb-3 border-none border-[#ddd]">
-              <span className="text-[13.5px] font-medium text-[#9CA3AF] tracking-tight">
-                Order within 3 hrs 18 mins
-              </span>
-            </div>
-
-            <div className="flex items-center justify-start gap-2 pb-0">
-              <MapPin size={16} />
-              <p className="flex items-center gap-1">
-                <span className="text-sm font-normal ">Deliver to </span>
-                <span className="text-sm text-blue-600 font-normal cursor-pointer hover:underline ">
-                  {location?.city}
+            {/* <div className="pb-0 border-none border-[#ddd]"></div> */}
+            <div className="flex flex-col items-start justify-center gap-2 pb-0">
+              {/* <MapPin size={16} /> */}
+              <p className="flex items-center gap-1 text-sm font-normal">
+                <span className="">Deliver to </span>
+                <span className="text-blue-600 font-semibold cursor-pointer hover:underline">
+                  {location?.city}, {location?.country}
                 </span>
               </p>
               {/* <span className="text-sm text-blue-700 font-normal cursor-pointer pt-2">
@@ -532,93 +615,25 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
           </div>
 
+          {/* Order timeline */}
+          <div className="w-full flex items-start justify-start gap-1 p-2 mb-4 bg-[#FFF4EE] border border-[#FBD7C4] rounded-md">
+            <p className="text-[13.5px] font-medium text-[#52525B] tracking-tight">
+              Order within{' '}
+              <span className="text-[13.5px] font-bold text-[#52525B] tracking-tight">
+                3 hrs 18 mins
+              </span>{' '}
+              to get this date
+            </p>
+          </div>
+
           {/* <hr className="border-t border-gray-200 mt-0" /> */}
 
-          {/* Quantity and Add to Cart */}
-          <div className="px-0 py-6 mb-0 rounded-md ">
-            <div className="flex flex-col items-start gap-2 mb-3">
-              {/* In stock and out of stock */}
-              <div className="hidden">
-                {productDetails?.stock > 0 ? (
-                  <span className="text-[15px] text-green-600 font-medium">
-                    In Stock{' '}
-                    {/* <span className="text-gray-500 font-medium">
-                    (Stock {productDetails?.stock})
-                  </span> */}
-                  </span>
-                ) : (
-                  <span className="text-red-600 font-medium">Out of Stock</span>
-                )}
-              </div>
-
-              {/* Price */}
-              <div className="tracking-tight mb-2">
-                <span className="text-[14px] font-bold">Ksh </span>
-                <span className="text-2xl font-bold tracking-tight text-gray-900">
-                  {productDetails?.deal
-                    ? productDetails.deal.sale_price
-                    : productDetails?.regular_price}
-                </span>
-              </div>
-
-              {/* Quantity dropdown */}
-              <span className="text-sm font-semibold text-[#333] hidden ">
-                Quantity
-              </span>
-              <div
-                className="flex flex-col gap-1 w-full mb-0.5 relative"
-                ref={quantityRef}
-              >
-                <button
-                  type="button"
-                  onClick={() => setQuantityOpen((o) => !o)}
-                  className="w-full h-10 px-3 border border-gray-200 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
-                >
-                  {quantity}
-                  <svg
-                    className="w-4 h-4 text-[#333] "
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {quantityOpen && (
-                  <ul className="absolute top-full mt-1 w-full max-h-[168px] overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg z-10">
-                    {[1, 2, 3, 4, 5, 10, 20, 50, 100].map((q) => (
-                      <li key={q}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setQuantity(q);
-                            setQuantityOpen(false);
-                          }}
-                          className={`w-full h-[34px] px-3 text-left text-sm hover:bg-gray-50 ${
-                            q === quantity
-                              ? 'bg-[#C2410C]/10 text-[#C2410C] font-medium'
-                              : 'text-[#1C1C1E]'
-                          }`}
-                        >
-                          {q}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-
+          {/* Add to Cart & Buy Now */}
+          <div className="px-0 pb-6 mb-0 rounded-md ">
             {/* Add to cart button */}
-            <div className="flex flex-col gap-2 w-full pb-2 border-none border-[#ddd]">
+            <div className="flex flex-col gap-2 w-full pb-4 border-none border-[#ddd]">
               <button
-                className={`flex items-center justify-center px-6 h-10 text-[14.0px] text-[#1C1C1E] font-semibold bg-[#fff] hover:bg-gray-100 border border-gray-300 rounded-full transition-colors duration-300 ${
+                className={`flex items-center justify-center px-6 h-[36px] text-[14.0px] text-[#1C1C1E] font-semibold bg-[#fff] border border-slate-500 hover:bg-gray-100 rounded-md transition-all duration-300 ${
                   isInCart ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isInCart || productDetails?.stock === 0}
@@ -638,32 +653,30 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   )
                 }
               >
-                Add to cart
+                Add to Cart
               </button>
 
               {/* Buy Now button */}
-              <button className="flex items-center justify-center px-6 h-10 bg-[#FEA417] hover:bg-amber-500 text-[14.0px] text-[#000] font-semibold rounded-full transition duration-100">
+              <button className="flex items-center justify-center px-6 h-[36px] bg-[#FF9F1C] hover:bg-amber-500 text-[14.0px] text-[#1C1C1E] font-semibold rounded-md transition duration-100">
                 Buy Now
               </button>
             </div>
 
-            <div className="pt-2 space-y-2 mb-4 text-[#333] pb-4 border-b border-gray-200">
+            <div className="pt-2 space-y-2 mb-4 text-[#1C1C1E] pb-4 border-b border-gray-200">
               {/* Returns */}
               <div className="flex items-center justify-between font-medium tracking-tight pt-0 ">
                 <div className="flex items-center gap-2">
                   <RotateCcw
                     size={18}
-                    strokeWidth="2"
+                    strokeWidth="1.5"
                     color="#007D49"
                     className="shrink-0"
                   />
-                  <span className="text-[#52525B] text-[13.5px] font-semibold ">
-                    Returns
-                  </span>
+                  <span className=" text-[13.5px] font-bold ">Returns</span>
                 </div>
                 <div className="">
-                  <p className="flex items-center gap-2 text-[#333]">
-                    <span className="font-bold text-[13.5px]">
+                  <p className="flex items-center gap-1 text-[#52525B]">
+                    <span className="font-semibold text-[13.5px]">
                       30-day returns
                     </span>
                     <span className="font-medium text-[12.5px] text-blue-600 underline cursor-pointer">
@@ -678,17 +691,15 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 <div className="flex items-center gap-2">
                   <ShieldCheck
                     size={18}
-                    strokeWidth="2"
+                    strokeWidth="1.5"
                     color="#007D49"
                     className="shrink-0"
                   />
-                  <span className="text-[#52525B] text-[13.5px] font-semibold ">
-                    Security
-                  </span>
+                  <span className=" text-[13.5px] font-bold ">Security</span>
                 </div>
                 <div className="">
-                  <p className="flex items-center gap-2 text-[#333]">
-                    <span className="font-bold text-[13.5px]">
+                  <p className="flex items-center gap-1 text-[#52525B]">
+                    <span className="font-semibold text-[13.5px]">
                       Secure payments
                     </span>
                     <span className="font-medium text-[12.5px] text-blue-600 underline ">
@@ -730,7 +741,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               </dl>
 
               {/* Seller performance stats */}
-              <div className="flex flex-col items-start justify-start gap-2 pb-6 mb-3 border-b border-[#ddd]">
+              <div className="flex flex-col items-start justify-start gap-2 pb-6 border-b border-[#ddd]">
                 {/* Seller Store */}
                 <span className="flex items-center gap-2 text-[14.5px] font-bold tracking-tight">
                   <Store size={18} strokeWidth="1.5" color="#1d1d1f" />
@@ -757,9 +768,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               {/* <hr className="border-t border-slate-200 my-5" /> */}
 
               {/* Chat and Add to wishlist */}
-              <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 ">
+              <div className="flex flex-col items-center justify-start gap-4 cursor-pointer text-gray-800 mt-4 ">
                 {/* Add to wishlist */}
-                <div className="w-full flex items-center justify-start gap-2 cursor-pointer hover:bg-[#f1f1f1] p-2 border border-gray-300 rounded-md transition-all duration-300">
+                <div className="w-full flex items-center justify-center gap-2 cursor-pointer hover:bg-[#f1f1f1] p-2 border border-gray-400 rounded-md transition-all duration-300">
                   <Heart
                     size={16}
                     fill={isWishlisted ? 'red' : 'transparent'}

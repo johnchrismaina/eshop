@@ -4,7 +4,7 @@ export const StarFilled: FC<{
   size?: number;
   color?: string;
   stroke?: string;
-}> = ({ size = 24, color = '#FFC107', stroke = '#FFC107' }) => (
+}> = ({ size = 24, color = '#FFC107', stroke = '#f2a71b' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}

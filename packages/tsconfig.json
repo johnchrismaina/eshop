@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "files": [],
-  "include": [],
+  "include": ["../apps/seller-ui/src/shared/components/ProductForm"],
   "references": [
     {
       "path": "./tsconfig.lib.json"

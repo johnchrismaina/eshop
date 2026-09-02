@@ -22,7 +22,7 @@ const Ratings: FC<Props> = ({ rating }) => {
       stars.push(<HalfStar key={`star-${i}`} size={12} />);
     } else {
       // empty star
-      stars.push(<Star key={`star-${i}`} size={12} color="#FFC107" />);
+      stars.push(<Star key={`star-${i}`} size={12} color="#f2a71b" />);
     }
   }
 

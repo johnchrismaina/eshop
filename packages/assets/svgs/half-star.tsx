@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 export const HalfStar: FC<{ size?: number; color?: string }> = ({
   size = 24,
-  color = '#FFC107',
+  color = '#f2a71b',
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

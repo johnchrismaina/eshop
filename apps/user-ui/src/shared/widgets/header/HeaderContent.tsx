@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import { ChevronDown, MapPin, ShoppingBag } from 'lucide-react';
+import { ChevronDown, Heart, MapPin, ShoppingBag } from 'lucide-react';
 // import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
@@ -239,7 +239,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   };
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_260px] items-center justify-start gap-3 bg-[#293241] ">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-[#273747] ">
       <div className="flex items-center justify-start gap-2">
         {/* Logo */}
         <div
@@ -257,7 +257,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         </div>
 
         {/* Delivery location - can be dropdown in future */}
-        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-slate-600 rounded-full cursor-pointer transition-colors duration-150 shrink-0">
+        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-gray-700 rounded-full cursor-pointer transition-colors duration-150 shrink-0">
           {/* </div> */}
           <div className="">
             <MapPin size={18} color="#fff" />
@@ -266,7 +266,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
             <span className="text-[11.0px] font-semibold text-[#5B6265] hover:text-[#000] mt-0 hidden">
               Deliver to
             </span>
-            <span className="text-[15.0px] font-medium text-[#fff] hover:text-[#fff] ">
+            <span className="text-[14.0px] font-normal text-[#fff] hover:text-[#fff] ">
               Deliver to Naivasha
             </span>
             <div className="shrink-0 mt-[0px]">
@@ -298,7 +298,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-10 bg-[#fff] rounded-full border border-gray-200
+            className="flex items-center h-[38px] bg-[#fff] rounded-full border border-gray-200
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out "
@@ -331,7 +331,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-14 h-10 mr-[0px] rounded-r-full
+              className="flex items-center justify-center w-14 h-[38px] mr-[0px] rounded-r-full
                    text-[#E85D1F] bg-gray-50 hover:text-[#E85D1F]
                    transition-colors flex-shrink-0"
             >
@@ -365,6 +365,15 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
       {/* Account / Cart column */}
       <div className="flex items-center justify-end w-full h-full gap-5">
+        {/* Delivery location - can be dropdown in future */}
+        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-slate-700 rounded-full cursor-pointer transition-colors duration-150 shrink-0">
+          <div className="shrink-0">
+            <Heart size={18} color="#fff" />
+          </div>
+          <span className="text-[14.0px] font-normal text-[#fff] hover:text-[#fff] ">
+            Orders
+          </span>
+        </div>
         {/* Account/Trigger */}
         <div
           className="relative flex items-center gap-1.5 text-gray-600 px-0 h-full "
@@ -372,13 +381,13 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           onMouseLeave={() => setOpen(false)}
         >
           {/* <HiOutlineUser size={20} color="#fff" /> */}
-          <AiOutlineUser size={18} color="#fff" />
+          <AiOutlineUser size={20} color="#fff" />
           <Link
             href={user?.name ? '/profile' : '/login'}
             className="flex flex-col gap-0 items-start justify-start "
           >
             {/* <UserRound size={18} /> */}
-            <span className="block text-[14.0px] font-semibold text-[#fff] mt-[0px]">
+            <span className="block text-[14.0px] font-normal text-[#fff] mt-[0px]">
               {!mounted ? (
                 // SSR + first client render: invisible placeholder to prevent hydration mismatch
                 <span className="">Sign in</span>
@@ -394,7 +403,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
                 // No user or no previous session: show Log in
                 <span className="flex items-center justify-center ">
                   {/* <ProfileIcon size={18} color="#fff" /> */}
-                  Hi, Sign in
+                  Sign in
                 </span>
               )}
             </span>
@@ -501,7 +510,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
             href="/cart"
             className="relative flex items-center justify-center mt-[0px] "
           >
-            <CgShoppingCart size={18} color="#fff" />
+            <CgShoppingCart size={20} color="#fff" />
             {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
             {cart?.length > 0 && (
@@ -516,8 +525,8 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
                 KES 0.00
               </span> */}
           <div className="flex items-end justify-center">
-            <span className="text-[14.0px] text-[#fff] font-semibold tracking-tight px-0 py-1 rounded-full">
-              Ksh 0.00
+            <span className="text-[13.0px] text-[#fff] font-normal tracking-tight px-0 py-1 rounded-full">
+              KSh 0.00
             </span>
           </div>
         </div>

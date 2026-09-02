@@ -27,6 +27,7 @@ import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
 import { splitSchema } from 'packages/utils/filtersUtils';
+import { renderFilterRow } from 'packages/utils/renderFilterRow';
 import { categories } from 'packages/utils/shopCategories.json';
 
 const TABS = [
@@ -1211,78 +1212,18 @@ export default function ProductForm({
             <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
               {/* Product Specifications */}
               {/* General Attributes (inherited filters) */}
+              {/* General Attributes */}
               {inherited.length > 0 && (
                 <div className="w-full mb-4">
                   <h3 className="text-lg font-bold pb-2">General Attributes</h3>
-                  {inherited.map((filter, idx) => {
-                    const isFirst = idx === 0;
-                    const isLast = idx === inherited.length - 1;
-
-                    return (
-                      <div
-                        key={filter.value}
-                        className={`flex items-center justify-end gap-3 bg-white px-4 py-2 
-                        ${isFirst ? 'rounded-t-md pt-4' : ''} 
-                        ${isLast ? 'rounded-b-md pb-4' : ''}`}
-                      >
-                        {/* Label + Tooltip */}
-                        <label className="flex items-center gap-1 text-sm font-bold">
-                          {filter.label}
-                          {filter.tooltip && (
-                            <span
-                              className="text-gray-400 cursor-pointer"
-                              title={filter.tooltip}
-                            >
-                              <Info size={18} color="#0078D7" />
-                            </span>
-                          )}
-                        </label>
-
-                        {/* Seller dropdown logic */}
-                        {filter.render === 'dropdown' && (
-                          <FilterDropdown
-                            label={filter.label}
-                            options={filter.options ?? []}
-                            multiSelect={filter.sellerInput === 'multi'} // ✅ sellerInput decides
-                            required={filter.required}
-                          />
-                        )}
-
-                        {/* Seller checkbox logic */}
-                        {filter.render === 'checkbox' && (
-                          <div className="flex flex-wrap gap-2">
-                            {filter.options?.map((opt) => (
-                              <label
-                                key={opt}
-                                className="flex items-center gap-1"
-                              >
-                                <input
-                                  type={
-                                    filter.sellerInput === 'multi'
-                                      ? 'checkbox'
-                                      : 'radio'
-                                  } // ✅ sellerInput decides
-                                  name={filter.value}
-                                  value={opt}
-                                />
-                                {opt}
-                              </label>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Seller text input */}
-                        {filter.render === 'text' && (
-                          <input
-                            type="text"
-                            placeholder={`Enter ${filter.label}`}
-                            className="w-[500px] border border-gray-200 rounded-md px-4 py-2 h-10 text-sm text-[#1C1C1E] placeholder-gray-400 focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
-                            required={filter.required}
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
+                  {inherited.map((filter, idx) =>
+                    renderFilterRow({
+                      filter,
+                      idx,
+                      length: inherited.length,
+                      mode: 'seller', // or "customer"
+                    })
+                  )}
                 </div>
               )}
 
@@ -1290,75 +1231,14 @@ export default function ProductForm({
               {groups.map((group) => (
                 <div key={group.title} className="w-full mb-4">
                   <h3 className="text-lg font-bold pb-2">{group.title}</h3>
-                  {group.filters.map((filter, idx) => {
-                    const isFirst = idx === 0;
-                    const isLast = idx === group.filters.length - 1;
-
-                    return (
-                      <div
-                        key={filter.value}
-                        className={`flex items-center justify-end gap-3 bg-white px-4 py-2  
-                        ${isFirst ? 'rounded-t-md pt-4' : ''} 
-                        ${isLast ? 'rounded-b-md pb-4' : ''}`}
-                      >
-                        {/* Label + Tooltip */}
-                        <label className="flex items-center gap-1 shrink-0 text-[14px] font-bold">
-                          {filter.label}
-                          {filter.tooltip && (
-                            <span
-                              className="text-gray-400 cursor-pointer"
-                              title={filter.tooltip}
-                            >
-                              <Info size={18} color="#0078D7" />
-                            </span>
-                          )}
-                        </label>
-
-                        {/* Seller dropdown logic */}
-                        {filter.render === 'dropdown' && (
-                          <FilterDropdown
-                            label={filter.label}
-                            options={filter.options ?? []}
-                            multiSelect={filter.sellerInput === 'multi'} // ✅ sellerInput decides
-                            required={filter.required}
-                          />
-                        )}
-
-                        {/* Seller checkbox logic (rare, but supported) */}
-                        {filter.render === 'checkbox' && (
-                          <div className="flex flex-wrap gap-2">
-                            {filter.options?.map((opt) => (
-                              <label
-                                key={opt}
-                                className="flex items-center gap-1"
-                              >
-                                <input
-                                  type={
-                                    filter.sellerInput === 'multi'
-                                      ? 'checkbox'
-                                      : 'radio'
-                                  } // ✅ sellerInput decides
-                                  name={filter.value}
-                                  value={opt}
-                                />
-                                {opt}
-                              </label>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Seller text input */}
-                        {filter.render === 'text' && (
-                          <input
-                            type="text"
-                            placeholder={`Enter ${filter.label}`}
-                            className="w-[500px] border border-gray-300 rounded-md px-4 py-2 h-10 text-sm text-[#1C1C1E] placeholder-gray-400 focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
-                            required={filter.required}
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
+                  {group.filters.map((filter, idx) =>
+                    renderFilterRow({
+                      filter,
+                      idx,
+                      length: group.filters.length,
+                      mode: 'seller', // or "customer"
+                    })
+                  )}
                 </div>
               ))}
 

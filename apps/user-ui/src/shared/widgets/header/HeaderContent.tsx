@@ -17,19 +17,13 @@ import {
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 // import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 import { CgShoppingCart } from 'react-icons/cg';
-
-// import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
-// import { CiUser } from 'react-icons/ci';
-
-// import { CgShoppingCart } from 'react-icons/cg';
-
 import { useEffect } from 'react';
 import { Search } from 'lucide-react';
 // import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
 import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
 // import { PiShoppingBag } from 'react-icons/pi';
 import { CgShoppingBag } from 'react-icons/cg';
-// import { HiOutlineUser } from 'react-icons/hi';
+import { HiOutlineUser } from 'react-icons/hi';
 import { AiOutlineUser } from 'react-icons/ai';
 import SidebarMenu from '../../components/sidebar-menu';
 
@@ -239,16 +233,16 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   };
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-[#273747] ">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-[#313133] ">
       <div className="flex items-center justify-start gap-2">
         {/* Logo */}
         <div
-          className="flex items-center gap-1.5 px-2 font-medium text-[26px] tracking-wider text-[#fff] -mt-[6px]"
+          className="flex items-center gap-1.5 px-2 font-medium text-2xl tracking-wide text-[#fff] -mt-[4px]"
           style={{ fontFamily: "'Oswald', sans-serif" }}
         >
           <div className="shrink-0 mt-1">
-            {/* <PiShoppingBag color="FEA417" size={30} /> */}
-            <CgShoppingBag color="FF9F1C" size={30} />
+            {/* <CgShoppingBag color="FF9F1C" size={30} /> */}
+            <CgShoppingBag color="EE7B30" size={26} />
           </div>
 
           <p className="">
@@ -257,10 +251,10 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         </div>
 
         {/* Delivery location - can be dropdown in future */}
-        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-gray-700 rounded-full cursor-pointer transition-colors duration-150 shrink-0">
+        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-[#424248] rounded-full cursor-pointer transition-colors duration-150 shrink-0">
           {/* </div> */}
           <div className="">
-            <MapPin size={18} color="#fff" />
+            <MapPin size={16} color="#fff" />
           </div>
           <div className="flex items-center justify-center gap-0.5">
             <span className="text-[11.0px] font-semibold text-[#5B6265] hover:text-[#000] mt-0 hidden">
@@ -298,7 +292,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-[38px] bg-[#fff] rounded-full border border-gray-200
+            className="flex items-center h-[36px] bg-[#fff] rounded-full border border-gray-200
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out "
@@ -332,7 +326,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
             <button
               aria-label="Search"
               className="flex items-center justify-center w-14 h-[38px] mr-[0px] rounded-r-full
-                   text-[#E85D1F] bg-gray-50 hover:text-[#E85D1F]
+                   text-[#EE7B30] bg-slate-100 hover:text-[#E85D1F]
                    transition-colors flex-shrink-0"
             >
               <Search strokeWidth={2} size={20} />
@@ -368,7 +362,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         {/* Delivery location - can be dropdown in future */}
         <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-slate-700 rounded-full cursor-pointer transition-colors duration-150 shrink-0">
           <div className="shrink-0">
-            <Heart size={18} color="#fff" />
+            <Heart size={16} color="#fff" />
           </div>
           <span className="text-[14.0px] font-normal text-[#fff] hover:text-[#fff] ">
             Orders
@@ -380,8 +374,8 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
         >
-          {/* <HiOutlineUser size={20} color="#fff" /> */}
-          <AiOutlineUser size={20} color="#fff" />
+          <HiOutlineUser size={16} color="#fff" />
+          {/* <AiOutlineUser size={16} color="#fff" /> */}
           <Link
             href={user?.name ? '/profile' : '/login'}
             className="flex flex-col gap-0 items-start justify-start "
@@ -510,12 +504,12 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
             href="/cart"
             className="relative flex items-center justify-center mt-[0px] "
           >
-            <CgShoppingCart size={20} color="#fff" />
+            <CgShoppingCart size={16} color="#fff" />
             {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
 
             {cart?.length > 0 && (
-              <div className="absolute top-[-6px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#FEA417] flex items-center justify-center mt-[0px]">
-                <span className="text-[#1C1C1E] font-bold text-[11px] leading-none">
+              <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#EE7B30] flex items-center justify-center mt-[0px]">
+                <span className="text-[#333] font-bold text-[11px] leading-none">
                   {cart.length > 99 ? '99+' : cart.length}
                 </span>
               </div>
@@ -526,7 +520,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
               </span> */}
           <div className="flex items-end justify-center">
             <span className="text-[13.0px] text-[#fff] font-normal tracking-tight px-0 py-1 rounded-full">
-              KSh 0.00
+              Ksh 0.00
             </span>
           </div>
         </div>

@@ -29,11 +29,11 @@ export const navItems: NavItemsTypes[] = [
     href: '/home',
     accent: false,
   },
-  {
-    title: 'Groceries',
-    href: '/groceries',
-    accent: false,
-  },
+  // {
+  //   title: 'Groceries',
+  //   href: '/groceries',
+  //   accent: false,
+  // },
   // {
   //   title: 'Customer Service',
   //   href: '/contact',

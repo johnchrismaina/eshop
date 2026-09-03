@@ -4,12 +4,10 @@ import {
   ChevronDown,
   ChevronDownIcon,
   Heart,
-  MapPin,
   MessageSquareText,
   Truck,
   Gift,
   Package,
-  Pencil,
   RotateCcw,
   ShieldCheck,
   Store,
@@ -38,6 +36,61 @@ import {
 } from '@headlessui/react';
 import ZoomImage from '../HoverMagnifier/HoverMagnifier';
 import Breadcrumbs from '../breadcrumbs';
+import ColorThumbnail from '../ColorThumbnail/ColorThumbnail';
+
+// const swatches = [
+//   { title: 'Brown', image: '/images/brown.png', price: 5000, dealPrice: 3999 },
+//   { title: 'Red', image: '/images/red.png', price: 5200 },
+//   { title: 'Blue', image: '/images/blue.png', price: 4800, dealPrice: 4500 },
+// ];
+
+interface ColorVariant {
+  id: string;
+  name: string;
+  hex: string;
+  title: string;
+  price: number;
+  isDefault: boolean;
+  images: string[];
+}
+
+type ProductImage = { url: string };
+type ActiveImage = string | ProductImage;
+
+const swatches = [
+  {
+    title: 'Black',
+    images: [
+      { url: '/images/black1.png' },
+      { url: '/images/black2.png' },
+      { url: '/images/black3.png' },
+    ],
+    price: 5000,
+    dealPrice: 3999,
+    aspect: 'square',
+  },
+  {
+    title: 'Brown',
+    images: [
+      { url: '/images/brown1.png' },
+      { url: '/images/brown2.png' },
+      { url: '/images/brown3.png' },
+    ],
+    price: 5000,
+    dealPrice: 3999,
+    aspect: 'square',
+  },
+  {
+    title: 'Red',
+    images: [
+      { url: '/images/red1.png' },
+      { url: '/images/red2.png' },
+      { url: '/images/red3.png' },
+    ],
+    price: 5200,
+    aspect: 'portrait',
+  },
+];
 
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   // const { user, isLoading } = useUser();
@@ -57,6 +110,31 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const [currentImage, setCurrentImage] = useState(
     productDetails?.images?.[0]?.url || fallbackImage
   );
+
+  // const [selectedSwatchColor, setSelectedSwatchColor] = useState<string>('');
+  // const [selectedSwatch, setSelectedSwatch] = useState(swatches[0]);
+  // const [selectedSwatch, setSelectedSwatch] = useState<color_variants | null>(
+  //   null
+  // );
+
+  const [selectedSwatch, setSelectedSwatch] = useState<ColorVariant | null>(
+    null
+  );
+
+  // Active images come from either swatch or product
+  // const activeImages = selectedSwatch
+  //   ? selectedSwatch.images
+  //   : productDetails.images;
+
+  const activeImages: ActiveImage[] = selectedSwatch
+    ? selectedSwatch.images // string[]
+    : productDetails.images; // ProductImage[]
+
+  // Helper to get URL
+  const getImageUrl = (img: ActiveImage) =>
+    typeof img === 'string' ? img : img.url;
+
+  const activeAspect = selectedSwatch ? 'square' : productDetails.aspect; // or swatch.aspect if you add it
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSelected, setIsSelected] = useState(
@@ -183,84 +261,79 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
       <div className="w-full pt-2 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_280px] gap-4">
         {/* left column - product images */}
         <div className="flex items-start justify-between px-0 w-[650px] h-auto mx-auto">
-          {/* Thumbnail images array */}
-          <div className=" flex flex-col items-center gap-2">
-            {/* Scroll up button */}
-            {productDetails?.images?.length > 4 && (
+          {/* Thumbnails */}
+          <div className="flex flex-col items-center gap-2 relative">
+            {activeImages.length > 4 && (
               <button
                 className="absolute top-0 bg-white p-2 rounded-md shadow-md z-10"
-                onClick={prevImage}
+                onClick={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
                 disabled={currentIndex === 0}
               >
                 <ChevronUp size={24} />
               </button>
             )}
 
-            {/* Thumbnails */}
             <div className="flex flex-col gap-3 overflow-y-auto">
-              {productDetails?.images?.map((img: any, index: number) => {
+              {activeImages.map((img: ActiveImage, index: number) => {
                 const thumbHeight =
-                  productDetails?.aspect === 'square'
-                    ? 75
-                    : Math.round((75 * 4) / 3);
+                  activeAspect === 'square' ? 75 : Math.round((75 * 4) / 3);
+
+                const url = typeof img === 'string' ? img : img.url;
 
                 return (
                   <img
                     key={index}
-                    src={
-                      img?.url ||
-                      'https://ik.imagekit.io/johnchrismaina/products/product-1764947748099_PpFh77hy3.jpg?updatedAt=1764947756039'
-                    }
+                    src={url}
                     alt="Thumbnail"
                     width={75}
                     height={thumbHeight}
-                    style={{ width: 75, height: thumbHeight }} // ✅ forces exact box, overrides Preflight
-                    className={`cursor-pointer border rounded-md object-cover flex-shrink-0 ${
-                      currentImage === img
+                    style={{ width: 75, height: thumbHeight }}
+                    className={`cursor-pointer border rounded-md object-cover ${
+                      currentIndex === index
                         ? 'border-blue-500'
                         : 'border-gray-300'
                     }`}
-                    onClick={() => {
-                      setCurrentIndex(index);
-                      setCurrentImage(img);
-                    }}
+                    onClick={() => setCurrentIndex(index)}
                   />
                 );
               })}
             </div>
 
-            {/* Scroll up button */}
-            {(productDetails?.images?.length ?? 0) > 4 && (
+            {activeImages.length > 4 && (
               <button
                 className="absolute bottom-0 p-2 rounded-full shadow-md z-10"
-                onClick={nextImage}
-                disabled={currentIndex === productDetails?.images.length - 1}
+                onClick={() =>
+                  setCurrentIndex((i) =>
+                    Math.min(i + 1, activeImages.length - 1)
+                  )
+                }
+                disabled={currentIndex === activeImages.length - 1}
               >
                 <ChevronDown size={24} />
               </button>
             )}
           </div>
 
-          {/* <div className="relative mx-auto flex justify-center items-start h-[500px]"> */}
+          {/* Main preview */}
           <div className="w-[540px] mx-auto rounded-lg">
-            {/* Main preview */}
             <div
               className={`relative mx-auto ${
-                productDetails?.aspect === 'square'
+                activeAspect === 'square'
                   ? 'w-[500px] h-[500px]'
                   : 'w-[503px] h-[670px]'
               }`}
             >
-              {productDetails?.images?.length > 0 && (
+              {activeImages.length > 0 && (
                 <ZoomImage
-                  src={productDetails.images[currentIndex]?.url}
+                  src={getImageUrl(activeImages[currentIndex])} // always string
                   alt="Product preview"
-                  aspect={productDetails.aspect}
+                  aspect={activeAspect}
                 />
               )}
             </div>
           </div>
         </div>
+
         {/* Middle column - product details */}
         <div className="px-6 pt-0 pb-1 prose prose-sm max-w-none">
           {/* Title */}
@@ -297,7 +370,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             {/* Product price */}
             <div className="flex flex-col">
               <div className="pt-4 text-[#52525B] space-x-0.5">
-                <span className="text-[15px] font-semibold">KSh</span>
+                <span className="text-[15px] font-bold">KSh</span>
                 <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight ">
                   {productDetails?.deal
                     ? productDetails.deal.sale_price
@@ -318,53 +391,77 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               )}
             </div>
 
-            <div className="mt-4">
-              <div className="flex flex-col md:flex-col items-start gap-6 mt-6 ">
-                {/* Color options */}
-                {productDetails?.colors?.length > 0 && (
-                  <div>
-                    <strong className="text-[#333]">Color</strong>
-                    <div className="flex gap-2 mt-2">
-                      {productDetails?.colors?.map(
-                        (color: string, index: number) => (
-                          <button
-                            key={index}
-                            className={`w-8 h-8 cursor-pointer rounded-full border-2 border-gray-200 transition ${
-                              isSelected === color
-                                ? 'border-gray-400 scale-110 shadow-md'
-                                : 'border-[#ddd]'
-                            }`}
-                            onClick={() => setIsSelected(color)}
-                            style={{ backgroundColor: color }}
-                          />
-                        )
-                      )}
-                    </div>
+            <div className="flex flex-col md:flex-col items-start gap-6 mt-6 ">
+              {/* Color options */}
+              {productDetails?.colors?.length > 0 && (
+                <div className="hidden">
+                  <strong className="text-[#333]">Color</strong>
+                  <div className="flex gap-2 mt-2">
+                    {productDetails?.colors?.map(
+                      (color: string, index: number) => (
+                        <button
+                          key={index}
+                          className={`w-8 h-8 cursor-pointer rounded-full border-2 border-gray-200 transition ${
+                            isSelected === color
+                              ? 'border-gray-400 scale-110 shadow-md'
+                              : 'border-[#ddd]'
+                          }`}
+                          onClick={() => setIsSelected(color)}
+                          style={{ backgroundColor: color }}
+                        />
+                      )
+                    )}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Size options */}
-                {productDetails?.sizes?.length > 0 && (
-                  <div>
-                    <strong className="text-[#333]">Size</strong>
-                    <div className="flex gap-2 mt-2">
-                      {productDetails?.sizes?.map(
-                        (size: string, index: number) => (
-                          <button
-                            key={index}
-                            className={`w-20 h-10 text-[14px] font-medium cursor-pointer rounded-lg border border-[#ddd] transition-colors duration-100 ${
-                              isSelected === size
-                                ? 'bg-[#333] text-white'
-                                : 'border border-[#ddd] text-black'
-                            }`}
-                            onClick={() => setIsSelected(size)}
-                          >
-                            {size}
-                          </button>
-                        )
-                      )}
-                    </div>
+              {/* Size options */}
+              {productDetails?.sizes?.length > 0 && (
+                <div>
+                  <strong className="text-[#333]">Size</strong>
+                  <div className="flex gap-2 mt-2">
+                    {productDetails?.sizes?.map(
+                      (size: string, index: number) => (
+                        <button
+                          key={index}
+                          className={`w-20 h-10 text-[14px] font-medium cursor-pointer rounded-lg border border-[#ddd] transition-colors duration-100 ${
+                            isSelected === size
+                              ? 'bg-[#333] text-white'
+                              : 'border border-[#ddd] text-black'
+                          }`}
+                          onClick={() => setIsSelected(size)}
+                        >
+                          {size}
+                        </button>
+                      )
+                    )}
                   </div>
+                </div>
+              )}
+            </div>
+
+            {/* Color swatches */}
+            <div className="flex flex-col items-start justify-center mt-6">
+              {/* Product header */}
+              <p className=" flex items-center justify-start text-[#333] gap-1 pb-2">
+                <span className=" font-normal">Color: </span>
+                <span className=" font-bold">
+                  {selectedSwatch ? selectedSwatch.title : 'Select a color'}
+                </span>
+              </p>
+
+              <div className="grid grid-cols-4 gap-4">
+                {(productDetails.colorVariants as ColorVariant[])?.map(
+                  (swatch: ColorVariant) => (
+                    <ColorThumbnail
+                      key={swatch.id}
+                      title={swatch.title}
+                      image={swatch.images[0]}
+                      price={swatch.price}
+                      // onHover={(color) => setSelectedSwatch(color)}
+                      onSelect={() => setSelectedSwatch(swatch)}
+                    />
+                  )
                 )}
               </div>
             </div>
@@ -462,13 +559,11 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[280px] px-4 py-4 bg-[#fff] border border-[#ddd] rounded-lg ">
+        <div className=" w-[280px] px-4 py-4 bg-[#f8f8f8] border-none border-[#ddd] rounded-lg ">
           {/* Price */}
           <div className="space-x-0.5 mb-4 ">
-            <span className="text-[15px] text-[#52525B] font-semibold">
-              KSh
-            </span>
-            <span className="text-3xl text-[#1C1C1E] font-semibold">
+            <span className="text-[15px] text-[#52525B] font-bold">KSh</span>
+            <span className="text-3xl text-[#1C1C1E] font-bold">
               {productDetails?.deal
                 ? productDetails.deal.sale_price
                 : productDetails?.regular_price}

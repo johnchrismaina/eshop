@@ -347,6 +347,11 @@ model color_variants {
   // ✅ Store up to 8 image URLs per variant
   images String[] @default([])
 
+  // ✅ Deal fields per variant
+  dealPrice Float?
+  dealStart DateTime?
+  dealEnd   DateTime?
+
   productId String   @db.ObjectId
   product   products @relation("ProductColorVariants", fields: [productId], references: [id])
 

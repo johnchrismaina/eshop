@@ -1,7 +1,10 @@
 {
   "extends": "../tsconfig.base.json",
   "files": [],
-  "include": ["../apps/seller-ui/src/shared/components/ProductForm"],
+  "include": [
+    "../apps/seller-ui/src/shared/components/ProductForm",
+    "../apps/seller-ui/src/shared/components/FilterDropdown"
+  ],
   "references": [
     {
       "path": "./tsconfig.lib.json"

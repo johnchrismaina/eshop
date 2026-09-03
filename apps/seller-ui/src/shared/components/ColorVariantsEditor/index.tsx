@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormSetValue } from 'react-hook-form';
+// import FormValues from '../ProductForm'; // adjust import
+import type { FormValues } from '../ProductForm'; // adjust path
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { X } from 'lucide-react';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
@@ -22,14 +24,17 @@ interface ColorVariantsEditorProps {
   draftKey: string; // ✅ new
   aspect: 'square' | 'portrait'; // ✅
   onHasColorsChange?: (hasColors: boolean) => void; // ✅ notify parent
+  setValue: UseFormSetValue<FormValues>; // ✅ add setValue from react-hook-form
 }
 
 const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
+  setValue,
   draftKey, // ✅
   aspect, // ✅
   onHasColorsChange,
 }) => {
   const [variants, setVariants] = useState<ColorVariant[]>([]);
+
   const [variantUploading, setVariantUploading] = useState<
     Record<string, boolean>
   >({});
@@ -163,6 +168,15 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     localStorage.removeItem('colorVariantsDraft'); // clear draft
     onHasColorsChange?.(false); // ✅ re-enable main images
   };
+
+  // ✅ keep form state in sync
+  // useEffect(() => {
+  //   setValue('colorVariants', variants);
+  // }, [variants, setValue]);
+  useEffect(() => {
+    setValue('colorVariants', variants);
+    onHasColorsChange?.(variants.length > 0);
+  }, [variants, setValue, onHasColorsChange]);
 
   return (
     <div className="w-full mt-2 space-y-2">

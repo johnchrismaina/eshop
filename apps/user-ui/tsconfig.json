@@ -43,7 +43,7 @@
     "../../global.d.ts",
     "src",
     "declarations.d.ts"
-, "../seller-ui/src/app/api/categories"  ],
+, "../seller-ui/src/app/api/categories", "../../packages/components/ColorThumbnail"  ],
   "exclude": [
     "out-tsc",
     "dist",

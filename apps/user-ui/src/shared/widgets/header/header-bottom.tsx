@@ -22,16 +22,16 @@ const HeaderBottom = () => {
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
-    <div className="relative z-10 w-full transition-all duration-300 bg-[#fff] border-b border-gray-200 shadow-none shadow-gray-300/10 ">
-      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-4 h-full ">
+    <div className="relative z-10 w-full transition-all duration-300 bg-[#424248] border-none border-gray-200 shadow-none shadow-gray-300/10 ">
+      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-4 h-full text-[#fff] ">
         {/* All Dropdowns */}
         <div>
           {/* Bottom header button */}
           <button
-            className="flex items-center justify-center gap-2.5 px-2 py-2 text-[14.0px] font-bold text-[#1d1d1f] hover:bg-[#f1f1f1] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0 "
+            className="flex items-center justify-center gap-2.5 px-2 py-2 text-[13.5px] font-bold hover:bg-[#f1f1f1] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0 "
             onClick={() => setShowSidebar(true)}
           >
-            <Menu size={16} color="#333" />
+            <Menu size={16} />
             All Categories
           </button>
 
@@ -46,10 +46,10 @@ const HeaderBottom = () => {
         <nav className="flex flex-1 items-center justify-start gap-1 ml-0 ">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
-              className={`flex items-center px-4 py-2 text-[14.0px] h-full hover:bg-[#f1f1f1] rounded-sm transition-colors duration-150 ${
+              className={`flex items-center px-4 py-2 text-[13.5px] h-full hover:bg-[#f1f1f1] rounded-sm transition-colors duration-150 ${
                 i.accent
                   ? 'text-[#FEA417] font-semibold hover:text-amber-500'
-                  : 'text-[#000] font-medim hover:text-[#000]'
+                  : 'text-[#fff] font-medim hover:text-[#000]'
               }`}
               href={i.href}
               key={index}
@@ -60,7 +60,7 @@ const HeaderBottom = () => {
         </nav>
 
         {/* </div> */}
-        <div className="flex items-center justify-end gap-1 ml-0 h-full text-[14.0px] font-medium text-[#000] rounded-sm transition-colors duration-150 ">
+        <div className="flex items-center justify-end gap-1 ml-0 h-full text-[13.5px] font-medium rounded-sm transition-colors duration-150 ">
           <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:bg-[#f1f1f1] hidden">
             Sell
           </span>

@@ -1,6 +1,6 @@
 // utils/renderFilterRow.tsx
 import { Info } from 'lucide-react';
-import FilterDropdownFilter from '../components/FilterDropdownFilter'; // adjust path
+import FilterDropdown from '../../apps/seller-ui/src/shared/components/FilterDropdown'; // adjust path
 
 interface FilterRowProps {
   filter: any;
@@ -21,7 +21,7 @@ export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
         ${isLast ? 'rounded-b-md pb-4' : ''}`}
     >
       {/* Label + Tooltip */}
-      <label className="flex items-center gap-1 text-sm font-bold">
+      <label className="flex items-center gap-1 shrink-0 text-sm font-bold">
         {filter.label}
         {filter.tooltip && (
           <span className="text-gray-400 cursor-pointer" title={filter.tooltip}>
@@ -32,13 +32,13 @@ export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
 
       {/* Dropdowns */}
       {filter.render === 'dropdown' && (
-        <FilterDropdownFilter
+        <FilterDropdown
           label={filter.label}
           options={filter.options ?? []}
           multiSelect={
             mode === 'seller'
-              ? filter.sellerInput === 'multi' // sellerInput decides
-              : filter.multiSelect // customer multiSelect decides
+              ? filter.sellerInput === 'multi'
+              : filter.multiSelect
           }
           required={filter.required}
         />

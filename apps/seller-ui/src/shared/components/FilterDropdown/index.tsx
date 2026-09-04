@@ -39,7 +39,7 @@ export default function FilterDropdown({
   };
 
   return (
-    <div className="flex flex-col gap-1 w-[500px] mb-0.5 relative" ref={ref}>
+    <div className="flex flex-col gap-1 w-[550px] mb-0.5 relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

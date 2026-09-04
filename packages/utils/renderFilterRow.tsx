@@ -71,7 +71,7 @@ export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
         <input
           type="text"
           placeholder={`Enter ${filter.label}`}
-          className="w-[500px] border border-gray-200 rounded-md px-4 py-2 h-10 text-sm text-[#1C1C1E] placeholder-gray-400 focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+          className="w-[550px] border border-gray-200 rounded-md px-4 py-2 h-10 text-sm text-[#1C1C1E] placeholder-gray-400 focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
           required={filter.required}
         />
       )}

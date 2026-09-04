@@ -84,8 +84,8 @@ interface ShopCategory {
 
 interface ColorVariant {
   id?: string;
+  name: string;
   title: string;
-  hex: string;
   price: number;
   dealPrice?: number;
   dealStart?: Date | null;
@@ -117,6 +117,7 @@ export type FormValues = {
   video_url: string;
   deal_start: Date | null;
   deal_end: Date | null;
+  sku: string;
   stock: number | undefined;
   total_tickets: number | undefined;
   discountCodes: string[];
@@ -125,6 +126,8 @@ export type FormValues = {
   // ✅ new field
   // colorVariants?: ColorVariantForm[];
   colorVariants: ColorVariant[];
+  condition: string;
+  shippingOption: string; // "self" | "company"
 };
 
 export default function ProductForm({
@@ -168,12 +171,15 @@ export default function ProductForm({
         video_url: '',
         deal_start: null,
         deal_end: null,
+        sku: '',
         stock: undefined,
         total_tickets: undefined,
         discountCodes: [],
         enableDeal: isDealRoute,
         // ✅ initialize empty colorVariants array
         colorVariants: [],
+        condition: '',
+        shippingOption: '',
       } as FormValues),
   });
 
@@ -742,18 +748,25 @@ export default function ProductForm({
         <div className="py-0 text-slate-700">
           {/* Product Identity */}
           {activeTab === 'Product Identity' && (
-            <div className="w-[700px] flex flex-col mx-auto items-center justify-start gap-3 py-4">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-start gap-3 mt-4 py-8 bg-white">
               {/* Product Title */}
-              <div className="w-full p-3 bg-white rounded-md ">
-                <label className="block text-[14px] font-bold  text-gray-800 mb-2">
-                  Product Title *
-                </label>
-                <AutoResizeTextarea
-                  label=""
-                  rows={2}
-                  placeholder="Enter product title"
-                  {...register('title', { required: 'Title is required' })}
-                />
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm ">
+                <p className="flex items-start justify-center gap-1">
+                  <label className="block text-[15px] font-bold  text-gray-800 mb-2">
+                    Product Title *
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
+                <div className="w-[800px]">
+                  <AutoResizeTextarea
+                    label=""
+                    rows={2}
+                    placeholder="Enter product title"
+                    {...register('title', { required: 'Title is required' })}
+                  />
+                </div>
                 {errors.title && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.title.message as string}
@@ -761,31 +774,38 @@ export default function ProductForm({
                 )}
               </div>
               {/* Slug */}
-              <div className="mt-0 w-full p-3 bg-white rounded-md">
-                <label className="block text-[14px] font-bold text-gray-700 mb-2">
-                  Slug *
-                </label>
-                <Input
-                  label=""
-                  placeholder="product_slug"
-                  className="bg-[#fff]"
-                  {...register('slug', {
-                    required: 'Slug is required!',
-                    pattern: {
-                      value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-                      message:
-                        'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
-                    },
-                    minLength: {
-                      value: 3,
-                      message: 'Slug must be at least 3 characters long.',
-                    },
-                    maxLength: {
-                      value: 50,
-                      message: 'Slug cannot be longer than 50 characters.',
-                    },
-                  })}
-                />
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm ">
+                <p className="flex items-start justify-center gap-1">
+                  <label className="block text-[15px] font-bold  text-gray-800 mb-2">
+                    Slug *
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
+                <div className="w-[800px]">
+                  <Input
+                    label=""
+                    placeholder="product_slug"
+                    className="bg-[#fff]"
+                    {...register('slug', {
+                      required: 'Slug is required!',
+                      pattern: {
+                        value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+                        message:
+                          'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
+                      },
+                      minLength: {
+                        value: 3,
+                        message: 'Slug must be at least 3 characters long.',
+                      },
+                      maxLength: {
+                        value: 50,
+                        message: 'Slug cannot be longer than 50 characters.',
+                      },
+                    })}
+                  />
+                </div>
 
                 {errors.slug && (
                   <p className="text-red-500 text-sm mt-1">
@@ -794,77 +814,59 @@ export default function ProductForm({
                 )}
               </div>
               {/* --- DROPDOWN --- */}
-              <div className="relative w-full flex flex-col items-center justify-start gap-3 p-3 bg-white rounded-md">
-                <label className="w-full flex items-center justify-start gap-3">
-                  <span className="block text-sm font-medium mb-1">
-                    Category:
-                  </span>
-                  <div
-                    className="flex flex-col gap-1 w-full relative"
-                    ref={categoryButtonRef}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setOpenCategories(true)}
-                      className="w-[400px] h-10 px-3 border border-gray-200 rounded-md text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+              <div className="relative w-full flex flex-col items-center justify-end gap-3 bg-white px-4 py-3 rounded-sm">
+                <label className="w-full flex items-center justify-end gap-3">
+                  <p className="flex items-start justify-center gap-1">
+                    <label className="block text-[15px] font-bold  text-gray-800 mb-2">
+                      Category *
+                    </label>
+                    <span>
+                      <Info size={16} color="#333" />
+                    </span>
+                  </p>
+                  <div className="w-[800px] ">
+                    <div
+                      className="flex flex-col gap-1 w-full relative"
+                      ref={categoryButtonRef}
                     >
-                      {selectedPath.length > 0
-                        ? selectedPath[selectedPath.length - 1]
-                        : 'Select Category'}
-                      <svg
-                        className="w-4 h-4 text-[#333]"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                      <button
+                        type="button"
+                        onClick={() => setOpenCategories(true)}
+                        className="w-[400px] h-10 px-3 border border-gray-200 rounded-md text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </button>
+                        {selectedPath.length > 0
+                          ? selectedPath[selectedPath.length - 1]
+                          : 'Select Category'}
+                        <svg
+                          className="w-4 h-4 text-[#333]"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
 
-                    {openCategories && (
-                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white w-full max-w-md h-full flex flex-col">
-                          {/* Header */}
-                          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-                            <h2 className="text-lg font-medium">
-                              Choose Category
-                            </h2>
-                            <button
-                              type="button"
-                              onClick={() => setOpenCategories(false)}
-                              className="p-1"
-                            >
-                              <svg
-                                className="w-5 h-5 text-gray-500"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M6 18L18 6M6 6l12 12"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-
-                          {/* Scrollable category list */}
-                          <div className="flex-1 overflow-y-auto p-4">
-                            {levelPath.length > 0 && (
+                      {openCategories && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                          <div className="bg-white w-full max-w-md h-full flex flex-col">
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+                              <h2 className="text-lg font-medium">
+                                Choose Category
+                              </h2>
                               <button
                                 type="button"
-                                onClick={handleBackCategories}
-                                className="w-full flex items-center gap-2 px-3 py-2 mb-2 text-sm font-medium text-[#C2410C] hover:bg-gray-50 rounded-md"
+                                onClick={() => setOpenCategories(false)}
+                                className="p-1"
                               >
                                 <svg
-                                  className="w-4 h-4"
+                                  className="w-5 h-5 text-gray-500"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -873,57 +875,92 @@ export default function ProductForm({
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth={2}
-                                    d="M15 19l-7-7 7-7"
+                                    d="M6 18L18 6M6 6l12 12"
                                   />
                                 </svg>
-                                Back
-                                {levelPath.length > 1
-                                  ? ` to ${levelPath[levelPath.length - 2]}`
-                                  : ' to Categories'}
                               </button>
-                            )}
-                            {renderOptions()}
-                          </div>
+                            </div>
 
-                          {/* Confirm button */}
-                          <div className="p-4 border-t border-gray-200">
-                            <button
-                              type="button"
-                              onClick={() => setOpenCategories(false)}
-                              disabled={!selectedValue}
-                              className="w-full h-11 rounded-md text-sm font-medium bg-[#C2410C] text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                            >
-                              Confirm Category
-                            </button>
+                            {/* Scrollable category list */}
+                            <div className="flex-1 overflow-y-auto p-4">
+                              {levelPath.length > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={handleBackCategories}
+                                  className="w-full flex items-center gap-2 px-3 py-2 mb-2 text-sm font-medium text-[#C2410C] hover:bg-gray-50 rounded-md"
+                                >
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M15 19l-7-7 7-7"
+                                    />
+                                  </svg>
+                                  Back
+                                  {levelPath.length > 1
+                                    ? ` to ${levelPath[levelPath.length - 2]}`
+                                    : ' to Categories'}
+                                </button>
+                              )}
+                              {renderOptions()}
+                            </div>
+
+                            {/* Confirm button */}
+                            <div className="p-4 border-t border-gray-200">
+                              <button
+                                type="button"
+                                onClick={() => setOpenCategories(false)}
+                                disabled={!selectedValue}
+                                className="w-full h-11 rounded-md text-sm font-medium bg-[#C2410C] text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                              >
+                                Confirm Category
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </label>
 
                 {/* Breadcrumb rail */}
-                <div className="w-full flex items-center justify-start gap-2 px-4 py-2 border border-gray-300 rounded-lg">
-                  <span
-                    onClick={handleRootClick}
-                    className="cursor-pointer hover:underline text-sm font-medium text-[#C2410C] shrink-0"
-                  >
-                    Home{selectedPath.length > 0 && ' >'}
-                  </span>
-                  {selectedPath.length > 0 && (
-                    <div className="flex flex-wrap gap-1 text-sm text-gray-600">
-                      {selectedPath.map((crumb, i) => (
-                        <span
-                          key={i}
-                          onClick={() => handleBreadcrumbClick(i)}
-                          className="cursor-pointer hover:underline"
-                        >
-                          {crumb}
-                          {i < selectedPath.length - 1 && ' > '}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                <div className="w-full flex items-start justify-end gap-3">
+                  <p className="flex items-start justify-center gap-1">
+                    <label className="block text-[15px] font-bold  text-gray-800 mb-2">
+                      Breadcrumbs
+                    </label>
+                    <span>
+                      <Info size={16} color="#333" />
+                    </span>
+                  </p>
+                  <div className="w-[800px] flex items-center justify-start gap-2 px-4 py-2 border border-gray-300 rounded-lg">
+                    <span
+                      onClick={handleRootClick}
+                      className="cursor-pointer hover:underline text-sm font-medium text-[#C2410C] shrink-0"
+                    >
+                      Home{selectedPath.length > 0 && ' >'}
+                    </span>
+                    {selectedPath.length > 0 && (
+                      <div className="flex flex-wrap gap-1 text-sm text-gray-600">
+                        {selectedPath.map((crumb, i) => (
+                          <span
+                            key={i}
+                            onClick={() => handleBreadcrumbClick(i)}
+                            className="cursor-pointer hover:underline"
+                          >
+                            {crumb}
+                            {i < selectedPath.length - 1 && ' > '}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               {/* Categories */}
@@ -1112,39 +1149,41 @@ export default function ProductForm({
 
           {/* Product Details */}
           {activeTab === 'Product Details' && (
-            <div className="w-[700px] flex flex-col mx-auto items-center justify-center gap-3 py-4 ">
-              {/* Product Specifications */}
-              {/* General Attributes (inherited filters) */}
-              {/* General Attributes */}
-              {inherited.length > 0 && (
-                <div className="w-full mb-4">
-                  <h3 className="text-lg font-bold pb-2">General Attributes</h3>
-                  {inherited.map((filter, idx) =>
-                    renderFilterRow({
-                      filter,
-                      idx,
-                      length: inherited.length,
-                      mode: 'seller', // or "customer"
-                    })
-                  )}
-                </div>
-              )}
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-3 mt-4 py-4  ">
+              <div className="w-[800px] flex flex-col mx-auto items-center justify-center ">
+                {/* Product Specifications */}
+                {/* General Attributes (inherited filters) */}
+                {inherited.length > 0 && (
+                  <div className="w-full mb-4">
+                    <h3 className="text-lg font-bold pb-2">
+                      General Attributes
+                    </h3>
+                    {inherited.map((filter, idx) =>
+                      renderFilterRow({
+                        filter,
+                        idx,
+                        length: inherited.length,
+                        mode: 'seller', // or "customer"
+                      })
+                    )}
+                  </div>
+                )}
 
-              {/* Category-specific filter groups */}
-              {groups.map((group) => (
-                <div key={group.title} className="w-full mb-4">
-                  <h3 className="text-lg font-bold pb-2">{group.title}</h3>
-                  {group.filters.map((filter, idx) =>
-                    renderFilterRow({
-                      filter,
-                      idx,
-                      length: group.filters.length,
-                      mode: 'seller', // or "customer"
-                    })
-                  )}
-                </div>
-              ))}
-
+                {/* Category-specific filter groups */}
+                {groups.map((group) => (
+                  <div key={group.title} className="w-full mb-4">
+                    <h3 className="text-lg font-bold pb-2 ">{group.title}</h3>
+                    {group.filters.map((filter, idx) =>
+                      renderFilterRow({
+                        filter,
+                        idx,
+                        length: group.filters.length,
+                        mode: 'seller', // or "customer"
+                      })
+                    )}
+                  </div>
+                ))}
+              </div>
               {/* ))} */}
               {/* Product Properties */}
               <div className="w-full p-0 rounded-md hidden">
@@ -1400,250 +1439,32 @@ export default function ProductForm({
           {/* Pricing */}
           {activeTab === 'Pricing' && (
             <div className="w-[700px] flex flex-col mx-auto items-start justify-center gap-2 py-4 ">
-              <div className="space-y-6">
-                {/* Case 1: No color variants → global pricing */}
-                {colorVariants.length === 0 && (
-                  <>
-                    {/* Pricing */}
-                    {/* Regular Price */}
-                    <div className="flex-1 w-full">
-                      <p className="text-[15px] font-semibold text-gray-700 py-2">
-                        Regular Price * <span className="text-sm">(Ksh)</span>
-                      </p>
-                      <Input
-                        label=""
-                        type="number"
-                        placeholder="0"
-                        className="bg-[#fff] text-[15px] "
-                        {...register('regular_price', {
-                          setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                          min: {
-                            value: 1,
-                            message: 'Price must be at least 1',
-                          },
-                          validate: (value) =>
-                            (typeof value === 'number' && !isNaN(value)) ||
-                            'Only numbers are allowed',
-                        })}
-                      />
-                      {errors.regular_price && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.regular_price.message as string}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Deal toggle */}
-                    {/* Checkbox to toggle deal */}
-                    <label className="flex items-center gap-2 font-semibold mt-2">
-                      <input
-                        id="deal-checkbox"
-                        type="checkbox"
-                        checked={enableDeal}
-                        onChange={(e) =>
-                          setValue('enableDeal', e.target.checked)
-                        }
-                      />
-                      Add a Deal
-                    </label>
-
-                    {/* Sale Price */}
-                    {/* Sale Price input (always rendered, disabled when not a deal) */}
-                    <div className="flex-1 w-full">
-                      <p className="text-[15px] font-semibold text-gray-700 py-2">
-                        Sale Price <span className="text-sm">(Ksh)</span>
-                      </p>
-                      <Input
-                        label=""
-                        type="number"
-                        placeholder="0"
-                        className="bg-[#fff] text-[15px]"
-                        disabled={!enableDeal} // ✅ disable when not a deal
-                        {...register('sale_price', {
-                          setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                          min: {
-                            value: 1,
-                            message: 'Sale price must be at least 1',
-                          },
-                          validate: (value) =>
-                            (typeof value === 'number' && !isNaN(value)) ||
-                            'Only numbers are allowed',
-                        })}
-                      />
-                      {errors.sale_price && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.sale_price.message as string}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Conditionally render deal fields */}
-                    <div className="flex items-start justify-center p-0 gap-4 rounded-md">
-                      {/* Deal Start Date */}
-                      <div className="w-full flex flex-col items-start justify-center p-0 rounded-md">
-                        <label className="text-[15px] font-medium text-gray-800 mt-1">
-                          Deal Start
-                        </label>
-                        <Controller
-                          name="deal_start"
-                          control={control}
-                          rules={{ required: 'Start date is required' }}
-                          render={({ field }) => (
-                            <DatePicker
-                              selected={field.value}
-                              onChange={(date: Date | null) => {
-                                field.onChange(date);
-                                if (date) {
-                                  const autoEnd = new Date(date);
-                                  autoEnd.setDate(autoEnd.getDate() + 7);
-                                  setValue('deal_end', autoEnd);
-                                }
-                              }}
-                              className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
-                              disabled={!enableDeal} // ✅ disable when not a deal
-                              dateFormat="yyyy-MM-dd"
-                            />
-                          )}
-                        />
-                        {errors.deal_start && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors.deal_start.message as string}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Deal End Date */}
-                      <div className="w-full flex flex-col items-start justify-center gap-1 p-0 rounded-md">
-                        <label className="text-sm font-medium text-gray-800 mt-1">
-                          Deal End
-                        </label>
-                        <Controller
-                          name="deal_end"
-                          control={control}
-                          rules={{
-                            required: 'End date is required',
-                            validate: (value) => {
-                              const start = getValues('deal_start');
-                              if (!value || !start) {
-                                return 'Both start and end dates are required';
-                              }
-                              return (
-                                value > start ||
-                                'End date must be after start date'
-                              );
-                            },
-                          }}
-                          render={({ field }) => (
-                            <DatePicker
-                              selected={field.value}
-                              onChange={(date: Date | null) =>
-                                field.onChange(date)
-                              }
-                              className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
-                              disabled={!enableDeal} // ✅ disable when not a deal
-                              dateFormat="yyyy-MM-dd"
-                            />
-                          )}
-                        />
-                        {errors.deal_end && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors.deal_end.message as string}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {/* Case 2: With color variants → table */}
-                {colorVariants?.length > 0 && (
-                  <table className="w-full border-collapse border border-gray-200">
-                    <thead>
-                      <tr className="bg-gray-100 text-sm font-semibold">
-                        <th className="border px-3 py-2 text-left">
-                          Color Variant
-                        </th>
-                        <th className="border px-3 py-2 text-left">
-                          Base Price (Ksh)
-                        </th>
-                        <th className="border px-3 py-2 text-left">
-                          Deal Price (Ksh)
-                        </th>
-                        <th className="border px-3 py-2 text-left">
-                          Deal Start
-                        </th>
-                        <th className="border px-3 py-2 text-left">Deal End</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {colorVariants.map((swatch, idx) => (
-                        <tr key={swatch.id || idx} className="text-sm">
-                          <td className="border px-3 py-2">{swatch.title}</td>
-                          <td className="border px-3 py-2">
-                            <input
-                              type="number"
-                              defaultValue={swatch.price}
-                              {...register(`colorVariants.${idx}.price`, {
-                                setValueAs: (v) =>
-                                  v === '' ? undefined : Number(v),
-                                min: {
-                                  value: 1,
-                                  message: 'Price must be at least 1',
-                                },
-                              })}
-                              className="w-full border rounded-md px-2 py-1"
-                            />
-                          </td>
-                          <td className="border px-3 py-2">
-                            <input
-                              type="number"
-                              defaultValue={swatch.dealPrice}
-                              {...register(`colorVariants.${idx}.dealPrice`, {
-                                setValueAs: (v) =>
-                                  v === '' ? undefined : Number(v),
-                              })}
-                              className="w-full border rounded-md px-2 py-1"
-                            />
-                          </td>
-                          <td className="border px-3 py-2">
-                            <input
-                              type="date"
-                              defaultValue={
-                                swatch.dealStart
-                                  ? new Date(swatch.dealStart)
-                                      .toISOString()
-                                      .split('T')[0]
-                                  : ''
-                              }
-                              {...register(`colorVariants.${idx}.dealStart`)}
-                              className="w-full border rounded-md px-2 py-1"
-                            />
-                          </td>
-                          <td className="border px-3 py-2">
-                            <input
-                              type="date"
-                              defaultValue={
-                                swatch.dealEnd
-                                  ? new Date(swatch.dealEnd)
-                                      .toISOString()
-                                      .split('T')[0]
-                                  : ''
-                              }
-                              {...register(`colorVariants.${idx}.dealEnd`)}
-                              className="w-full border rounded-md px-2 py-1"
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              {/* SKU */}
+              <div className="w-[500px] p-0 rounded-md">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  SKU * <span className="text-sm">(Stock Keeping Unit)</span>
+                </p>
+                <Input
+                  label=""
+                  placeholder="Enter SKU"
+                  type="text"
+                  className="text-[15px]"
+                  {...register('sku', {
+                    validate: (value) =>
+                      value.trim().length > 0 || 'SKU cannot be empty',
+                  })}
+                />
+                {errors.sku && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.sku.message as string}
+                  </p>
                 )}
               </div>
 
-              {/* Stock */}
-              <div className="w-full p-0 rounded-md">
+              {/* Quantity */}
+              <div className="w-[500px] p-0 rounded-md">
                 <p className="text-[15px] font-semibold text-gray-700 py-2">
-                  Stock *
+                  Quantity *
                 </p>
                 <Input
                   label=""
@@ -1661,6 +1482,323 @@ export default function ProductForm({
                 {errors.stock && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.stock.message as string}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                {/* Case 1: No color variants → global pricing */}
+                {/* Regular Price */}
+                <div className="flex-1 w-full">
+                  <p className="text-[15px] font-semibold text-gray-700 py-2 hidden">
+                    Base Price * <span className="text-sm">(Ksh)</span>
+                  </p>
+                  <h2 className="flex items-center gap-2 text-[15px] font-bold text-gray-700 pb-2">
+                    {colorVariants.length > 0 ? (
+                      <>
+                        <Info className="w-4 h-4 text-yellow-600" />
+                        <span className="text-yellow-800">
+                          Base Price disabled, color swatches are active
+                        </span>
+                      </>
+                    ) : (
+                      'Base Price *'
+                    )}
+                  </h2>
+                  <Input
+                    label=""
+                    type="number"
+                    placeholder="0"
+                    disabled={colorVariants.length > 0} // ✅ disable when variants exist
+                    className="bg-[#fff] text-[15px] "
+                    {...register('regular_price', {
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                      min: {
+                        value: 1,
+                        message: 'Price must be at least 1',
+                      },
+                      validate: (value) =>
+                        (typeof value === 'number' && !isNaN(value)) ||
+                        'Only numbers are allowed',
+                    })}
+                  />
+                  {errors.regular_price && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.regular_price.message as string}
+                    </p>
+                  )}
+                </div>
+
+                {/* Deal toggle */}
+                {/* Checkbox to toggle deal */}
+                <label className="flex items-center gap-2 font-semibold pt-2">
+                  <input
+                    id="deal-checkbox"
+                    type="checkbox"
+                    disabled={colorVariants.length > 0} // ✅ disable when variants exist
+                    checked={enableDeal}
+                    onChange={(e) => setValue('enableDeal', e.target.checked)}
+                  />
+                  Add a Deal
+                </label>
+
+                {/* Sale Price */}
+                {/* Sale Price input (always rendered, disabled when not a deal) */}
+                <div className="flex-1 w-full">
+                  <p className="text-[15px] font-semibold text-gray-700 py-2">
+                    Sale Price <span className="text-sm">(Ksh)</span>
+                  </p>
+                  <Input
+                    label=""
+                    type="number"
+                    placeholder="0"
+                    className="bg-[#fff] text-[15px]"
+                    disabled={!enableDeal} // ✅ disable when not a deal
+                    {...register('sale_price', {
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                      min: {
+                        value: 1,
+                        message: 'Sale price must be at least 1',
+                      },
+                      validate: (value) =>
+                        (typeof value === 'number' && !isNaN(value)) ||
+                        'Only numbers are allowed',
+                    })}
+                  />
+                  {errors.sale_price && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.sale_price.message as string}
+                    </p>
+                  )}
+                </div>
+
+                {/* Conditionally render deal fields */}
+                <div className="flex items-start justify-center p-0 gap-4 rounded-md">
+                  {/* Deal Start Date */}
+                  <div className="w-full flex flex-col items-start justify-center p-0 rounded-md">
+                    <label className="text-[15px] font-medium text-gray-800 mt-1">
+                      Deal Start
+                    </label>
+                    <Controller
+                      name="deal_start"
+                      control={control}
+                      rules={{ required: 'Start date is required' }}
+                      render={({ field }) => (
+                        <DatePicker
+                          selected={field.value}
+                          onChange={(date: Date | null) => {
+                            field.onChange(date);
+                            if (date) {
+                              const autoEnd = new Date(date);
+                              autoEnd.setDate(autoEnd.getDate() + 7);
+                              setValue('deal_end', autoEnd);
+                            }
+                          }}
+                          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
+                          disabled={!enableDeal} // ✅ disable when not a deal
+                          dateFormat="yyyy-MM-dd"
+                        />
+                      )}
+                    />
+                    {errors.deal_start && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.deal_start.message as string}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Deal End Date */}
+                  <div className="w-full flex flex-col items-start justify-center gap-1 p-0 rounded-md">
+                    <label className="text-sm font-medium text-gray-800 mt-1">
+                      Deal End
+                    </label>
+                    <Controller
+                      name="deal_end"
+                      control={control}
+                      rules={{
+                        required: 'End date is required',
+                        validate: (value) => {
+                          const start = getValues('deal_start');
+                          if (!value || !start) {
+                            return 'Both start and end dates are required';
+                          }
+                          return (
+                            value > start || 'End date must be after start date'
+                          );
+                        },
+                      }}
+                      render={({ field }) => (
+                        <DatePicker
+                          selected={field.value}
+                          onChange={(date: Date | null) => field.onChange(date)}
+                          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
+                          disabled={!enableDeal} // ✅ disable when not a deal
+                          dateFormat="yyyy-MM-dd"
+                        />
+                      )}
+                    />
+                    {errors.deal_end && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.deal_end.message as string}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Case 2: With color variants → table */}
+                {colorVariants?.length > 0 && (
+                  <div className="flex flex-col items-start justify-center">
+                    <h2 className="font-bold py-2">Color Variants</h2>
+                    <table className="w-full border-collapse border border-gray-200">
+                      <thead>
+                        <tr className="bg-gray-100 text-sm font-semibold">
+                          <th className="border px-3 py-2 text-left">
+                            Color Variant
+                          </th>
+                          <th className="border px-3 py-2 text-left">
+                            Base Price (Ksh)
+                          </th>
+                          <th className="border px-3 py-2 text-left">
+                            Deal Price (Ksh)
+                          </th>
+                          <th className="border px-3 py-2 text-left">
+                            Deal Start
+                          </th>
+                          <th className="border px-3 py-2 text-left">
+                            Deal End
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {colorVariants.map((swatch, idx) => (
+                          <tr key={swatch.id || idx} className="text-sm">
+                            {/* Color name from editor, fallback to placeholder */}
+                            <td className="border px-3 py-2 font-medium text-gray-800">
+                              {swatch.name && swatch.name.trim() !== ''
+                                ? swatch.name
+                                : `Color ${idx + 1}`}
+                            </td>
+                            {/* Base Price */}
+                            <td className="border px-3 py-2">
+                              <input
+                                type="number"
+                                defaultValue={swatch.price}
+                                {...register(`colorVariants.${idx}.price`, {
+                                  setValueAs: (v) =>
+                                    v === '' ? undefined : Number(v),
+                                  min: {
+                                    value: 1,
+                                    message: 'Price must be at least 1',
+                                  },
+                                })}
+                                className="w-full border rounded-md px-2 py-1"
+                              />
+                            </td>
+                            {/* Deal Price */}
+                            <td className="border px-3 py-2">
+                              <input
+                                type="number"
+                                defaultValue={swatch.dealPrice}
+                                {...register(`colorVariants.${idx}.dealPrice`, {
+                                  setValueAs: (v) =>
+                                    v === '' ? undefined : Number(v),
+                                })}
+                                className="w-full border rounded-md px-2 py-1"
+                              />
+                            </td>
+                            {/* Deal Start */}
+                            <td className="border px-3 py-2">
+                              <input
+                                type="date"
+                                defaultValue={
+                                  swatch.dealStart
+                                    ? new Date(swatch.dealStart)
+                                        .toISOString()
+                                        .split('T')[0]
+                                    : ''
+                                }
+                                {...register(`colorVariants.${idx}.dealStart`)}
+                                className="w-full border rounded-md px-2 py-1"
+                              />
+                            </td>
+                            {/* Deal End */}
+                            <td className="border px-3 py-2">
+                              <input
+                                type="date"
+                                defaultValue={
+                                  swatch.dealEnd
+                                    ? new Date(swatch.dealEnd)
+                                        .toISOString()
+                                        .split('T')[0]
+                                    : ''
+                                }
+                                {...register(`colorVariants.${idx}.dealEnd`)}
+                                className="w-full border rounded-md px-2 py-1"
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Item Condition */}
+              <div className="w-[500px] p-0 rounded-md">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  Item Condition *{' '}
+                </p>
+                <Input
+                  label=""
+                  placeholder="Example: New, Used, Renewed"
+                  type="text"
+                  className="text-[15px]"
+                  {...register('condition', {
+                    validate: (value) =>
+                      value.trim().length > 0 || 'SKU cannot be empty',
+                  })}
+                />
+                {errors.condition && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.condition.message as string}
+                  </p>
+                )}
+              </div>
+
+              {/* Shipping Options */}
+              <div className="w-full flex items-center justify-start gap-2 py-2 rounded-md">
+                <p className="text-[15px] font-semibold text-gray-700 py-2">
+                  Shipping Options *
+                </p>
+
+                <div className="w-[500px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="self"
+                      {...register('shippingOption', {
+                        required: 'Please select a shipping option',
+                      })}
+                    />
+                    I will ship the item myself
+                  </label>
+
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="company"
+                      {...register('shippingOption', {
+                        required: 'Please select a shipping option',
+                      })}
+                    />
+                    Fulfilled by the company
+                  </label>
+                </div>
+
+                {errors.shippingOption && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.shippingOption.message as string}
                   </p>
                 )}
               </div>
@@ -1794,7 +1932,7 @@ export default function ProductForm({
       )}
 
       {/* Navigation Section */}
-      <div className="w-[700px] mx-auto flex items-center justify-start gap-6 mt-6 mb-8 bg-[#f6f6f6]">
+      <div className="w-[1000px] mx-auto flex items-center justify-start gap-6 mt-8 mb-8 bg-[#f6f6f6]">
         {/* Back button */}
         <button
           type="button"

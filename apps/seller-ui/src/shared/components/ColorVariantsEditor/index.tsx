@@ -13,7 +13,6 @@ interface UploadedImage {
 
 type ColorVariant = {
   name: string;
-  hex: string;
   title: string;
   price: number;
   images: (UploadedImage | null)[];
@@ -65,7 +64,6 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
       ...variants,
       {
         name: '',
-        hex: '#000000',
         title: '',
         price: 0,
         images: Array(8).fill(null),
@@ -194,23 +192,10 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
           </button>
 
           <div className="flex flex-col items-start justify-center space-y-2">
-            {/* Hex value */}
-            <div className="flex items-center justify-center gap-6">
-              <label className="block text-[15px] font-semibold text-gray-800 mb-1">
-                Hex value:
-              </label>{' '}
-              <input
-                type="color"
-                value={variant.hex}
-                onChange={(e) => updateVariant(vIndex, 'hex', e.target.value)}
-                className="rounded-full"
-              />
-            </div>
-
-            {/* Color name * */}
+            {/* Color name */}
             <div className="w-full flex items-start justify-start gap-2 p-0 rounded-md">
               <label className="block text-[15px] font-semibold text-gray-800 mb-1">
-                Color name *
+                Color Name *
               </label>
               <input
                 type="text"
@@ -237,21 +222,6 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
                   {errors.title.message as string}
                 </p>
               )}
-            </div>
-
-            <div className="w-full flex items-start justify-start gap-2 p-0 rounded-md">
-              <label className="block text-[15px] font-semibold  text-gray-800 mb-1">
-                Price *
-              </label>
-              <input
-                type="number"
-                placeholder="Price"
-                value={variant.price}
-                onChange={(e) =>
-                  updateVariant(vIndex, 'price', parseFloat(e.target.value))
-                }
-                className="px-6 py-1 border border-gray-300 rounded-md"
-              />
             </div>
           </div>
 

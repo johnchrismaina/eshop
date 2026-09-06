@@ -1,15 +1,26 @@
 // utils/renderFilterRow.tsx
 import { Info } from 'lucide-react';
+import { UseFormRegister, Control } from 'react-hook-form';
 import FilterDropdown from '../../apps/seller-ui/src/shared/components/FilterDropdown'; // adjust path
+import type { FormValues } from '../../apps/seller-ui/src/shared/components/ProductForm'; // adjust path
 
 interface FilterRowProps {
   filter: any;
   idx: number;
   length: number;
   mode: 'seller' | 'customer';
+  register: UseFormRegister<FormValues>;
+  control: Control<FormValues>;
 }
 
-export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
+export function renderFilterRow({
+  filter,
+  idx,
+  length,
+  mode,
+  register,
+  control,
+}: FilterRowProps) {
   const isFirst = idx === 0;
   const isLast = idx === length - 1;
 
@@ -21,11 +32,11 @@ export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
         ${isLast ? 'rounded-b-md pb-4' : ''}`}
     >
       {/* Label + Tooltip */}
-      <label className="flex items-center gap-1 shrink-0 text-sm font-bold">
+      <label className="flex items-start justify-center gap-1 shrink-0 text-sm text-gray-800 font-bold">
         {filter.label}
         {filter.tooltip && (
-          <span className="text-gray-400 cursor-pointer" title={filter.tooltip}>
-            <Info size={18} color="#0078D7" />
+          <span className="text-gray-600 cursor-pointer" title={filter.tooltip}>
+            <Info size={16} />
           </span>
         )}
       </label>
@@ -41,6 +52,8 @@ export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
               : filter.multiSelect
           }
           required={filter.required}
+          name={filter.value} // ✅ pass the field name
+          control={control} // ✅ pass react-hook-form control
         />
       )}
 
@@ -57,7 +70,9 @@ export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
                       : 'radio'
                     : 'checkbox'
                 }
+                {...register(`product_specifications.${filter.value}`)}
                 name={filter.value}
+                // {...register(`product_specifications.${filter.value}`)}
                 value={opt}
               />
               {opt}
@@ -71,6 +86,7 @@ export function renderFilterRow({ filter, idx, length, mode }: FilterRowProps) {
         <input
           type="text"
           placeholder={`Enter ${filter.label}`}
+          {...register(`product_specifications.${filter.value}`)}
           className="w-[550px] border border-gray-200 rounded-md px-4 py-2 h-10 text-sm text-[#1C1C1E] placeholder-gray-400 focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
           required={filter.required}
         />

@@ -20,45 +20,28 @@ type ColorVariant = {
 };
 
 interface ColorVariantsEditorProps {
-  draftKey: string; // ✅ new
-  aspect: 'square' | 'portrait'; // ✅
-  onHasColorsChange?: (hasColors: boolean) => void; // ✅ notify parent
-  setValue: UseFormSetValue<FormValues>; // ✅ add setValue from react-hook-form
+  draftKey: string; // ✅ used for localStorage persistence
+  aspect: 'square' | 'portrait'; // ✅ passed from parent form
+  onHasColorsChange?: (hasColors: boolean) => void; // ✅ notify parent to disable main images
+  setValue: UseFormSetValue<FormValues>; // ✅ sync with parent form
 }
 
 const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
   setValue,
-  draftKey, // ✅
-  aspect, // ✅
+  draftKey,
+  aspect,
   onHasColorsChange,
 }) => {
   const [variants, setVariants] = useState<ColorVariant[]>([]);
-
   const [variantUploading, setVariantUploading] = useState<
     Record<string, boolean>
   >({});
-  // Variant images preview state
   const [variantPreviewImage, setVariantPreviewImage] = useState<string | null>(
     null
   );
   const [openVariantPreviewModal, setOpenVariantPreviewModal] = useState(false);
 
-  // const draftKey = `colorVariantsDraft-${productId ?? 'new'}`;
-
-  // ✅ Hook form setup
-  const {
-    register,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = (data: any) => {
-    console.log('Form data:', data);
-    console.log('Variants:', variants);
-  };
-
-  // Add new variant
+  // ✅ Add new variant
   const addVariant = () => {
     const newVariants = [
       ...variants,
@@ -71,10 +54,10 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
       },
     ];
     setVariants(newVariants);
-    onHasColorsChange?.(true); // ✅ disable main images
+    onHasColorsChange?.(true); // disable main images when variants exist
   };
 
-  // Update field
+  // ✅ Update a specific field in a variant
   const updateVariant = <K extends keyof ColorVariant>(
     index: number,
     field: K,
@@ -85,21 +68,8 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     setVariants(updated);
   };
 
-  // Handle image upload
+  // ✅ Handle image upload/remove for a specific variant slot
   const handleVariantImageUpload = (
-    variantIndex: number,
-    imageIndex: number,
-    file: File | null
-  ) => {
-    const updated = [...variants];
-    updated[variantIndex].images[imageIndex] = file
-      ? { fileId: crypto.randomUUID(), file_url: URL.createObjectURL(file) }
-      : null;
-    setVariants(updated);
-  };
-
-  // Handle image upload
-  const handleImageUpload = (
     variantIndex: number,
     imageIndex: number,
     file: File | null
@@ -116,7 +86,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     setVariants(updated);
   };
 
-  // Set default
+  // ✅ Set one variant as default
   const setAsDefault = (index: number) => {
     const updated = variants.map((v, i) => ({
       ...v,
@@ -125,17 +95,16 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     setVariants(updated);
   };
 
-  // ✅ Delete variant + reset logic
+  // ✅ Delete variant
   const deleteVariant = (index: number) => {
     const updated = variants.filter((_, i) => i !== index);
     setVariants(updated);
-
     if (updated.length === 0) {
-      onHasColorsChange?.(false); // ✅ re-enable main images
+      onHasColorsChange?.(false); // re-enable main images when no variants
     }
   };
 
-  // Load
+  // ✅ Load variants from localStorage
   useEffect(() => {
     const saved = localStorage.getItem(draftKey);
     if (saved) {
@@ -151,7 +120,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     }
   }, [draftKey]);
 
-  // Save (and clear when empty)
+  // ✅ Save variants to localStorage
   useEffect(() => {
     if (variants.length > 0) {
       localStorage.setItem(draftKey, JSON.stringify(variants));
@@ -160,24 +129,21 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     }
   }, [variants, draftKey]);
 
-  // Color swatch reset function
-  const resetVariants = () => {
-    setVariants([]); // clear state
-    localStorage.removeItem('colorVariantsDraft'); // clear draft
-    onHasColorsChange?.(false); // ✅ re-enable main images
-  };
-
-  // ✅ keep form state in sync
-  // useEffect(() => {
-  //   setValue('colorVariants', variants);
-  // }, [variants, setValue]);
+  // ✅ Sync with parent form
   useEffect(() => {
     setValue('colorVariants', variants);
     onHasColorsChange?.(variants.length > 0);
   }, [variants, setValue, onHasColorsChange]);
 
+  // ✅ Reset all variants
+  const resetVariants = () => {
+    setVariants([]);
+    localStorage.removeItem(draftKey);
+    onHasColorsChange?.(false);
+  };
+
   return (
-    <div className="w-full mt-2 space-y-2">
+    <div className="w-full space-y-2 rounded-sm px-6 py-4 bg-white">
       <h2 className="font-bold">Color Variants</h2>
 
       {variants.map((variant, vIndex) => (
@@ -187,13 +153,14 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
             type="button"
             onClick={() => deleteVariant(vIndex)}
             className="absolute top-2 right-2 text-red-600 hover:text-red-800 p-2 bg-gray-200 rounded-md"
+            aria-label="Delete variant"
           >
             <X />
           </button>
 
           <div className="flex flex-col items-start justify-center space-y-2">
             {/* Color name */}
-            <div className="w-full flex items-start justify-start gap-2 p-0 rounded-md">
+            <div className="w-full flex items-start gap-2">
               <label className="block text-[15px] font-semibold text-gray-800 mb-1">
                 Color Name *
               </label>
@@ -206,22 +173,18 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
               />
             </div>
 
-            {/* Product Title * */}
-            <div className="w-full flex items-start justify-start gap-2 p-0 rounded-md">
-              <label className="block shrink-0 text-[15px] font-semibold  text-gray-800 mb-0">
+            {/* Product Title */}
+            <div className="w-full flex items-start gap-2">
+              <label className="block shrink-0 text-[15px] font-semibold text-gray-800 mb-0">
                 Product Title *
               </label>
               <AutoResizeTextarea
                 label=""
                 rows={2}
                 placeholder="Enter product title"
-                {...register('title', { required: 'Title is required' })}
+                value={variant.title}
+                onChange={(e) => updateVariant(vIndex, 'title', e.target.value)}
               />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.title.message as string}
-                </p>
-              )}
             </div>
           </div>
 
@@ -234,16 +197,15 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
                   key={i}
                   idPrefix={`variant-${vIndex}`}
                   index={i}
-                  aspect={aspect} // ✅ pass it through, not hardcoded
-                  pictureUploadingLoader={variantUploading[key] ?? false} // ✅ per-slot loader
-                  image={variant.images[i]} // ✅ scoped to this variant only
+                  aspect={aspect}
+                  pictureUploadingLoader={variantUploading[key] ?? false}
+                  image={variant.images[i]}
                   onImageChange={async (file) => {
-                    if (!file) return;
                     setVariantUploading((prev) => ({ ...prev, [key]: true }));
-                    await handleVariantImageUpload(vIndex, i, file); // ✅ use variant-specific handler
+                    await handleVariantImageUpload(vIndex, i, file);
                     setVariantUploading((prev) => ({ ...prev, [key]: false }));
                   }}
-                  onRemove={() => handleVariantImageUpload(vIndex, i, null)} // ✅ remove only from this variant
+                  onRemove={() => handleVariantImageUpload(vIndex, i, null)}
                   setOpenPreviewModal={setOpenVariantPreviewModal}
                   setSelectedPreviewImage={setVariantPreviewImage}
                 />
@@ -269,7 +231,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
         <button
           type="button"
           onClick={addVariant}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg "
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
         >
           + Add Color Swatch
         </button>
@@ -292,6 +254,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
           <button
             className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
             onClick={() => setOpenVariantPreviewModal(false)}
+            aria-label="Close preview"
           >
             <X />
           </button>

@@ -6,12 +6,10 @@ import {
   Heart,
   MessageSquareText,
   Truck,
-  Gift,
   Package,
   RotateCcw,
   ShieldCheck,
   Store,
-  Info,
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
@@ -559,7 +557,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[280px] px-4 py-4 bg-[#f8f8f8] border-none border-[#ddd] rounded-lg ">
+        <div className=" w-[280px] px-4 py-4 bg-[#fff] border border-[#ddd] rounded-lg ">
           {/* Price */}
           <div className="space-x-0.5 mb-4 ">
             <span className="text-[15px] text-[#52525B] font-bold">KSh</span>

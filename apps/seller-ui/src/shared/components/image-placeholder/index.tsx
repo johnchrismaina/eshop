@@ -59,6 +59,10 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
 
   const handleFileChange = (file: File | null) => {
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Only image files are allowed.');
+        return;
+      }
       if (localPreview) {
         URL.revokeObjectURL(localPreview);
       }

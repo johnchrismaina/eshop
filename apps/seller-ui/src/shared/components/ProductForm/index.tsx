@@ -19,7 +19,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
-import Select from 'react-select';
+// import Select from 'react-select';
 import { usePathname } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import CustomAccordion from '../CustomAccordion';
@@ -46,12 +46,6 @@ interface UploadedImage {
   fileId: string;
   file_url: string;
 }
-
-// interface ShopCategory {
-//   value: string;
-//   label: string;
-//   subCategories?: ShopCategory[];
-// }
 
 // A single filter definition
 interface Filter {
@@ -112,7 +106,7 @@ export type FormValues = {
   tags: string[];
   category: string;
   subCategory: string;
-  product_specifications: { label: string; value: string }[];
+  product_specifications: Record<string, string | string[]>;
   detailed_description: string;
   video_url: string;
   deal_start: Date | null;
@@ -156,30 +150,30 @@ export default function ProductForm({
       product ??
       ({
         title: '',
-        aspect: 'square',
-        images: Array(8).fill(null),
-        regular_price: undefined,
-        sale_price: undefined,
+        slug: '',
+        category: 'men_clothing',
+        subCategory: 'polo_shirt',
         short_description: '',
         accordions: [],
-        slug: '',
-        tags: [],
-        category: 'Clothing & Apparel',
-        subCategory: "Women's Clothing",
-        product_specifications: [],
-        detailed_description: '',
+        aspect: 'square',
+        images: Array(8).fill(null),
+        colorVariants: [],
         video_url: '',
-        deal_start: null,
-        deal_end: null,
+        product_specifications: {},
+        detailed_description: '',
         sku: '',
         stock: undefined,
-        total_tickets: undefined,
-        discountCodes: [],
-        enableDeal: isDealRoute,
-        // ✅ initialize empty colorVariants array
-        colorVariants: [],
+        regular_price: undefined,
+        sale_price: undefined,
+        deal_start: null,
+        deal_end: null,
         condition: '',
         shippingOption: '',
+        discountCodes: [],
+        total_tickets: undefined,
+        tags: [],
+        enableDeal: isDealRoute,
+        // ✅ initialize empty colorVariants array
       } as FormValues),
   });
 
@@ -262,19 +256,19 @@ export default function ProductForm({
   }, [activeTab]);
 
   //   Fetch categories
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      try {
-        const res = await axiosProduct.get('/get-categories');
-        return res.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    staleTime: 1000 * 60 * 5,
-    retry: 2,
-  });
+  // const { data, isLoading, isError } = useQuery({
+  //   queryKey: ['categories'],
+  //   queryFn: async () => {
+  //     try {
+  //       const res = await axiosProduct.get('/get-categories');
+  //       return res.data;
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  //   staleTime: 1000 * 60 * 5,
+  //   retry: 2,
+  // });
 
   //   Fetch discount codes
   const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
@@ -288,6 +282,11 @@ export default function ProductForm({
   // const categories = data?.categories || [];
   // const subCategoriesData = data?.subCategories || {};
 
+  const title = watch('title');
+
+  // ✅ run the debounced slug generator
+  useDebouncedSlug(title, setValue);
+
   const selectedCategory = watch('category');
   const specs = watch('product_specifications');
 
@@ -298,9 +297,17 @@ export default function ProductForm({
   const [loadingCategories, setLoadingCategories] = useState(true);
 
   const [openCategories, setOpenCategories] = useState(false);
-  const [selectedPath, setSelectedPath] = useState<string[]>([]);
+  // const [selectedPath, setSelectedPath] = useState<string[]>([]);
+  const [selectedPath, setSelectedPath] = useState([
+    "Men's Fashion",
+    "Men's Clothing",
+    'Men Shirts',
+    'Polo Shirt',
+  ]);
+
   const [currentLevel, setCurrentLevel] = useState<ShopCategory[]>([]);
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  // const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [selectedValue, setSelectedValue] = useState<ShopCategory | null>(null);
 
   // path leading TO the level currently being displayed (never includes a leaf label)
   const [levelPath, setLevelPath] = useState<string[]>([]);
@@ -371,7 +378,7 @@ export default function ProductForm({
       setCurrentLevel(cat.subCategories);
     } else {
       setSelectedPath(newPath);
-      setSelectedValue(cat.value);
+      setSelectedValue(cat);
       // no auto-close here anymore — panel stays open until the user
       // taps Confirm, X, or the backdrop
     }
@@ -424,7 +431,7 @@ export default function ProductForm({
   function renderOptions() {
     return currentLevel.map((cat) => {
       const isLeaf = !cat.subCategories || cat.subCategories.length === 0;
-      const isSelected = isLeaf && selectedValue === cat.value;
+      const isSelected = isLeaf && selectedValue === cat;
 
       return (
         <button
@@ -496,6 +503,51 @@ export default function ProductForm({
     }
 
     return { inherited, groups };
+  }
+
+  // Auto‑Generate Slug from Title
+  useEffect(() => {
+    if (title) {
+      const baseSlug = title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-'); // spaces → dashes
+
+      setValue('slug', baseSlug, { shouldValidate: true });
+    }
+  }, [title, setValue]);
+
+  // Handle Duplicate Slugs
+  function ensureUniqueSlug(baseSlug: string, existingSlugs: string[]): string {
+    let slug = baseSlug;
+    let counter = 2;
+
+    while (existingSlugs.includes(slug)) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+
+    return slug;
+  }
+
+  // Debounced Slug Auto‑Generation
+  function useDebouncedSlug(title: string, setValue: any) {
+    useEffect(() => {
+      if (!title) return;
+
+      const handler = setTimeout(() => {
+        const baseSlug = title
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-]/g, '') // remove invalid chars
+          .replace(/\s+/g, '-'); // spaces → dashes
+
+        setValue('slug', baseSlug, { shouldValidate: true });
+      }, 400); // ✅ wait 400ms after typing stops
+
+      return () => clearTimeout(handler);
+    }, [title, setValue]);
   }
 
   // Load Draft on Page Mount
@@ -663,25 +715,45 @@ export default function ProductForm({
   // Unified submit function
   const onSubmit = async (data: FormValues) => {
     try {
+      // ✅ Clean up images
+      const cleanedImages = (data.images || []).filter(
+        (img) => img && img.file_url && img.fileId
+      );
+
+      // ✅ Flatten product specifications into array of { key, value }
+      const specsObject = data.product_specifications || {};
+      const productSpecifications = Object.entries(specsObject).flatMap(
+        ([key, value]) =>
+          Array.isArray(value)
+            ? value.map((v) => ({ key, value: v })) // multi-select → multiple entries
+            : [{ key, value }]
+      );
+
+      // ✅ Ensure slug uniqueness
+      const { data: existingProducts } = await axiosProduct.get('/all-slugs');
+      const existingSlugs = existingProducts.map((p: any) => p.slug);
+      data.slug = ensureUniqueSlug(data.slug, existingSlugs);
+
+      // ✅ Build final payload
       const payload = {
         ...data,
-        images: (data.images || []).filter(
-          (img) => img && img.file_url && img.fileId
-        ),
+        images: cleanedImages,
+        product_specifications: productSpecifications,
       };
+
       if (mode === 'create') {
         if (isDealRoute || data.enableDeal) {
           await axiosProduct.post('/create-deal', payload);
-          localStorage.removeItem(draftKey); // ✅
+          localStorage.removeItem(draftKey);
           router.push('/dashboard/all-deals');
         } else {
           await axiosProduct.post('/create-product', payload);
-          localStorage.removeItem(draftKey); // ✅
+          localStorage.removeItem(draftKey);
           router.push('/dashboard/all-products');
         }
       } else {
         await axiosProduct.put(`/update-product/${product?.slug}`, payload);
-        localStorage.removeItem(draftKey); // ✅
+        localStorage.removeItem(draftKey);
         router.push('/dashboard/all-products');
       }
     } catch (error: any) {
@@ -774,54 +846,56 @@ export default function ProductForm({
                 )}
               </div>
               {/* Slug */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm ">
-                <p className="flex items-start justify-center gap-1">
-                  <label className="block text-[15px] font-bold  text-gray-800 mb-2">
-                    Slug *
-                  </label>
-                  <span>
-                    <Info size={16} color="#333" />
-                  </span>
-                </p>
-                <div className="w-[800px]">
-                  <Input
-                    label=""
-                    placeholder="product_slug"
-                    className="bg-[#fff]"
-                    {...register('slug', {
-                      required: 'Slug is required!',
-                      pattern: {
-                        value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-                        message:
-                          'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
-                      },
-                      minLength: {
-                        value: 3,
-                        message: 'Slug must be at least 3 characters long.',
-                      },
-                      maxLength: {
-                        value: 50,
-                        message: 'Slug cannot be longer than 50 characters.',
-                      },
-                    })}
-                  />
+              <div className="w-full flex flex-col items-start justify-start gap-1 px-4">
+                <div className="w-full flex items-start justify-end gap-3 bg-white px-0 pt-3 rounded-sm ">
+                  <p className="flex items-start justify-center gap-1 shrink-0">
+                    <label className="block text-[15px] font-bold  text-gray-800 mb-2">
+                      Slug *
+                    </label>
+                    <span>
+                      <Info size={16} color="#333" />
+                    </span>
+                  </p>
+                  <div className="w-[800px]">
+                    <Input
+                      label=""
+                      placeholder="product-slug"
+                      className="bg-[#fff]"
+                      disabled={!watch('title')} // ✅ lock until title is typed
+                      {...register('slug', {
+                        required: 'Slug is required!',
+                        pattern: {
+                          value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+                          message:
+                            'Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug)',
+                        },
+                        minLength: {
+                          value: 3,
+                          message: 'Slug must be at least 3 characters long.',
+                        },
+                        maxLength: {
+                          value: 50,
+                          message: 'Slug cannot be longer than 50 characters.',
+                        },
+                      })}
+                    />
+                  </div>
                 </div>
-
                 {errors.slug && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500 text-sm ">
                     {errors.slug.message as string}
                   </p>
                 )}
               </div>
-              {/* --- DROPDOWN --- */}
+              {/* --- Dropdown Categories --- */}
               <div className="relative w-full flex flex-col items-center justify-end gap-3 bg-white px-4 py-3 rounded-sm">
                 <label className="w-full flex items-center justify-end gap-3">
-                  <p className="flex items-start justify-center gap-1">
+                  <p className="flex items-start justify-center gap-1 text-gray-600">
                     <label className="block text-[15px] font-bold  text-gray-800 mb-2">
                       Category *
                     </label>
                     <span>
-                      <Info size={16} color="#333" />
+                      <Info size={16} />
                     </span>
                   </p>
                   <div className="w-[800px] ">
@@ -836,7 +910,8 @@ export default function ProductForm({
                       >
                         {selectedPath.length > 0
                           ? selectedPath[selectedPath.length - 1]
-                          : 'Select Category'}
+                          : "Men's Clothing / Polo Shirt"}
+
                         <svg
                           className="w-4 h-4 text-[#333]"
                           fill="none"
@@ -915,7 +990,22 @@ export default function ProductForm({
                             <div className="p-4 border-t border-gray-200">
                               <button
                                 type="button"
-                                onClick={() => setOpenCategories(false)}
+                                onClick={() => {
+                                  if (selectedValue) {
+                                    setValue(
+                                      'category',
+                                      selectedPath[1] || 'men_clothing'
+                                    ); // second level
+                                    setValue(
+                                      'subCategory',
+                                      selectedValue.value || 'polo_shirt'
+                                    );
+                                  } else {
+                                    setValue('category', 'men_clothing');
+                                    setValue('subCategory', 'polo_shirt');
+                                  }
+                                  setOpenCategories(false);
+                                }}
                                 disabled={!selectedValue}
                                 className="w-full h-11 rounded-md text-sm font-medium bg-[#C2410C] text-white disabled:opacity-40 disabled:cursor-not-allowed"
                               >
@@ -963,199 +1053,18 @@ export default function ProductForm({
                   </div>
                 </div>
               </div>
-              {/* Categories */}
-              <div className="w-full mt-0 items-center justify-between gap-4 p-0 rounded-md hidden">
-                {/* Category */}
-                <div className="flex-1">
-                  <label className="block font-semibold text-[15px] text-gray-700 mb-1">
-                    Category *
-                  </label>
-                  <div className="relative mb-2">
-                    {isLoading ? (
-                      <p className="text-gray-700">Loading Categories...</p>
-                    ) : isError ? (
-                      <p className="text-red-500">Failed to load categories</p>
-                    ) : (
-                      <Controller
-                        name="category"
-                        control={control}
-                        rules={{ required: 'Categories is required' }}
-                        render={({ field }) => (
-                          <select
-                            {...field}
-                            className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
-                          >
-                            <option
-                              value=""
-                              className="bg-gray-100 text-gray-700"
-                            >
-                              Select
-                            </option>
-                            {/* {data?.categories?.map((c: any) => (
-                              <option
-                                key={c.id}
-                                value={c.name}
-                                className="bg-gray-200 text-gray-800"
-                              >
-                                {c.name}
-                              </option>
-                            ))} */}
-                          </select>
-                        )}
-                      />
-                    )}
-                    {/* Custom arrow */}
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                      <ChevronDown />
-                    </div>
-                  </div>
-                  {errors.category && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.category.message as string}
-                    </p>
-                  )}
-                </div>
-
-                {/* Sub Categories */}
-                <div className="flex-1">
-                  <label className="block font-semibold text-[15px] text-gray-700 mb-1">
-                    Sub-category *
-                  </label>
-                  <div className="relative mb-2">
-                    <Controller
-                      name="subCategory"
-                      control={control}
-                      rules={{ required: 'Subcategories is required' }}
-                      render={({ field }) => (
-                        <select
-                          {...field}
-                          className="w-full px-2 py-1.5 rounded-md border outline-none border-gray-400 text-gray-700 bg-transparent appearance-none"
-                        >
-                          <option
-                            value=""
-                            className="bg-gray-100 text-gray-700"
-                          >
-                            Select
-                          </option>
-                          {/* {subcategories.map((subcategory: string) => (
-                            <option
-                              key={subcategory}
-                              value={subcategory}
-                              className="bg-gray-200 text-gray-800"
-                            >
-                              {subcategory}
-                            </option>
-                          ))} */}
-                        </select>
-                      )}
-                    />
-
-                    {/* Custom arrow */}
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                      <ChevronDown />
-                    </div>
-                  </div>
-
-                  {errors.subCategory && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.subCategory.message as string}
-                    </p>
-                  )}
-                </div>
-              </div>
-              {/* Tags */}
-              <div className="mb-10 w-full p-0 rounded-md hidden">
-                <label className="block text-[15px] font-semibold text-gray-700 mb-1">
-                  Tags *
-                </label>
-                <Controller
-                  name="tags"
-                  control={control}
-                  rules={{
-                    required: 'Separate related product tags with a comma',
-                  }}
-                  render={({ field }) => (
-                    <Select
-                      isMulti
-                      options={[
-                        { value: 'sauce', label: 'Sauce' },
-                        { value: 'apple', label: 'Apple' },
-                        { value: 'flagship', label: 'Flagship' },
-                        // ✅ Add more options or fetch dynamically
-                      ]}
-                      value={(field.value || []).map((tag: string) => ({
-                        value: tag,
-                        label: tag,
-                      }))}
-                      onChange={(selected) =>
-                        field.onChange(selected.map((s: any) => s.value))
-                      }
-                      styles={{
-                        control: (base) => ({
-                          ...base,
-                          backgroundColor: 'rgb(253 253 253)', // fdfdfd
-                          borderColor: 'rgb(156 163 175)', // border-gray-400
-                          color: 'rgb(31 41 55)', // Tailwind bg-gray-800
-                          borderRadius: '0.375rem', // rounded-md
-                          padding: '5px',
-                          boxShadow: 'none',
-                          '&:hover': { borderColor: 'rgb(107 114 128)' }, // gray-500
-                        }),
-                        menu: (base) => ({
-                          ...base,
-                          backgroundColor: 'rgb(31 41 55)', // bg-gray-800
-                          border: '1px solid rgb(75 85 99)', // border-gray-600
-                        }),
-                        option: (base, { isFocused, isSelected }) => ({
-                          ...base,
-                          backgroundColor: isSelected
-                            ? 'rgb(55 65 81)' // bg-gray-700
-                            : isFocused
-                            ? 'rgb(75 85 99)' // bg-gray-600
-                            : 'rgb(31 41 55)', // bg-gray-800
-                          color: 'white',
-                          cursor: 'pointer',
-                        }),
-                        multiValue: (base) => ({
-                          ...base,
-                          backgroundColor: 'rgb(55 65 81)', // bg-gray-700
-                          padding: '2px',
-                          borderRadius: '0.375rem',
-                        }),
-                        multiValueLabel: (base) => ({
-                          ...base,
-                          color: 'rgb(229 231 235)', // text-gray-200
-                        }),
-                        multiValueRemove: (base) => ({
-                          ...base,
-                          color: 'rgb(156 163 175)', // text-gray-400
-                          ':hover': {
-                            backgroundColor: 'rgb(239 68 68)', // red-500
-                            color: 'white',
-                          },
-                        }),
-                      }}
-                    />
-                  )}
-                />
-                {errors.tags && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.tags.message as string}
-                  </p>
-                )}
-              </div>
             </div>
           )}
 
           {/* Product Details */}
           {activeTab === 'Product Details' && (
-            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-3 mt-4 py-4  ">
-              <div className="w-[800px] flex flex-col mx-auto items-center justify-center ">
-                {/* Product Specifications */}
-                {/* General Attributes (inherited filters) */}
-                {inherited.length > 0 && (
-                  <div className="w-full mb-4">
-                    <h3 className="text-lg font-bold pb-2">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center rounded-sm gap-2 mt-4 ">
+              {/* Product Specifications */}
+              {/* General Attributes (inherited filters) */}
+              {inherited.length > 0 && (
+                <div className="w-[1000px] flex items-center justify-center bg-white">
+                  <div className="w-[700px] mb-4 p-2">
+                    <h3 className="text-lg font-bold pt-2 pb-2">
                       General Attributes
                     </h3>
                     {inherited.map((filter, idx) =>
@@ -1164,27 +1073,34 @@ export default function ProductForm({
                         idx,
                         length: inherited.length,
                         mode: 'seller', // or "customer"
+                        register,
+                        control,
                       })
                     )}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Category-specific filter groups */}
-                {groups.map((group) => (
-                  <div key={group.title} className="w-full mb-4">
-                    <h3 className="text-lg font-bold pb-2 ">{group.title}</h3>
+              {/* Category-specific filter groups */}
+              {groups.map((group) => (
+                <div className="w-[1000px] flex items-center justify-center bg-white border-none border-[#ddd] ">
+                  <div key={group.title} className="w-[700px] mb-4 p-2 ">
+                    <h3 className="text-lg font-bold pt-4 pb-2 ">
+                      {group.title}
+                    </h3>
                     {group.filters.map((filter, idx) =>
                       renderFilterRow({
                         filter,
                         idx,
                         length: group.filters.length,
                         mode: 'seller', // or "customer"
+                        register,
+                        control,
                       })
                     )}
                   </div>
-                ))}
-              </div>
-              {/* ))} */}
+                </div>
+              ))}
               {/* Product Properties */}
               <div className="w-full p-0 rounded-md hidden">
                 <CustomProperties control={control} errors={errors} />
@@ -1198,12 +1114,16 @@ export default function ProductForm({
 
           {/* Description & Media*/}
           {activeTab === 'Description & Media' && (
-            <div className="w-[700px] flex flex-col mx-auto items-start justify-center gap-3 py-4 ">
+            <div className="w-[1000px] flex flex-col mx-auto items-start justify-center gap-2 py-4 ">
               {/* Short Description */}
-              <div className="w-full p-0 rounded-md ">
-                <label className="block font-bold text-gray-700 pb-3">
+              <div className="w-full rounded-sm px-6 py-4 bg-white">
+                <label
+                  htmlFor="short-description-editor"
+                  className="block text-[15px] font-bold text-gray-700 pb-3"
+                >
                   Product Description * (Min 50 words)
                 </label>
+
                 <Controller
                   name="short_description"
                   control={control}
@@ -1218,13 +1138,14 @@ export default function ProductForm({
                   }}
                   render={({ field }) => (
                     <RichTextEditor
-                      id="short-description-editor" // ✅ unique id
+                      id="short-description-editor" // ✅ unique id for accessibility
                       value={field.value || ''}
                       onChange={field.onChange}
                       className="bg-white"
                     />
                   )}
                 />
+
                 {errors.short_description && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.short_description.message as string}
@@ -1233,13 +1154,13 @@ export default function ProductForm({
               </div>
 
               {/* Product details / Accordions */}
-              <div className="w-full p-0 rounded-md ">
+              <div className="w-full rounded-sm px-6 py-4 bg-white hidden">
                 <CustomAccordion control={control} errors={errors} />{' '}
               </div>
 
               {/* Dropdown */}
-              <div className="w-full flex flex-col items-start justify-start gap-1 mb-0 p-0 rounded-md">
-                <label className="block font-bold  text-gray-700 mb-1">
+              <div className="w-full flex flex-col items-start justify-start gap-1 rounded-sm px-6 py-4 bg-white">
+                <label className="block text-[15px] font-bold  text-gray-700 mb-1">
                   Image Aspect Ratio
                 </label>
                 <div
@@ -1289,7 +1210,7 @@ export default function ProductForm({
               {/* Image upload section */}
               {/* Main Images section always visible */}
               <div
-                className={`relative w-full mx-auto bg-[#F5F5F5] p-0 rounded-md mt-0 ${
+                className={`relative w-[1000px] mx-auto rounded-sm px-6 py-4 bg-white ${
                   hasColors ? 'opacity-50 pointer-events-none' : ''
                 }`}
               >
@@ -1364,33 +1285,49 @@ export default function ProductForm({
               />
 
               {/* Color Selector */}
-              <div className="w-full mt-0 p-0 rounded-md">
+              <div className="w-full mt-0 rounded-sm px-6 py-4 bg-white hidden">
                 <ColorSelector control={control} errors={errors} />
               </div>
 
               {/* Size Selector */}
-              <div className="w-full mt-0 p-0 rounded-md">
+              <div className="w-full mt-0 rounded-sm px-6 py-4 bg-white">
                 <SizeSelector control={control} errors={errors} />
               </div>
 
               {/* Video Url */}
-              <div className="w-full pt-2 rounded-md">
-                <label className="block text-[15px] font-bold text-gray-700 mb-1">
+              <div className="w-full rounded-sm px-6 py-4 bg-white">
+                <label
+                  htmlFor="video-url"
+                  className="block text-[15px] font-bold text-gray-700 mb-1"
+                >
                   Video Url *
                 </label>
                 <Input
+                  id="video-url"
                   label=""
                   placeholder="https://www.youtube.com/embed/xyz123"
                   className="bg-[#fff]"
                   {...register('video_url', {
-                    pattern: {
-                      value:
-                        /^https:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]+$/,
-                      message:
-                        'Invalid Youtube embed url URL! Use format: https://youtube.com/embed/xyz123',
+                    validate: (value) => {
+                      // ✅ normalize watch links → embed links
+                      const watchRegex =
+                        /^https:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/;
+                      const embedRegex =
+                        /^https:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]+$/;
+
+                      if (embedRegex.test(value)) return true;
+                      const match = value.match(watchRegex);
+                      if (match) {
+                        // auto-convert watch → embed
+                        const embedUrl = `https://www.youtube.com/embed/${match[2]}`;
+                        setValue('video_url', embedUrl);
+                        return true;
+                      }
+                      return 'Invalid YouTube URL! Use format: https://youtube.com/embed/xyz123';
                     },
                   })}
                 />
+
                 {errors.video_url && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.video_url.message as string}
@@ -1399,12 +1336,15 @@ export default function ProductForm({
               </div>
 
               {/* Detailed product description */}
-              <div className="w-full lg:w-full mx-auto px-0 pt-1">
-                {/* Detailed description */}
+              <div className="w-full lg:w-full mx-auto rounded-sm px-6 py-4 bg-white">
                 <div className="mt-4">
-                  <label className="block font-bold text-gray-700 mb-3">
+                  <label
+                    htmlFor="detailed-description-editor"
+                    className="block font-bold text-gray-700 mb-3"
+                  >
                     Detailed description * (Min 100 words)
                   </label>
+
                   <Controller
                     name="detailed_description"
                     control={control}
@@ -1419,13 +1359,14 @@ export default function ProductForm({
                     }}
                     render={({ field }) => (
                       <RichTextEditor
-                        id="detailed-description-editor" // ✅ unique id
+                        id="detailed-description-editor" // ✅ unique id for accessibility
                         value={field.value || ''}
                         onChange={field.onChange}
                         className="bg-white"
                       />
                     )}
                   />
+
                   {errors.detailed_description && (
                     <p className="text-red-500 text-sm mt-1">
                       {errors.detailed_description.message as string}
@@ -1438,22 +1379,24 @@ export default function ProductForm({
 
           {/* Pricing */}
           {activeTab === 'Pricing' && (
-            <div className="w-[700px] flex flex-col mx-auto items-start justify-center gap-2 py-4 ">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-2 mt-4 py-8 bg-white">
               {/* SKU */}
-              <div className="w-[500px] p-0 rounded-md">
-                <p className="text-[15px] font-semibold text-gray-700 py-2">
-                  SKU * <span className="text-sm">(Stock Keeping Unit)</span>
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm">
+                <p className="text-[15px] font-bold text-gray-700 shrink-0 py-2">
+                  SKU *
                 </p>
-                <Input
-                  label=""
-                  placeholder="Enter SKU"
-                  type="text"
-                  className="text-[15px]"
-                  {...register('sku', {
-                    validate: (value) =>
-                      value.trim().length > 0 || 'SKU cannot be empty',
-                  })}
-                />
+                <div className="w-[800px]">
+                  <Input
+                    label=""
+                    placeholder="Enter SKU"
+                    type="text"
+                    className="text-[15px] "
+                    {...register('sku', {
+                      validate: (value) =>
+                        value.trim().length > 0 || 'SKU cannot be empty',
+                    })}
+                  />
+                </div>
                 {errors.sku && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.sku.message as string}
@@ -1462,23 +1405,25 @@ export default function ProductForm({
               </div>
 
               {/* Quantity */}
-              <div className="w-[500px] p-0 rounded-md">
-                <p className="text-[15px] font-semibold text-gray-700 py-2">
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                <p className="text-[15px] font-bold text-gray-700 py-2">
                   Quantity *
                 </p>
-                <Input
-                  label=""
-                  placeholder="0"
-                  type="number"
-                  className="text-[15px]"
-                  {...register('stock', {
-                    setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                    min: { value: 0, message: 'Stock cannot be negative' },
-                    validate: (value) =>
-                      (typeof value === 'number' && !isNaN(value)) ||
-                      'Only numbers are allowed',
-                  })}
-                />
+                <div className="w-[800px]">
+                  <Input
+                    label=""
+                    placeholder="0"
+                    type="number"
+                    className="text-[15px]"
+                    {...register('stock', {
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                      min: { value: 0, message: 'Stock cannot be negative' },
+                      validate: (value) =>
+                        (typeof value === 'number' && !isNaN(value)) ||
+                        'Only numbers are allowed',
+                    })}
+                  />
+                </div>
                 {errors.stock && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.stock.message as string}
@@ -1486,25 +1431,25 @@ export default function ProductForm({
                 )}
               </div>
 
-              <div className="space-y-2">
-                {/* Case 1: No color variants → global pricing */}
-                {/* Regular Price */}
-                <div className="flex-1 w-full">
-                  <p className="text-[15px] font-semibold text-gray-700 py-2 hidden">
-                    Base Price * <span className="text-sm">(Ksh)</span>
-                  </p>
-                  <h2 className="flex items-center gap-2 text-[15px] font-bold text-gray-700 pb-2">
-                    {colorVariants.length > 0 ? (
-                      <>
-                        <Info className="w-4 h-4 text-yellow-600" />
-                        <span className="text-yellow-800">
-                          Base Price disabled, color swatches are active
-                        </span>
-                      </>
-                    ) : (
-                      'Base Price *'
-                    )}
-                  </h2>
+              {/* <div className="space-y-2"> */}
+              {/* Case 1: No color variants → global pricing */}
+              {/* Regular Price */}
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                <h2 className="flex items-center gap-2 text-[15px] font-bold text-gray-700 pb-2">
+                  {colorVariants.length > 0 ? (
+                    <>
+                      <Info className="w-4 h-4 text-yellow-600" />
+                      <span className="text-yellow-800">
+                        Base Price disabled, color swatches are active
+                      </span>
+                    </>
+                  ) : (
+                    <p className="text-[15px] font-bold text-gray-700 py-2 shrink-0">
+                      Base Price * <span className="text-sm">(Ksh)</span>
+                    </p>
+                  )}
+                </h2>
+                <div className="w-[800px]">
                   <Input
                     label=""
                     type="number"
@@ -1522,243 +1467,242 @@ export default function ProductForm({
                         'Only numbers are allowed',
                     })}
                   />
-                  {errors.regular_price && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.regular_price.message as string}
-                    </p>
-                  )}
                 </div>
+                {errors.regular_price && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.regular_price.message as string}
+                  </p>
+                )}
+              </div>
 
-                {/* Deal toggle */}
-                {/* Checkbox to toggle deal */}
-                <label className="flex items-center gap-2 font-semibold pt-2">
-                  <input
-                    id="deal-checkbox"
-                    type="checkbox"
-                    disabled={colorVariants.length > 0} // ✅ disable when variants exist
-                    checked={enableDeal}
-                    onChange={(e) => setValue('enableDeal', e.target.checked)}
-                  />
-                  Add a Deal
-                </label>
-
-                {/* Sale Price */}
-                {/* Sale Price input (always rendered, disabled when not a deal) */}
-                <div className="flex-1 w-full">
-                  <p className="text-[15px] font-semibold text-gray-700 py-2">
+              {/* Sale Price */}
+              {/* Sale Price input (always rendered, disabled when not a deal) */}
+              {isDealRoute && (
+                <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                  <p className="text-[15px] font-bold text-gray-700 shrink-0 py-2">
                     Sale Price <span className="text-sm">(Ksh)</span>
                   </p>
-                  <Input
-                    label=""
-                    type="number"
-                    placeholder="0"
-                    className="bg-[#fff] text-[15px]"
-                    disabled={!enableDeal} // ✅ disable when not a deal
-                    {...register('sale_price', {
-                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                      min: {
-                        value: 1,
-                        message: 'Sale price must be at least 1',
-                      },
-                      validate: (value) =>
-                        (typeof value === 'number' && !isNaN(value)) ||
-                        'Only numbers are allowed',
-                    })}
-                  />
+                  <div className="w-[800px]">
+                    <Input
+                      label=""
+                      type="number"
+                      placeholder="0"
+                      className="bg-[#fff] text-[15px]"
+                      // disabled={!enableDeal} // ✅ disable when not a deal
+                      {...register('sale_price', {
+                        setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                        min: {
+                          value: 1,
+                          message: 'Sale price must be at least 1',
+                        },
+                        validate: (value) =>
+                          (typeof value === 'number' && !isNaN(value)) ||
+                          'Only numbers are allowed',
+                      })}
+                    />
+                  </div>
                   {errors.sale_price && (
                     <p className="text-red-500 text-xs mt-1">
                       {errors.sale_price.message as string}
                     </p>
                   )}
                 </div>
+              )}
 
-                {/* Conditionally render deal fields */}
-                <div className="flex items-start justify-center p-0 gap-4 rounded-md">
-                  {/* Deal Start Date */}
-                  <div className="w-full flex flex-col items-start justify-center p-0 rounded-md">
-                    <label className="text-[15px] font-medium text-gray-800 mt-1">
-                      Deal Start
-                    </label>
-                    <Controller
-                      name="deal_start"
-                      control={control}
-                      rules={{ required: 'Start date is required' }}
-                      render={({ field }) => (
-                        <DatePicker
-                          selected={field.value}
-                          onChange={(date: Date | null) => {
-                            field.onChange(date);
-                            if (date) {
-                              const autoEnd = new Date(date);
-                              autoEnd.setDate(autoEnd.getDate() + 7);
-                              setValue('deal_end', autoEnd);
+              {/* Conditionally render deal fields */}
+              {isDealRoute && (
+                <div className="w-[800px]">
+                  <div className="flex items-start justify-center p-0 gap-2 rounded-md">
+                    {/* Deal Start Date */}
+                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
+                      <label className="text-[15px] font-medium text-gray-800 mt-1">
+                        Deal Start
+                      </label>
+                      <Controller
+                        name="deal_start"
+                        control={control}
+                        rules={{ required: 'Start date is required' }}
+                        render={({ field }) => (
+                          <DatePicker
+                            selected={field.value}
+                            onChange={(date: Date | null) => {
+                              field.onChange(date);
+                              if (date) {
+                                const autoEnd = new Date(date);
+                                autoEnd.setDate(autoEnd.getDate() + 7);
+                                setValue('deal_end', autoEnd);
+                              }
+                            }}
+                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
+                            disabled={!enableDeal} // ✅ disable when not a deal
+                            dateFormat="yyyy-MM-dd"
+                          />
+                        )}
+                      />
+                      {errors.deal_start && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.deal_start.message as string}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Deal End Date */}
+                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
+                      <label className="text-sm font-medium text-gray-800 mt-1">
+                        Deal End
+                      </label>
+                      <Controller
+                        name="deal_end"
+                        control={control}
+                        rules={{
+                          required: 'End date is required',
+                          validate: (value) => {
+                            const start = getValues('deal_start');
+                            if (!value || !start) {
+                              return 'Both start and end dates are required';
                             }
-                          }}
-                          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
-                          disabled={!enableDeal} // ✅ disable when not a deal
-                          dateFormat="yyyy-MM-dd"
-                        />
+                            return (
+                              value > start ||
+                              'End date must be after start date'
+                            );
+                          },
+                        }}
+                        render={({ field }) => (
+                          <DatePicker
+                            selected={field.value}
+                            onChange={(date: Date | null) =>
+                              field.onChange(date)
+                            }
+                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
+                            disabled={!enableDeal} // ✅ disable when not a deal
+                            dateFormat="yyyy-MM-dd"
+                          />
+                        )}
+                      />
+                      {errors.deal_end && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.deal_end.message as string}
+                        </p>
                       )}
-                    />
-                    {errors.deal_start && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.deal_start.message as string}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Deal End Date */}
-                  <div className="w-full flex flex-col items-start justify-center gap-1 p-0 rounded-md">
-                    <label className="text-sm font-medium text-gray-800 mt-1">
-                      Deal End
-                    </label>
-                    <Controller
-                      name="deal_end"
-                      control={control}
-                      rules={{
-                        required: 'End date is required',
-                        validate: (value) => {
-                          const start = getValues('deal_start');
-                          if (!value || !start) {
-                            return 'Both start and end dates are required';
-                          }
-                          return (
-                            value > start || 'End date must be after start date'
-                          );
-                        },
-                      }}
-                      render={({ field }) => (
-                        <DatePicker
-                          selected={field.value}
-                          onChange={(date: Date | null) => field.onChange(date)}
-                          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
-                          disabled={!enableDeal} // ✅ disable when not a deal
-                          dateFormat="yyyy-MM-dd"
-                        />
-                      )}
-                    />
-                    {errors.deal_end && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.deal_end.message as string}
-                      </p>
-                    )}
+                    </div>
                   </div>
                 </div>
+              )}
 
-                {/* Case 2: With color variants → table */}
-                {colorVariants?.length > 0 && (
-                  <div className="flex flex-col items-start justify-center">
-                    <h2 className="font-bold py-2">Color Variants</h2>
-                    <table className="w-full border-collapse border border-gray-200">
-                      <thead>
-                        <tr className="bg-gray-100 text-sm font-semibold">
-                          <th className="border px-3 py-2 text-left">
-                            Color Variant
-                          </th>
-                          <th className="border px-3 py-2 text-left">
-                            Base Price (Ksh)
-                          </th>
-                          <th className="border px-3 py-2 text-left">
-                            Deal Price (Ksh)
-                          </th>
-                          <th className="border px-3 py-2 text-left">
-                            Deal Start
-                          </th>
-                          <th className="border px-3 py-2 text-left">
-                            Deal End
-                          </th>
+              {/* Case 2: With color variants → table */}
+              {colorVariants?.length > 0 && (
+                <div className="flex flex-col items-start justify-center">
+                  <h2 className="font-bold py-2">Color Variants</h2>
+                  <table className="w-full border-collapse border border-gray-200">
+                    <thead>
+                      <tr className="bg-gray-100 text-sm font-semibold">
+                        <th className="border px-3 py-2 text-left">
+                          Color Variant
+                        </th>
+                        <th className="border px-3 py-2 text-left">
+                          Base Price (Ksh)
+                        </th>
+                        <th className="border px-3 py-2 text-left">
+                          Deal Price (Ksh)
+                        </th>
+                        <th className="border px-3 py-2 text-left">
+                          Deal Start
+                        </th>
+                        <th className="border px-3 py-2 text-left">Deal End</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {colorVariants.map((swatch, idx) => (
+                        <tr key={swatch.id || idx} className="text-sm">
+                          {/* Color name from editor, fallback to placeholder */}
+                          <td className="border px-3 py-2 font-medium text-gray-800">
+                            {swatch.name && swatch.name.trim() !== ''
+                              ? swatch.name
+                              : `Color ${idx + 1}`}
+                          </td>
+                          {/* Base Price */}
+                          <td className="border px-3 py-2">
+                            <input
+                              type="number"
+                              defaultValue={swatch.price}
+                              {...register(`colorVariants.${idx}.price`, {
+                                setValueAs: (v) =>
+                                  v === '' ? undefined : Number(v),
+                                min: {
+                                  value: 1,
+                                  message: 'Price must be at least 1',
+                                },
+                              })}
+                              className="w-full border rounded-md px-2 py-1"
+                            />
+                          </td>
+                          {/* Deal Price */}
+                          <td className="border px-3 py-2">
+                            <input
+                              type="number"
+                              defaultValue={swatch.dealPrice}
+                              {...register(`colorVariants.${idx}.dealPrice`, {
+                                setValueAs: (v) =>
+                                  v === '' ? undefined : Number(v),
+                              })}
+                              className="w-full border rounded-md px-2 py-1"
+                            />
+                          </td>
+                          {/* Deal Start */}
+                          <td className="border px-3 py-2">
+                            <input
+                              type="date"
+                              defaultValue={
+                                swatch.dealStart
+                                  ? new Date(swatch.dealStart)
+                                      .toISOString()
+                                      .split('T')[0]
+                                  : ''
+                              }
+                              {...register(`colorVariants.${idx}.dealStart`)}
+                              className="w-full border rounded-md px-2 py-1"
+                            />
+                          </td>
+                          {/* Deal End */}
+                          <td className="border px-3 py-2">
+                            <input
+                              type="date"
+                              defaultValue={
+                                swatch.dealEnd
+                                  ? new Date(swatch.dealEnd)
+                                      .toISOString()
+                                      .split('T')[0]
+                                  : ''
+                              }
+                              {...register(`colorVariants.${idx}.dealEnd`)}
+                              className="w-full border rounded-md px-2 py-1"
+                            />
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {colorVariants.map((swatch, idx) => (
-                          <tr key={swatch.id || idx} className="text-sm">
-                            {/* Color name from editor, fallback to placeholder */}
-                            <td className="border px-3 py-2 font-medium text-gray-800">
-                              {swatch.name && swatch.name.trim() !== ''
-                                ? swatch.name
-                                : `Color ${idx + 1}`}
-                            </td>
-                            {/* Base Price */}
-                            <td className="border px-3 py-2">
-                              <input
-                                type="number"
-                                defaultValue={swatch.price}
-                                {...register(`colorVariants.${idx}.price`, {
-                                  setValueAs: (v) =>
-                                    v === '' ? undefined : Number(v),
-                                  min: {
-                                    value: 1,
-                                    message: 'Price must be at least 1',
-                                  },
-                                })}
-                                className="w-full border rounded-md px-2 py-1"
-                              />
-                            </td>
-                            {/* Deal Price */}
-                            <td className="border px-3 py-2">
-                              <input
-                                type="number"
-                                defaultValue={swatch.dealPrice}
-                                {...register(`colorVariants.${idx}.dealPrice`, {
-                                  setValueAs: (v) =>
-                                    v === '' ? undefined : Number(v),
-                                })}
-                                className="w-full border rounded-md px-2 py-1"
-                              />
-                            </td>
-                            {/* Deal Start */}
-                            <td className="border px-3 py-2">
-                              <input
-                                type="date"
-                                defaultValue={
-                                  swatch.dealStart
-                                    ? new Date(swatch.dealStart)
-                                        .toISOString()
-                                        .split('T')[0]
-                                    : ''
-                                }
-                                {...register(`colorVariants.${idx}.dealStart`)}
-                                className="w-full border rounded-md px-2 py-1"
-                              />
-                            </td>
-                            {/* Deal End */}
-                            <td className="border px-3 py-2">
-                              <input
-                                type="date"
-                                defaultValue={
-                                  swatch.dealEnd
-                                    ? new Date(swatch.dealEnd)
-                                        .toISOString()
-                                        .split('T')[0]
-                                    : ''
-                                }
-                                {...register(`colorVariants.${idx}.dealEnd`)}
-                                className="w-full border rounded-md px-2 py-1"
-                              />
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {/* </div> */}
 
               {/* Item Condition */}
-              <div className="w-[500px] p-0 rounded-md">
-                <p className="text-[15px] font-semibold text-gray-700 py-2">
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                <p className="text-[15px] font-bold text-gray-700 py-2">
                   Item Condition *{' '}
                 </p>
-                <Input
-                  label=""
-                  placeholder="Example: New, Used, Renewed"
-                  type="text"
-                  className="text-[15px]"
-                  {...register('condition', {
-                    validate: (value) =>
-                      value.trim().length > 0 || 'SKU cannot be empty',
-                  })}
-                />
+                <div className="w-[800px]">
+                  <Input
+                    label=""
+                    placeholder="Example: New, Used, Renewed"
+                    type="text"
+                    className="text-[15px]"
+                    {...register('condition', {
+                      validate: (value) =>
+                        value.trim().length > 0 || 'SKU cannot be empty',
+                    })}
+                  />
+                </div>
                 {errors.condition && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.condition.message as string}
@@ -1767,12 +1711,12 @@ export default function ProductForm({
               </div>
 
               {/* Shipping Options */}
-              <div className="w-full flex items-center justify-start gap-2 py-2 rounded-md">
-                <p className="text-[15px] font-semibold text-gray-700 py-2">
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                <p className="text-[15px] font-bold text-gray-700 py-2">
                   Shipping Options *
                 </p>
 
-                <div className="w-[500px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
+                <div className="w-[800px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
                   <label className="flex items-center gap-2">
                     <input
                       type="radio"
@@ -1804,7 +1748,7 @@ export default function ProductForm({
               </div>
 
               {/* Discount codes */}
-              <div className="w-full p-0 rounded-md">
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
                 <label className="block font-semibold text-gray-700 py-2">
                   Select Discount Codes (optional)
                 </label>
@@ -1812,7 +1756,7 @@ export default function ProductForm({
                 {discountLoading ? (
                   <p className="text-gray-400">Loading discount codes...</p>
                 ) : (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="w-[800px] flex flex-wrap gap-2">
                     {discountCodes?.map((code: any) => (
                       <button
                         key={code.id}
@@ -1838,40 +1782,41 @@ export default function ProductForm({
                         {code.discountType === 'percentage' ? '%' : '$'})
                       </button>
                     ))}
-
-                    {/* Total Tickets  */}
-                    <div className="mt-2 mb-4">
-                      <p className="text-[15px] font-semibold text-gray-700 py-2">
-                        Total Tickets
-                      </p>
-                      <Input
-                        label=""
-                        placeholder="0"
-                        type="number"
-                        className="text-[15px]"
-                        {...register('total_tickets', {
-                          setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
-                          validate: (value) => {
-                            if (value === undefined) return true; // ✅ allow empty
-                            if (typeof value === 'number' && !isNaN(value)) {
-                              if (value < 1)
-                                return 'Total tickets must be at least 1';
-                              return true;
-                            }
-                            return 'Only numbers are allowed';
-                          },
-                        })}
-                      />
-                      {errors.total_tickets && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.total_tickets.message as string}
-                        </p>
-                      )}
-                    </div>
                   </div>
                 )}
               </div>
-              {/* </div> */}
+
+              {/* Total Tickets  */}
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                <p className="shrink-0 text-[15px] font-bold text-gray-700 py-2">
+                  Total Tickets
+                </p>
+                <div className="w-[800px]">
+                  <Input
+                    label=""
+                    placeholder="0"
+                    type="number"
+                    className="text-[15px]"
+                    {...register('total_tickets', {
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
+                      validate: (value) => {
+                        if (value === undefined) return true; // ✅ allow empty
+                        if (typeof value === 'number' && !isNaN(value)) {
+                          if (value < 1)
+                            return 'Total tickets must be at least 1';
+                          return true;
+                        }
+                        return 'Only numbers are allowed';
+                      },
+                    })}
+                  />
+                </div>
+                {errors.total_tickets && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.total_tickets.message as string}
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </div>

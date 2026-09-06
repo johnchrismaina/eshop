@@ -32,20 +32,20 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
   }, [slide, isPaused]);
 
   return (
-    <div className="relative flex justify-center items-center w-full bg-transparent px-0 h-[38vh] overflow-hidden">
+    <div className="relative flex justify-center items-center w-full bg-transparent px-0 h-[40vh] overflow-hidden">
       {data.map((item, idx) => (
         <img
           src={item.src}
           alt={item.alt}
           key={idx}
-          className={`w-full h-full object-top object-cover transition-opacity duration-1000 rounded-lg ${
+          className={`w-full h-full object-center object-cover transition-opacity duration-1000 rounded-lg ${
             slide === idx ? 'opacity-100 ring-1 ' : 'opacity-0 absolute ring-1 '
           }`}
         />
       ))}
 
       {/* The Dark Overlay */}
-      {/* <div className="absolute inset-0 bg-black bg-opacity-5 z-10"></div> */}
+      <div className="absolute inset-0 bg-black bg-opacity-5 z-10"></div>
 
       <div className="absolute bottom-4 right-6 flex items-center justify-center gap-2">
         {/* Pause/Play button */}
@@ -72,12 +72,12 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
         />
       </div>
 
-      <span className="flex absolute bottom-4 space-x-2">
+      <span className="flex absolute bottom-4 space-x-2 rounded-full">
         {data.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setSlide(idx)}
-            className={`h-2 w-2 rounded-full ring-transparent ring-[#f5f5f5] ${
+            className={`h-2 w-2 rounded-full ring-1 ring-slate-300 ${
               slide === idx ? 'bg-white' : 'bg-transparent'
             }`}
           ></button>

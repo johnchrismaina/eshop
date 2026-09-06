@@ -24,7 +24,7 @@ const CustomAccordion = ({ control, errors }: any) => {
   return (
     <div>
       <label className="block font-bold text-gray-700 mb-2">
-        Product Details - Accordions (max 3)
+        Product Details - Accordions (max - 3)
       </label>
 
       <div className="flex flex-col gap-4 mt-2">

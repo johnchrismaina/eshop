@@ -119,6 +119,83 @@ export const getDiscountCodes = async (
   }
 };
 
+export const redeemDiscountHandler = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { discountCodeId } = req.body;
+    const sellerId = req.seller?.id;
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const discountCode = await tx.discount_codes.findUnique({
+        where: { id: discountCodeId },
+        select: {
+          id: true,
+          sellerId: true,
+          available_tickets: true,
+          discount_end: true,
+          status: true,
+        },
+      });
+
+      if (!discountCode) throw new NotFoundError('Discount code not found');
+      if (discountCode.sellerId !== sellerId)
+        throw new ValidationError('Unauthorized access!');
+
+      const now = new Date();
+
+      // ✅ Auto-expire check
+      if (
+        discountCode.available_tickets === null ||
+        discountCode.available_tickets <= 0 ||
+        (discountCode.discount_end && discountCode.discount_end < now)
+      ) {
+        if (discountCode.status !== 'Expired') {
+          await tx.discount_codes.update({
+            where: { id: discountCodeId },
+            data: { status: 'Expired' },
+          });
+        }
+        throw new ValidationError('No tickets remaining or discount expired');
+      }
+
+      // ✅ Safe decrement
+      const updatedDiscount = await tx.discount_codes.update({
+        where: { id: discountCodeId },
+        data: { available_tickets: { decrement: 1 } },
+      });
+
+      // Optional analytics
+      await tx.deals.updateMany({
+        where: { dealDiscountCodes: { some: { discountId: discountCodeId } } },
+        data: { redemptions: { increment: 1 } },
+      });
+
+      // ✅ Expire if tickets hit zero
+      if (
+        updatedDiscount.available_tickets !== null &&
+        updatedDiscount.available_tickets <= 0
+      ) {
+        await tx.discount_codes.update({
+          where: { id: discountCodeId },
+          data: { status: 'Expired' },
+        });
+      }
+
+      return updatedDiscount;
+    });
+
+    res.status(200).json({
+      message: 'Discount successfully redeemed',
+      discount: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Delete discount code
 export const deleteDiscountCode = async (
   req: any,
@@ -202,7 +279,7 @@ export const deleteProductImage = async (
   }
 };
 
-// Create product (no deal fields)
+// Create product (no deal fields, flattened specs)
 export const createProduct = async (
   req: any,
   res: Response,
@@ -215,22 +292,22 @@ export const createProduct = async (
       title,
       aspect,
       slug,
-      tags,
       short_description,
       detailed_description,
-      product_details = {},
       video_url,
       category,
-      discountCodes,
+      subCategory,
+      product_specifications = [],
+      images = [],
+      colorVariants = [],
       stock,
       regular_price,
-      subCategory,
-      custom_properties = {},
-      product_specifications = {},
-      images = [],
+      condition,
+      shippingOption,
+      sku,
     } = req.body;
 
-    // Required field validation
+    // ✅ Required field validation
     if (
       !title?.trim() ||
       !slug?.trim() ||
@@ -239,8 +316,7 @@ export const createProduct = async (
       subCategory == null ||
       regular_price == null ||
       stock == null ||
-      !Array.isArray(images) ||
-      !Array.isArray(tags)
+      (!Array.isArray(images) && !Array.isArray(colorVariants))
     ) {
       return next(new ValidationError('Missing required fields'));
     }
@@ -251,7 +327,7 @@ export const createProduct = async (
       );
     }
 
-    // Slug uniqueness check
+    // ✅ Slug uniqueness check
     const slugChecking = await prisma.products.findUnique({ where: { slug } });
     if (slugChecking) {
       return next(
@@ -259,7 +335,7 @@ export const createProduct = async (
       );
     }
 
-    // Map images
+    // ✅ Map images
     const mappedImages = (images as { fileId: string; file_url: string }[])
       .filter((img) => img?.fileId && img?.file_url)
       .map((img) => ({
@@ -267,38 +343,50 @@ export const createProduct = async (
         url: img.file_url,
       }));
 
-    // Normalize tags once
-    const normalizedTags: string[] = Array.isArray(tags)
-      ? tags
-      : typeof tags === 'string'
-      ? (tags as string).split(',').map((t) => t.trim())
-      : [];
-
     // ✅ Create product
     const newProduct = await prisma.products.create({
       data: {
         title,
-        aspect,
         slug,
-        tags: normalizedTags,
-        short_description,
-        detailed_description,
-        custom_properties,
-        product_specifications,
-        product_details,
         category,
         subCategory,
+        short_description,
+        aspect,
+        detailed_description,
+        // Flattened array of { key, value }
+        product_specifications: {
+          create: product_specifications.map((spec: any) => ({
+            key: spec.key,
+            value: spec.value,
+          })),
+        },
         shopId: req.seller.shops[0].id,
         stock: parseInt(stock),
         regular_price: parseFloat(regular_price),
-        discount_codes: discountCodes ?? [], // ✅ matches your schema
         video_url,
+        sku,
+        condition,
+        shippingOption,
         isDeal: false,
         images: {
           create: mappedImages,
         },
+        colorVariants: {
+          create: colorVariants.map((variant: any) => ({
+            name: variant.name,
+            hex: variant.hex,
+            title: variant.title,
+            price: variant.price,
+            isDefault: variant.isDefault ?? false,
+            images: variant.images ?? [],
+          })),
+        },
       },
-      include: { images: true },
+      include: {
+        images: true,
+        colorVariants: true,
+        product_specifications: true,
+      },
     });
 
     res.status(201).json({

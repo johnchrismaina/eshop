@@ -158,19 +158,6 @@ model site_config {
   banner        String?
 }
 
-model discount_codes {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  public_name       String
-  discountType      String
-  discountValue     Float
-  discountCode      String   @unique
-  sellerId          String   @db.ObjectId
-  total_tickets     Int? // ✅ optional
-  available_tickets Int? // ✅ optional
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-}
-
 enum productStatus {
   Active
   Pending
@@ -182,16 +169,13 @@ model products {
   title                  String
   aspect                 String                   @default("square") // default at DB level too
   slug                   String                   @unique
-  tags                   String[]
   colors                 String[]                 @default([]) // ✅ optional array
   sizes                  String[]                 @default([])
   category               String
   subCategory            String?
   short_description      String
   detailed_description   String?
-  custom_properties      Json?
   product_specifications product_specifications[]
-  product_details        Json?
   regular_price          Float
   stock                  Int
   video_url              String?
@@ -235,6 +219,12 @@ model products {
   @@index([createdAt])
 }
 
+enum DealStatus {
+  Active
+  Expired
+  Archived
+}
+
 model deals {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   slug          String   @unique
@@ -244,17 +234,15 @@ model deals {
   regular_price Float
 
   // ✅ snapshot fields
-  category               String
-  subCategory            String?
-  short_description      String
-  tags                   String[]
-  colors                 String[]
-  sizes                  String[]
-  product_specifications product_specifications[] @relation("DealSpecifications")
-  product_details        Json?
+  category          String
+  subCategory       String?
+  short_description String
+  tags              String[]
+  colors            String[]
+  sizes             String[]
 
   // Status
-  status String @default("Active") // Active | Expired | Archived
+  status DealStatus @default(Active) // Active | Expired | Archived
 
   // Analytics
   views          Int   @default(0)
@@ -266,7 +254,7 @@ model deals {
   totalSales     Int   @default(0)
   totalAddToCart Int   @default(0)
 
-  // ✅ Relations
+  // Relations
   productId String   @db.ObjectId
   product   products @relation("ProductDeal", fields: [productId], references: [id])
 
@@ -275,12 +263,58 @@ model deals {
 
   images images[] @relation("EventImages")
 
+  // ✅ Explicit relation via junction
+  dealDiscountCodes deal_discount_codes[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Soft delete
   isDeleted Boolean   @default(false)
   deletedAt DateTime?
+}
+
+enum DiscountStatus {
+  Active
+  Expired
+  Archived
+}
+
+model discount_codes {
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  public_name       String
+  discountType      DiscountType
+  discountValue     Float
+  discountCode      String       @unique
+  sellerId          String       @db.ObjectId
+  total_tickets     Int?
+  available_tickets Int?
+
+  discount_start DateTime
+  discount_end   DateTime
+  status         DiscountStatus @default(Active)
+
+  // ✅ Explicit relation via junction
+  dealDiscountCodes deal_discount_codes[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model deal_discount_codes {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  dealId     String @db.ObjectId
+  discountId String @db.ObjectId
+
+  deal     deals          @relation(fields: [dealId], references: [id])
+  discount discount_codes @relation(fields: [discountId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum DiscountType {
+  percentage
+  flat
 }
 
 model category {
@@ -313,10 +347,6 @@ model product_specifications {
   // ✅ relation to products
   productId String?   @db.ObjectId
   product   products? @relation(fields: [productId], references: [id])
-
-  // ✅ relation to deals
-  dealId String? @db.ObjectId
-  deal   deals?  @relation("DealSpecifications", fields: [dealId], references: [id])
 }
 
 model Deal {

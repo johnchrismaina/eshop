@@ -224,7 +224,6 @@ const Page = () => {
                 disabled={createDiscountCodeMutation.isPending}
                 className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md font-semibold flex items-center justify-center gap-2"
               >
-                <PlusIcon size={18} />
                 {createDiscountCodeMutation?.isPending
                   ? 'Creating...'
                   : 'Create'}

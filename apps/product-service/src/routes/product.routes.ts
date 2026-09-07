@@ -27,6 +27,7 @@ import {
   getFilteredDeals,
   getProductBySlug,
   updateProductBySlug,
+  redeemDiscountHandler,
 } from '../controllers/product.controller';
 import isAuthenticated from '@packages/middleware/isAuthenticated';
 import { upload } from '@packages/middleware/multer';
@@ -39,6 +40,7 @@ router.get('/get-categories', getCategories);
 router.post('/create-discount-code', isAuthenticated, createDiscountCodes);
 router.get('/get-discount-codes', isAuthenticated, getDiscountCodes);
 router.delete('/delete-discount-code/:id', isAuthenticated, deleteDiscountCode);
+router.post('/redeem-discount', isAuthenticated, redeemDiscountHandler);
 // router.post('/upload-product-image', isAuthenticated, uploadProductImage);
 router.post(
   '/upload-product-image',

@@ -16,18 +16,19 @@ import SizeSelector from 'packages/components/size-selector';
 import Spinner from 'packages/components/spinner';
 // import { Spinner } from 'packages/components/spinner';
 import React, { useEffect, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
 // import Select from 'react-select';
 import { usePathname } from 'next/navigation';
-import DatePicker from 'react-datepicker';
 import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
 import { splitSchema } from 'packages/utils/filtersUtils';
 import { renderFilterRow } from 'packages/utils/renderFilterRow';
+import { Dropdown } from '../CustomDropdown';
+import axios from 'axios';
 // import { categories } from 'packages/utils/shopCategories.json';
 
 const TABS = [
@@ -88,40 +89,40 @@ interface ColorVariant {
   images: (UploadedImage | null)[]; // ✅ form-only
 }
 
-interface ProductDetails {
-  regular_price: number;
-  sale_price?: number;
-  enableDeal?: boolean;
-  colorVariants?: ColorVariant[];
+interface DiscountCode {
+  id: string;
+  public_name: string;
+  discountType: 'percentage' | 'flat';
+  discountValue: number;
+  discountCode: string;
 }
 
 export type FormValues = {
   title: string;
-  aspect: 'square' | 'portrait';
-  images: (UploadedImage | null)[];
-  regular_price: number | undefined;
-  sale_price: number | undefined;
-  short_description: string;
   slug: string;
-  tags: string[];
   category: string;
   subCategory: string;
+  short_description: string;
+  aspect: 'square' | 'portrait';
+  images: (UploadedImage | null)[];
+  colorVariants: ColorVariant[];
+  video_url: string;
   product_specifications: Record<string, string | string[]>;
   detailed_description: string;
-  video_url: string;
-  deal_start: Date | null;
-  deal_end: Date | null;
   sku: string;
   stock: number | undefined;
-  total_tickets: number | undefined;
-  discountCodes: string[];
-  enableDeal: boolean;
-  accordions?: { title: string; content: string }[];
-  // ✅ new field
-  // colorVariants?: ColorVariantForm[];
-  colorVariants: ColorVariant[];
+  regular_price: number | undefined;
+  sale_price: number | undefined;
+  deal_start: Date | null;
+  deal_end: Date | null;
+  discount_start: Date | null;
+  discount_end: Date | null;
   condition: string;
   shippingOption: string; // "self" | "company"
+  discountCodes: string[];
+  availableTickets?: number;
+  total_tickets?: number;
+  enableDeal: boolean;
 };
 
 export default function ProductForm({
@@ -154,7 +155,6 @@ export default function ProductForm({
         category: 'men_clothing',
         subCategory: 'polo_shirt',
         short_description: '',
-        accordions: [],
         aspect: 'square',
         images: Array(8).fill(null),
         colorVariants: [],
@@ -167,11 +167,13 @@ export default function ProductForm({
         sale_price: undefined,
         deal_start: null,
         deal_end: null,
+        discount_start: null,
+        discount_end: null,
         condition: '',
         shippingOption: '',
         discountCodes: [],
+        availableTickets: undefined,
         total_tickets: undefined,
-        tags: [],
         enableDeal: isDealRoute,
         // ✅ initialize empty colorVariants array
       } as FormValues),
@@ -255,21 +257,6 @@ export default function ProductForm({
     localStorage.setItem('activeTab', activeTab);
   }, [activeTab]);
 
-  //   Fetch categories
-  // const { data, isLoading, isError } = useQuery({
-  //   queryKey: ['categories'],
-  //   queryFn: async () => {
-  //     try {
-  //       const res = await axiosProduct.get('/get-categories');
-  //       return res.data;
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   },
-  //   staleTime: 1000 * 60 * 5,
-  //   retry: 2,
-  // });
-
   //   Fetch discount codes
   const { data: discountCodes = [], isLoading: discountLoading } = useQuery({
     queryKey: ['shop-discounts'],
@@ -279,8 +266,12 @@ export default function ProductForm({
     },
   });
 
-  // const categories = data?.categories || [];
-  // const subCategoriesData = data?.subCategories || {};
+  const availableTickets = useWatch({ control, name: 'availableTickets' }) as
+    | number
+    | undefined;
+  const total_tickets = useWatch({ control, name: 'total_tickets' }) as
+    | number
+    | undefined;
 
   const title = watch('title');
 
@@ -292,12 +283,10 @@ export default function ProductForm({
 
   const regularPrice = watch('regular_price');
 
-  // const [categories, setCategories] = useState<ShopCategory[]>([]);
   const [categories, setCategories] = useState<ShopCategory[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
   const [openCategories, setOpenCategories] = useState(false);
-  // const [selectedPath, setSelectedPath] = useState<string[]>([]);
   const [selectedPath, setSelectedPath] = useState([
     "Men's Fashion",
     "Men's Clothing",
@@ -612,8 +601,6 @@ export default function ProductForm({
     }
   }, [openMainPreviewModal]);
 
-  // console.log(categories, subCategoriesData);
-
   // const convertFiletoBase64 = (file: File) => {
   //   return new Promise((resolve, reject) => {
   //     const reader = new FileReader();
@@ -725,24 +712,24 @@ export default function ProductForm({
       const productSpecifications = Object.entries(specsObject).flatMap(
         ([key, value]) =>
           Array.isArray(value)
-            ? value.map((v) => ({ key, value: v })) // multi-select → multiple entries
+            ? value.map((v) => ({ key, value: v }))
             : [{ key, value }]
       );
 
       // ✅ Ensure slug uniqueness
       const { data: existingProducts } = await axiosProduct.get('/all-slugs');
       const existingSlugs = existingProducts.map((p: any) => p.slug);
-      data.slug = ensureUniqueSlug(data.slug, existingSlugs);
 
-      // ✅ Build final payload
+      // ✅ Build final payload (assign slug here, don’t mutate data directly)
       const payload = {
         ...data,
+        slug: ensureUniqueSlug(data.slug, existingSlugs),
         images: cleanedImages,
         product_specifications: productSpecifications,
       };
 
       if (mode === 'create') {
-        if (isDealRoute || data.enableDeal) {
+        if (isDealRoute) {
           await axiosProduct.post('/create-deal', payload);
           localStorage.removeItem(draftKey);
           router.push('/dashboard/all-deals');
@@ -1137,12 +1124,21 @@ export default function ProductForm({
                       ),
                   }}
                   render={({ field }) => (
-                    <RichTextEditor
-                      id="short-description-editor" // ✅ unique id for accessibility
-                      value={field.value || ''}
-                      onChange={field.onChange}
-                      className="bg-white"
-                    />
+                    <div className="relative">
+                      <RichTextEditor
+                        id="short-description-editor" // ✅ unique id for accessibility
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        className="bg-white"
+                      />
+
+                      {/* ✅ Spinner overlay when loading */}
+                      {loading && (
+                        <span className="absolute inset-0 flex items-center justify-center bg-white/50">
+                          <Spinner size={16} borderColor="border-gray-200" />
+                        </span>
+                      )}
+                    </div>
                   )}
                 />
 
@@ -1336,7 +1332,7 @@ export default function ProductForm({
               </div>
 
               {/* Detailed product description */}
-              <div className="w-full lg:w-full mx-auto rounded-sm px-6 py-4 bg-white">
+              <div className="w-full mx-auto rounded-sm px-6 py-4 bg-white">
                 <div className="mt-4">
                   <label
                     htmlFor="detailed-description-editor"
@@ -1358,12 +1354,22 @@ export default function ProductForm({
                         ),
                     }}
                     render={({ field }) => (
-                      <RichTextEditor
-                        id="detailed-description-editor" // ✅ unique id for accessibility
-                        value={field.value || ''}
-                        onChange={field.onChange}
-                        className="bg-white"
-                      />
+                      <div className="relative">
+                        {/* ✅ Wrap editor in relative container so spinner can be absolutely positioned */}
+                        <RichTextEditor
+                          id="detailed-description-editor"
+                          value={field.value || ''}
+                          onChange={field.onChange}
+                          className="bg-white"
+                        />
+
+                        {/* ✅ Spinner overlay when loading */}
+                        {loading && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-white/50">
+                            <Spinner size={16} borderColor="border-gray-200" />
+                          </span>
+                        )}
+                      </div>
                     )}
                   />
 
@@ -1382,21 +1388,32 @@ export default function ProductForm({
             <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-2 mt-4 py-8 bg-white">
               {/* SKU */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm">
-                <p className="text-[15px] font-bold text-gray-700 shrink-0 py-2">
+                <label
+                  htmlFor="sku"
+                  className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                >
                   SKU *
-                </p>
+                </label>
+
                 <div className="w-[800px]">
                   <Input
+                    id="sku"
                     label=""
-                    placeholder="Enter SKU"
+                    placeholder="Enter SKU (e.g., PROD-12345, PROD12345, SKU-ABC-999)"
                     type="text"
-                    className="text-[15px] "
+                    className="text-[15px] placeholder:text-sm"
                     {...register('sku', {
                       validate: (value) =>
                         value.trim().length > 0 || 'SKU cannot be empty',
+                      pattern: {
+                        value: /^[A-Z0-9-]+$/, // ✅ enforce alphanumeric + dashes
+                        message:
+                          'SKU must contain only letters, numbers, or dashes',
+                      },
                     })}
                   />
                 </div>
+
                 {errors.sku && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.sku.message as string}
@@ -1406,24 +1423,31 @@ export default function ProductForm({
 
               {/* Quantity */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <p className="text-[15px] font-bold text-gray-700 py-2">
+                <label
+                  htmlFor="stock"
+                  className="text-[15px] font-bold text-gray-700 py-2 shrink-0"
+                >
                   Quantity *
-                </p>
+                </label>
+
                 <div className="w-[800px]">
                   <Input
+                    id="stock"
                     label=""
                     placeholder="0"
                     type="number"
                     className="text-[15px]"
                     {...register('stock', {
-                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                      min: { value: 0, message: 'Stock cannot be negative' },
+                      required: 'Quantity is required!', // ✅ enforce required
+                      setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ keep empty as undefined
+                      min: { value: 0, message: 'Quantity cannot be negative' }, // ✅ no negatives allowed
                       validate: (value) =>
                         (typeof value === 'number' && !isNaN(value)) ||
                         'Only numbers are allowed',
                     })}
                   />
                 </div>
+
                 {errors.stock && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.stock.message as string}
@@ -1431,43 +1455,53 @@ export default function ProductForm({
                 )}
               </div>
 
-              {/* <div className="space-y-2"> */}
               {/* Case 1: No color variants → global pricing */}
               {/* Regular Price */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <h2 className="flex items-center gap-2 text-[15px] font-bold text-gray-700 pb-2">
+                <label
+                  htmlFor="regular_price"
+                  className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                >
                   {colorVariants.length > 0 ? (
-                    <>
+                    <span className="flex items-center gap-2">
                       <Info className="w-4 h-4 text-yellow-600" />
                       <span className="text-yellow-800">
                         Base Price disabled, color swatches are active
                       </span>
-                    </>
+                    </span>
                   ) : (
-                    <p className="text-[15px] font-bold text-gray-700 py-2 shrink-0">
+                    <>
                       Base Price * <span className="text-sm">(Ksh)</span>
-                    </p>
+                    </>
                   )}
-                </h2>
+                </label>
+
                 <div className="w-[800px]">
                   <Input
+                    id="regular_price"
                     label=""
                     type="number"
                     placeholder="0"
                     disabled={colorVariants.length > 0} // ✅ disable when variants exist
-                    className="bg-[#fff] text-[15px] "
+                    className="bg-[#fff] text-[15px]"
                     {...register('regular_price', {
+                      required:
+                        colorVariants.length === 0
+                          ? 'Base Price is required when no color variants exist'
+                          : false,
                       setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                      min: {
-                        value: 1,
-                        message: 'Price must be at least 1',
-                      },
+                      min:
+                        colorVariants.length === 0
+                          ? { value: 1, message: 'Price must be at least 1' }
+                          : undefined,
                       validate: (value) =>
+                        colorVariants.length > 0 ||
                         (typeof value === 'number' && !isNaN(value)) ||
                         'Only numbers are allowed',
                     })}
                   />
                 </div>
+
                 {errors.regular_price && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.regular_price.message as string}
@@ -1476,20 +1510,24 @@ export default function ProductForm({
               </div>
 
               {/* Sale Price */}
-              {/* Sale Price input (always rendered, disabled when not a deal) */}
               {isDealRoute && (
-                <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                  <p className="text-[15px] font-bold text-gray-700 shrink-0 py-2">
-                    Sale Price <span className="text-sm">(Ksh)</span>
-                  </p>
+                <div className="w-full flex items-start gap-3 bg-white px-4 py-2 rounded-sm">
+                  <label
+                    htmlFor="sale_price"
+                    className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                  >
+                    Sale Price * <span className="text-sm">(Ksh)</span>
+                  </label>
+
                   <div className="w-[800px]">
                     <Input
+                      id="sale_price"
                       label=""
                       type="number"
                       placeholder="0"
                       className="bg-[#fff] text-[15px]"
-                      // disabled={!enableDeal} // ✅ disable when not a deal
                       {...register('sale_price', {
+                        required: 'Sale Price is required when creating a deal', // ✅ always required on deal route
                         setValueAs: (v) => (v === '' ? undefined : Number(v)),
                         min: {
                           value: 1,
@@ -1501,6 +1539,7 @@ export default function ProductForm({
                       })}
                     />
                   </div>
+
                   {errors.sale_price && (
                     <p className="text-red-500 text-xs mt-1">
                       {errors.sale_price.message as string}
@@ -1509,33 +1548,48 @@ export default function ProductForm({
                 </div>
               )}
 
-              {/* Conditionally render deal fields */}
+              {/* Conditionally render deal dates */}
               {isDealRoute && (
                 <div className="w-[800px]">
-                  <div className="flex items-start justify-center p-0 gap-2 rounded-md">
+                  <div className="flex items-start justify-center gap-2 rounded-md">
                     {/* Deal Start Date */}
                     <div className="w-full flex items-start justify-center gap-2 rounded-md">
-                      <label className="text-[15px] font-medium text-gray-800 mt-1">
-                        Deal Start
+                      <label
+                        htmlFor="deal_start"
+                        className="text-[15px] font-medium text-gray-800 mt-1"
+                      >
+                        Deal Start *
                       </label>
                       <Controller
                         name="deal_start"
                         control={control}
                         rules={{ required: 'Start date is required' }}
                         render={({ field }) => (
-                          <DatePicker
-                            selected={field.value}
-                            onChange={(date: Date | null) => {
-                              field.onChange(date);
-                              if (date) {
-                                const autoEnd = new Date(date);
+                          <input
+                            id="deal_start"
+                            type="date"
+                            value={
+                              field.value
+                                ? new Date(field.value)
+                                    .toISOString()
+                                    .split('T')[0]
+                                : ''
+                            }
+                            onChange={(e) => {
+                              const startDateStr = e.target.value;
+                              if (startDateStr) {
+                                const startDate = new Date(startDateStr);
+                                field.onChange(startDate);
+
+                                // ✅ auto-populate Deal End to +7 days
+                                const autoEnd = new Date(startDate);
                                 autoEnd.setDate(autoEnd.getDate() + 7);
                                 setValue('deal_end', autoEnd);
+                              } else {
+                                field.onChange(null);
                               }
                             }}
-                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
-                            disabled={!enableDeal} // ✅ disable when not a deal
-                            dateFormat="yyyy-MM-dd"
+                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
                           />
                         )}
                       />
@@ -1548,8 +1602,11 @@ export default function ProductForm({
 
                     {/* Deal End Date */}
                     <div className="w-full flex items-start justify-center gap-2 rounded-md">
-                      <label className="text-sm font-medium text-gray-800 mt-1">
-                        Deal End
+                      <label
+                        htmlFor="deal_end"
+                        className="text-sm font-medium text-gray-800 mt-1"
+                      >
+                        Deal End *
                       </label>
                       <Controller
                         name="deal_end"
@@ -1558,24 +1615,33 @@ export default function ProductForm({
                           required: 'End date is required',
                           validate: (value) => {
                             const start = getValues('deal_start');
-                            if (!value || !start) {
-                              return 'Both start and end dates are required';
+                            if (value && start) {
+                              return (
+                                new Date(value) > new Date(start) ||
+                                'End date must be after start date'
+                              );
                             }
-                            return (
-                              value > start ||
-                              'End date must be after start date'
-                            );
+                            return true;
                           },
                         }}
                         render={({ field }) => (
-                          <DatePicker
-                            selected={field.value}
-                            onChange={(date: Date | null) =>
-                              field.onChange(date)
+                          <input
+                            id="deal_end"
+                            type="date"
+                            value={
+                              field.value
+                                ? new Date(field.value)
+                                    .toISOString()
+                                    .split('T')[0]
+                                : ''
                             }
-                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700 "
-                            disabled={!enableDeal} // ✅ disable when not a deal
-                            dateFormat="yyyy-MM-dd"
+                            onChange={(e) => {
+                              const endDateStr = e.target.value;
+                              field.onChange(
+                                endDateStr ? new Date(endDateStr) : null
+                              );
+                            }}
+                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
                           />
                         )}
                       />
@@ -1620,22 +1686,29 @@ export default function ProductForm({
                               ? swatch.name
                               : `Color ${idx + 1}`}
                           </td>
+
                           {/* Base Price */}
                           <td className="border px-3 py-2">
                             <input
                               type="number"
                               defaultValue={swatch.price}
                               {...register(`colorVariants.${idx}.price`, {
+                                required: 'Base Price is required',
                                 setValueAs: (v) =>
                                   v === '' ? undefined : Number(v),
                                 min: {
                                   value: 1,
                                   message: 'Price must be at least 1',
                                 },
+                                validate: (value) =>
+                                  (typeof value === 'number' &&
+                                    !isNaN(value)) ||
+                                  'Only numbers are allowed',
                               })}
                               className="w-full border rounded-md px-2 py-1"
                             />
                           </td>
+
                           {/* Deal Price */}
                           <td className="border px-3 py-2">
                             <input
@@ -1644,10 +1717,30 @@ export default function ProductForm({
                               {...register(`colorVariants.${idx}.dealPrice`, {
                                 setValueAs: (v) =>
                                   v === '' ? undefined : Number(v),
+                                validate: (value) => {
+                                  const basePrice = getValues(
+                                    `colorVariants.${idx}.price`
+                                  );
+                                  if (value === undefined) return true; // allow blank
+                                  if (
+                                    typeof value !== 'number' ||
+                                    isNaN(value)
+                                  ) {
+                                    return 'Only numbers are allowed';
+                                  }
+                                  if (
+                                    basePrice !== undefined &&
+                                    value >= basePrice
+                                  ) {
+                                    return 'Deal Price must be less than Base Price';
+                                  }
+                                  return true;
+                                },
                               })}
                               className="w-full border rounded-md px-2 py-1"
                             />
                           </td>
+
                           {/* Deal Start */}
                           <td className="border px-3 py-2">
                             <input
@@ -1659,10 +1752,31 @@ export default function ProductForm({
                                       .split('T')[0]
                                   : ''
                               }
-                              {...register(`colorVariants.${idx}.dealStart`)}
+                              {...register(`colorVariants.${idx}.dealStart`, {
+                                setValueAs: (v) => (v ? new Date(v) : null), // ✅ store as Date
+                              })}
+                              onChange={(e) => {
+                                const startDateStr = e.target.value;
+                                if (startDateStr) {
+                                  const startDate = new Date(startDateStr);
+                                  const autoEnd = new Date(startDate);
+                                  autoEnd.setDate(autoEnd.getDate() + 7);
+
+                                  // ✅ store as Date object
+                                  setValue(
+                                    `colorVariants.${idx}.dealEnd`,
+                                    autoEnd
+                                  );
+                                }
+                              }}
                               className="w-full border rounded-md px-2 py-1"
                             />
+                            <p className="text-xs text-gray-500 mt-1">
+                              Selecting a start date will auto‑set Deal End to 7
+                              days later.
+                            </p>
                           </td>
+
                           {/* Deal End */}
                           <td className="border px-3 py-2">
                             <input
@@ -1674,7 +1788,21 @@ export default function ProductForm({
                                       .split('T')[0]
                                   : ''
                               }
-                              {...register(`colorVariants.${idx}.dealEnd`)}
+                              {...register(`colorVariants.${idx}.dealEnd`, {
+                                setValueAs: (v) => (v ? new Date(v) : null), // ✅ store as Date
+                                validate: (value) => {
+                                  const start = getValues(
+                                    `colorVariants.${idx}.dealStart`
+                                  );
+                                  if (value && start) {
+                                    return (
+                                      new Date(value) > new Date(start) ||
+                                      'Deal End must be after Deal Start'
+                                    );
+                                  }
+                                  return true;
+                                },
+                              })}
                               className="w-full border rounded-md px-2 py-1"
                             />
                           </td>
@@ -1684,22 +1812,27 @@ export default function ProductForm({
                   </table>
                 </div>
               )}
-              {/* </div> */}
 
               {/* Item Condition */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <p className="text-[15px] font-bold text-gray-700 py-2">
-                  Item Condition *{' '}
-                </p>
+                <label
+                  htmlFor="condition"
+                  className="text-[15px] font-bold text-gray-700 py-2 shrink-0"
+                >
+                  Item Condition *
+                </label>
                 <div className="w-[800px]">
                   <Input
+                    id="condition"
                     label=""
                     placeholder="Example: New, Used, Renewed"
                     type="text"
                     className="text-[15px]"
                     {...register('condition', {
+                      required: 'Item condition is required',
                       validate: (value) =>
-                        value.trim().length > 0 || 'SKU cannot be empty',
+                        value.trim().length > 0 ||
+                        'Item condition cannot be empty',
                     })}
                   />
                 </div>
@@ -1712,10 +1845,9 @@ export default function ProductForm({
 
               {/* Shipping Options */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <p className="text-[15px] font-bold text-gray-700 py-2">
+                <label className="text-[15px] font-bold text-gray-700 py-2 shrink-0">
                   Shipping Options *
-                </p>
-
+                </label>
                 <div className="w-[800px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
                   <label className="flex items-center gap-2">
                     <input
@@ -1747,76 +1879,171 @@ export default function ProductForm({
                 )}
               </div>
 
-              {/* Discount codes */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <label className="block font-semibold text-gray-700 py-2">
-                  Select Discount Codes (optional)
-                </label>
-
-                {discountLoading ? (
-                  <p className="text-gray-400">Loading discount codes...</p>
-                ) : (
-                  <div className="w-[800px] flex flex-wrap gap-2">
-                    {discountCodes?.map((code: any) => (
-                      <button
-                        key={code.id}
-                        type="button"
-                        className={`px-3 py-1 rounded-md text-sm font-semibold border ${
-                          watch('discountCodes')?.includes(code.id)
-                            ? 'bg-blue-600 text-white border-blue-600'
-                            : 'bg-gray-800 text-gray-300 border-gray-600 hover:border-gray-700'
-                        }`}
-                        onClick={() => {
-                          const currentSelection = watch('discountCodes') || [];
-                          const updatedSelection = currentSelection?.includes(
-                            code.id
-                          )
-                            ? currentSelection.filter(
-                                (id: string) => id !== code.id
-                              )
-                            : [...currentSelection, code.id];
-                          setValue('discountCodes', updatedSelection);
-                        }}
-                      >
-                        {code?.public_name} ({code.discountValue}
-                        {code.discountType === 'percentage' ? '%' : '$'})
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Total Tickets  */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <p className="shrink-0 text-[15px] font-bold text-gray-700 py-2">
-                  Total Tickets
-                </p>
-                <div className="w-[800px]">
-                  <Input
-                    label=""
-                    placeholder="0"
-                    type="number"
-                    className="text-[15px]"
-                    {...register('total_tickets', {
-                      setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
-                      validate: (value) => {
-                        if (value === undefined) return true; // ✅ allow empty
-                        if (typeof value === 'number' && !isNaN(value)) {
-                          if (value < 1)
-                            return 'Total tickets must be at least 1';
-                          return true;
+              {/* Discount Codes */}
+              {isDealRoute && (
+                <>
+                  <div className="w-full flex items-start justify-start gap-3 bg-white px-4 py-2 rounded-sm">
+                    <label className="font-bold text-gray-700 py-2">
+                      Select Discount Code (optional)
+                    </label>
+                    <div className="w-[800px] flex items-center text-[15px]">
+                      <Dropdown<DiscountCode>
+                        options={discountCodes}
+                        getLabel={(code) =>
+                          `${code.public_name} (${code.discountValue}${
+                            code.discountType === 'percentage' ? '%' : '$'
+                          })`
                         }
-                        return 'Only numbers are allowed';
-                      },
-                    })}
-                  />
-                </div>
-                {errors.total_tickets && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.total_tickets.message as string}
-                  </p>
-                )}
-              </div>
+                        getValue={(code) => code.id}
+                        selected={watch('discountCodes') || []}
+                        multiSelect={true} // ✅ enables multi-select
+                        placeholder="Select discount codes"
+                        emptyMessage="No discount codes"
+                        onChange={(values) =>
+                          setValue('discountCodes', values as string[])
+                        }
+                        width="300px"
+                      />
+
+                      {errors.discountCodes && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.discountCodes.message as string}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Render discount dates */}
+                  <div className="w-[800px]">
+                    {/* Discount Start Date */}
+                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
+                      <label
+                        htmlFor="deal_start"
+                        className="text-[15px] font-medium text-gray-800 mt-1"
+                      >
+                        Discount Start
+                      </label>
+                      <Controller
+                        name="discount_start"
+                        control={control}
+                        rules={{ required: 'Start date is required' }}
+                        render={({ field }) => (
+                          <input
+                            id="discount_start"
+                            type="date"
+                            value={
+                              field.value
+                                ? new Date(field.value)
+                                    .toISOString()
+                                    .split('T')[0]
+                                : ''
+                            }
+                            onChange={(e) => {
+                              const startDateStr = e.target.value;
+                              if (startDateStr) {
+                                const startDate = new Date(startDateStr);
+                                field.onChange(startDate);
+
+                                // ✅ auto-populate Discount End to +7 days
+                                const autoEnd = new Date(startDate);
+                                autoEnd.setDate(autoEnd.getDate() + 7);
+                                setValue('discount_end', autoEnd);
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
+                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                          />
+                        )}
+                      />
+                    </div>
+
+                    {/* Discount End Date */}
+                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
+                      <label
+                        htmlFor="deal_start"
+                        className="text-[15px] font-medium text-gray-800 mt-1"
+                      >
+                        Discount End
+                      </label>
+                      <Controller
+                        name="discount_end"
+                        control={control}
+                        rules={{
+                          required: 'End date is required',
+                          validate: (value) => {
+                            const start = watch('discount_start');
+                            if (value && start) {
+                              return (
+                                new Date(value) > new Date(start) ||
+                                'Discount End must be after Discount Start'
+                              );
+                            }
+                            return true;
+                          },
+                        }}
+                        render={({ field }) => (
+                          <input
+                            id="discount_end"
+                            type="date"
+                            value={
+                              field.value
+                                ? new Date(field.value)
+                                    .toISOString()
+                                    .split('T')[0]
+                                : ''
+                            }
+                            onChange={(e) => {
+                              const endDateStr = e.target.value;
+                              field.onChange(
+                                endDateStr ? new Date(endDateStr) : null
+                              );
+                            }}
+                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Total Tickets  */}
+                  <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                    <p className="shrink-0 text-[15px] font-bold text-gray-700 py-2">
+                      Total Tickets
+                    </p>
+                    <div className="w-[800px]">
+                      <Input
+                        label=""
+                        placeholder="0"
+                        type="number"
+                        className="text-[15px]"
+                        {...register('total_tickets', {
+                          setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
+                          validate: (value) => {
+                            if (value === undefined) return true; // ✅ allow empty
+                            if (typeof value === 'number' && !isNaN(value)) {
+                              if (value < 1)
+                                return 'Total tickets must be at least 1';
+                              return true;
+                            }
+                            return 'Only numbers are allowed';
+                          },
+                        })}
+                      />
+                    </div>
+                    {errors.total_tickets && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.total_tickets.message as string}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="text-sm text-gray-600 mt-1">
+                    Remaining tickets:{' '}
+                    <span>{availableTickets ?? total_tickets ?? 0}</span>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -1824,7 +2051,6 @@ export default function ProductForm({
 
       {/* --------------------------------------------------------------------------------- */}
 
-      {/* Product details */}
       {/* <div className="w-full lg:w-full mx-auto border-t border-y-gray-200"></div> */}
 
       {/* Image transformation modal */}

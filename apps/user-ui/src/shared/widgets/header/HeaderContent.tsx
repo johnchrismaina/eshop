@@ -235,7 +235,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   // bg-gradient-to-b from-[#38383B] to-[#1C1C1E]
 
   return (
-    <div className="w-full px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-gradient-to-b from-[#3A3A3A] to-[#1C1C1C] ">
+    <div className="w-full px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-[#313133] ">
       <div className="flex items-center justify-start gap-2">
         {/* Logo */}
         <div
@@ -295,7 +295,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-[38px] bg-[#fff] rounded-[4px] border border-gray-200
+            className="flex items-center h-[38px] bg-[#fff] rounded-md border border-gray-200
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out "

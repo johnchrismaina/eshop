@@ -26,5 +26,5 @@ export default function EditProductPage() {
       </div>
     );
 
-  return <ProductForm mode="edit" product={product} />;
+  return <ProductForm mode="editProduct" product={product} />;
 }

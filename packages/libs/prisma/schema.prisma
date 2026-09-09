@@ -169,6 +169,7 @@ model products {
   title                  String
   aspect                 String                   @default("square") // default at DB level too
   slug                   String                   @unique
+  ratings                Float                    @default(4)
   colors                 String[]                 @default([]) // ✅ optional array
   sizes                  String[]                 @default([])
   category               String
@@ -176,10 +177,12 @@ model products {
   short_description      String
   detailed_description   String?
   product_specifications product_specifications[]
-  regular_price          Float
-  stock                  Int
   video_url              String?
-  ratings                Float                    @default(4)
+  sku                    String?
+  regular_price          Float?
+  stock                  Int
+  condition              String?
+  shippingOption         String?
   isDeleted              Boolean?                 @default(false)
   status                 productStatus            @default(Active)
   deletedAt              DateTime?
@@ -290,8 +293,8 @@ model discount_codes {
   total_tickets     Int?
   available_tickets Int?
 
-  discount_start DateTime
-  discount_end   DateTime
+  discount_start DateTime?
+  discount_end   DateTime?
   status         DiscountStatus @default(Active)
 
   // ✅ Explicit relation via junction
@@ -341,7 +344,7 @@ model sub_category {
 
 model product_specifications {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  label String
+  label String?
   value String?
 
   // ✅ relation to products
@@ -369,7 +372,7 @@ model Deal {
 model color_variants {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  hex       String
+  hex       String?
   title     String
   price     Float
   isDefault Boolean @default(false)

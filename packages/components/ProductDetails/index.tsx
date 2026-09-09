@@ -55,41 +55,6 @@ interface ColorVariant {
 type ProductImage = { url: string };
 type ActiveImage = string | ProductImage;
 
-const swatches = [
-  {
-    title: 'Black',
-    images: [
-      { url: '/images/black1.png' },
-      { url: '/images/black2.png' },
-      { url: '/images/black3.png' },
-    ],
-    price: 5000,
-    dealPrice: 3999,
-    aspect: 'square',
-  },
-  {
-    title: 'Brown',
-    images: [
-      { url: '/images/brown1.png' },
-      { url: '/images/brown2.png' },
-      { url: '/images/brown3.png' },
-    ],
-    price: 5000,
-    dealPrice: 3999,
-    aspect: 'square',
-  },
-  {
-    title: 'Red',
-    images: [
-      { url: '/images/red1.png' },
-      { url: '/images/red2.png' },
-      { url: '/images/red3.png' },
-    ],
-    price: 5200,
-    aspect: 'portrait',
-  },
-];
-
 const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   // const { user, isLoading } = useUser();
   const { user } = useUser();
@@ -109,24 +74,18 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
     productDetails?.images?.[0]?.url || fallbackImage
   );
 
-  // const [selectedSwatchColor, setSelectedSwatchColor] = useState<string>('');
-  // const [selectedSwatch, setSelectedSwatch] = useState(swatches[0]);
-  // const [selectedSwatch, setSelectedSwatch] = useState<color_variants | null>(
-  //   null
-  // );
-
+  const [hoveredColorName, setHoveredColorName] = useState<string | null>(null);
   const [selectedSwatch, setSelectedSwatch] = useState<ColorVariant | null>(
-    null
+    productDetails.colorVariants?.find((v: ColorVariant) => v.isDefault) ?? null
   );
 
-  // Active images come from either swatch or product
-  // const activeImages = selectedSwatch
-  //   ? selectedSwatch.images
-  //   : productDetails.images;
+  const activeImages = selectedSwatch
+    ? selectedSwatch.images
+    : productDetails.images; // now normalized in backend
 
-  const activeImages: ActiveImage[] = selectedSwatch
-    ? selectedSwatch.images // string[]
-    : productDetails.images; // ProductImage[]
+  const activePrice = selectedSwatch
+    ? selectedSwatch.price
+    : productDetails.regular_price;
 
   // Helper to get URL
   const getImageUrl = (img: ActiveImage) =>
@@ -273,26 +232,28 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
             <div className="flex flex-col gap-3 overflow-y-auto">
               {activeImages.map((img: ActiveImage, index: number) => {
-                const thumbHeight =
-                  activeAspect === 'square' ? 75 : Math.round((75 * 4) / 3);
-
                 const url = typeof img === 'string' ? img : img.url;
 
                 return (
-                  <img
+                  <div
                     key={index}
-                    src={url}
-                    alt="Thumbnail"
-                    width={75}
-                    height={thumbHeight}
-                    style={{ width: 75, height: thumbHeight }}
-                    className={`cursor-pointer border rounded-md object-cover ${
-                      currentIndex === index
-                        ? 'border-blue-500'
-                        : 'border-gray-300'
+                    className={`w-[75px] ${
+                      activeAspect === 'square'
+                        ? 'aspect-square'
+                        : 'aspect-[3/4]'
                     }`}
-                    onClick={() => setCurrentIndex(index)}
-                  />
+                  >
+                    <img
+                      src={url}
+                      alt="Thumbnail"
+                      className={`w-full h-full object-cover cursor-pointer border rounded-md ${
+                        currentIndex === index
+                          ? 'border-blue-500'
+                          : 'border-gray-300'
+                      }`}
+                      onClick={() => setCurrentIndex(index)}
+                    />
+                  </div>
                 );
               })}
             </div>
@@ -317,15 +278,14 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             <div
               className={`relative mx-auto ${
                 activeAspect === 'square'
-                  ? 'w-[500px] h-[500px]'
-                  : 'w-[503px] h-[670px]'
+                  ? 'aspect-square w-[500px]'
+                  : 'aspect-[3/4] w-[500px]'
               }`}
             >
               {activeImages.length > 0 && (
                 <ZoomImage
-                  src={getImageUrl(activeImages[currentIndex])} // always string
+                  src={getImageUrl(activeImages[currentIndex])}
                   alt="Product preview"
-                  aspect={activeAspect}
                 />
               )}
             </div>
@@ -367,14 +327,29 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           <div className="mt-1">
             {/* Product price */}
             <div className="flex flex-col">
-              <div className="pt-4 text-[#52525B] space-x-0.5">
-                <span className="text-[15px] font-bold">KSh</span>
-                <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight ">
-                  {productDetails?.deal
-                    ? productDetails.deal.sale_price
-                    : productDetails?.regular_price}
-                </span>
+              {selectedSwatch ? (
+                <div className="pt-4 text-[#52525B] space-x-0.5">
+                  <span className="text-[15px] font-bold">Ksh</span>
+                  <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight">
+                    {selectedSwatch.price}
+                  </span>
+                </div>
+              ) : (
+                <div className="pt-4 text-[#52525B] space-x-0.5">
+                  <span className="text-[15px] font-bold">Ksh</span>
+                  <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight">
+                    {productDetails.regular_price}
+                  </span>
+                </div>
+              )}
+              <div className="pt-4 text-[#52525B] space-x-0.5 hidden">
+                <span className="text-[15px] font-bold">Ksh</span>
+                <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight"></span>
               </div>
+
+              {/* {selectedSwatch
+                ? `Price: $${selectedSwatch.price}`
+                : `Price: $${productDetails.regular_price}`} */}
 
               {/* Show discount only if deal exists */}
               {productDetails?.deal && (
@@ -389,86 +364,67 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               )}
             </div>
 
-            <div className="flex flex-col md:flex-col items-start gap-6 mt-6 ">
-              {/* Color options */}
-              {productDetails?.colors?.length > 0 && (
-                <div className="hidden">
-                  <strong className="text-[#333]">Color</strong>
-                  <div className="flex gap-2 mt-2">
-                    {productDetails?.colors?.map(
-                      (color: string, index: number) => (
-                        <button
-                          key={index}
-                          className={`w-8 h-8 cursor-pointer rounded-full border-2 border-gray-200 transition ${
-                            isSelected === color
-                              ? 'border-gray-400 scale-110 shadow-md'
-                              : 'border-[#ddd]'
-                          }`}
-                          onClick={() => setIsSelected(color)}
-                          style={{ backgroundColor: color }}
-                        />
-                      )
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Size options */}
-              {productDetails?.sizes?.length > 0 && (
-                <div>
-                  <strong className="text-[#333]">Size</strong>
-                  <div className="flex gap-2 mt-2">
-                    {productDetails?.sizes?.map(
-                      (size: string, index: number) => (
-                        <button
-                          key={index}
-                          className={`w-20 h-10 text-[14px] font-medium cursor-pointer rounded-lg border border-[#ddd] transition-colors duration-100 ${
-                            isSelected === size
-                              ? 'bg-[#333] text-white'
-                              : 'border border-[#ddd] text-black'
-                          }`}
-                          onClick={() => setIsSelected(size)}
-                        >
-                          {size}
-                        </button>
-                      )
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Color swatches */}
-            <div className="flex flex-col items-start justify-center mt-6">
-              {/* Product header */}
-              <p className=" flex items-center justify-start text-[#333] gap-1 pb-2">
-                <span className=" font-normal">Color: </span>
-                <span className=" font-bold">
-                  {selectedSwatch ? selectedSwatch.title : 'Select a color'}
-                </span>
-              </p>
+            {productDetails?.colorVariants?.length > 0 && (
+              <div className="flex flex-col items-start justify-center mt-8">
+                {/* Product header */}
+                <p className=" flex items-center justify-start text-[#333] gap-1 pb-2">
+                  <span className=" font-bold">Color: </span>
+                  <span className="font-normal">
+                    {hoveredColorName
+                      ? hoveredColorName
+                      : selectedSwatch
+                      ? selectedSwatch.name
+                      : 'Select a color'}
+                  </span>
+                </p>
 
-              <div className="grid grid-cols-4 gap-4">
-                {(productDetails.colorVariants as ColorVariant[])?.map(
-                  (swatch: ColorVariant) => (
-                    <ColorThumbnail
-                      key={swatch.id}
-                      title={swatch.title}
-                      image={swatch.images[0]}
-                      price={swatch.price}
-                      // onHover={(color) => setSelectedSwatch(color)}
-                      onSelect={() => setSelectedSwatch(swatch)}
-                    />
-                  )
-                )}
+                <div className="grid grid-cols-4 gap-4">
+                  {(productDetails.colorVariants as ColorVariant[])?.map(
+                    (swatch: ColorVariant) => (
+                      <ColorThumbnail
+                        key={swatch.id}
+                        title={swatch.title}
+                        name={swatch.name}
+                        image={swatch.images[0]}
+                        price={swatch.price}
+                        onHover={(name) => setHoveredColorName(name)} // ✅ only updates name
+                        onLeave={() => setHoveredColorName(null)} // ✅ clears on mouse leave
+                        onSelect={() => setSelectedSwatch(swatch)} // ✅ click locks selection
+                        isActive={selectedSwatch?.id === swatch.id} // ✅ highlight active
+                      />
+                    )
+                  )}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Size options */}
+            {productDetails?.sizes?.length > 0 && (
+              <div className="mt-4">
+                <strong className="text-[#333]">Size</strong>
+                <div className="flex gap-2 mt-2">
+                  {productDetails?.sizes?.map((size: string, index: number) => (
+                    <button
+                      key={index}
+                      className={`w-20 h-10 text-[14px] font-medium cursor-pointer rounded-lg border border-[#ddd] transition-colors duration-100 ${
+                        isSelected === size
+                          ? 'bg-[#333] text-white'
+                          : 'border border-[#ddd] text-black'
+                      }`}
+                      onClick={() => setIsSelected(size)}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Product description */}
             {/* <div className="w-full lg:w-full mx-auto mt-5"> */}
             <div className=" py-4 ">
               <span className="text-lg font-bold text-[#333] hidden">
-                {/* About this item {productDetails?.title} */}
                 Product details
               </span>
 
@@ -506,10 +462,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 </div>
               )}
 
-              <div className="flex flex-col gap-3">
-                <span className="text-base font-bold text-[#333] ">
-                  {/* About this item {productDetails?.title} */}
-                  About this item
+              <div className="flex flex-col gap-4">
+                <span className="text-base font-bold text-gray-800 ">
+                  Description
                 </span>
 
                 {/* Description */}
@@ -559,13 +514,30 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* Right column - Seller information */}
         <div className=" w-[280px] px-4 py-4 bg-[#fff] border border-[#ddd] rounded-lg ">
           {/* Price */}
-          <div className="space-x-0.5 mb-4 ">
-            <span className="text-[15px] text-[#52525B] font-bold">KSh</span>
-            <span className="text-3xl text-[#1C1C1E] font-bold">
-              {productDetails?.deal
-                ? productDetails.deal.sale_price
-                : productDetails?.regular_price}
-            </span>
+          <div className="flex flex-col mb-4">
+            {selectedSwatch ? (
+              <div className="pt-4 text-[#52525B] space-x-0.5">
+                <span className="text-[15px] font-bold">Ksh</span>
+                <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight">
+                  {selectedSwatch.price}
+                </span>
+              </div>
+            ) : (
+              <div className="pt-4 text-[#52525B] space-x-0.5">
+                <span className="text-[15px] font-bold">Ksh</span>
+                <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight">
+                  {productDetails.regular_price}
+                </span>
+              </div>
+            )}
+            <div className="pt-4 text-[#52525B] space-x-0.5 hidden">
+              <span className="text-[15px] font-bold">Ksh</span>
+              <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight"></span>
+            </div>
+
+            {/* {selectedSwatch
+                ? `Price: $${selectedSwatch.price}`
+                : `Price: $${productDetails.regular_price}`} */}
           </div>
 
           {/* Quantity */}

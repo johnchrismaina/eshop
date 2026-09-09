@@ -3,5 +3,5 @@ import ProductForm from 'apps/seller-ui/src/shared/components/ProductForm';
 
 // create-deal.tsx
 export default function CreateDealPage() {
-  return <ProductForm mode="create" />;
+  return <ProductForm mode="createDeal" />;
 }

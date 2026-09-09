@@ -236,25 +236,62 @@ export const uploadProductImage = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const fileBuffer = req.file?.buffer;
-
-    if (!fileBuffer) {
-      res.status(400).json({ error: 'No image file provided' });
-      return; // ✅ Explicit return to satisfy TypeScript
+    if (!req.file?.buffer) {
+      res
+        .status(400)
+        .json({ success: false, message: 'No image file provided' });
+      return; // ✅ exit early
     }
 
-    const response = await imagekit.upload({
-      file: fileBuffer,
-      fileName: `product-${Date.now()}.jpg`,
-      folder: '/products',
+    const uploaded = await imagekit.upload({
+      file: req.file.buffer,
+      fileName: `product-${Date.now()}-${req.file.originalname}`,
+      folder: 'products',
     });
 
     res.status(201).json({
-      file_url: response.url,
-      fileId: response.fileId,
+      success: true,
+      fileId: uploaded.fileId,
+      file_url: uploaded.url,
     });
+    return; // ✅ explicit return
   } catch (error) {
+    console.error('❌ Product image upload failed:', error);
     next(error);
+    return; // ✅ ensures catch path also returns
+  }
+};
+
+// Upload variant image
+export const uploadVariantImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    if (!req.file?.buffer) {
+      res
+        .status(400)
+        .json({ success: false, message: 'No image file provided' });
+      return;
+    }
+
+    const uploaded = await imagekit.upload({
+      file: req.file.buffer,
+      fileName: `variant-${Date.now()}-${req.file.originalname}`,
+      folder: 'variants',
+    });
+
+    res.status(201).json({
+      success: true,
+      fileId: uploaded.fileId,
+      file_url: uploaded.url,
+    });
+    return;
+  } catch (error) {
+    console.error('❌ Variant image upload failed:', error);
+    next(error);
+    return;
   }
 };
 
@@ -314,7 +351,6 @@ export const createProduct = async (
       !short_description?.trim() ||
       !category?.trim() ||
       subCategory == null ||
-      regular_price == null ||
       stock == null ||
       (!Array.isArray(images) && !Array.isArray(colorVariants))
     ) {
@@ -335,13 +371,57 @@ export const createProduct = async (
       );
     }
 
-    // ✅ Map images
+    // ✅ Map product-level images (keep fileId + url relation)
     const mappedImages = (images as { fileId: string; file_url: string }[])
       .filter((img) => img?.fileId && img?.file_url)
       .map((img) => ({
         file_id: img.fileId,
         url: img.file_url,
       }));
+
+    // ✅ Map product specifications (use label, not key)
+    const mappedSpecifications = (product_specifications as any[])
+      .filter((spec) => spec.label)
+      .map((spec) => ({
+        label: spec.label,
+        value: spec.value ?? null,
+      }));
+
+    // ✅ Map color variants (hex optional, price required, images as URL strings)
+    const mappedVariants = (colorVariants as any[]).map((variant) => {
+      if (variant.price == null || isNaN(parseFloat(variant.price))) {
+        throw new ValidationError(
+          'Each variant must have a valid price when variants are defined'
+        );
+      }
+      return {
+        name: variant.name,
+        title: variant.title,
+        hex: variant.hex ?? null,
+        price: parseFloat(variant.price),
+        isDefault: variant.isDefault ?? false,
+        images: (variant.images || [])
+          .filter((img: any) => img?.file_url)
+          .map((img: any) => img.file_url), // ✅ only store URLs
+      };
+    });
+
+    // ✅ Enforce conditional pricing logic
+    if (mappedVariants.length > 0) {
+      mappedVariants.forEach((v) => {
+        if (v.price == null || isNaN(v.price)) {
+          throw new ValidationError(
+            'Each variant must have a valid price when variants are defined'
+          );
+        }
+      });
+    } else {
+      if (regular_price == null || isNaN(parseFloat(regular_price))) {
+        throw new ValidationError(
+          'Regular price is required when no variants exist'
+        );
+      }
+    }
 
     // ✅ Create product
     const newProduct = await prisma.products.create({
@@ -353,16 +433,13 @@ export const createProduct = async (
         short_description,
         aspect,
         detailed_description,
-        // Flattened array of { key, value }
         product_specifications: {
-          create: product_specifications.map((spec: any) => ({
-            key: spec.key,
-            value: spec.value,
-          })),
+          create: mappedSpecifications,
         },
         shopId: req.seller.shops[0].id,
         stock: parseInt(stock),
-        regular_price: parseFloat(regular_price),
+        regular_price:
+          mappedVariants.length > 0 ? null : parseFloat(regular_price),
         video_url,
         sku,
         condition,
@@ -372,14 +449,7 @@ export const createProduct = async (
           create: mappedImages,
         },
         colorVariants: {
-          create: colorVariants.map((variant: any) => ({
-            name: variant.name,
-            hex: variant.hex,
-            title: variant.title,
-            price: variant.price,
-            isDefault: variant.isDefault ?? false,
-            images: variant.images ?? [],
-          })),
+          create: mappedVariants,
         },
       },
       include: {
@@ -920,28 +990,44 @@ export const getProductBySlug = async (
   req: any,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
+    console.log('🟢 getProductBySlug called with slug:', req.params.slug);
+
     const product = await prisma.products.findUnique({
       where: { slug: req.params.slug },
       include: {
         images: true,
-        deal: true, // 👈 include relation so frontend sees deal fields
+        colorVariants: true, // ✅ must match schema field name
+        product_specifications: true, // ✅ must match schema field name
+        deals: true,
+        Shop: true,
       },
     });
 
+    console.log('🟢 Prisma raw product:', product);
+
     if (!product) {
+      console.warn('⚠️ Product not found for slug:', req.params.slug);
       res.status(404).json({ success: false, message: 'Product not found' });
       return;
     }
 
-    // ✅ Unified response: product always includes deal + images
+    // ✅ Add explicit logs for relations
+    console.log('🟢 Product images:', product.images);
+    console.log('🟢 Product colorVariants:', product.colorVariants);
+    console.log('🟢 Product specifications:', product.product_specifications);
+    console.log('🟢 Product deals:', product.deals);
+
     res.status(200).json({
       success: true,
       product,
     });
+    return;
   } catch (error) {
+    console.error('❌ Error in getProductBySlug:', error);
     next(error);
+    return;
   }
 };
 
@@ -1316,31 +1402,64 @@ export const getProductDetails = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
-    let product: ((products | deals) & { images: any; Shop: any }) | null =
-      null;
+    console.log('🟢 getProductDetails called with slug:', req.params.slug);
 
+    let product:
+      | (products & {
+          images: any;
+          Shop: any;
+          colorVariants?: any;
+          product_specifications?: any;
+          deals?: any;
+        })
+      | null = null;
+
+    // ✅ First check products
     product = await prisma.products.findUnique({
       where: { slug: req.params.slug! },
-      include: { images: true, Shop: true },
+      include: {
+        images: true,
+        Shop: true,
+        colorVariants: true, // ✅ include variants
+        product_specifications: true, // ✅ include specifications
+        deals: true,
+      },
     });
 
+    // ✅ If not found, check deals
     if (!product) {
       product = await prisma.deals.findUnique({
         where: { slug: req.params.slug! },
-        include: { images: true, Shop: true },
+        include: {
+          images: true,
+          Shop: true,
+          // deals model may not have variants/specs, but include if defined
+          colorVariants: true,
+          product_specifications: true,
+        },
       });
     }
 
     if (!product) {
+      console.warn('⚠️ Product not found for slug:', req.params.slug);
       res.status(404).json({ success: false, message: 'Product not found' });
       return;
     }
 
+    // ✅ Debug logs
+    console.log('🟢 Product images:', product.images);
+    console.log('🟢 Product colorVariants:', product.colorVariants);
+    console.log('🟢 Product specifications:', product.product_specifications);
+    console.log('🟢 Product deals:', product.deals);
+
     res.status(200).json({ success: true, product });
+    return;
   } catch (error) {
+    console.error('❌ Error in getProductDetails:', error);
     next(error);
+    return;
   }
 };
 

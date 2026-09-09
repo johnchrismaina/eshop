@@ -5,17 +5,25 @@ import type { FormValues } from '../ProductForm'; // adjust path
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { X } from 'lucide-react';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
+import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
+import toast from 'react-hot-toast';
 
 interface UploadedImage {
   fileId: string;
   file_url: string;
 }
 
+type VariantImage = {
+  fileId: string;
+  file_url: string;
+};
+
 type ColorVariant = {
   name: string;
   title: string;
   price: number;
-  images: (UploadedImage | null)[];
+  // images: (UploadedImage | null)[];
+  images: (VariantImage | null)[]; // ✅ always objects with file_url
   isDefault: boolean;
 };
 
@@ -69,20 +77,38 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
   };
 
   // ✅ Handle image upload/remove for a specific variant slot
-  const handleVariantImageUpload = (
+  const handleVariantImageUpload = async (
     variantIndex: number,
     imageIndex: number,
     file: File | null
   ) => {
     const updated = [...variants];
+
     if (file) {
-      updated[variantIndex].images[imageIndex] = {
-        fileId: crypto.randomUUID(),
-        file_url: URL.createObjectURL(file),
-      };
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const response = await axiosProduct.post(
+          '/upload-variant-image',
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+
+        updated[variantIndex].images[imageIndex] = {
+          fileId: response.data.fileId,
+          file_url: response.data.file_url, // ✅ permanent ImageKit URL
+        };
+      } catch (error) {
+        toast.error('Variant image upload failed');
+        return;
+      }
     } else {
       updated[variantIndex].images[imageIndex] = null;
     }
+
     setVariants(updated);
   };
 
@@ -158,7 +184,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
             <X />
           </button>
 
-          <div className="flex flex-col items-start justify-center space-y-2">
+          <div className="flex flex-col items-start justify-center space-y-2 ">
             {/* Color name */}
             <div className="w-full flex items-start gap-2">
               <label className="block text-[15px] font-semibold text-gray-800 mb-1">
@@ -192,6 +218,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
           <div className="grid grid-cols-4 gap-3">
             {Array.from({ length: 8 }).map((_, i) => {
               const key = `${vIndex}-${i}`;
+              const imgObj = variant.images[i]; // ✅ object with fileId + file_url or null
               return (
                 <ImagePlaceholder
                   key={i}
@@ -199,7 +226,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
                   index={i}
                   aspect={aspect}
                   pictureUploadingLoader={variantUploading[key] ?? false}
-                  image={variant.images[i]}
+                  image={imgObj} // ✅ pass the object directly
                   onImageChange={async (file) => {
                     setVariantUploading((prev) => ({ ...prev, [key]: true }));
                     await handleVariantImageUpload(vIndex, i, file);
@@ -266,7 +293,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
             }`}
           >
             <img
-              src={variantPreviewImage}
+              src={variantPreviewImage} // ✅ permanent ImageKit URL
               alt="Preview"
               className="w-full h-full object-cover rounded-lg"
             />

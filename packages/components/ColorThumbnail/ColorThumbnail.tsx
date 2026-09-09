@@ -1,49 +1,61 @@
 interface ColorThumbnailProps {
   title: string;
+  name: string;
   image: string;
   price: number;
   dealPrice?: number;
-  // onHover: (color: string) => void; // notify parent
-  // onSelect: (color: string) => void; // optional click select
+  onHover?: (name: string) => void; // ✅ notify parent on hover
+  onLeave?: () => void;
   onSelect: (swatch: {
     title: string;
     image: string;
     price: number;
     dealPrice?: number;
   }) => void;
+  isActive?: boolean;
 }
 
 export default function ColorThumbnail({
   title,
+  name,
   image,
   price,
   dealPrice,
-  // onHover,
+  onHover,
+  onLeave,
   onSelect,
+  isActive,
 }: ColorThumbnailProps) {
   return (
     <div
-      className="flex flex-col items-center gap-2 cursor-pointer rounded-md border border-gray-200"
-      // onMouseEnter={() => onHover(title)}
+      className={`flex flex-col items-center gap-2 cursor-pointer rounded-md border 
+        ${isActive ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200'}
+      `}
+      onMouseEnter={() => onHover?.(name)} // ✅ hover updates parent
+      onMouseLeave={() => onLeave?.()}
       onClick={() => onSelect({ title, image, price, dealPrice })}
     >
       {/* Thumbnail */}
-      <img src={image} alt={title} className="w-32 h-32 object-cover " />
+      <img
+        src={image}
+        alt={title}
+        className="w-32 h-32 object-cover rounded-t-md "
+      />
 
       {/* Pricing */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mb-2">
         {dealPrice ? (
           <>
-            <span className="text-[#1C1C1E] font-bold text-sm">
-              KES {dealPrice.toLocaleString()}
+            <span className="text-[#1C1C1E] font-semibold text-sm">
+              Ksh {dealPrice.toLocaleString()}
             </span>
             <span className="text-gray-400 line-through text-sm">
-              KES {price.toLocaleString()}
+              Ksh {price.toLocaleString()}
             </span>
           </>
         ) : (
-          <span className="text-[#1C1C1E] font-bold text-sm">
-            KES {price.toLocaleString()}
+          <span className="text-[#1C1C1E] font-semibold text-sm">
+            Ksh {price.toLocaleString()}
           </span>
         )}
       </div>

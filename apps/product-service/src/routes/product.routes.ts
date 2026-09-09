@@ -28,6 +28,7 @@ import {
   getProductBySlug,
   updateProductBySlug,
   redeemDiscountHandler,
+  uploadVariantImage,
 } from '../controllers/product.controller';
 import isAuthenticated from '@packages/middleware/isAuthenticated';
 import { upload } from '@packages/middleware/multer';
@@ -48,11 +49,18 @@ router.post(
   isAuthenticated,
   uploadProductImage
 );
+router.post(
+  '/upload-variant-image',
+  upload.single('image'),
+  isAuthenticated,
+  uploadVariantImage
+);
 router.delete('/delete-product-image', isAuthenticated, deleteProductImage);
 router.post('/create-product', isAuthenticated, createProduct);
 router.post('/create-deal', isAuthenticated, createDeal);
 router.get('/get-shop-products', isAuthenticated, getShopProducts);
-router.get('/get-product', isAuthenticated, getProductBySlug);
+// router.get('/get-product', isAuthenticated, getProductBySlug);
+router.get('/product/get-product/:slug', isAuthenticated, getProductBySlug);
 router.get('/get-shop-deals', isAuthenticated, getShopDeals);
 router.delete('/delete-product/:productId', isAuthenticated, deleteProduct);
 router.put('/restore-product/:productId', isAuthenticated, restoreProduct);

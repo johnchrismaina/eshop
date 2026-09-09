@@ -235,7 +235,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   // bg-gradient-to-b from-[#38383B] to-[#1C1C1E]
 
   return (
-    <div className="w-full px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-[#313133] ">
+    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-[#313133] ">
       <div className="flex items-center justify-start gap-2">
         {/* Logo */}
         <div
@@ -295,7 +295,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-[38px] bg-[#fff] rounded-md border border-gray-200
+            className="flex items-center h-[38px] bg-[#fff] rounded-full border border-gray-200
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out "
@@ -310,7 +310,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
               onFocus={() => setOpenSearchBackdrop(true)} // open backdrop when input is focused
               placeholder="Search products, brands, categories..."
               className="flex-1 h-10 bg-transparent outline-none border-none text-[14.0px] 
-                   placeholder:font-normal placeholder:text-[#6e6e73] pl-4 pr-4 py-0 
+                   placeholder:font-normal placeholder:text-[#6e6e73] pl-6 pr-4 py-0 
                    focus:border-blue-500 focus:border-2 focus:ring-0"
             />
 
@@ -328,7 +328,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-12 h-[38px] mr-[0px] rounded-r-md
+              className="flex items-center justify-center w-14 h-[38px] mr-[0px] rounded-r-full
                    text-[#EE7B30] hover:text-[#E85D1F] bg-[#fafafa] border-l border-[#ddd]
                    transition-colors flex-shrink-0"
             >

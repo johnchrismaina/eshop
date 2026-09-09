@@ -77,16 +77,21 @@ interface ShopCategory {
   highlights?: { ref: string }[];
 }
 
+type VariantImage = {
+  file_url: string;
+};
+
 interface ColorVariant {
   id?: string;
   name: string;
   title: string;
   price: number;
   dealPrice?: number;
-  dealStart?: Date | null;
-  dealEnd?: Date | null;
+  dealStart?: string; // yyyy-MM-dd
+  dealEnd?: string; // yyyy-MM-dd
   // images: string[];
-  images: (UploadedImage | null)[]; // ✅ form-only
+  // images: (UploadedImage | null)[]; // ✅ form-only
+  images: (VariantImage | null)[]; // ✅ always objects with file_url
 }
 
 interface DiscountCode {
@@ -126,10 +131,10 @@ export type FormValues = {
 };
 
 export default function ProductForm({
-  mode = 'create',
+  mode = 'createProduct',
   product,
 }: {
-  mode: 'create' | 'edit';
+  mode: 'createProduct' | 'editProduct' | 'createDeal';
   product?: FormValues;
 }) {
   const router = useRouter();
@@ -157,7 +162,14 @@ export default function ProductForm({
         short_description: '',
         aspect: 'square',
         images: Array(8).fill(null),
-        colorVariants: [],
+        colorVariants: [
+          {
+            name: '',
+            title: '',
+            price: 0,
+            images: [] as VariantImage[], // ✅ consistent
+          },
+        ],
         video_url: '',
         product_specifications: {},
         detailed_description: '',
@@ -179,8 +191,9 @@ export default function ProductForm({
       } as FormValues),
   });
 
+  // Reset form when editing
   useEffect(() => {
-    if (mode === 'edit' && product) {
+    if (mode === 'editProduct' && product) {
       reset(product);
     }
   }, [mode, product, reset]);
@@ -219,9 +232,39 @@ export default function ProductForm({
   const [mainPreviewImage, setMainPreviewImage] = useState<string | null>(null);
   const [openMainPreviewModal, setOpenMainPreviewModal] = useState(false);
 
+  const hasVariants = colorVariants.length > 0;
+
+  const validateProductForm = (values: FormValues) => {
+    const errors: Record<string, string> = {};
+
+    // ✅ Common required fields
+    if (!values.title?.trim()) errors.title = 'Title is required';
+    if (!values.slug?.trim()) errors.slug = 'Slug is required';
+    if (!values.short_description?.trim())
+      errors.short_description = 'Short description is required';
+    if (!values.category?.trim()) errors.category = 'Category is required';
+    if (!values.subCategory) errors.subCategory = 'Subcategory is required';
+
+    // ✅ Conditional pricing logic
+    if (values.colorVariants?.length > 0) {
+      values.colorVariants.forEach((variant, idx) => {
+        if (variant.price == null || Number.isNaN(variant.price)) {
+          errors[`colorVariants.${idx}.price`] = 'Variant price is required';
+        }
+      });
+    } else {
+      if (values.regular_price == null || Number.isNaN(values.regular_price)) {
+        errors.regular_price =
+          'Regular price is required when no variants exist';
+      }
+    }
+
+    return errors;
+  };
+
   // Inside ProductForm, alongside `mode`, `isDealRoute`, `product` (whatever these are already destructured from)
   const draftKey =
-    mode === 'edit'
+    mode === 'editProduct'
       ? `colorVariantsDraft-edit-${product?.slug}`
       : `colorVariantsDraft-create-${isDealRoute ? 'deal' : 'product'}`;
 
@@ -313,7 +356,8 @@ export default function ProductForm({
   const [openAspectRatio, setOpenAspectRatio] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [aspect, setAspect] = useState<'square' | 'portrait'>('square');
+  // const [aspect, setAspect] = useState<'square' | 'portrait'>('square');
+  const aspect = watch('aspect'); // always in sync with form
 
   const aspectMap = {
     square: { width: 'w-[500px]', aspect: 'aspect-square' },
@@ -612,11 +656,34 @@ export default function ProductForm({
 
   //-----------------------------------------------
 
-  const handleMainImageUpload = (index: number, file: File | null) => {
+  const handleMainImageUpload = async (index: number, file: File | null) => {
     const updated = [...mainImages];
-    updated[index] = file
-      ? { fileId: crypto.randomUUID(), file_url: URL.createObjectURL(file) }
-      : null;
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const response = await axiosProduct.post(
+          '/upload-product-image',
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+
+        updated[index] = {
+          fileId: response.data.fileId,
+          file_url: response.data.file_url, // ✅ permanent ImageKit URL
+        };
+      } catch (error) {
+        toast.error('Main image upload failed');
+        return;
+      }
+    } else {
+      updated[index] = null;
+    }
+
     setMainImages(updated);
   };
 
@@ -702,49 +769,98 @@ export default function ProductForm({
   // Unified submit function
   const onSubmit = async (data: FormValues) => {
     try {
+      setLoading(true);
+
+      // ✅ Run validation first
+      const errors = validateProductForm(data);
+      if (Object.keys(errors).length > 0) {
+        // react-hook-form already handles inline errors, so just stop here
+        console.error('Validation errors:', errors);
+        setLoading(false);
+        return;
+      }
+
       // ✅ Clean up images
       const cleanedImages = (data.images || []).filter(
         (img) => img && img.file_url && img.fileId
       );
 
-      // ✅ Flatten product specifications into array of { key, value }
+      // ✅ Flatten product specifications
       const specsObject = data.product_specifications || {};
       const productSpecifications = Object.entries(specsObject).flatMap(
         ([key, value]) =>
           Array.isArray(value)
-            ? value.map((v) => ({ key, value: v }))
-            : [{ key, value }]
+            ? value.map((v) => ({ label: key, value: v })) // ✅ use label
+            : [{ label: key, value }]
       );
 
-      // ✅ Ensure slug uniqueness
-      const { data: existingProducts } = await axiosProduct.get('/all-slugs');
-      const existingSlugs = existingProducts.map((p: any) => p.slug);
+      // ✅ Ensure slug uniqueness (wrapped in try/catch)
+      let existingSlugs: string[] = [];
+      try {
+        const { data: existingProducts } = await axiosProduct.get('/all-slugs');
+        existingSlugs = existingProducts.map((p: any) => p.slug);
+        console.log('Fetched slugs:', existingSlugs);
+      } catch (err) {
+        console.error('Error fetching slugs:', err);
+        // fallback: leave existingSlugs empty so ensureUniqueSlug just returns data.slug
+      }
 
-      // ✅ Build final payload (assign slug here, don’t mutate data directly)
+      // ✅ Build payload
       const payload = {
         ...data,
         slug: ensureUniqueSlug(data.slug, existingSlugs),
         images: cleanedImages,
         product_specifications: productSpecifications,
+
+        // ✅ Convert string dates to Date objects for backend
+        deal_start: data.deal_start ? new Date(data.deal_start) : null,
+        deal_end: data.deal_end ? new Date(data.deal_end) : null,
+        discount_start: data.discount_start
+          ? new Date(data.discount_start)
+          : null,
+        discount_end: data.discount_end ? new Date(data.discount_end) : null,
+
+        // ✅ Handle variant dates too
+        colorVariants: (data.colorVariants || []).map((cv) => ({
+          ...cv,
+          dealStart: cv.dealStart ? new Date(cv.dealStart) : null,
+          dealEnd: cv.dealEnd ? new Date(cv.dealEnd) : null,
+        })),
       };
 
-      if (mode === 'create') {
-        if (isDealRoute) {
+      console.log('Mode check:', mode === 'createProduct');
+
+      // ✅ Branch logic
+      if (mode === 'createProduct') {
+        console.log('Calling /create-product');
+        await axiosProduct.post('/create-product', payload);
+        router.push('/dashboard/all-products');
+      } else if (mode === 'editProduct') {
+        console.log('Calling /update-product');
+        await axiosProduct.put(`/update-product/${product?.slug}`, payload);
+        router.push('/dashboard/all-products');
+      } else if (mode === 'createDeal') {
+        console.log('Calling /create-deal');
+        await axiosProduct.post('/create-deal', payload);
+        router.push('/dashboard/all-deals');
+      } else {
+        console.log('Calling fallback branch');
+        if (isDealRoute || data.enableDeal) {
           await axiosProduct.post('/create-deal', payload);
-          localStorage.removeItem(draftKey);
           router.push('/dashboard/all-deals');
         } else {
           await axiosProduct.post('/create-product', payload);
-          localStorage.removeItem(draftKey);
           router.push('/dashboard/all-products');
         }
-      } else {
-        await axiosProduct.put(`/update-product/${product?.slug}`, payload);
-        localStorage.removeItem(draftKey);
-        router.push('/dashboard/all-products');
       }
+
+      localStorage.removeItem(draftKey);
+      console.log('➡️ Submitting payload:', payload);
     } catch (error: any) {
+      console.error('Submit error:', error);
       toast.error(error?.response?.data?.message ?? 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -752,7 +868,7 @@ export default function ProductForm({
   const handleSaveDraft = () => {
     const draftData = getValues(); // ✅ grab all current form values
     localStorage.setItem(
-      mode === 'create' ? 'productDraft' : `editDraft-${product?.slug}`,
+      mode === 'createProduct' ? 'productDraft' : `editDraft-${product?.slug}`,
       JSON.stringify({
         ...draftData,
         activeTab, // ✅ also save which tab they were on
@@ -764,7 +880,7 @@ export default function ProductForm({
   // load the draft from localStorage and set it as default values
   useEffect(() => {
     const savedDraft = localStorage.getItem(
-      mode === 'create' ? 'productDraft' : `editDraft-${product?.slug}`
+      mode === 'createProduct' ? 'productDraft' : `editDraft-${product?.slug}`
     );
     if (savedDraft) {
       const parsed = JSON.parse(savedDraft);
@@ -776,6 +892,14 @@ export default function ProductForm({
       }
     }
   }, [mode, product?.slug, setValue]);
+
+  // Submit button label
+  const buttonLabel =
+    mode === 'createProduct'
+      ? 'Create Product'
+      : mode === 'editProduct'
+      ? 'Update Product'
+      : 'Create Deal';
 
   return (
     <form
@@ -861,7 +985,7 @@ export default function ProductForm({
                           message: 'Slug must be at least 3 characters long.',
                         },
                         maxLength: {
-                          value: 50,
+                          value: 500,
                           message: 'Slug cannot be longer than 50 characters.',
                         },
                       })}
@@ -1569,25 +1693,11 @@ export default function ProductForm({
                             id="deal_start"
                             type="date"
                             value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split('T')[0]
-                                : ''
-                            }
+                              typeof field.value === 'string' ? field.value : ''
+                            } // ✅ always a string
                             onChange={(e) => {
                               const startDateStr = e.target.value;
-                              if (startDateStr) {
-                                const startDate = new Date(startDateStr);
-                                field.onChange(startDate);
-
-                                // ✅ auto-populate Deal End to +7 days
-                                const autoEnd = new Date(startDate);
-                                autoEnd.setDate(autoEnd.getDate() + 7);
-                                setValue('deal_end', autoEnd);
-                              } else {
-                                field.onChange(null);
-                              }
+                              field.onChange(startDateStr); // ✅ store string in form state
                             }}
                             className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
                           />
@@ -1629,17 +1739,11 @@ export default function ProductForm({
                             id="deal_end"
                             type="date"
                             value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split('T')[0]
-                                : ''
-                            }
+                              typeof field.value === 'string' ? field.value : ''
+                            } // ✅ always a string
                             onChange={(e) => {
                               const endDateStr = e.target.value;
-                              field.onChange(
-                                endDateStr ? new Date(endDateStr) : null
-                              );
+                              field.onChange(endDateStr); // ✅ store string in form state
                             }}
                             className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
                           />
@@ -1741,7 +1845,7 @@ export default function ProductForm({
                             />
                           </td>
 
-                          {/* Deal Start */}
+                          {/* Variant Deal Start Date */}
                           <td className="border px-3 py-2">
                             <input
                               type="date"
@@ -1752,32 +1856,19 @@ export default function ProductForm({
                                       .split('T')[0]
                                   : ''
                               }
-                              {...register(`colorVariants.${idx}.dealStart`, {
-                                setValueAs: (v) => (v ? new Date(v) : null), // ✅ store as Date
-                              })}
+                              {...register(`colorVariants.${idx}.dealStart`)}
                               onChange={(e) => {
                                 const startDateStr = e.target.value;
-                                if (startDateStr) {
-                                  const startDate = new Date(startDateStr);
-                                  const autoEnd = new Date(startDate);
-                                  autoEnd.setDate(autoEnd.getDate() + 7);
-
-                                  // ✅ store as Date object
-                                  setValue(
-                                    `colorVariants.${idx}.dealEnd`,
-                                    autoEnd
-                                  );
-                                }
+                                setValue(
+                                  `colorVariants.${idx}.dealStart`,
+                                  startDateStr
+                                ); // ✅ store string only
                               }}
                               className="w-full border rounded-md px-2 py-1"
                             />
-                            <p className="text-xs text-gray-500 mt-1">
-                              Selecting a start date will auto‑set Deal End to 7
-                              days later.
-                            </p>
                           </td>
 
-                          {/* Deal End */}
+                          {/* Variant Deal End Date */}
                           <td className="border px-3 py-2">
                             <input
                               type="date"
@@ -1789,7 +1880,6 @@ export default function ProductForm({
                                   : ''
                               }
                               {...register(`colorVariants.${idx}.dealEnd`, {
-                                setValueAs: (v) => (v ? new Date(v) : null), // ✅ store as Date
                                 validate: (value) => {
                                   const start = getValues(
                                     `colorVariants.${idx}.dealStart`
@@ -1803,6 +1893,13 @@ export default function ProductForm({
                                   return true;
                                 },
                               })}
+                              onChange={(e) => {
+                                const endDateStr = e.target.value;
+                                setValue(
+                                  `colorVariants.${idx}.dealEnd`,
+                                  endDateStr
+                                ); // ✅ store string only
+                              }}
                               className="w-full border rounded-md px-2 py-1"
                             />
                           </td>
@@ -1932,25 +2029,11 @@ export default function ProductForm({
                             id="discount_start"
                             type="date"
                             value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split('T')[0]
-                                : ''
-                            }
+                              typeof field.value === 'string' ? field.value : ''
+                            } // ✅ always a string
                             onChange={(e) => {
                               const startDateStr = e.target.value;
-                              if (startDateStr) {
-                                const startDate = new Date(startDateStr);
-                                field.onChange(startDate);
-
-                                // ✅ auto-populate Discount End to +7 days
-                                const autoEnd = new Date(startDate);
-                                autoEnd.setDate(autoEnd.getDate() + 7);
-                                setValue('discount_end', autoEnd);
-                              } else {
-                                field.onChange(null);
-                              }
+                              field.onChange(startDateStr); // ✅ store string in form state
                             }}
                             className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
                           />
@@ -1987,17 +2070,11 @@ export default function ProductForm({
                             id="discount_end"
                             type="date"
                             value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split('T')[0]
-                                : ''
-                            }
+                              typeof field.value === 'string' ? field.value : ''
+                            } // ✅ always a string
                             onChange={(e) => {
                               const endDateStr = e.target.value;
-                              field.onChange(
-                                endDateStr ? new Date(endDateStr) : null
-                              );
+                              field.onChange(endDateStr); // ✅ store string in form state
                             }}
                             className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
                           />
@@ -2143,7 +2220,7 @@ export default function ProductForm({
               disabled={loading}
             >
               <span className={loading ? 'opacity-0' : 'opacity-100'}>
-                {mode === 'create' ? 'Create Product' : 'Update Product'}
+                {buttonLabel}
               </span>
               {loading && (
                 <span className="absolute inset-0 flex items-center justify-center">

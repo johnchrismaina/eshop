@@ -39,7 +39,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/40 mt-[98px] z-40"
+        className="fixed inset-0 bg-black/40 mt-[94px] z-40"
         // onMouseEnter
         onClick={() => {
           onClose();
@@ -54,7 +54,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
       >
         {/* First window */}
         <div className="w-52 overflow-y-auto ">
-          <h3 className="font-semibold mb-2 px-6">Categories</h3>
+          <h3 className=" text-[#333] font-semibold mb-2 px-6">Categories</h3>
           <ul className="text-sm text-gray-600">
             {Object.keys(categories).map((cat) => (
               <li

@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 
 const initializeSiteConfig = async () => {
   try {
+    console.log('DATABASE_URL:', process.env.DATABASE_URL);
+
     const existingConfig = await prisma.site_config.findFirst();
 
     if (!existingConfig) {

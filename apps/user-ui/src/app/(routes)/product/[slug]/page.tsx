@@ -13,13 +13,18 @@ async function fetchProductDetails(slug: string) {
 
   try {
     const url = `/product/get-product/${slug}`;
-    console.log('Requesting:', url);
-    console.log('Base URL:', axiosProductService.defaults.baseURL);
+    // console.log('Requesting:', url);
+    // console.log('Base URL:', axiosProductService.defaults.baseURL);
 
     const response = await axiosProductService.get(url);
-    console.log('Response:', response.data);
+    // console.log('🟢 ProductDetails raw:', response.data);
 
     const product = response.data?.product || response.data;
+
+    // console.log('Product by Slug:', product);
+    console.log('🟢 Color Variants in frontend:', product.colorVariants);
+
+    // console.log('🟢 ProductDetails raw:', response.data);
 
     if (!product) {
       console.log('Product not found for slug:', slug);

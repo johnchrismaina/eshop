@@ -8,10 +8,16 @@ interface UploadedImage {
   file_url: string;
 }
 
+interface VariantImage {
+  fileId: string;
+  file_url: string;
+}
+
 interface ImagePlaceholderProps {
   aspect: 'square' | 'portrait';
   pictureUploadingLoader: boolean;
-  image: UploadedImage | null;
+  // image: UploadedImage | null;
+  image: UploadedImage | VariantImage | null; // ✅ accept both
   index: number;
   idPrefix: string; // ✅ new — makes the DOM id unique per grid instance
   onImageChange: (file: File | null, index: number) => void;
@@ -38,6 +44,7 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const [visible, setVisible] = useState(false);
 
+  // const preview = image?.file_url ?? localPreview;
   const preview = image?.file_url ?? localPreview;
 
   // Flip visibility only when a valid preview exists

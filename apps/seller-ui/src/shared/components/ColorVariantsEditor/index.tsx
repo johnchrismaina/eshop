@@ -3,7 +3,7 @@ import { useForm, UseFormSetValue } from 'react-hook-form';
 // import FormValues from '../ProductForm'; // adjust import
 import type { FormValues } from '../ProductForm'; // adjust path
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
-import { X } from 'lucide-react';
+import { Info, Plus, X } from 'lucide-react';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import toast from 'react-hot-toast';
@@ -32,6 +32,8 @@ interface ColorVariantsEditorProps {
   aspect: 'square' | 'portrait'; // ✅ passed from parent form
   onHasColorsChange?: (hasColors: boolean) => void; // ✅ notify parent to disable main images
   setValue: UseFormSetValue<FormValues>; // ✅ sync with parent form
+  productTitle: string; // ✅ new
+  variants: FormValues['colorVariants'];
 }
 
 const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
@@ -39,8 +41,10 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
   draftKey,
   aspect,
   onHasColorsChange,
+  productTitle,
+  variants,
 }) => {
-  const [variants, setVariants] = useState<ColorVariant[]>([]);
+  // const [variants, setVariants] = useState<ColorVariant[]>([]);
   const [variantUploading, setVariantUploading] = useState<
     Record<string, boolean>
   >({});
@@ -61,7 +65,8 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
         isDefault: false,
       },
     ];
-    setVariants(newVariants);
+    // setVariants(newVariants);
+    setValue('colorVariants', newVariants, { shouldValidate: true });
     onHasColorsChange?.(true); // disable main images when variants exist
   };
 
@@ -72,8 +77,10 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     value: ColorVariant[K]
   ) => {
     const updated = [...variants];
-    updated[index][field] = value;
-    setVariants(updated);
+    // updated[index][field] = value;
+    // setVariants(updated);
+    updated[index] = { ...updated[index], [field]: value };
+    setValue('colorVariants', updated, { shouldValidate: true });
   };
 
   // ✅ Handle image upload/remove for a specific variant slot
@@ -109,7 +116,8 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
       updated[variantIndex].images[imageIndex] = null;
     }
 
-    setVariants(updated);
+    // setVariants(updated);
+    setValue('colorVariants', updated, { shouldValidate: true });
   };
 
   // ✅ Set one variant as default
@@ -118,13 +126,15 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
       ...v,
       isDefault: i === index,
     }));
-    setVariants(updated);
+    // setVariants(updated);
+    setValue('colorVariants', updated, { shouldValidate: true });
   };
 
   // ✅ Delete variant
   const deleteVariant = (index: number) => {
     const updated = variants.filter((_, i) => i !== index);
-    setVariants(updated);
+    // setVariants(updated);
+    setValue('colorVariants', updated, { shouldValidate: true });
     if (updated.length === 0) {
       onHasColorsChange?.(false); // re-enable main images when no variants
     }
@@ -136,7 +146,8 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     if (saved) {
       try {
         const parsed: ColorVariant[] = JSON.parse(saved);
-        setVariants(parsed);
+        // setVariants(parsed);
+        setValue('colorVariants', parsed, { shouldValidate: true });
         if (parsed.length > 0) {
           onHasColorsChange?.(true);
         }
@@ -156,14 +167,15 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
   }, [variants, draftKey]);
 
   // ✅ Sync with parent form
-  useEffect(() => {
-    setValue('colorVariants', variants);
-    onHasColorsChange?.(variants.length > 0);
-  }, [variants, setValue, onHasColorsChange]);
+  // useEffect(() => {
+  //   setValue('colorVariants', variants);
+  //   onHasColorsChange?.(variants.length > 0);
+  // }, [variants, setValue, onHasColorsChange]);
 
   // ✅ Reset all variants
   const resetVariants = () => {
-    setVariants([]);
+    // setVariants([]);
+    setValue('colorVariants', [], { shouldValidate: true });
     localStorage.removeItem(draftKey);
     onHasColorsChange?.(false);
   };
@@ -178,7 +190,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
           <button
             type="button"
             onClick={() => deleteVariant(vIndex)}
-            className="absolute top-2 right-2 text-red-600 hover:text-red-800 p-2 bg-gray-200 rounded-md"
+            className="absolute top-2 right-2 text-red-600 p-2 bg-gray-100 hover:bg-gray-200 rounded-md"
             aria-label="Delete variant"
           >
             <X />
@@ -186,10 +198,15 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
 
           <div className="flex flex-col items-start justify-center space-y-2 ">
             {/* Color name */}
-            <div className="w-full flex items-start gap-2">
-              <label className="block text-[15px] font-semibold text-gray-800 mb-1">
-                Color Name *
-              </label>
+            <div className="w-full flex items-center gap-3">
+              <p className="flex items-start justify-center gap-1 text-gray-600">
+                <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
+                  Color Name *
+                </label>
+                <span>
+                  <Info size={16} />
+                </span>
+              </p>
               <input
                 type="text"
                 placeholder="Color name"
@@ -199,18 +216,64 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
               />
             </div>
 
-            {/* Product Title */}
-            <div className="w-full flex items-start gap-2">
-              <label className="block shrink-0 text-[15px] font-semibold text-gray-800 mb-0">
-                Product Title *
-              </label>
-              <AutoResizeTextarea
-                label=""
-                rows={2}
-                placeholder="Enter product title"
-                value={variant.title}
-                onChange={(e) => updateVariant(vIndex, 'title', e.target.value)}
-              />
+            {/* Main title */}
+            <div className="w-full flex items-center gap-3 pt-2 ">
+              <p className="flex items-start justify-center gap-1 text-gray-600">
+                <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
+                  Main title
+                </label>
+                <span>
+                  <Info size={16} />
+                </span>
+              </p>
+              <span className="truncate w-full flex-1 text-sm text-yellow-950 px-3 py-2 border border-gray-100 bg-yellow-100 rounded-md">
+                {productTitle || 'No title yet'}
+              </span>
+            </div>
+
+            {/* Duplicate product title with insert button */}
+            <div className="flex items-center gap-3 pt-2 text-sm text-gray-600">
+              <p className="flex items-start justify-center gap-1 text-gray-600">
+                <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
+                  Get Main title
+                </label>
+                <span>
+                  <Info size={16} />
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={() => updateVariant(vIndex, 'title', productTitle)}
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg"
+                aria-label="Insert product title"
+              >
+                <Plus /> Insert title
+              </button>
+            </div>
+
+            {/* Custom Title */}
+            <div className="w-full flex items-start gap-3 pt-2">
+              <p className="flex items-start justify-center gap-1 text-gray-600">
+                <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
+                  Custom Title *
+                </label>
+                <span>
+                  <Info size={16} />
+                </span>
+              </p>
+              <div className="flex-1">
+                <AutoResizeTextarea
+                  label=""
+                  rows={2}
+                  placeholder="Enter Custom title or Copy and customize the Main title"
+                  // value={variant.title}
+                  // onChange={(e) => updateVariant(vIndex, 'title', e.target.value)}
+                  value={variant.title}
+                  onChange={(e) =>
+                    updateVariant(vIndex, 'title', e.target.value)
+                  }
+                />
+              </div>
             </div>
           </div>
 

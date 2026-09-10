@@ -78,6 +78,7 @@ interface ShopCategory {
 }
 
 type VariantImage = {
+  fileId: string;
   file_url: string;
 };
 
@@ -89,9 +90,8 @@ interface ColorVariant {
   dealPrice?: number;
   dealStart?: string; // yyyy-MM-dd
   dealEnd?: string; // yyyy-MM-dd
-  // images: string[];
-  // images: (UploadedImage | null)[]; // ✅ form-only
   images: (VariantImage | null)[]; // ✅ always objects with file_url
+  isDefault: boolean; // ✅ add this
 }
 
 interface DiscountCode {
@@ -168,6 +168,7 @@ export default function ProductForm({
             title: '',
             price: 0,
             images: [] as VariantImage[], // ✅ consistent
+            isDefault: false,
           },
         ],
         video_url: '',
@@ -1283,6 +1284,13 @@ export default function ProductForm({
                 <label className="block text-[15px] font-bold  text-gray-700 mb-1">
                   Image Aspect Ratio
                 </label>
+                <p className="w-full flex-1 text-sm text-yellow-950 px-3 py-2 mb-2 border border-gray-100 bg-yellow-100 rounded-md">
+                  <span className="font-bold">Aspect ratio required:</span> To
+                  ensure your product images display correctly to customers,
+                  please set an aspect ratio. This keeps all images consistent
+                  in size and prevents them from looking stretched or squeezed
+                  on the storefront.
+                </p>
                 <div
                   ref={dropdownRef}
                   className="relative inline-block text-left ml-0 pb-3"
@@ -1402,6 +1410,8 @@ export default function ProductForm({
                 aspect={watch('aspect')} // ✅
                 onHasColorsChange={setHasColors}
                 setValue={setValue} // ✅ forward from useForm
+                productTitle={watch('title')} // ✅ pass down product title
+                variants={watch('colorVariants')}
               />
 
               {/* Color Selector */}
@@ -1581,57 +1591,48 @@ export default function ProductForm({
 
               {/* Case 1: No color variants → global pricing */}
               {/* Regular Price */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <label
-                  htmlFor="regular_price"
-                  className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
-                >
-                  {colorVariants.length > 0 ? (
-                    <span className="flex items-center gap-2">
-                      <Info className="w-4 h-4 text-yellow-600" />
-                      <span className="text-yellow-800">
-                        Base Price disabled, color swatches are active
-                      </span>
-                    </span>
-                  ) : (
-                    <>
-                      Base Price * <span className="text-sm">(Ksh)</span>
-                    </>
+              {colorVariants.length < 1 && (
+                <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                  <label
+                    htmlFor="regular_price"
+                    className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                  >
+                    Base Price * <span className="text-sm">(Ksh)</span>
+                  </label>
+
+                  <div className="w-[800px]">
+                    <Input
+                      id="regular_price"
+                      label=""
+                      type="number"
+                      placeholder="0"
+                      disabled={colorVariants.length > 0} // ✅ disable when variants exist
+                      className="bg-[#fff] text-[15px]"
+                      {...register('regular_price', {
+                        required:
+                          colorVariants.length === 0
+                            ? 'Base Price is required when no color variants exist'
+                            : false,
+                        setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                        min:
+                          colorVariants.length === 0
+                            ? { value: 1, message: 'Price must be at least 1' }
+                            : undefined,
+                        validate: (value) =>
+                          colorVariants.length > 0 ||
+                          (typeof value === 'number' && !isNaN(value)) ||
+                          'Only numbers are allowed',
+                      })}
+                    />
+                  </div>
+
+                  {errors.regular_price && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.regular_price.message as string}
+                    </p>
                   )}
-                </label>
-
-                <div className="w-[800px]">
-                  <Input
-                    id="regular_price"
-                    label=""
-                    type="number"
-                    placeholder="0"
-                    disabled={colorVariants.length > 0} // ✅ disable when variants exist
-                    className="bg-[#fff] text-[15px]"
-                    {...register('regular_price', {
-                      required:
-                        colorVariants.length === 0
-                          ? 'Base Price is required when no color variants exist'
-                          : false,
-                      setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                      min:
-                        colorVariants.length === 0
-                          ? { value: 1, message: 'Price must be at least 1' }
-                          : undefined,
-                      validate: (value) =>
-                        colorVariants.length > 0 ||
-                        (typeof value === 'number' && !isNaN(value)) ||
-                        'Only numbers are allowed',
-                    })}
-                  />
                 </div>
-
-                {errors.regular_price && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.regular_price.message as string}
-                  </p>
-                )}
-              </div>
+              )}
 
               {/* Sale Price */}
               {isDealRoute && (

@@ -29,7 +29,11 @@ export default function ColorThumbnail({
   return (
     <div
       className={`flex flex-col items-center gap-2 cursor-pointer rounded-md border 
-        ${isActive ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200'}
+        ${
+          isActive
+            ? 'border-gray-300 ring-2 ring-offset-2 ring-gray-900'
+            : 'border-gray-300'
+        }
       `}
       onMouseEnter={() => onHover?.(name)} // ✅ hover updates parent
       onMouseLeave={() => onLeave?.()}

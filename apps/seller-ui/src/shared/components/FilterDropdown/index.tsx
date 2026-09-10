@@ -1,5 +1,5 @@
 // components/FilterDropdown.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { Control } from 'react-hook-form';
 
@@ -21,7 +21,24 @@ export default function FilterDropdown({
   control,
 }: FilterDropdownProps) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // ✅ Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <Controller
@@ -35,34 +52,26 @@ export default function FilterDropdown({
 
         const toggleOption = (opt: string) => {
           if (multiSelect) {
-            if (selected.includes(opt)) {
-              field.onChange(selected.filter((o) => o !== opt));
-            } else {
-              field.onChange([...selected, opt]);
-            }
+            field.onChange(
+              selected.includes(opt)
+                ? selected.filter((o) => o !== opt)
+                : [...selected, opt]
+            );
           } else {
             field.onChange([opt]);
-            setOpen(false);
+            setOpen(false); // ✅ close after selecting
           }
-        };
-
-        const clearSelection = () => {
-          field.onChange([]);
-          if (!multiSelect) setOpen(false);
-        };
-
-        const selectAll = () => {
-          field.onChange([...options]);
         };
 
         return (
           <div
+            ref={dropdownRef} // ✅ attach ref here
             className="flex flex-col gap-1 w-[550px] mb-0.5 relative"
-            ref={ref}
           >
+            {/* Toggle button */}
             <button
               type="button"
-              onClick={() => setOpen((o) => !o)}
+              onClick={() => setOpen((prev) => !prev)} // ✅ toggle open
               className="w-full h-10 px-3 border border-gray-200 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
             >
               {selected.length > 0 ? (
@@ -85,36 +94,9 @@ export default function FilterDropdown({
               </svg>
             </button>
 
+            {/* Dropdown menu */}
             {open && (
               <ul className="absolute top-full mt-1 w-full max-h-[168px] overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg z-10">
-                {multiSelect && (
-                  <>
-                    {selected.length > 0 && (
-                      <li>
-                        <button
-                          type="button"
-                          onClick={clearSelection}
-                          className="w-full h-[34px] px-3 text-left text-sm text-red-600 hover:bg-red-50 font-medium"
-                        >
-                          Clear selection
-                        </button>
-                      </li>
-                    )}
-                    {selected.length < options.length && (
-                      <li>
-                        <button
-                          type="button"
-                          onClick={selectAll}
-                          className="w-full h-[34px] px-3 text-left text-sm text-green-600 hover:bg-green-50 font-medium"
-                        >
-                          Select all
-                        </button>
-                      </li>
-                    )}
-                    <li className="border-t border-gray-200"></li>
-                  </>
-                )}
-
                 {options.map((opt) => (
                   <li key={opt}>
                     <button

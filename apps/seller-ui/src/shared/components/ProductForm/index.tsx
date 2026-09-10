@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-import { ChevronDown, Info, Wand, X } from 'lucide-react';
+import { ChevronDown, ChevronLeft, Info, Wand, X } from 'lucide-react';
 import Image from 'next/image';
 // import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -111,6 +111,7 @@ export type FormValues = {
   aspect: 'square' | 'portrait';
   images: (UploadedImage | null)[];
   colorVariants: ColorVariant[];
+  sizes: string[];
   video_url: string;
   product_specifications: Record<string, string | string[]>;
   detailed_description: string;
@@ -141,6 +142,10 @@ export default function ProductForm({
   const pathname = usePathname();
   const isDealRoute = pathname.includes('create-deal');
 
+  // Detect which route we're on
+  const isDeal = pathname.includes('create-deal');
+  const pageTitle = isDeal ? 'Create Deal' : 'Create Product';
+
   const {
     control,
     register,
@@ -149,7 +154,7 @@ export default function ProductForm({
     watch,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
     clearErrors,
   } = useForm<FormValues>({
     defaultValues:
@@ -162,15 +167,8 @@ export default function ProductForm({
         short_description: '',
         aspect: 'square',
         images: Array(8).fill(null),
-        colorVariants: [
-          {
-            name: '',
-            title: '',
-            price: 0,
-            images: [] as VariantImage[], // ✅ consistent
-            isDefault: false,
-          },
-        ],
+        colorVariants: [], // ✅ empty, not seeded with a blank variant
+        sizes: [],
         video_url: '',
         product_specifications: {},
         detailed_description: '',
@@ -205,7 +203,7 @@ export default function ProductForm({
   const [openImageModal, setOpenImageModal] = useState(false);
 
   // const [isChanged, setIsChanged] = useState(true);
-  const [isChanged] = useState(true);
+  // const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
 
@@ -264,10 +262,68 @@ export default function ProductForm({
   };
 
   // Inside ProductForm, alongside `mode`, `isDealRoute`, `product` (whatever these are already destructured from)
+
+  // const draftKey =
+  //   mode === 'editProduct'
+  //     ? `colorVariantsDraft-edit-${product?.slug}`
+  //     : `colorVariantsDraft-create-${isDealRoute ? 'deal' : 'product'}`;
+
   const draftKey =
     mode === 'editProduct'
-      ? `colorVariantsDraft-edit-${product?.slug}`
-      : `colorVariantsDraft-create-${isDealRoute ? 'deal' : 'product'}`;
+      ? `productDraft-edit-${product?.slug}`
+      : `productDraft-create-${isDealRoute ? 'deal' : 'product'}`;
+
+  const [hasDraft, setHasDraft] = useState(false);
+
+  useEffect(() => {
+    setHasDraft(!!localStorage.getItem(draftKey));
+  }, [draftKey]);
+
+  // ✅ Save current form state as draft
+  const handleSaveDraft = () => {
+    const draftData = getValues();
+    localStorage.setItem(draftKey, JSON.stringify({ ...draftData, activeTab }));
+    setHasDraft(true); // ✅ a draft now exists
+    toast.success('Draft saved!');
+  };
+
+  // ✅ Explicitly load a previously saved draft
+  const handleLoadDraft = () => {
+    const savedDraft = localStorage.getItem(draftKey);
+    if (!savedDraft) {
+      toast.error('No saved draft found');
+      return;
+    }
+    try {
+      const parsed = JSON.parse(savedDraft);
+      Object.keys(parsed).forEach((key) => {
+        if (key !== 'activeTab') {
+          setValue(key as keyof FormValues, parsed[key], {
+            shouldValidate: true,
+          });
+        }
+      });
+      if (parsed.activeTab && TABS.includes(parsed.activeTab)) {
+        setActiveTab(parsed.activeTab);
+      }
+      toast.success('Draft loaded');
+    } catch (err) {
+      console.error('Failed to parse saved draft:', err);
+      toast.error('Saved draft is corrupted');
+    }
+  };
+
+  // ✅ Clear form + wipe draft
+  const handleClearForm = () => {
+    reset({
+      colorVariants: [],
+      // ...other blank defaults
+    });
+    localStorage.removeItem(draftKey);
+    setHasDraft(false); // ✅ draft is gone
+    setActiveTab(TABS[0]);
+    toast.success('Form cleared');
+  };
 
   const handleNext = () => {
     const currentIndex = TABS.indexOf(activeTab);
@@ -584,26 +640,6 @@ export default function ProductForm({
     }, [title, setValue]);
   }
 
-  // Load Draft on Page Mount
-  useEffect(() => {
-    const savedDraft = localStorage.getItem('productDraft');
-    if (savedDraft) {
-      const parsed = JSON.parse(savedDraft);
-
-      // ✅ restore form values
-      Object.keys(parsed).forEach((key) => {
-        if (key !== 'activeTab') {
-          setValue(key as keyof FormValues, parsed[key]);
-        }
-      });
-
-      // ✅ restore tab
-      if (parsed.activeTab && TABS.includes(parsed.activeTab)) {
-        setActiveTab(parsed.activeTab);
-      }
-    }
-  }, [setValue]);
-
   // Esc key support so the preview modal can be dismissed without clicking the Close button
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -775,7 +811,6 @@ export default function ProductForm({
       // ✅ Run validation first
       const errors = validateProductForm(data);
       if (Object.keys(errors).length > 0) {
-        // react-hook-form already handles inline errors, so just stop here
         console.error('Validation errors:', errors);
         setLoading(false);
         return;
@@ -791,19 +826,17 @@ export default function ProductForm({
       const productSpecifications = Object.entries(specsObject).flatMap(
         ([key, value]) =>
           Array.isArray(value)
-            ? value.map((v) => ({ label: key, value: v })) // ✅ use label
+            ? value.map((v) => ({ label: key, value: v }))
             : [{ label: key, value }]
       );
 
-      // ✅ Ensure slug uniqueness (wrapped in try/catch)
+      // ✅ Ensure slug uniqueness
       let existingSlugs: string[] = [];
       try {
         const { data: existingProducts } = await axiosProduct.get('/all-slugs');
         existingSlugs = existingProducts.map((p: any) => p.slug);
-        console.log('Fetched slugs:', existingSlugs);
       } catch (err) {
         console.error('Error fetching slugs:', err);
-        // fallback: leave existingSlugs empty so ensureUniqueSlug just returns data.slug
       }
 
       // ✅ Build payload
@@ -812,16 +845,12 @@ export default function ProductForm({
         slug: ensureUniqueSlug(data.slug, existingSlugs),
         images: cleanedImages,
         product_specifications: productSpecifications,
-
-        // ✅ Convert string dates to Date objects for backend
         deal_start: data.deal_start ? new Date(data.deal_start) : null,
         deal_end: data.deal_end ? new Date(data.deal_end) : null,
         discount_start: data.discount_start
           ? new Date(data.discount_start)
           : null,
         discount_end: data.discount_end ? new Date(data.discount_end) : null,
-
-        // ✅ Handle variant dates too
         colorVariants: (data.colorVariants || []).map((cv) => ({
           ...cv,
           dealStart: cv.dealStart ? new Date(cv.dealStart) : null,
@@ -829,34 +858,34 @@ export default function ProductForm({
         })),
       };
 
-      console.log('Mode check:', mode === 'createProduct');
-
       // ✅ Branch logic
       if (mode === 'createProduct') {
-        console.log('Calling /create-product');
         await axiosProduct.post('/create-product', payload);
+        toast.success('Product created!');
         router.push('/dashboard/all-products');
       } else if (mode === 'editProduct') {
-        console.log('Calling /update-product');
         await axiosProduct.put(`/update-product/${product?.slug}`, payload);
+        toast.success('Product updated!');
         router.push('/dashboard/all-products');
       } else if (mode === 'createDeal') {
-        console.log('Calling /create-deal');
         await axiosProduct.post('/create-deal', payload);
+        toast.success('Deal created!');
         router.push('/dashboard/all-deals');
       } else {
-        console.log('Calling fallback branch');
         if (isDealRoute || data.enableDeal) {
           await axiosProduct.post('/create-deal', payload);
+          toast.success('Deal created!');
           router.push('/dashboard/all-deals');
         } else {
           await axiosProduct.post('/create-product', payload);
+          toast.success('Product created!');
           router.push('/dashboard/all-products');
         }
       }
 
+      // ✅ Only reached if none of the branches above threw — i.e. on success
       localStorage.removeItem(draftKey);
-      console.log('➡️ Submitting payload:', payload);
+      reset(data); // ✅ re-baseline the form so isDirty/isChanged resets too
     } catch (error: any) {
       console.error('Submit error:', error);
       toast.error(error?.response?.data?.message ?? 'Something went wrong');
@@ -864,35 +893,6 @@ export default function ProductForm({
       setLoading(false);
     }
   };
-
-  // ✅ Save Draft (no validation)
-  const handleSaveDraft = () => {
-    const draftData = getValues(); // ✅ grab all current form values
-    localStorage.setItem(
-      mode === 'createProduct' ? 'productDraft' : `editDraft-${product?.slug}`,
-      JSON.stringify({
-        ...draftData,
-        activeTab, // ✅ also save which tab they were on
-      })
-    );
-    toast.success('Draft saved!');
-  };
-
-  // load the draft from localStorage and set it as default values
-  useEffect(() => {
-    const savedDraft = localStorage.getItem(
-      mode === 'createProduct' ? 'productDraft' : `editDraft-${product?.slug}`
-    );
-    if (savedDraft) {
-      const parsed = JSON.parse(savedDraft);
-      Object.keys(parsed).forEach((key) => {
-        setValue(key as keyof FormValues, parsed[key]);
-      });
-      if (parsed.activeTab && TABS.includes(parsed.activeTab)) {
-        setActiveTab(parsed.activeTab);
-      }
-    }
-  }, [mode, product?.slug, setValue]);
 
   // Submit button label
   const buttonLabel =
@@ -904,11 +904,19 @@ export default function ProductForm({
 
   return (
     <form
-      className="w-full mx-auto px-0 py-4 rounded-lg text-white"
+      className="w-full px-0 py-2 rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
+      <div className="w-full bg-white flex items-center justify-between px-8 py-2">
+        <div>
+          {/* Heading */}
+          <h2 className="text-lg py-2 font-semibold text-gray-800">
+            {pageTitle}
+          </h2>
+        </div>
+      </div>
       {/* Tabs Section */}
-      <div className="w-full lg:w-full mx-auto bg-[#f6f6f6]">
+      <div className="w-full lg:w-full mx-auto bg-[#f6f6f6] ">
         {/* Tabs */}
         <div className="flex justify-center border-b border-gray-400 overflow-hidden mx-8">
           {TABS.map((tab) => (
@@ -1000,8 +1008,8 @@ export default function ProductForm({
                 )}
               </div>
               {/* --- Dropdown Categories --- */}
-              <div className="relative w-full flex flex-col items-center justify-end gap-3 bg-white px-4 py-3 rounded-sm">
-                <label className="w-full flex items-center justify-end gap-3">
+              <div className="relative w-full flex flex-col items-center justify-end gap-3 bg-white px-4 py-3 rounded-sm ">
+                <div className="w-full flex items-center justify-end gap-3">
                   <p className="flex items-start justify-center gap-1 text-gray-600">
                     <label className="block text-[15px] font-bold  text-gray-800 mb-2">
                       Category *
@@ -1010,15 +1018,15 @@ export default function ProductForm({
                       <Info size={16} />
                     </span>
                   </p>
-                  <div className="w-[800px] ">
+                  <div className="w-[800px] pointer-events-none">
                     <div
-                      className="flex flex-col gap-1 w-full relative"
+                      className="w-[400px] flex flex-col gap-1 relative pointer-events-auto"
                       ref={categoryButtonRef}
                     >
                       <button
                         type="button"
                         onClick={() => setOpenCategories(true)}
-                        className="w-[400px] h-10 px-3 border border-gray-200 rounded-md text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+                        className="h-10 px-3 border border-gray-200 rounded-md text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
                       >
                         {selectedPath.length > 0
                           ? selectedPath[selectedPath.length - 1]
@@ -1052,43 +1060,19 @@ export default function ProductForm({
                                 onClick={() => setOpenCategories(false)}
                                 className="p-1"
                               >
-                                <svg
-                                  className="w-5 h-5 text-gray-500"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                  />
-                                </svg>
+                                <X size={18} />
                               </button>
                             </div>
 
                             {/* Scrollable category list */}
-                            <div className="flex-1 overflow-y-auto p-4">
+                            <div className="relative flex-1 overflow-y-auto p-4">
                               {levelPath.length > 0 && (
                                 <button
                                   type="button"
                                   onClick={handleBackCategories}
                                   className="w-full flex items-center gap-2 px-3 py-2 mb-2 text-sm font-medium text-[#C2410C] hover:bg-gray-50 rounded-md"
                                 >
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M15 19l-7-7 7-7"
-                                    />
-                                  </svg>
+                                  <ChevronLeft size={16} />
                                   Back
                                   {levelPath.length > 1
                                     ? ` to ${levelPath[levelPath.length - 2]}`
@@ -1096,6 +1080,13 @@ export default function ProductForm({
                                 </button>
                               )}
                               {renderOptions()}
+
+                              {/* ✅ Spinner overlay when loading */}
+                              {loading && (
+                                <span className="absolute inset-0 flex items-center justify-center bg-white/50">
+                                  Loading...
+                                </span>
+                              )}
                             </div>
 
                             {/* Confirm button */}
@@ -1129,40 +1120,39 @@ export default function ProductForm({
                       )}
                     </div>
                   </div>
-                </label>
-
-                {/* Breadcrumb rail */}
-                <div className="w-full flex items-start justify-end gap-3">
-                  <p className="flex items-start justify-center gap-1">
-                    <label className="block text-[15px] font-bold  text-gray-800 mb-2">
-                      Breadcrumbs
-                    </label>
-                    <span>
-                      <Info size={16} color="#333" />
-                    </span>
-                  </p>
-                  <div className="w-[800px] flex items-center justify-start gap-2 px-4 py-2 border border-gray-300 rounded-lg">
-                    <span
-                      onClick={handleRootClick}
-                      className="cursor-pointer hover:underline text-sm font-medium text-[#C2410C] shrink-0"
-                    >
-                      Home{selectedPath.length > 0 && ' >'}
-                    </span>
-                    {selectedPath.length > 0 && (
-                      <div className="flex flex-wrap gap-1 text-sm text-gray-600">
-                        {selectedPath.map((crumb, i) => (
-                          <span
-                            key={i}
-                            onClick={() => handleBreadcrumbClick(i)}
-                            className="cursor-pointer hover:underline"
-                          >
-                            {crumb}
-                            {i < selectedPath.length - 1 && ' > '}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                </div>
+              </div>
+              {/* Breadcrumb rail */}
+              <div className="w-full flex items-start justify-end gap-3 px-4">
+                <p className="flex items-start justify-center gap-1">
+                  <label className="block text-[15px] font-bold  text-gray-800 mb-2">
+                    Breadcrumbs
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
+                <div className="w-[800px] flex items-center justify-start gap-2 px-4 py-2 border border-gray-300 rounded-lg">
+                  <span
+                    onClick={handleRootClick}
+                    className="cursor-pointer hover:underline text-sm font-medium text-[#C2410C] shrink-0"
+                  >
+                    Home{selectedPath.length > 0 && ' >'}
+                  </span>
+                  {selectedPath.length > 0 && (
+                    <div className="flex flex-wrap gap-1 text-sm text-gray-600">
+                      {selectedPath.map((crumb, i) => (
+                        <span
+                          key={i}
+                          onClick={() => handleBreadcrumbClick(i)}
+                          className="cursor-pointer hover:underline"
+                        >
+                          {crumb}
+                          {i < selectedPath.length - 1 && ' > '}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1260,7 +1250,7 @@ export default function ProductForm({
                       {/* ✅ Spinner overlay when loading */}
                       {loading && (
                         <span className="absolute inset-0 flex items-center justify-center bg-white/50">
-                          <Spinner size={16} borderColor="border-gray-200" />
+                          Loading...
                         </span>
                       )}
                     </div>
@@ -1406,7 +1396,6 @@ export default function ProductForm({
 
               {/* Color Variants Editor */}
               <ColorVariantsEditor
-                draftKey={draftKey}
                 aspect={watch('aspect')} // ✅
                 onHasColorsChange={setHasColors}
                 setValue={setValue} // ✅ forward from useForm
@@ -2194,26 +2183,43 @@ export default function ProductForm({
 
         {/* Next / Submit */}
         {TABS.indexOf(activeTab) < TABS.length - 1 ? (
-          <button
-            type="button"
-            onClick={handleNext}
-            disabled={TABS.indexOf(activeTab) === TABS.length - 1}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md disabled:opacity-50"
-          >
-            Next
-          </button>
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={handleNext}
+              disabled={TABS.indexOf(activeTab) === TABS.length - 1}
+              className="px-6 py-2 bg-blue-600 text-white rounded-md disabled:opacity-50"
+            >
+              Next
+            </button>
+            <button
+              type="button"
+              disabled={!isDirty}
+              onClick={handleSaveDraft}
+              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Save Draft
+            </button>
+
+            <button
+              type="button"
+              disabled={!hasDraft}
+              onClick={handleLoadDraft}
+              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Load Draft
+            </button>
+
+            <button
+              type="button"
+              onClick={handleClearForm}
+              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-700 rounded-md"
+            >
+              Clear Form
+            </button>
+          </div>
         ) : (
           <div className="flex gap-6 relative">
-            {isChanged && (
-              <button
-                type="button"
-                onClick={handleSaveDraft}
-                className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
-              >
-                Save Draft
-              </button>
-            )}
-
             {/* Submit button */}
             <button
               type="submit"

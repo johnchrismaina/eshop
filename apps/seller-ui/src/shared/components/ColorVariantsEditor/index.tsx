@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useForm, UseFormSetValue } from 'react-hook-form';
-// import FormValues from '../ProductForm'; // adjust import
 import type { FormValues } from '../ProductForm'; // adjust path
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { Info, Plus, X } from 'lucide-react';
@@ -28,7 +27,6 @@ type ColorVariant = {
 };
 
 interface ColorVariantsEditorProps {
-  draftKey: string; // ✅ used for localStorage persistence
   aspect: 'square' | 'portrait'; // ✅ passed from parent form
   onHasColorsChange?: (hasColors: boolean) => void; // ✅ notify parent to disable main images
   setValue: UseFormSetValue<FormValues>; // ✅ sync with parent form
@@ -38,7 +36,6 @@ interface ColorVariantsEditorProps {
 
 const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
   setValue,
-  draftKey,
   aspect,
   onHasColorsChange,
   productTitle,
@@ -140,45 +137,20 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
     }
   };
 
-  // ✅ Load variants from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem(draftKey);
-    if (saved) {
-      try {
-        const parsed: ColorVariant[] = JSON.parse(saved);
-        // setVariants(parsed);
-        setValue('colorVariants', parsed, { shouldValidate: true });
-        if (parsed.length > 0) {
-          onHasColorsChange?.(true);
-        }
-      } catch (err) {
-        console.error('Failed to parse saved color variants:', err);
-      }
-    }
-  }, [draftKey]);
-
-  // ✅ Save variants to localStorage
-  useEffect(() => {
-    if (variants.length > 0) {
-      localStorage.setItem(draftKey, JSON.stringify(variants));
-    } else {
-      localStorage.removeItem(draftKey);
-    }
-  }, [variants, draftKey]);
-
-  // ✅ Sync with parent form
-  // useEffect(() => {
-  //   setValue('colorVariants', variants);
-  //   onHasColorsChange?.(variants.length > 0);
-  // }, [variants, setValue, onHasColorsChange]);
-
   // ✅ Reset all variants
-  const resetVariants = () => {
-    // setVariants([]);
-    setValue('colorVariants', [], { shouldValidate: true });
-    localStorage.removeItem(draftKey);
-    onHasColorsChange?.(false);
-  };
+  // const resetVariants = () => {
+  //   setValue('colorVariants', [], { shouldValidate: true });
+  //   localStorage.removeItem(draftKey);
+  //   onHasColorsChange?.(false);
+  // };
+
+  useEffect(() => {
+    if (!variants || variants.length === 0) {
+      onHasColorsChange?.(false);
+    } else {
+      onHasColorsChange?.(true);
+    }
+  }, [variants, onHasColorsChange]);
 
   return (
     <div className="w-full space-y-2 rounded-sm px-6 py-4 bg-white">
@@ -328,7 +300,7 @@ const ColorVariantsEditor: React.FC<ColorVariantsEditorProps> = ({
 
         <button
           type="button"
-          onClick={resetVariants}
+          // onClick={resetVariants}
           className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg"
         >
           Reset Variants

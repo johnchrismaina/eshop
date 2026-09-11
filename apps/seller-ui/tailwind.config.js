@@ -13,6 +13,15 @@ module.exports = {
       fontFamily: {
         sans: ['Nunito Sans', 'sans-serif'],
       },
+      keyframes: {
+        fadeScaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.97)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        'fade-scale-in': 'fadeScaleIn 0.2s ease-out',
+      },
     },
   },
   plugins: [],

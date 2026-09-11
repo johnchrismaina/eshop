@@ -3,7 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
 import { enhancements } from 'apps/seller-ui/src/utils/AI.enhancements';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
-import { ChevronDown, ChevronLeft, Info, Wand, X } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  Info,
+  RotateCcw,
+  Wand,
+  X,
+} from 'lucide-react';
 import Image from 'next/image';
 // import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -24,12 +31,15 @@ import { usePathname } from 'next/navigation';
 import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
-import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
+// import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
 import { splitSchema } from 'packages/utils/filtersUtils';
 import { renderFilterRow } from 'packages/utils/renderFilterRow';
 import { Dropdown } from '../CustomDropdown';
 import axios from 'axios';
-// import { categories } from 'packages/utils/shopCategories.json';
+import { AnimatePresence, motion } from 'framer-motion';
+import ColorVariantsEditor, {
+  ColorVariantsEditorHandle,
+} from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
 
 const TABS = [
   'Product Identity',
@@ -82,7 +92,7 @@ type VariantImage = {
   file_url: string;
 };
 
-interface ColorVariant {
+export interface ColorVariant {
   id?: string;
   name: string;
   title: string;
@@ -209,6 +219,24 @@ export default function ProductForm({
 
   const colorVariants = watch('colorVariants') ?? [];
 
+  // const colorVariantsRef = useRef<ColorVariantsEditorHandle>(null);
+
+  // const colorVariantsRef = useRef(null);
+  const colorVariantsRef = useRef<ColorVariantsEditorHandle>(null);
+
+  const handleAddColorSwatchClick = () => {
+    colorVariantsRef.current?.addVariant();
+  };
+
+  const handleResetVariantsClick = () => {
+    colorVariantsRef.current?.resetVariants();
+  };
+
+  // Single source of truth: tab follows hasColors, nothing else sets it directly
+  useEffect(() => {
+    setActiveImageTab(hasColors ? 'variants' : 'main');
+  }, [hasColors]);
+
   const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
 
   const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
@@ -217,6 +245,7 @@ export default function ProductForm({
   // const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(TABS[0]);
+  const [activeImageTab, setActiveImageTab] = useState('main'); // 'main' | 'variants'
 
   const [images, setImages] = useState<(UploadedImage | null)[]>(
     Array(8).fill(null)
@@ -227,6 +256,7 @@ export default function ProductForm({
   const [mainUploading, setMainUploading] = useState<boolean[]>(
     Array(8).fill(false)
   );
+
   // Main images preview state
   const [mainPreviewImage, setMainPreviewImage] = useState<string | null>(null);
   const [openMainPreviewModal, setOpenMainPreviewModal] = useState(false);
@@ -1263,12 +1293,10 @@ export default function ProductForm({
                   </p>
                 )}
               </div>
-
               {/* Product details / Accordions */}
               <div className="w-full rounded-sm px-6 py-4 bg-white hidden">
                 <CustomAccordion control={control} errors={errors} />{' '}
               </div>
-
               {/* Dropdown */}
               <div className="w-full flex flex-col items-start justify-start gap-1 rounded-sm px-6 py-4 bg-white">
                 <label className="block text-[15px] font-bold  text-gray-700 mb-1">
@@ -1324,95 +1352,133 @@ export default function ProductForm({
                 Recommended size: 850×850 for square, 765×1020 for portrait
                 </p> */}
               </div>
-
               {/* Image upload section */}
               {/* Main Images section always visible */}
-              <div
-                className={`relative w-[1000px] mx-auto rounded-sm px-6 py-4 bg-white ${
-                  hasColors ? 'opacity-50 pointer-events-none' : ''
-                }`}
-              >
-                <h2 className="flex items-center gap-2 font-bold text-gray-700 pb-2">
-                  {hasColors ? (
-                    <>
-                      <Info className="w-4 h-4 text-yellow-600" />
-                      <span className="text-yellow-800">
-                        Main images disabled, color swatches are active
-                      </span>
-                    </>
-                  ) : (
-                    'Main Images'
-                  )}
-                </h2>
+              <div className="w-[1000px] mx-auto">
+                {/* Tab bar */}
+                <div className="flex gap-4 mb-4 py-1">
+                  <button
+                    type="button"
+                    disabled={hasColors}
+                    onClick={() => {}} // no-op: Main Images is the default view, only reachable back via Reset Variants
+                    className={`px-4 py-2 rounded-md font-medium transition ${
+                      !hasColors
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-800 border border-gray-400'
+                    } ${hasColors ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    Main Images
+                  </button>
 
-                {/* Main Image Upload Section */}
-                <div className="grid grid-cols-4 gap-3 mt-0">
-                  {mainImages.map((img, index) => (
-                    <ImagePlaceholder
-                      key={index}
-                      idPrefix="main"
-                      index={index}
-                      aspect={watch('aspect')}
-                      pictureUploadingLoader={mainUploading[index]}
-                      image={img}
-                      onImageChange={(file) =>
-                        handleMainImageUpload(index, file)
-                      }
-                      onRemove={() => handleMainImageUpload(index, null)}
-                      setOpenPreviewModal={setOpenMainPreviewModal}
-                      setSelectedPreviewImage={setMainPreviewImage}
-                    />
-                  ))}
+                  <button
+                    type="button"
+                    onClick={handleAddColorSwatchClick}
+                    className={`px-4 py-2 rounded-md font-medium transition ${
+                      hasColors
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-800'
+                    }`}
+                  >
+                    + Add Color Swatch
+                  </button>
+
+                  {hasColors && (
+                    <button
+                      type="button"
+                      onClick={handleResetVariantsClick}
+                      className="flex items-center gap-1 px-4 py-2 rounded-md font-medium bg-gray-800 hover:bg-gray-700 text-white transition"
+                    >
+                      <RotateCcw size={14} /> Reset Variants
+                    </button>
+                  )}
                 </div>
 
-                {/* ✅ Single floating preview modal */}
-                {openMainPreviewModal && mainPreviewImage && (
-                  <div
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-hidden"
-                    style={{ overscrollBehavior: 'contain' }}
-                  >
-                    <button
-                      className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
-                      onClick={() => setOpenMainPreviewModal(false)}
-                    >
-                      <X />
-                    </button>
+                <div className="relative rounded-sm bg-white">
+                  {/* Main Images — plain conditional render, mount always replays the animation */}
+                  {activeImageTab === 'main' && (
                     <div
-                      className={`relative bg-white p-4 rounded-lg shadow-lg overflow-hidden ${
-                        watch('aspect') === 'square'
-                          ? 'aspect-square w-[500px]'
-                          : 'aspect-[3/4] w-[500px]'
-                      }`}
+                      key="main-tab"
+                      className="px-6 py-4 animate-fade-scale-in"
                     >
-                      <img
-                        src={mainPreviewImage}
-                        alt="Preview"
-                        className="w-full h-full object-cover rounded-lg"
-                      />
+                      <h2 className="font-bold text-gray-700 pb-2">
+                        Main Images
+                      </h2>
+                      <div className="grid grid-cols-4 gap-3 mt-0">
+                        {mainImages.map((img, index) => (
+                          <ImagePlaceholder
+                            key={index}
+                            idPrefix="main"
+                            index={index}
+                            aspect={watch('aspect')}
+                            pictureUploadingLoader={mainUploading[index]}
+                            image={img}
+                            onImageChange={(file) =>
+                              handleMainImageUpload(index, file)
+                            }
+                            onRemove={() => handleMainImageUpload(index, null)}
+                            setOpenPreviewModal={setOpenMainPreviewModal}
+                            setSelectedPreviewImage={setMainPreviewImage}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Preview modal — plain div, no animated ancestor to leak into it anymore */}
+                      {openMainPreviewModal && mainPreviewImage && (
+                        <div
+                          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-hidden"
+                          style={{ overscrollBehavior: 'contain' }}
+                        >
+                          <button
+                            className="absolute top-4 right-6 bg-[#f6f6f6] hover:bg-red-100 text-gray-800 p-2 rounded-lg transition-all duration-150"
+                            onClick={() => setOpenMainPreviewModal(false)}
+                          >
+                            <X />
+                          </button>
+                          <div
+                            className={`relative bg-white p-4 rounded-lg shadow-lg overflow-hidden ${
+                              watch('aspect') === 'square'
+                                ? 'aspect-square w-[500px]'
+                                : 'aspect-[3/4] w-[500px]'
+                            }`}
+                          >
+                            <img
+                              src={mainPreviewImage}
+                              alt="Preview"
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
+                  )}
+
+                  {/* Variants — always mounted (ref stays valid), CSS `hidden` toggles visibility.
+                  Animation replays automatically each time it goes from hidden -> visible,
+                  since a display:none -> display:block transition restarts CSS animations. */}
+                  <div
+                    className={`px-6 py-4 animate-fade-scale-in ${
+                      activeImageTab !== 'variants' ? 'hidden' : ''
+                    }`}
+                  >
+                    <ColorVariantsEditor
+                      ref={colorVariantsRef}
+                      aspect={watch('aspect')}
+                      onHasColorsChange={setHasColors}
+                      setValue={setValue}
+                      productTitle={watch('title')}
+                      variants={watch('colorVariants')}
+                    />
                   </div>
-                )}
+                </div>
               </div>
-
-              {/* Color Variants Editor */}
-              <ColorVariantsEditor
-                aspect={watch('aspect')} // ✅
-                onHasColorsChange={setHasColors}
-                setValue={setValue} // ✅ forward from useForm
-                productTitle={watch('title')} // ✅ pass down product title
-                variants={watch('colorVariants')}
-              />
-
               {/* Color Selector */}
               <div className="w-full mt-0 rounded-sm px-6 py-4 bg-white hidden">
                 <ColorSelector control={control} errors={errors} />
               </div>
-
               {/* Size Selector */}
               <div className="w-full mt-0 rounded-sm px-6 py-4 bg-white">
                 <SizeSelector control={control} errors={errors} />
               </div>
-
               {/* Video Url */}
               <div className="w-full rounded-sm px-6 py-4 bg-white">
                 <label
@@ -1453,7 +1519,6 @@ export default function ProductForm({
                   </p>
                 )}
               </div>
-
               {/* Detailed product description */}
               <div className="w-full mx-auto rounded-sm px-6 py-4 bg-white">
                 <div className="mt-4">

@@ -72,7 +72,7 @@ export default function FilterDropdown({
             <button
               type="button"
               onClick={() => setOpen((prev) => !prev)} // ✅ toggle open
-              className="w-full h-10 px-3 border border-gray-200 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
+              className="w-full h-10 px-3 border border-gray-300 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
             >
               {selected.length > 0 ? (
                 selected.join(', ')

@@ -512,7 +512,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[280px] px-4 py-4 bg-[#fff] border border-[#ddd] rounded-lg ">
+        <div className=" w-[280px] px-5 py-4 bg-[#fff] border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-xl ">
           {/* Price */}
           <div className="flex flex-col mb-4">
             {selectedSwatch ? (
@@ -557,9 +557,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             </div>
 
             {/* Quantity dropdown */}
-            <span className="text-sm font-bold text-[#333] ">Quantity</span>
+            <span className="text-sm font-bold text-[#52525B] ">Quantity</span>
             <div
-              className="flex flex-col gap-1 w-[180px] mb-0.5 relative"
+              className="flex flex-col gap-1 w-full mb-0.5 relative"
               ref={quantityRef}
             >
               <button

@@ -31,7 +31,7 @@ export default function ColorThumbnail({
       className={`flex flex-col items-center gap-2 cursor-pointer rounded-md border 
         ${
           isActive
-            ? 'border-gray-300 ring-2 ring-offset-2 ring-gray-900'
+            ? 'border-none border-gray-200 ring-2 ring-offset-2 ring-slate-800'
             : 'border-gray-300'
         }
       `}

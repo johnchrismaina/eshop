@@ -36,7 +36,6 @@ import { splitSchema } from 'packages/utils/filtersUtils';
 import { renderFilterRow } from 'packages/utils/renderFilterRow';
 import { Dropdown } from '../CustomDropdown';
 import axios from 'axios';
-import { AnimatePresence, motion } from 'framer-motion';
 import ColorVariantsEditor, {
   ColorVariantsEditorHandle,
 } from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
@@ -934,32 +933,32 @@ export default function ProductForm({
 
   return (
     <form
-      className="w-full px-0 py-2 rounded-lg text-white"
+      className="w-full px-0 py-0 rounded-lg text-white"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="w-full bg-white flex items-center justify-between px-8 py-2">
-        <div>
+      <div className="w-full bg-white flex items-center justify-between mb-4 px-8 py-2 border-b border-gray-300">
+        <div className="">
           {/* Heading */}
-          <h2 className="text-lg py-2 font-semibold text-gray-800">
+          <h2 className="text-lg py-2 font-semibold text-[#1C1C1E]">
             {pageTitle}
           </h2>
         </div>
       </div>
       {/* Tabs Section */}
-      <div className="w-full lg:w-full mx-auto bg-[#f6f6f6] ">
+      <div className="w-full lg:w-full mx-auto bg-[#fff] ">
         {/* Tabs */}
-        <div className="flex justify-center border-b border-gray-400 overflow-hidden mx-8">
+        <div className="flex justify-center  overflow-hidden mx-8">
           {TABS.map((tab) => (
             <button
               key={tab}
               type="button" // ✅ prevents accidental form submission
               // onClick={() => setActiveTab(tab)}
               onClick={() => handleTabChange(tab)}
-              className={`py-3 px-4 text-base font-semibold ${
+              className={`py-3 px-4 text-[15px] font-bold ${
                 activeTab === tab
-                  ? 'text-[#000] border-b-2 border-[#FEA417]'
-                  : 'text-[#1d1d1f]'
-              } transition`}
+                  ? 'text-[#1C1C1E] border-b-2 border-[#FEA417]'
+                  : 'text-gray-500 border-b border-slate-300'
+              } transition-all duration-100`}
             >
               {tab}
             </button>
@@ -970,7 +969,7 @@ export default function ProductForm({
         <div className="py-0 text-slate-700">
           {/* Product Identity */}
           {activeTab === 'Product Identity' && (
-            <div className="w-[1000px] flex flex-col mx-auto items-center justify-start gap-3 mt-4 py-8 bg-white">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-start gap-3 mt-4 py-2 bg-white">
               {/* Product Title */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm ">
                 <p className="flex items-start justify-center gap-1">
@@ -1190,12 +1189,12 @@ export default function ProductForm({
 
           {/* Product Details */}
           {activeTab === 'Product Details' && (
-            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center rounded-sm gap-2 mt-4 ">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center rounded-sm gap-0 mt-4 ">
               {/* Product Specifications */}
               {/* General Attributes (inherited filters) */}
               {inherited.length > 0 && (
-                <div className="w-[1000px] flex items-center justify-center bg-white">
-                  <div className="w-[700px] mb-4 p-2">
+                <div className="w-[1000px] flex items-center justify-center bg-white ">
+                  <div className="w-[700px] mb-3 px-2 pb-2 border-b border-slate-300">
                     <h3 className="text-lg font-bold pt-2 pb-2">
                       General Attributes
                     </h3>
@@ -1215,8 +1214,11 @@ export default function ProductForm({
 
               {/* Category-specific filter groups */}
               {groups.map((group) => (
-                <div className="w-[1000px] flex items-center justify-center bg-white border-none border-[#ddd] ">
-                  <div key={group.title} className="w-[700px] mb-4 p-2 ">
+                <div className="w-[1000px] flex items-center justify-center bg-white ">
+                  <div
+                    key={group.title}
+                    className="w-[700px] mb-3 px-2 pb-2 border-b border-slate-300"
+                  >
                     <h3 className="text-lg font-bold pt-4 pb-2 ">
                       {group.title}
                     </h3>
@@ -1246,9 +1248,9 @@ export default function ProductForm({
 
           {/* Description & Media*/}
           {activeTab === 'Description & Media' && (
-            <div className="w-[1000px] flex flex-col mx-auto items-start justify-center gap-2 py-4 ">
+            <div className="w-[1000px] flex flex-col mx-auto items-start justify-center gap-0 py-4 ">
               {/* Short Description */}
-              <div className="w-full rounded-sm px-6 py-4 bg-white">
+              <div className="w-full rounded-sm px-6 pt-4 pb-6 border-b border-slate-300">
                 <label
                   htmlFor="short-description-editor"
                   className="block text-[15px] font-bold text-gray-700 pb-3"
@@ -1298,7 +1300,7 @@ export default function ProductForm({
                 <CustomAccordion control={control} errors={errors} />{' '}
               </div>
               {/* Dropdown */}
-              <div className="w-full flex flex-col items-start justify-start gap-1 rounded-sm px-6 py-4 bg-white">
+              <div className="w-full flex flex-col items-start justify-start gap-1 rounded-sm px-6 py-4 bg-white border-b border-slate-300">
                 <label className="block text-[15px] font-bold  text-gray-700 mb-1">
                   Image Aspect Ratio
                 </label>
@@ -1354,9 +1356,9 @@ export default function ProductForm({
               </div>
               {/* Image upload section */}
               {/* Main Images section always visible */}
-              <div className="w-[1000px] mx-auto">
+              <div className="w-[1000px] mx-auto py-4 border-b border-slate-300">
                 {/* Tab bar */}
-                <div className="flex gap-4 mb-4 py-1">
+                <div className="flex gap-4 mb-0.5 py-1">
                   <button
                     type="button"
                     disabled={hasColors}
@@ -1373,7 +1375,7 @@ export default function ProductForm({
                   <button
                     type="button"
                     onClick={handleAddColorSwatchClick}
-                    className={`px-4 py-2 rounded-md font-medium transition ${
+                    className={`px-4 py-2 rounded-md font-medium border border-gray-300 transition ${
                       hasColors
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-200 text-gray-800'
@@ -1472,15 +1474,15 @@ export default function ProductForm({
                 </div>
               </div>
               {/* Color Selector */}
-              <div className="w-full mt-0 rounded-sm px-6 py-4 bg-white hidden">
+              <div className="w-full mt-0 rounded-sm px-6 py-5 bg-white hidden">
                 <ColorSelector control={control} errors={errors} />
               </div>
               {/* Size Selector */}
-              <div className="w-full mt-0 rounded-sm px-6 py-4 bg-white">
+              <div className="w-full mt-0 rounded-sm px-6 py-4 bg-white border-b border-slate-300">
                 <SizeSelector control={control} errors={errors} />
               </div>
               {/* Video Url */}
-              <div className="w-full rounded-sm px-6 py-4 bg-white">
+              <div className="w-full rounded-sm px-6 py-5 bg-white border-b border-slate-300">
                 <label
                   htmlFor="video-url"
                   className="block text-[15px] font-bold text-gray-700 mb-1"
@@ -1491,7 +1493,7 @@ export default function ProductForm({
                   id="video-url"
                   label=""
                   placeholder="https://www.youtube.com/embed/xyz123"
-                  className="bg-[#fff]"
+                  className="bg-[#fff] border border-gray-300 px-4 placeholder:font-normal"
                   {...register('video_url', {
                     validate: (value) => {
                       // ✅ normalize watch links → embed links
@@ -1520,7 +1522,7 @@ export default function ProductForm({
                 )}
               </div>
               {/* Detailed product description */}
-              <div className="w-full mx-auto rounded-sm px-6 py-4 bg-white">
+              <div className="w-full mx-auto rounded-sm px-6 py-4 bg-white border-b border-slate-300">
                 <div className="mt-4">
                   <label
                     htmlFor="detailed-description-editor"
@@ -1573,15 +1575,20 @@ export default function ProductForm({
 
           {/* Pricing */}
           {activeTab === 'Pricing' && (
-            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-2 mt-4 py-8 bg-white">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-2 mt-4 py-2 bg-white">
               {/* SKU */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm">
-                <label
-                  htmlFor="sku"
-                  className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
-                >
-                  SKU *
-                </label>
+                <p className="flex items-center justify-center gap-1">
+                  <label
+                    htmlFor="sku"
+                    className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                  >
+                    SKU *
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
 
                 <div className="w-[800px]">
                   <Input
@@ -1611,12 +1618,17 @@ export default function ProductForm({
 
               {/* Quantity */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <label
-                  htmlFor="stock"
-                  className="text-[15px] font-bold text-gray-700 py-2 shrink-0"
-                >
-                  Quantity *
-                </label>
+                <p className="flex items-center justify-center gap-1">
+                  <label
+                    htmlFor="stock"
+                    className="text-[15px] font-bold text-gray-700 py-2 shrink-0"
+                  >
+                    Quantity *
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
 
                 <div className="w-[800px]">
                   <Input
@@ -1647,12 +1659,17 @@ export default function ProductForm({
               {/* Regular Price */}
               {colorVariants.length < 1 && (
                 <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                  <label
-                    htmlFor="regular_price"
-                    className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
-                  >
-                    Base Price * <span className="text-sm">(Ksh)</span>
-                  </label>
+                  <p className="flex items-center justify-center gap-1">
+                    <label
+                      htmlFor="regular_price"
+                      className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                    >
+                      Base Price * <span className="text-sm">(Ksh)</span>
+                    </label>
+                    <span>
+                      <Info size={16} color="#333" />
+                    </span>
+                  </p>
 
                   <div className="w-[800px]">
                     <Input
@@ -1691,12 +1708,17 @@ export default function ProductForm({
               {/* Sale Price */}
               {isDealRoute && (
                 <div className="w-full flex items-start gap-3 bg-white px-4 py-2 rounded-sm">
-                  <label
-                    htmlFor="sale_price"
-                    className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
-                  >
-                    Sale Price * <span className="text-sm">(Ksh)</span>
-                  </label>
+                  <p className="flex items-center justify-center gap-1">
+                    <label
+                      htmlFor="sale_price"
+                      className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                    >
+                      Sale Price * <span className="text-sm">(Ksh)</span>
+                    </label>
+                    <span>
+                      <Info size={16} color="#333" />
+                    </span>
+                  </p>
 
                   <div className="w-[800px]">
                     <Input
@@ -1967,12 +1989,17 @@ export default function ProductForm({
 
               {/* Item Condition */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <label
-                  htmlFor="condition"
-                  className="text-[15px] font-bold text-gray-700 py-2 shrink-0"
-                >
-                  Item Condition *
-                </label>
+                <p className="flex items-center justify-center gap-1">
+                  <label
+                    htmlFor="condition"
+                    className="text-[15px] font-bold text-gray-700 py-2 shrink-0"
+                  >
+                    Item Condition *
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
                 <div className="w-[800px]">
                   <Input
                     id="condition"
@@ -1997,9 +2024,14 @@ export default function ProductForm({
 
               {/* Shipping Options */}
               <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                <label className="text-[15px] font-bold text-gray-700 py-2 shrink-0">
-                  Shipping Options *
-                </label>
+                <p className="flex items-center justify-center gap-1">
+                  <label className="text-[15px] font-bold text-gray-700 py-2 shrink-0">
+                    Shipping Options *
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
                 <div className="w-[800px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
                   <label className="flex items-center gap-2">
                     <input
@@ -2035,9 +2067,14 @@ export default function ProductForm({
               {isDealRoute && (
                 <>
                   <div className="w-full flex items-start justify-start gap-3 bg-white px-4 py-2 rounded-sm">
-                    <label className="font-bold text-gray-700 py-2">
-                      Select Discount Code (optional)
-                    </label>
+                    <p className="flex items-center justify-center gap-1">
+                      <label className="font-bold text-gray-700 py-2">
+                        Select Discount Code (optional)
+                      </label>
+                      <span>
+                        <Info size={16} color="#333" />
+                      </span>
+                    </p>
                     <div className="w-[800px] flex items-center text-[15px]">
                       <Dropdown<DiscountCode>
                         options={discountCodes}
@@ -2140,8 +2177,13 @@ export default function ProductForm({
 
                   {/* Total Tickets  */}
                   <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                    <p className="shrink-0 text-[15px] font-bold text-gray-700 py-2">
-                      Total Tickets
+                    <p className="flex items-center justify-center gap-1">
+                      <label className="shrink-0 text-[15px] font-bold text-gray-700 py-2">
+                        Total Tickets
+                      </label>
+                      <span>
+                        <Info size={16} color="#333" />
+                      </span>
                     </p>
                     <div className="w-[800px]">
                       <Input
@@ -2235,7 +2277,7 @@ export default function ProductForm({
       )}
 
       {/* Navigation Section */}
-      <div className="w-[1000px] mx-auto flex items-center justify-start gap-6 mt-8 mb-8 bg-[#f6f6f6]">
+      <div className="w-[1000px] mx-auto flex items-center justify-start gap-6 mt-8 mb-8 ">
         {/* Back button */}
         <button
           type="button"
@@ -2261,7 +2303,7 @@ export default function ProductForm({
               type="button"
               disabled={!isDirty}
               onClick={handleSaveDraft}
-              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Save Draft
             </button>
@@ -2270,7 +2312,7 @@ export default function ProductForm({
               type="button"
               disabled={!hasDraft}
               onClick={handleLoadDraft}
-              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Load Draft
             </button>
@@ -2278,7 +2320,7 @@ export default function ProductForm({
             <button
               type="button"
               onClick={handleClearForm}
-              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-700 rounded-md"
+              className="px-4 py-2 text-[#333] bg-gray-200 hover:bg-gray-300 border border-gray-600 rounded-md"
             >
               Clear Form
             </button>

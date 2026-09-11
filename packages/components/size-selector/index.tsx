@@ -43,7 +43,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({ control, errors }) => {
                     className={`px-2 py-1 rounded-lg font-poppins transition-all duration-150 w-[70px] ${
                       isSelected
                         ? 'bg-gray-800 text-white'
-                        : 'bg-white text-gray-700 border border-gray-300'
+                        : 'bg-white text-gray-700 border border-gray-400'
                     }`}
                   >
                     {size}

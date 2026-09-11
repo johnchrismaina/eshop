@@ -1,5 +1,5 @@
 import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import { useForm, UseFormSetValue } from 'react-hook-form';
+import { UseFormSetValue } from 'react-hook-form';
 import type { FormValues } from '../ProductForm'; // adjust path
 import { ColorVariant } from '../ProductForm'; // adjust path
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
@@ -7,7 +7,6 @@ import { ClipboardPaste, Info, Plus, RotateCcw, X } from 'lucide-react';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
 import toast from 'react-hot-toast';
-import { AnimatePresence, motion } from 'framer-motion';
 
 export interface ColorVariantsEditorHandle {
   addVariant: () => void;

@@ -35,6 +35,7 @@ import {
 import ZoomImage from '../HoverMagnifier/HoverMagnifier';
 import Breadcrumbs from '../breadcrumbs';
 import ColorThumbnail from '../ColorThumbnail/ColorThumbnail';
+import ImagePreviewModal from '../ImagePreviewModal';
 
 // const swatches = [
 //   { title: 'Brown', image: '/images/brown.png', price: 5000, dealPrice: 3999 },
@@ -91,7 +92,12 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const getImageUrl = (img: ActiveImage) =>
     typeof img === 'string' ? img : img.url;
 
-  const activeAspect = selectedSwatch ? 'square' : productDetails.aspect; // or swatch.aspect if you add it
+  // const activeAspect = selectedSwatch ? 'square' : productDetails.aspect; // or swatch.aspect if you add it
+  const activeAspect = productDetails.aspect; // or swatch.aspect if you add it
+
+  // console.log('Aspect:', productDetails);
+  // console.log('Aspect:', productDetails.aspect);
+  console.log('Aspect:', activeAspect);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSelected, setIsSelected] = useState(
@@ -122,6 +128,8 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const isWishlisted = wishlist.some(
     (item: any) => item.id === productDetails.id
   );
+
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Navigate to previous image
   const prevImage = () => {
@@ -215,9 +223,9 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>
-      <div className="w-full pt-2 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,650px)_minmax(300px,1fr)_280px] gap-4">
+      <div className="w-full pt-2 pb-6 grid grid-cols-1 lg:grid-cols-[minmax(500px,620px)_minmax(300px,1fr)_280px] gap-4">
         {/* left column - product images */}
-        <div className="flex items-start justify-between px-0 w-[650px] h-auto mx-auto">
+        <div className="flex items-start justify-between px-0 w-[620px] h-auto mx-auto">
           {/* Thumbnails */}
           <div className="flex flex-col items-center gap-2 relative">
             {activeImages.length > 4 && (
@@ -246,7 +254,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                     <img
                       src={url}
                       alt="Thumbnail"
-                      className={`w-full h-full object-cover cursor-pointer border rounded-md ${
+                      className={`w-full h-full object-cover cursor-pointer border rounded-lg ${
                         currentIndex === index
                           ? 'border-blue-500'
                           : 'border-gray-300'
@@ -276,24 +284,40 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           {/* Main preview */}
           <div className="w-[540px] mx-auto rounded-lg">
             <div
-              className={`relative mx-auto ${
+              className={`relative mx-auto cursor-zoom-in ${
                 activeAspect === 'square'
-                  ? 'aspect-square w-[500px]'
-                  : 'aspect-[3/4] w-[500px]'
+                  ? 'w-[500px] h-[500px]'
+                  : 'w-[500px] h-[667px]' // 3:4 ratio
               }`}
+              onClick={() => setIsPreviewOpen(true)}
             >
               {activeImages.length > 0 && (
-                <ZoomImage
+                <Image
                   src={getImageUrl(activeImages[currentIndex])}
                   alt="Product preview"
+                  width={500}
+                  height={activeAspect === 'square' ? 500 : 667}
+                  className="object-cover rounded-lg"
+                  priority
                 />
               )}
             </div>
+
+            {isPreviewOpen && (
+              <ImagePreviewModal
+                images={activeImages}
+                currentIndex={currentIndex}
+                onIndexChange={setCurrentIndex}
+                onClose={() => setIsPreviewOpen(false)}
+                getImageUrl={getImageUrl}
+                activeAspect={activeAspect}
+              />
+            )}
           </div>
         </div>
 
         {/* Middle column - product details */}
-        <div className="px-6 pt-0 pb-1 prose prose-sm max-w-none">
+        <div className="pl-2 pr-6 pt-0 pb-1 prose prose-sm max-w-none">
           {/* Title */}
           <h1 className="text-lg text-[#1C1C1E] font-semibold">
             {productDetails?.title}
@@ -303,7 +327,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           <div className="text-left ">
             <Link
               href={`/shop/${productDetails?.Shop?.id}`}
-              className="text-blue-600 font-medium text-sm hover:underline hidden"
+              className="text-blue-600 font-medium text-sm hover:underline "
             >
               {/* <Store size={18} /> */}
               Go to store
@@ -392,6 +416,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                         onLeave={() => setHoveredColorName(null)} // ✅ clears on mouse leave
                         onSelect={() => setSelectedSwatch(swatch)} // ✅ click locks selection
                         isActive={selectedSwatch?.id === swatch.id} // ✅ highlight active
+                        activeAspect={activeAspect}
                       />
                     )
                   )}
@@ -512,25 +537,25 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
         </div>
         {/* Right column - Seller information */}
-        <div className=" w-[280px] px-5 py-4 bg-[#fff] border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-xl ">
+        <div className=" w-[280px] px-5 py-2 bg-[#fff] border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-xl ">
           {/* Price */}
-          <div className="flex flex-col mb-4">
+          <div className="flex flex-col mb-2">
             {selectedSwatch ? (
-              <div className="pt-4 text-[#52525B] space-x-0.5">
+              <div className="pt-2 text-[#52525B] space-x-0.5">
                 <span className="text-[15px] font-bold">Ksh</span>
                 <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight">
                   {selectedSwatch.price}
                 </span>
               </div>
             ) : (
-              <div className="pt-4 text-[#52525B] space-x-0.5">
+              <div className="pt-2 text-[#52525B] space-x-0.5">
                 <span className="text-[15px] font-bold">Ksh</span>
                 <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight">
                   {productDetails.regular_price}
                 </span>
               </div>
             )}
-            <div className="pt-4 text-[#52525B] space-x-0.5 hidden">
+            <div className="pt-2 text-[#52525B] space-x-0.5 hidden">
               <span className="text-[15px] font-bold">Ksh</span>
               <span className="text-3xl text-[#1C1C1E] font-semibold tracking-tight"></span>
             </div>
@@ -540,24 +565,26 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 : `Price: $${productDetails.regular_price}`} */}
           </div>
 
+          <span className="text-lg font-semibold hidden">
+            Stock: {productDetails.stock}
+          </span>
+
           {/* Quantity */}
           <div className="flex flex-col items-start gap-1 pb-4 mb-6 border-b border-gray-200">
             {/* In stock and out of stock */}
-            <div className="hidden">
-              {productDetails?.stock > 0 ? (
-                <span className="text-[15px] text-green-600 font-medium">
-                  In Stock{' '}
-                  {/* <span className="text-gray-500 font-medium">
-                    (Stock {productDetails?.stock})
-                  </span> */}
-                </span>
-              ) : (
-                <span className="text-red-600 font-medium">Out of Stock</span>
-              )}
-            </div>
+            {productDetails?.stock > 0 ? (
+              <span className="text-[15px] text-green-600 font-medium">
+                In Stock
+              </span>
+            ) : (
+              // <span className="text-[15px] text-green-600 font-medium">
+              //   In Stock ({productDetails.stock})
+              // </span>
+              <span className="text-red-600 font-medium">Out of Stock</span>
+            )}
 
             {/* Quantity dropdown */}
-            <span className="text-sm font-bold text-[#52525B] ">Quantity</span>
+            <span className="text-sm font-bold text-[#52525B]">Quantity</span>
             <div
               className="flex flex-col gap-1 w-full mb-0.5 relative"
               ref={quantityRef}
@@ -569,7 +596,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               >
                 {quantity}
                 <svg
-                  className="w-4 h-4 text-[#333] "
+                  className="w-4 h-4 text-[#333]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -585,7 +612,10 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
               {quantityOpen && (
                 <ul className="absolute top-full mt-1 w-full max-h-[168px] overflow-y-auto border border-gray-200 rounded-md bg-white shadow-lg z-10">
-                  {[1, 2, 3, 4, 5, 10, 20, 50, 100].map((q) => (
+                  {Array.from(
+                    { length: productDetails.stock },
+                    (_, i) => i + 1
+                  ).map((q) => (
                     <li key={q}>
                       <button
                         type="button"

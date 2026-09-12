@@ -14,13 +14,28 @@ module.exports = {
         sans: ['Nunito Sans', 'sans-serif'],
       },
       keyframes: {
-        fadeScaleIn: {
-          '0%': { opacity: '0', transform: 'scale(0.97)' },
+        'fade-scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'fade-scale-out': {
+          '0%': { opacity: '1', transform: 'scale(1)' },
+          '100%': { opacity: '0', transform: 'scale(0.95)' },
+        },
+        'slide-up-in': {
+          '0%': { transform: 'translateY(100%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
+        'slide-down-out': {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(100%)' },
         },
       },
       animation: {
-        'fade-scale-in': 'fadeScaleIn 0.2s ease-out',
+        'fade-scale-in': 'fade-scale-in 0.2s ease-out forwards',
+        'fade-scale-out': 'fade-scale-out 0.15s ease-in forwards',
+        'slide-up-in': 'slide-up-in 0.25s ease-out forwards',
+        'slide-down-out': 'slide-down-out 0.2s ease-in forwards',
       },
     },
   },

@@ -22,7 +22,7 @@ import Input from 'packages/components/input';
 import SizeSelector from 'packages/components/size-selector';
 import Spinner from 'packages/components/spinner';
 // import { Spinner } from 'packages/components/spinner';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
@@ -210,9 +210,8 @@ export default function ProductForm({
 
   const [hasColors, setHasColors] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
-  // const [isChanged, setIsChanged] = useState(true);
-  // const [isChanged] = useState(true);
   const [activeEffect, setActiveEffect] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState('');
 
@@ -230,6 +229,14 @@ export default function ProductForm({
   const handleResetVariantsClick = () => {
     colorVariantsRef.current?.resetVariants();
   };
+
+  const handleCloseCategories = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setOpenCategories(false);
+      setIsClosing(false); // reset so next open starts clean
+    }, 200); // matches the slower of the two exit durations
+  }, []);
 
   // Single source of truth: tab follows hasColors, nothing else sets it directly
   useEffect(() => {
@@ -1077,8 +1084,16 @@ export default function ProductForm({
                       </button>
 
                       {openCategories && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                          <div className="bg-white w-full max-w-md h-full flex flex-col">
+                        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50">
+                          <div
+                            className={`bg-white w-full sm:max-w-md h-[80vh] sm:h-[80vh] flex flex-col
+                            rounded-t-2xl sm:rounded-lg
+                            ${
+                              isClosing
+                                ? 'animate-slide-down-out sm:animate-fade-scale-out'
+                                : 'animate-slide-up-in sm:animate-fade-scale-in'
+                            }`}
+                          >
                             {/* Header */}
                             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
                               <h2 className="text-lg font-medium">
@@ -1086,7 +1101,9 @@ export default function ProductForm({
                               </h2>
                               <button
                                 type="button"
-                                onClick={() => setOpenCategories(false)}
+                                // onClick={() => setOpenCategories(false)}
+                                onClick={handleCloseCategories}
+                                aria-label="Close"
                                 className="p-1"
                               >
                                 <X size={18} />
@@ -1110,9 +1127,9 @@ export default function ProductForm({
                               )}
                               {renderOptions()}
 
-                              {/* ✅ Spinner overlay when loading */}
+                              {/* ✅ Loading text when loading */}
                               {loading && (
-                                <span className="absolute inset-0 flex items-center justify-center bg-white/50">
+                                <span className="absolute inset-0 flex items-center justify-center text-gray-700">
                                   Loading...
                                 </span>
                               )}
@@ -1136,7 +1153,8 @@ export default function ProductForm({
                                     setValue('category', 'men_clothing');
                                     setValue('subCategory', 'polo_shirt');
                                   }
-                                  setOpenCategories(false);
+                                  // setOpenCategories(false);
+                                  handleCloseCategories();
                                 }}
                                 disabled={!selectedValue}
                                 className="w-full h-11 rounded-md text-sm font-medium bg-[#C2410C] text-white disabled:opacity-40 disabled:cursor-not-allowed"
@@ -1189,7 +1207,7 @@ export default function ProductForm({
 
           {/* Product Details */}
           {activeTab === 'Product Details' && (
-            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center rounded-sm gap-0 mt-4 ">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center rounded-sm gap-0 mt-4 relative ">
               {/* Product Specifications */}
               {/* General Attributes (inherited filters) */}
               {inherited.length > 0 && (
@@ -1235,6 +1253,15 @@ export default function ProductForm({
                   </div>
                 </div>
               ))}
+
+              {/* ✅ Spinner overlay when loading categories */}
+              {loading && (
+                <span className="absolute inset-0 flex items-center justify-center bg-white/50 text-sm font-medium">
+                  <Spinner size={16} borderColor="border-gray-200" />
+                  <span className="ml-2">Loading...</span>
+                </span>
+              )}
+
               {/* Product Properties */}
               <div className="w-full p-0 rounded-md hidden">
                 <CustomProperties control={control} errors={errors} />
@@ -1405,7 +1432,7 @@ export default function ProductForm({
                       <h2 className="font-bold text-gray-700 pb-2">
                         Main Images
                       </h2>
-                      <div className="grid grid-cols-4 gap-3 mt-0">
+                      <div className="grid grid-cols-4 gap-3 mt-0 ">
                         {mainImages.map((img, index) => (
                           <ImagePlaceholder
                             key={index}
@@ -1575,9 +1602,9 @@ export default function ProductForm({
 
           {/* Pricing */}
           {activeTab === 'Pricing' && (
-            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-2 mt-4 py-2 bg-white">
+            <div className="w-[1000px] flex flex-col mx-auto items-center justify-center gap-2 mt-4 py-2 ">
               {/* SKU */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-3 rounded-sm">
+              <div className="w-full flex items-start justify-end gap-3 px-4 py-3 rounded-sm">
                 <p className="flex items-center justify-center gap-1">
                   <label
                     htmlFor="sku"
@@ -1590,23 +1617,25 @@ export default function ProductForm({
                   </span>
                 </p>
 
-                <div className="w-[800px]">
-                  <Input
-                    id="sku"
-                    label=""
-                    placeholder="Enter SKU (e.g., PROD-12345, PROD12345, SKU-ABC-999)"
-                    type="text"
-                    className="text-[15px] placeholder:text-sm"
-                    {...register('sku', {
-                      validate: (value) =>
-                        value.trim().length > 0 || 'SKU cannot be empty',
-                      pattern: {
-                        value: /^[A-Z0-9-]+$/, // ✅ enforce alphanumeric + dashes
-                        message:
-                          'SKU must contain only letters, numbers, or dashes',
-                      },
-                    })}
-                  />
+                <div className="w-[700px]">
+                  <div className="w-[600px]">
+                    <Input
+                      id="sku"
+                      label=""
+                      placeholder="Enter SKU (e.g., PROD-12345, PROD12345, SKU-ABC-999)"
+                      type="text"
+                      className="text-[15px] placeholder:text-sm"
+                      {...register('sku', {
+                        validate: (value) =>
+                          value.trim().length > 0 || 'SKU cannot be empty',
+                        pattern: {
+                          value: /^[A-Z0-9-]+$/, // ✅ enforce alphanumeric + dashes
+                          message:
+                            'SKU must contain only letters, numbers, or dashes',
+                        },
+                      })}
+                    />
+                  </div>
                 </div>
 
                 {errors.sku && (
@@ -1617,7 +1646,7 @@ export default function ProductForm({
               </div>
 
               {/* Quantity */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+              <div className="w-full flex items-start justify-end gap-3 px-4 py-2 rounded-sm">
                 <p className="flex items-center justify-center gap-1">
                   <label
                     htmlFor="stock"
@@ -1630,22 +1659,27 @@ export default function ProductForm({
                   </span>
                 </p>
 
-                <div className="w-[800px]">
-                  <Input
-                    id="stock"
-                    label=""
-                    placeholder="0"
-                    type="number"
-                    className="text-[15px]"
-                    {...register('stock', {
-                      required: 'Quantity is required!', // ✅ enforce required
-                      setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ keep empty as undefined
-                      min: { value: 0, message: 'Quantity cannot be negative' }, // ✅ no negatives allowed
-                      validate: (value) =>
-                        (typeof value === 'number' && !isNaN(value)) ||
-                        'Only numbers are allowed',
-                    })}
-                  />
+                <div className="w-[700px]">
+                  <div className="w-[400px]">
+                    <Input
+                      id="stock"
+                      label=""
+                      placeholder="0"
+                      type="number"
+                      className="text-[15px]"
+                      {...register('stock', {
+                        required: 'Quantity is required!', // ✅ enforce required
+                        setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ keep empty as undefined
+                        min: {
+                          value: 0,
+                          message: 'Quantity cannot be negative',
+                        }, // ✅ no negatives allowed
+                        validate: (value) =>
+                          (typeof value === 'number' && !isNaN(value)) ||
+                          'Only numbers are allowed',
+                      })}
+                    />
+                  </div>
                 </div>
 
                 {errors.stock && (
@@ -1671,30 +1705,35 @@ export default function ProductForm({
                     </span>
                   </p>
 
-                  <div className="w-[800px]">
-                    <Input
-                      id="regular_price"
-                      label=""
-                      type="number"
-                      placeholder="0"
-                      disabled={colorVariants.length > 0} // ✅ disable when variants exist
-                      className="bg-[#fff] text-[15px]"
-                      {...register('regular_price', {
-                        required:
-                          colorVariants.length === 0
-                            ? 'Base Price is required when no color variants exist'
-                            : false,
-                        setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                        min:
-                          colorVariants.length === 0
-                            ? { value: 1, message: 'Price must be at least 1' }
-                            : undefined,
-                        validate: (value) =>
-                          colorVariants.length > 0 ||
-                          (typeof value === 'number' && !isNaN(value)) ||
-                          'Only numbers are allowed',
-                      })}
-                    />
+                  <div className="w-[700px]">
+                    <div className="w-[400px]">
+                      <Input
+                        id="regular_price"
+                        label=""
+                        type="number"
+                        placeholder="0"
+                        disabled={colorVariants.length > 0} // ✅ disable when variants exist
+                        className="bg-[#fff] text-[15px]"
+                        {...register('regular_price', {
+                          required:
+                            colorVariants.length === 0
+                              ? 'Base Price is required when no color variants exist'
+                              : false,
+                          setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                          min:
+                            colorVariants.length === 0
+                              ? {
+                                  value: 1,
+                                  message: 'Price must be at least 1',
+                                }
+                              : undefined,
+                          validate: (value) =>
+                            colorVariants.length > 0 ||
+                            (typeof value === 'number' && !isNaN(value)) ||
+                            'Only numbers are allowed',
+                        })}
+                      />
+                    </div>
                   </div>
 
                   {errors.regular_price && (
@@ -1707,7 +1746,7 @@ export default function ProductForm({
 
               {/* Sale Price */}
               {isDealRoute && (
-                <div className="w-full flex items-start gap-3 bg-white px-4 py-2 rounded-sm">
+                <div className="w-full flex items-start justify-end gap-3 px-4 py-2 rounded-sm">
                   <p className="flex items-center justify-center gap-1">
                     <label
                       htmlFor="sale_price"
@@ -1720,25 +1759,28 @@ export default function ProductForm({
                     </span>
                   </p>
 
-                  <div className="w-[800px]">
-                    <Input
-                      id="sale_price"
-                      label=""
-                      type="number"
-                      placeholder="0"
-                      className="bg-[#fff] text-[15px]"
-                      {...register('sale_price', {
-                        required: 'Sale Price is required when creating a deal', // ✅ always required on deal route
-                        setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                        min: {
-                          value: 1,
-                          message: 'Sale price must be at least 1',
-                        },
-                        validate: (value) =>
-                          (typeof value === 'number' && !isNaN(value)) ||
-                          'Only numbers are allowed',
-                      })}
-                    />
+                  <div className="w-[700px]">
+                    <div className="w-[400px]">
+                      <Input
+                        id="sale_price"
+                        label=""
+                        type="number"
+                        placeholder="0"
+                        className="bg-[#fff] text-[15px]"
+                        {...register('sale_price', {
+                          required:
+                            'Sale Price is required when creating a deal', // ✅ always required on deal route
+                          setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                          min: {
+                            value: 1,
+                            message: 'Sale price must be at least 1',
+                          },
+                          validate: (value) =>
+                            (typeof value === 'number' && !isNaN(value)) ||
+                            'Only numbers are allowed',
+                        })}
+                      />
+                    </div>
                   </div>
 
                   {errors.sale_price && (
@@ -1751,86 +1793,96 @@ export default function ProductForm({
 
               {/* Conditionally render deal dates */}
               {isDealRoute && (
-                <div className="w-[800px]">
-                  <div className="flex items-start justify-center gap-2 rounded-md">
-                    {/* Deal Start Date */}
-                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
-                      <label
-                        htmlFor="deal_start"
-                        className="text-[15px] font-medium text-gray-800 mt-1"
-                      >
-                        Deal Start *
-                      </label>
-                      <Controller
-                        name="deal_start"
-                        control={control}
-                        rules={{ required: 'Start date is required' }}
-                        render={({ field }) => (
-                          <input
-                            id="deal_start"
-                            type="date"
-                            value={
-                              typeof field.value === 'string' ? field.value : ''
-                            } // ✅ always a string
-                            onChange={(e) => {
-                              const startDateStr = e.target.value;
-                              field.onChange(startDateStr); // ✅ store string in form state
-                            }}
-                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
-                          />
+                <div className="w-full flex flex-col items-center justify-center gap-3 px-4 ">
+                  {/* Deal Start Date */}
+                  <div className="w-full flex items-center justify-end gap-2 rounded-md">
+                    <label
+                      htmlFor="deal_start"
+                      className="shrink-0 text-[15px] font-bold text-gray-800 mt-1"
+                    >
+                      Deal Start *
+                    </label>
+                    <div className="w-[700px]">
+                      <div className="w-[220px]">
+                        <Controller
+                          name="deal_start"
+                          control={control}
+                          rules={{ required: 'Start date is required' }}
+                          render={({ field }) => (
+                            <input
+                              id="deal_start"
+                              type="date"
+                              value={
+                                typeof field.value === 'string'
+                                  ? field.value
+                                  : ''
+                              } // ✅ always a string
+                              onChange={(e) => {
+                                const startDateStr = e.target.value;
+                                field.onChange(startDateStr); // ✅ store string in form state
+                              }}
+                              className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                            />
+                          )}
+                        />
+                        {errors.deal_start && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.deal_start.message as string}
+                          </p>
                         )}
-                      />
-                      {errors.deal_start && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.deal_start.message as string}
-                        </p>
-                      )}
+                      </div>
                     </div>
+                  </div>
 
-                    {/* Deal End Date */}
-                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
-                      <label
-                        htmlFor="deal_end"
-                        className="text-sm font-medium text-gray-800 mt-1"
-                      >
-                        Deal End *
-                      </label>
-                      <Controller
-                        name="deal_end"
-                        control={control}
-                        rules={{
-                          required: 'End date is required',
-                          validate: (value) => {
-                            const start = getValues('deal_start');
-                            if (value && start) {
-                              return (
-                                new Date(value) > new Date(start) ||
-                                'End date must be after start date'
-                              );
-                            }
-                            return true;
-                          },
-                        }}
-                        render={({ field }) => (
-                          <input
-                            id="deal_end"
-                            type="date"
-                            value={
-                              typeof field.value === 'string' ? field.value : ''
-                            } // ✅ always a string
-                            onChange={(e) => {
-                              const endDateStr = e.target.value;
-                              field.onChange(endDateStr); // ✅ store string in form state
-                            }}
-                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
-                          />
+                  {/* Deal End Date */}
+                  <div className="w-full flex items-center justify-end gap-2 rounded-md">
+                    <label
+                      htmlFor="deal_end"
+                      className="shrink-0 text-sm font-bold text-gray-800 mt-1"
+                    >
+                      Deal End *
+                    </label>
+                    <div className="w-[700px]">
+                      <div className="w-[220px]">
+                        <Controller
+                          name="deal_end"
+                          control={control}
+                          rules={{
+                            required: 'End date is required',
+                            validate: (value) => {
+                              const start = getValues('deal_start');
+                              if (value && start) {
+                                return (
+                                  new Date(value) > new Date(start) ||
+                                  'End date must be after start date'
+                                );
+                              }
+                              return true;
+                            },
+                          }}
+                          render={({ field }) => (
+                            <input
+                              id="deal_end"
+                              type="date"
+                              value={
+                                typeof field.value === 'string'
+                                  ? field.value
+                                  : ''
+                              } // ✅ always a string
+                              onChange={(e) => {
+                                const endDateStr = e.target.value;
+                                field.onChange(endDateStr); // ✅ store string in form state
+                              }}
+                              className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                            />
+                          )}
+                        />
+                        {errors.deal_end && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.deal_end.message as string}
+                          </p>
                         )}
-                      />
-                      {errors.deal_end && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.deal_end.message as string}
-                        </p>
-                      )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1868,7 +1920,7 @@ export default function ProductForm({
                               : `Color ${idx + 1}`}
                           </td>
 
-                          {/* Base Price */}
+                          {/* Variant Base Price */}
                           <td className="border px-3 py-2">
                             <input
                               type="number"
@@ -1890,7 +1942,7 @@ export default function ProductForm({
                             />
                           </td>
 
-                          {/* Deal Price */}
+                          {/* Variant Deal Price */}
                           <td className="border px-3 py-2">
                             <input
                               type="number"
@@ -1988,7 +2040,7 @@ export default function ProductForm({
               )}
 
               {/* Item Condition */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+              <div className="w-full flex items-start justify-end gap-3 px-4 py-2 rounded-sm">
                 <p className="flex items-center justify-center gap-1">
                   <label
                     htmlFor="condition"
@@ -2000,20 +2052,22 @@ export default function ProductForm({
                     <Info size={16} color="#333" />
                   </span>
                 </p>
-                <div className="w-[800px]">
-                  <Input
-                    id="condition"
-                    label=""
-                    placeholder="Example: New, Used, Renewed"
-                    type="text"
-                    className="text-[15px]"
-                    {...register('condition', {
-                      required: 'Item condition is required',
-                      validate: (value) =>
-                        value.trim().length > 0 ||
-                        'Item condition cannot be empty',
-                    })}
-                  />
+                <div className="w-[700px]">
+                  <div className="w-[400px]">
+                    <Input
+                      id="condition"
+                      label=""
+                      placeholder="Example: New, Used, Renewed"
+                      type="text"
+                      className="text-[15px]"
+                      {...register('condition', {
+                        required: 'Item condition is required',
+                        validate: (value) =>
+                          value.trim().length > 0 ||
+                          'Item condition cannot be empty',
+                      })}
+                    />
+                  </div>
                 </div>
                 {errors.condition && (
                   <p className="text-red-500 text-sm mt-1">
@@ -2023,7 +2077,7 @@ export default function ProductForm({
               </div>
 
               {/* Shipping Options */}
-              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+              <div className="w-full flex items-start justify-end gap-3 px-4 py-2 rounded-sm">
                 <p className="flex items-center justify-center gap-1">
                   <label className="text-[15px] font-bold text-gray-700 py-2 shrink-0">
                     Shipping Options *
@@ -2032,28 +2086,30 @@ export default function ProductForm({
                     <Info size={16} color="#333" />
                   </span>
                 </p>
-                <div className="w-[800px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="self"
-                      {...register('shippingOption', {
-                        required: 'Please select a shipping option',
-                      })}
-                    />
-                    I will ship the item myself
-                  </label>
+                <div className="w-[700px] ">
+                  <div className="w-[600px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="self"
+                        {...register('shippingOption', {
+                          required: 'Please select a shipping option',
+                        })}
+                      />
+                      I will ship the item myself
+                    </label>
 
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="company"
-                      {...register('shippingOption', {
-                        required: 'Please select a shipping option',
-                      })}
-                    />
-                    Fulfilled by the company
-                  </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="company"
+                        {...register('shippingOption', {
+                          required: 'Please select a shipping option',
+                        })}
+                      />
+                      Fulfilled by the company
+                    </label>
+                  </div>
                 </div>
 
                 {errors.shippingOption && (
@@ -2066,112 +2122,126 @@ export default function ProductForm({
               {/* Discount Codes */}
               {isDealRoute && (
                 <>
-                  <div className="w-full flex items-start justify-start gap-3 bg-white px-4 py-2 rounded-sm">
+                  <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
                     <p className="flex items-center justify-center gap-1">
-                      <label className="font-bold text-gray-700 py-2">
-                        Select Discount Code (optional)
+                      <label className="shrink-0 font-bold text-gray-700 py-2">
+                        Select Discount Code
                       </label>
                       <span>
                         <Info size={16} color="#333" />
                       </span>
                     </p>
-                    <div className="w-[800px] flex items-center text-[15px]">
-                      <Dropdown<DiscountCode>
-                        options={discountCodes}
-                        getLabel={(code) =>
-                          `${code.public_name} (${code.discountValue}${
-                            code.discountType === 'percentage' ? '%' : '$'
-                          })`
-                        }
-                        getValue={(code) => code.id}
-                        selected={watch('discountCodes') || []}
-                        multiSelect={true} // ✅ enables multi-select
-                        placeholder="Select discount codes"
-                        emptyMessage="No discount codes"
-                        onChange={(values) =>
-                          setValue('discountCodes', values as string[])
-                        }
-                        width="300px"
-                      />
+                    <div className="w-[700px] flex items-center justify-start text-[15px]">
+                      <div className="w-[400px]">
+                        <Dropdown<DiscountCode>
+                          options={discountCodes}
+                          getLabel={(code) =>
+                            `${code.public_name} (${code.discountValue}${
+                              code.discountType === 'percentage' ? '%' : '$'
+                            })`
+                          }
+                          getValue={(code) => code.id}
+                          selected={watch('discountCodes') || []}
+                          multiSelect={true} // ✅ enables multi-select
+                          placeholder="Select discount codes"
+                          emptyMessage="No discount codes"
+                          onChange={(values) =>
+                            setValue('discountCodes', values as string[])
+                          }
+                          width="300px"
+                        />
 
-                      {errors.discountCodes && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.discountCodes.message as string}
-                        </p>
-                      )}
+                        {errors.discountCodes && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.discountCodes.message as string}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
 
                   {/* Render discount dates */}
-                  <div className="w-[800px]">
+                  <div className="w-full flex flex-col items-center justify-center gap-3 px-4 ">
                     {/* Discount Start Date */}
-                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
+                    <div className="w-full flex items-center justify-end gap-2 rounded-md">
                       <label
                         htmlFor="deal_start"
-                        className="text-[15px] font-medium text-gray-800 mt-1"
+                        className="shrink-0 text-[15px] font-bold text-gray-800 mt-1"
                       >
                         Discount Start
                       </label>
-                      <Controller
-                        name="discount_start"
-                        control={control}
-                        rules={{ required: 'Start date is required' }}
-                        render={({ field }) => (
-                          <input
-                            id="discount_start"
-                            type="date"
-                            value={
-                              typeof field.value === 'string' ? field.value : ''
-                            } // ✅ always a string
-                            onChange={(e) => {
-                              const startDateStr = e.target.value;
-                              field.onChange(startDateStr); // ✅ store string in form state
-                            }}
-                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                      <div className="w-[700px]">
+                        <div className="w-[220px]">
+                          <Controller
+                            name="discount_start"
+                            control={control}
+                            rules={{ required: 'Start date is required' }}
+                            render={({ field }) => (
+                              <input
+                                id="discount_start"
+                                type="date"
+                                value={
+                                  typeof field.value === 'string'
+                                    ? field.value
+                                    : ''
+                                } // ✅ always a string
+                                onChange={(e) => {
+                                  const startDateStr = e.target.value;
+                                  field.onChange(startDateStr); // ✅ store string in form state
+                                }}
+                                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                              />
+                            )}
                           />
-                        )}
-                      />
+                        </div>
+                      </div>
                     </div>
 
                     {/* Discount End Date */}
-                    <div className="w-full flex items-start justify-center gap-2 rounded-md">
+                    <div className="w-full flex items-center justify-end gap-2 rounded-md">
                       <label
                         htmlFor="deal_start"
-                        className="text-[15px] font-medium text-gray-800 mt-1"
+                        className="shrink-0 text-[15px] font-bold text-gray-800 mt-1"
                       >
                         Discount End
                       </label>
-                      <Controller
-                        name="discount_end"
-                        control={control}
-                        rules={{
-                          required: 'End date is required',
-                          validate: (value) => {
-                            const start = watch('discount_start');
-                            if (value && start) {
-                              return (
-                                new Date(value) > new Date(start) ||
-                                'Discount End must be after Discount Start'
-                              );
-                            }
-                            return true;
-                          },
-                        }}
-                        render={({ field }) => (
-                          <input
-                            id="discount_end"
-                            type="date"
-                            value={
-                              typeof field.value === 'string' ? field.value : ''
-                            } // ✅ always a string
-                            onChange={(e) => {
-                              const endDateStr = e.target.value;
-                              field.onChange(endDateStr); // ✅ store string in form state
+                      <div className="w-[700px]">
+                        <div className="w-[220px]">
+                          <Controller
+                            name="discount_end"
+                            control={control}
+                            rules={{
+                              required: 'End date is required',
+                              validate: (value) => {
+                                const start = watch('discount_start');
+                                if (value && start) {
+                                  return (
+                                    new Date(value) > new Date(start) ||
+                                    'Discount End must be after Discount Start'
+                                  );
+                                }
+                                return true;
+                              },
                             }}
-                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                            render={({ field }) => (
+                              <input
+                                id="discount_end"
+                                type="date"
+                                value={
+                                  typeof field.value === 'string'
+                                    ? field.value
+                                    : ''
+                                } // ✅ always a string
+                                onChange={(e) => {
+                                  const endDateStr = e.target.value;
+                                  field.onChange(endDateStr); // ✅ store string in form state
+                                }}
+                                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm font-semibold text-gray-700"
+                              />
+                            )}
                           />
-                        )}
-                      />
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -2185,25 +2255,28 @@ export default function ProductForm({
                         <Info size={16} color="#333" />
                       </span>
                     </p>
-                    <div className="w-[800px]">
-                      <Input
-                        label=""
-                        placeholder="0"
-                        type="number"
-                        className="text-[15px]"
-                        {...register('total_tickets', {
-                          setValueAs: (v) => (v === '' ? undefined : Number(v)), // ✅ empty string → undefined
-                          validate: (value) => {
-                            if (value === undefined) return true; // ✅ allow empty
-                            if (typeof value === 'number' && !isNaN(value)) {
-                              if (value < 1)
-                                return 'Total tickets must be at least 1';
-                              return true;
-                            }
-                            return 'Only numbers are allowed';
-                          },
-                        })}
-                      />
+                    <div className="w-[700px]">
+                      <div className="w-[400px]">
+                        <Input
+                          label=""
+                          placeholder="0"
+                          type="number"
+                          className="text-[15px]"
+                          {...register('total_tickets', {
+                            setValueAs: (v) =>
+                              v === '' ? undefined : Number(v), // ✅ empty string → undefined
+                            validate: (value) => {
+                              if (value === undefined) return true; // ✅ allow empty
+                              if (typeof value === 'number' && !isNaN(value)) {
+                                if (value < 1)
+                                  return 'Total tickets must be at least 1';
+                                return true;
+                              }
+                              return 'Only numbers are allowed';
+                            },
+                          })}
+                        />
+                      </div>
                     </div>
                     {errors.total_tickets && (
                       <p className="text-red-500 text-xs mt-1">

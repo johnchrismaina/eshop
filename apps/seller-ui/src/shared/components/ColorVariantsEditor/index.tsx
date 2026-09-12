@@ -162,29 +162,29 @@ const ColorVariantsEditor = forwardRef<
   }, [variants, onHasColorsChange]);
 
   return (
-    <div className="w-full space-y-2 bg-white ">
+    <div className="w-full space-y-2 rounded-lg  ">
       {/* <h2 className="font-bold">Color Variants</h2> */}
       {variants.map((variant, vIndex) => (
         <div
           key={variant.id ?? vIndex}
-          className="p-0 rounded-md space-y-3 relative"
+          className="p-4 space-y-3 relative border border-gray-200 rounded-lg"
         >
           {/* Delete button */}
           <button
             type="button"
             onClick={() => deleteVariant(vIndex)}
-            className="absolute -top-1 right-2 text-red-600 p-1 bg-gray-50 hover:bg-gray-100 rounded-full transition-all duration-150"
+            className="absolute top-6 right-4 text-gray-700 p-1.5 hover:bg-gray-200 rounded-md transition-all duration-150"
             aria-label="Delete variant"
           >
-            <X />
+            <X strokeWidth={1.5} />
           </button>
 
-          <div className="flex items-center justify-start p-0 ">
+          <div className="flex items-center justify-start mt-0 ">
             <span className="font-bold">Color Swatch </span>
           </div>
 
           {/* Color Variant Image Grid */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 gap-3 ">
             {Array.from({ length: 8 }).map((_, i) => {
               const key = `${vIndex}-${i}`;
               const imgObj = variant.images[i]; // ✅ object with fileId + file_url or null
@@ -215,9 +215,10 @@ const ColorVariantsEditor = forwardRef<
             })}
           </div>
 
-          <div className="flex flex-col items-start justify-center space-y-2 ">
+          <div className="flex flex-col items-end justify-center space-y-2 pt-2 ">
             {/* Color name */}
-            <div className="w-full flex items-center gap-3">
+
+            <div className="w-full flex items-center justify-end gap-3">
               <p className="flex items-start justify-center gap-1 text-gray-600">
                 <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
                   Color Name *
@@ -226,17 +227,21 @@ const ColorVariantsEditor = forwardRef<
                   <Info size={16} />
                 </span>
               </p>
-              <input
-                type="text"
-                placeholder="Color name"
-                value={variant.name}
-                onChange={(e) => updateVariant(vIndex, 'name', e.target.value)}
-                className="px-6 py-1 border border-gray-300 rounded-md"
-              />
+              <div className="w-[780px] flex items-center justify-start">
+                <input
+                  type="text"
+                  placeholder="Color name"
+                  value={variant.name}
+                  onChange={(e) =>
+                    updateVariant(vIndex, 'name', e.target.value)
+                  }
+                  className="px-6 py-1 border border-gray-300 rounded-md"
+                />
+              </div>
             </div>
 
             {/* Main title */}
-            <div className="w-full flex items-center gap-3 pt-2 ">
+            <div className="w-full flex items-center justify-end gap-3 pt-2 ">
               <p className="flex items-start justify-center gap-1 text-gray-600">
                 <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
                   Main title
@@ -245,13 +250,15 @@ const ColorVariantsEditor = forwardRef<
                   <Info size={16} />
                 </span>
               </p>
-              <span className="truncate w-full flex-1 text-sm text-yellow-950 px-3 py-2 border border-gray-100 bg-yellow-100 rounded-md">
-                {productTitle || 'No title yet'}
-              </span>
+              <div className="w-[780px] flex items-start justify-start">
+                <span className="truncate w-full flex-1 text-sm text-yellow-950 px-3 py-2 border border-gray-100 bg-yellow-100 rounded-md">
+                  {productTitle || 'No title yet'}
+                </span>
+              </div>
             </div>
 
             {/* Duplicate product title with insert button */}
-            <div className="flex items-center gap-3 pt-2 text-sm text-gray-600">
+            <div className="w-full flex items-center justify-end gap-3 pt-2 text-sm text-gray-600">
               <p className="flex items-start justify-center gap-1 text-gray-600">
                 <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
                   Get Main title
@@ -260,18 +267,20 @@ const ColorVariantsEditor = forwardRef<
                   <Info size={16} />
                 </span>
               </p>
-              <button
-                type="button"
-                onClick={() => updateVariant(vIndex, 'title', productTitle)}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md"
-                aria-label="Insert product title"
-              >
-                <ClipboardPaste size={16} /> Insert title
-              </button>
+              <div className="w-[780px] flex items-center justify-start">
+                <button
+                  type="button"
+                  onClick={() => updateVariant(vIndex, 'title', productTitle)}
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md"
+                  aria-label="Insert product title"
+                >
+                  <ClipboardPaste size={16} /> Insert title
+                </button>
+              </div>
             </div>
 
             {/* Custom Title */}
-            <div className="w-full flex items-start gap-3 pt-2">
+            <div className="w-full flex items-start justify-end gap-3 pt-2">
               <p className="flex items-start justify-center gap-1 text-gray-600">
                 <label className="block shrink-0 text-[15px] font-bold text-gray-800 mb-0">
                   Custom Title *
@@ -280,7 +289,7 @@ const ColorVariantsEditor = forwardRef<
                   <Info size={16} />
                 </span>
               </p>
-              <div className="flex-1">
+              <div className="w-[780px]">
                 <AutoResizeTextarea
                   label=""
                   rows={2}
@@ -309,7 +318,7 @@ const ColorVariantsEditor = forwardRef<
           </label>
 
           {/* Bottom "add" button — same action as the top-bar one, closer to where sellers are working */}
-          <div className="flex items-center justify-start gap-4 pt-2 pb-6">
+          <div className="flex items-center justify-start gap-4 pt-2 pb-2">
             <button
               type="button"
               onClick={addVariant}
@@ -327,7 +336,7 @@ const ColorVariantsEditor = forwardRef<
             </button>
           </div>
 
-          <hr className="border-t border-slate-400 pb-6" />
+          {/* <hr className="border-t border-slate-400 pb-6" /> */}
 
           {/* Variant preview modal */}
           {openVariantPreviewModal && variantPreviewImage && (

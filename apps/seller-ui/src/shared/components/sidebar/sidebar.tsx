@@ -46,7 +46,7 @@ const SidebarWrapper = () => {
   }, [pathName, setActiveSidebar]);
 
   const getIconColor = (route: string) =>
-    activeSidebar === route ? '#0085ff' : '#444';
+    activeSidebar === route ? '#0085ff' : '#4b5563';
 
   // console.log('Sidebar seller:', seller);
 
@@ -83,7 +83,7 @@ const SidebarWrapper = () => {
     <Box
       $css={{
         height: '100vh',
-        zIndex: 202,
+        zIndex: 20,
         position: 'sticky',
         padding: '8px',
         top: '0',

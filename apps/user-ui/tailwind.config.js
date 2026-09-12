@@ -18,6 +18,20 @@ module.exports = {
       screens: {
         lg: '900px', // redefine lg to start at 900px
       },
+      keyframes: {
+        'fade-scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'fade-scale-out': {
+          '0%': { opacity: '1', transform: 'scale(1)' },
+          '100%': { opacity: '0', transform: 'scale(0.95)' },
+        },
+      },
+      animation: {
+        'fade-scale-in': 'fade-scale-in 0.2s ease-out forwards',
+        'fade-scale-out': 'fade-scale-out 0.15s ease-in forwards',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms')],

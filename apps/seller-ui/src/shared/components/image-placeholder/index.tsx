@@ -1,5 +1,4 @@
 import { Pencil, Eye, Plus, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import Spinner from 'packages/components/spinner';
 import React, { useState, useEffect } from 'react';
 
@@ -137,7 +136,7 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
             <label
               // htmlFor={`image-upload-${index}`}
               htmlFor={inputId} /* ✅ */
-              className="p-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded shadow cursor-pointer"
+              className="p-2 bg-slate-600/50 hover:bg-slate-600 text-white rounded shadow cursor-pointer"
             >
               <Pencil size={16} />
             </label>
@@ -167,8 +166,25 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
           className="flex flex-col items-center justify-center w-full h-full text-gray-500"
         >
           <Plus size={24} />
-          <span className="text-xs">
+          {/* <span className="text-xs">
             {dragActive ? 'Drop image here' : 'Upload or Drag Here'}
+          </span> */}
+          <span className="text-sm text-center">
+            {dragActive ? (
+              'Drop image here'
+            ) : idPrefix.startsWith('main') ? (
+              <>
+                Upload Main product image
+                <br />
+                <span className="text-gray-500">or Drag Here</span>
+              </>
+            ) : (
+              <>
+                Upload Variant image
+                <br />
+                <span className="text-gray-500">or Drag Here</span>
+              </>
+            )}
           </span>
         </label>
       )}

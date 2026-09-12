@@ -20,6 +20,7 @@ const HeaderBottom = () => {
   console.log(user);
 
   // bg-gradient-to-b from-[#5C5C62] to-[#4A4A50]
+  // bg-[#161617]/80
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">

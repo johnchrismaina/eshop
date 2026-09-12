@@ -13,6 +13,7 @@ interface ColorThumbnailProps {
     dealPrice?: number;
   }) => void;
   isActive?: boolean;
+  activeAspect: 'square' | 'portrait';
 }
 
 export default function ColorThumbnail({
@@ -25,10 +26,15 @@ export default function ColorThumbnail({
   onLeave,
   onSelect,
   isActive,
+  activeAspect,
 }: ColorThumbnailProps) {
+  const aspectClass =
+    activeAspect === 'square' ? 'aspect-square' : 'aspect-[3/4]';
+
   return (
     <div
-      className={`flex flex-col items-center gap-2 cursor-pointer rounded-md border 
+      className={`w-20 flex flex-col items-center gap-2 cursor-pointer rounded-md border 
+        ${aspectClass}
         ${
           isActive
             ? 'border-none border-gray-200 ring-2 ring-offset-2 ring-slate-800'
@@ -43,7 +49,7 @@ export default function ColorThumbnail({
       <img
         src={image}
         alt={title}
-        className="w-32 h-32 object-cover rounded-t-md "
+        className="w-full h-full object-cover rounded-t-md "
       />
 
       {/* Pricing */}

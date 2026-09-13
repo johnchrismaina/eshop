@@ -595,19 +595,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 className="w-full h-[36px] px-3 border border-gray-300 rounded-md text-[#1C1C1E] text-sm font-medium text-left flex items-center justify-between focus:outline-none focus:border-[#C2410C] focus:ring-2 focus:ring-[#C2410C]/20 transition-shadow"
               >
                 {quantity}
-                <svg
-                  className="w-4 h-4 text-[#333]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                <ChevronDown size={14} />
               </button>
 
               {quantityOpen && (

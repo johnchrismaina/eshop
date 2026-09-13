@@ -70,6 +70,38 @@
               "label": "Men Shirts",
               "filterGroups": [
                 {
+                  "title": "Item details",
+                  "filters": [
+                    {
+                      "label": "Brand Name",
+                      "value": "brand_name",
+                      "multiSelect": true,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official brand name associated with the product."
+                    },
+                    {
+                      "label": "Model Name",
+                      "value": "model_name",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                    },
+                    {
+                      "label": "Manufacturer",
+                      "value": "manufacturer",
+                      "multiSelect": true,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official manufacturer name associated with the product."
+                    }
+                  ]
+                },
+                {
                   "title": "Features & Specs",
                   "filters": [
                     {
@@ -202,13 +234,7 @@
                       "label": "Seasons",
                       "value": "seasons",
                       "type": "enum",
-                      "options": [
-                        "All",
-                        "Summer",
-                        "Autumn",
-                        "Winter",
-                        "Spring"
-                      ],
+                      "options": ["Summer", "Autumn", "Winter", "Spring"],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
@@ -334,9 +360,7 @@
                         "Carbon Impact",
                         "Recycled Fabric",
                         "Eco-Friendly Fabric",
-                        "Eco-Friendly Dye",
                         "Biodegradable",
-                        "Energy Efficient Production",
                         "Animal Welfare",
                         "Farming Practices",
                         "Worker Wellbeing"
@@ -352,8 +376,7 @@
                       "value": "customizable_product",
                       "type": "enum",
                       "options": [
-                        "Yes",
-                        "No",
+                        "Customizable",
                         "Personalized Text",
                         "Custom Size",
                         "Custom Color"
@@ -363,38 +386,6 @@
                       "sellerInput": "single",
                       "required": false,
                       "tooltip": "Indicate whether the product can be customized (e.g., Personalized Text, Custom Size, Custom Color)."
-                    }
-                  ]
-                },
-                {
-                  "title": "Item details",
-                  "filters": [
-                    {
-                      "label": "Brand Name",
-                      "value": "brand_name",
-                      "multiSelect": true,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Enter the official brand name associated with the product."
-                    },
-                    {
-                      "label": "Model Name",
-                      "value": "model_name",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
-                    },
-                    {
-                      "label": "Manufacturer",
-                      "value": "manufacturer",
-                      "multiSelect": true,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Enter the official manufacturer name associated with the product."
                     }
                   ]
                 },
@@ -5844,18 +5835,34 @@
               "type": "enum",
               "options": [
                 "Cotton",
-                "Polyester",
-                "Wool",
-                "Linen",
-                "Leather",
-                "Faux Leather",
-                "Cashmere",
-                "Nylon",
+                "Cotton Blend",
                 "Polycotton",
+                "Polyester",
+                "Polyester Blend",
+                "Cashmere",
+                "Silk",
+                "Silk Blend",
+                "Wool",
+                "Wool Blend",
+                "Linen",
+                "Linen Blend",
+                "Latex",
+                "Leather",
+                "Faux Fur",
+                "Faux Leather",
+                "Neoprene",
+                "Acrylic",
+                "Acrylic Blend",
+                "Nylon",
+                "Nylon Blend",
+                "Polycotton",
+                "Rayon",
+                "Rayon Blend",
+                "Polyvinyl Chloride (PVC)",
+                "Sequined",
                 "Acrylic",
                 "Spandex",
-                "Silk",
-                "Rayon"
+                "Suede"
               ],
               "multiSelect": true,
               "render": "dropdown",
@@ -5873,19 +5880,20 @@
                 "Floral",
                 "Checkered",
                 "Geometric",
+                "Polka Dots",
                 "Camouflage",
                 "Animal Print",
                 "Letter Print",
-                "Polka Dots",
+                "Chevron",
                 "Hearts",
                 "Plaid",
                 "Stars",
-                "Chevron",
-                "Argyle",
                 "Fruits",
+                "Argyle",
                 "Herringbone",
                 "Houndstooth",
-                "Paisley"
+                "Paisley",
+                "Moire"
               ],
               "multiSelect": true,
               "render": "dropdown",
@@ -5900,101 +5908,102 @@
               "label": "Dresses",
               "filterGroups": [
                 {
+                  "title": "Item details",
+                  "filters": [
+                    {
+                      "label": "Brand Name",
+                      "value": "brand_name",
+                      "multiSelect": true,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official brand name associated with the product."
+                    },
+                    {
+                      "label": "Model Name",
+                      "value": "model_name",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                    },
+                    {
+                      "label": "Manufacturer",
+                      "value": "manufacturer",
+                      "multiSelect": true,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Enter the official manufacturer name associated with the product."
+                    }
+                  ]
+                },
+                {
                   "title": "Features & Specs",
                   "filters": [
                     {
-                      "label": "Fit Type",
-                      "value": "fit_type",
+                      "label": "Item Length",
+                      "value": "item_length",
                       "type": "enum",
                       "options": [
-                        "Regular",
-                        "Fitted",
-                        "Slim",
-                        "Athletic",
-                        "Oversized",
-                        "Straight",
-                        "Relaxed",
-                        "Tailored"
-                      ],
-                      "multiSelect": true,
-                      "render": "checkbox",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Choose the fit style that best describes the product."
-                    },
-                    {
-                      "label": "Collar Style",
-                      "value": "collar_style",
-                      "type": "enum",
-                      "options": [
-                        "Polo Collar",
-                        "Button Down Collar",
-                        "Laydown Collar",
-                        "Flat Collar",
-                        "Mandarin Collar",
-                        "Hidden Button Down Collar",
-                        "Spread Collar",
-                        "Wingtip Collar",
-                        "Collarless",
-                        "Band Collar",
-                        "Lapel Collar",
-                        "Cutaway Collar",
-                        "Point Collar",
-                        "Club Collar",
-                        "Camp Collar",
-                        "Eyelet Collar"
+                        "Mini",
+                        "Midi",
+                        "Maxi",
+                        "Knee Length",
+                        "Above the Knee",
+                        "Below the Knee",
+                        "Mid-Thigh Length",
+                        "Ankle Length",
+                        "High Low",
+                        "Calf Length",
+                        "Mid-Calf Length",
+                        "Tea Length"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Select the collar design that best matches the product (e.g., Spread, Mandarin, Wingtip)."
+                      "tooltip": "Select the item length that best matches the product (e.g., Mini, Knee Length, Maxi)."
                     },
                     {
-                      "label": "Neck Style",
-                      "value": "neck_style",
+                      "label": "Occasion",
+                      "value": "occasion",
                       "type": "enum",
                       "options": [
-                        "Round Neck",
-                        "Scoop Neck",
-                        "Notch Neck",
-                        "Square Neck",
-                        "Turtle Neck",
-                        "V-Neck",
-                        "Boat Neck",
-                        "Crew Neck",
-                        "Asymmetric Neck",
-                        "Choker Neck",
-                        "Collared Neck",
-                        "High Neck",
-                        "Cowl Neck",
-                        "Mock Neck",
-                        "Hooded Neck",
-                        "Henley Neck",
-                        "Tie Neck"
+                        "Birthday",
+                        "Anniversary",
+                        "Prom Homecoming",
+                        "Baby Shower",
+                        "Bridal Shower",
+                        "Father's Day",
+                        "Mother's Day",
+                        "Easter",
+                        "Christmas",
+                        "Baptism",
+                        "Communion",
+                        "Valentine's Day",
+                        "Bachelorette Party",
+                        "Bachelor Party",
+                        "Dedication Ceremony",
+                        "Diwali",
+                        "Engagement",
+                        "Wedding",
+                        "Honeymoon",
+                        "Graduation",
+                        "Funeral",
+                        "Haloween",
+                        "New Baby",
+                        "New Year",
+                        "Thanksgiving",
+                        "Vacation",
+                        "Women's Day"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
-                      "label": "Sleeve Type",
-                      "value": "sleeve_type",
-                      "type": "enum",
-                      "options": [
-                        "Short Sleeve",
-                        "Half Sleeve",
-                        "Long Sleeve",
-                        "Sleeveless",
-                        "3/4 Sleeve"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Select the sleeve design that best describes the product (e.g., Short Sleeve, Sleeveless, Three-Quarter Sleeve)."
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Select the occasion or event where the product is most suitable to wear (e.g., Anniversary, Graduation, Wedding)."
                     },
                     {
                       "label": "Lifestyle",
@@ -6006,10 +6015,12 @@
                         "Business Professional",
                         "Formal",
                         "Comfort",
-                        "Dress",
                         "Evening",
-                        "Themed",
-                        "Work Utility"
+                        "Prom",
+                        "Wedding",
+                        "Party",
+                        "Cocktail",
+                        "Club"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
@@ -6018,21 +6029,115 @@
                       "tooltip": "Select the lifestyle or dress code the product is best suited for (e.g., Casual, Business Casual, Formal)."
                     },
                     {
-                      "label": "Seasons",
-                      "value": "seasons",
+                      "label": "Embellishment Feature",
+                      "value": "embellishment",
                       "type": "enum",
                       "options": [
-                        "All",
-                        "Summer",
-                        "Autumn",
-                        "Winter",
-                        "Spring"
+                        "Lace",
+                        "Glitter",
+                        "Bead",
+                        "Crystal",
+                        "Bow",
+                        "Sequin",
+                        "Buckle",
+                        "Fringe",
+                        "Feather",
+                        "Tassel",
+                        "Logo",
+                        "Pearl",
+                        "Twist Knot",
+                        "Rhinestone",
+                        "Piping"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi",
+                      "sellerInput": "single",
                       "required": false,
-                      "tooltip": "Select the season(s) during which the product is most suitable for wear (e.g., Summer, Winter)."
+                      "tooltip": "Select the embellishment feature on the product (e.g., Adult, Senior)."
+                    },
+                    {
+                      "label": "Neck Style",
+                      "value": "neck_style",
+                      "type": "enum",
+                      "options": [
+                        "Round Neck",
+                        "Scoop Neck",
+                        "Notch Neck",
+                        "Square Neck",
+                        "Turtle Neck",
+                        "Jewel Neck",
+                        "Funnel Neck",
+                        "U-Neck",
+                        "V-Neck",
+                        "Off Shoulder Neck",
+                        "One Shoulder Neck",
+                        "Scallop Neck",
+                        "Boat Neck",
+                        "Halter Neck",
+                        "Crew Neck",
+                        "Asymmetric Neck",
+                        "Choker Neck",
+                        "Keyhole Neck",
+                        "Collared Neck",
+                        "Envelope Neck",
+                        "Plunging Neck",
+                        "Sweetheart Neck",
+                        "Scoop Neck",
+                        "High Neck",
+                        "Split Neck",
+                        "Cowl Neck",
+                        "Mock Neck",
+                        "Hooded Neck",
+                        "Surplice Neck",
+                        "Henley Neck",
+                        "Illusion Neck",
+                        "Tie Neck"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
+                    },
+                    {
+                      "label": "Silhouette",
+                      "value": "silhouette",
+                      "type": "enum",
+                      "options": [
+                        "A-line",
+                        "Ball Gown",
+                        "Princess",
+                        "Sheath",
+                        "Empire Waist",
+                        "Shift",
+                        "Mermaid",
+                        "Asymmetrical",
+                        "Fit-And-Flare",
+                        "Trumpet"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Select the silhouette on the product (e.g., A-line, Ball Gown, Princess)."
+                    },
+                    {
+                      "label": "Sleeve Type",
+                      "value": "sleeve_type",
+                      "type": "enum",
+                      "options": [
+                        "Short Sleeve",
+                        "Sleeveless",
+                        "Half Sleeve",
+                        "Bracelet Sleeve",
+                        "3/4 Sleeve",
+                        "Long Sleeve"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Select the sleeve design that best describes the product (e.g., Short Sleeve, Sleeveless, Three-Quarter Sleeve)."
                     },
                     {
                       "label": "Closure Type",
@@ -6041,43 +6146,56 @@
                       "options": [
                         "Button",
                         "Pull On",
-                        "Zipper",
+                        "Double Ring",
                         "Drawstring",
+                        "Hook & Eye",
+                        "Hook & Loop",
+                        "Toggle",
                         "Snap",
-                        "Buckle"
+                        "Magnetic",
+                        "Zipper"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Select the fastening method used to close the product (e.g., Button, Zipper, Velcro)."
+                    },
+                    {
+                      "label": "Fit Type",
+                      "value": "fit_type",
+                      "type": "enum",
+                      "options": [
+                        "Regular",
+                        "Fitted",
+                        "Flowy",
+                        "Slim",
+                        "Athletic",
+                        "Relaxed",
+                        "Loose",
+                        "Boxy",
+                        "Oversized",
+                        "Straight",
+                        "skinny",
+                        "Snug",
+                        "Tailored"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Select the fastening method used to close the product (e.g., Button, Zipper, Pull On )."
+                      "tooltip": "Choose the fit style that best describes the product."
                     },
                     {
-                      "label": "Occasion",
-                      "value": "occasion",
+                      "label": "Weave Method",
+                      "value": "weave_method",
                       "type": "enum",
-                      "options": [
-                        "Birthday",
-                        "Anniversary",
-                        "Father's Day",
-                        "Mother's Day",
-                        "Easter",
-                        "Baptism",
-                        "Communion",
-                        "Christmas",
-                        "Valentine's Day",
-                        "Bachelor Party",
-                        "Bachelorette Party",
-                        "Wedding",
-                        "Honeymoon",
-                        "Graduation",
-                        "Vacation"
-                      ],
+                      "options": ["Handloom", "Powerloom"],
                       "multiSelect": true,
                       "render": "dropdown",
-                      "sellerInput": "multi",
+                      "sellerInput": "single",
                       "required": false,
-                      "tooltip": "Select the occasion or event where the product is most suitable to wear (e.g., Anniversary, Graduation, Wedding)."
+                      "tooltip": "Specify the weave method of the product (e.g., Handloom, Powerloom)."
                     },
                     {
                       "label": "Origin",
@@ -6095,44 +6213,17 @@
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": false,
-                      "tooltip": "Specify the country or region where the product was manufactured or sourced (e.g., Made in Kenya, Imported, Handmade)."
-                    },
-                    {
-                      "label": "Age Description",
-                      "value": "age",
-                      "type": "enum",
-                      "options": ["Adults", "Senior"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Select the age group the product is designed for (e.g., Adult, Senior)."
-                    },
-                    {
-                      "label": "Pocket Description",
-                      "value": "pockets",
-                      "type": "enum",
-                      "options": ["Pocket", "No Pockets"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Specify the type and placement of pockets on the product (e.g., Pockets, No Pockets)."
+                      "tooltip": "Specify the country or region where the product was manufactured or sourced (e.g., Made in Kenya, Imported)."
                     },
                     {
                       "label": "Sustainability Features",
                       "value": "sustainability_features",
                       "type": "enum",
                       "options": [
-                        "Organic Material",
                         "Carbon Impact",
                         "Recycled Fabric",
                         "Eco-Friendly Fabric",
-                        "Eco-Friendly Dye",
                         "Biodegradable",
-                        "Energy Efficient Production",
-                        "Animal Welfare",
-                        "Farming Practices",
                         "Worker Wellbeing"
                       ],
                       "multiSelect": true,
@@ -6146,8 +6237,7 @@
                       "value": "customizable_product",
                       "type": "enum",
                       "options": [
-                        "Yes",
-                        "No",
+                        "Customizable",
                         "Personalized Text",
                         "Custom Size",
                         "Custom Color"
@@ -6161,60 +6251,32 @@
                   ]
                 },
                 {
-                  "title": "Item details",
-                  "filters": [
-                    {
-                      "label": "Brand Name",
-                      "value": "brand_name",
-                      "type": "text",
-                      "multiSelect": false,
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Enter the official brand name associated with the product."
-                    },
-                    {
-                      "label": "Model Name",
-                      "value": "model_name",
-                      "type": "text",
-                      "multiSelect": false,
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
-                    },
-                    {
-                      "label": "Manufacturer",
-                      "value": "manufacturer",
-                      "type": "text",
-                      "multiSelect": false,
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Enter the official manufacturer name associated with the product."
-                    }
-                  ]
-                },
-                {
                   "title": "Materials & Care",
                   "filters": [
                     {
                       "label": "Fabric Type",
                       "value": "fabric_type",
-                      "type": "text",
-                      "multiSelect": false,
+                      "multiSelect": true,
+                      "render": "text",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Specify the fabric type used in the product (e.g., Denim, Silk, Jersey, 50% Polyester, 50% Cotton )."
+                      "tooltip": "Specify the fabric type used in the product (e.g., Denim, Silk, Jersey, 50% Polyester, 50% Cotton)."
                     },
 
                     {
                       "label": "Product Care Instructions",
-                      "value": "product_care_instructions",
+                      "value": "product_care",
                       "type": "enum",
-                      "options": ["Dry Clean", "Hand Wash", "Machine Wash"],
+                      "options": [
+                        "Hand Wash",
+                        "Dry Clean Only",
+                        "Machine Wash"
+                      ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash, Dry Clean, Machine Wash )."
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
                     },
                     {
                       "label": "Special Features",
@@ -6256,8 +6318,8 @@
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Select the fabric weight category that best describes the product (e.g., Lightweight, Heavyweight)."
+                      "required": false,
+                      "tooltip": "Select the fabric weight category that best describes the product (e.g., Lightweight for summer wear, Heavyweight for winter wear)."
                     }
                   ]
                 },
@@ -6265,27 +6327,10 @@
                   "title": "Size & Fit",
                   "filters": [
                     {
-                      "label": "Fit to Size",
-                      "value": "fit",
-                      "type": "enum",
-                      "options": [
-                        "True to size",
-                        "Runs Slightly small",
-                        "Runs small",
-                        "Runs Slightly Large",
-                        "Runs large"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Describe how the product fits compared to standard sizing (e.g., True to Size, Runs Slightly small, Runs Slightly Large)."
-                    },
-                    {
                       "label": "Weight",
                       "value": "weight",
-                      "type": "text",
                       "multiSelect": false,
+                      "render": "text",
                       "sellerInput": "single",
                       "required": false,
                       "tooltip": "Specify the product’s weight, including units (e.g., 500g, 2kg, 1.5 lbs)."
@@ -6295,7 +6340,7 @@
                       "value": "size_country",
                       "type": "enum",
                       "options": [
-                        "United Stated",
+                        "United States",
                         "UK",
                         "EU",
                         "Japan",
@@ -6312,10 +6357,39 @@
                 }
               ],
               "subCategories": [
-                { "value": "polo_shirt", "label": "Polo Shirt" },
-                { "value": "sport_jersey", "label": "Sport Jersey" },
-                { "value": "tshirt", "label": "T-Shirt" },
-                { "value": "tuxedo_shirt", "label": "Tuxedo Shirt" }
+                { "value": "mini_dress", "label": "Mini Dress" },
+                { "value": "midi_dress", "label": "Midi Dress" },
+                { "value": "maxi_dress", "label": "Maxi Dress" },
+                { "value": "halter_dress", "label": "Halter Dress" },
+                { "value": "cocktail_dress", "label": "Cocktail Dress" },
+                { "value": "wrap_dress", "label": "Wrap Dress" },
+                { "value": "square_neck_dress", "label": "Square-Neck Dress" },
+                {
+                  "value": "off_the_shoulder_dress",
+                  "label": "Off-the-Shoulder Dress"
+                },
+                { "value": "shirt_dress", "label": "Shirt Dress" },
+                { "value": "sweater_dress", "label": "Sweater Dress" },
+                { "value": "bubble_dress", "label": "Bubble Dress" },
+                { "value": "sundress_dress", "label": "Sundress Dress" },
+                {
+                  "value": "trumpet_sleeve_dress",
+                  "label": "Trumpet-Sleeve Dress"
+                },
+                { "value": "sweetheart_dress", "label": "Sweetheart Dress" },
+                { "value": "shift_dress", "label": "Shift Dress" },
+                { "value": "structured_dress", "label": "Structured Dress" },
+                {
+                  "value": "one_shoulder_dress",
+                  "label": "One-Shoulder Dress"
+                },
+                { "value": "denim_dress", "label": "Denim Dress" },
+                { "value": "chevron_dress", "label": "Chevron Dress" },
+                { "value": "bodycon_dress", "label": "Bodycon Dress" },
+                { "value": "sheer_dress", "label": "Sheer Dress" },
+                { "value": "high_low_dress", "label": "High-Low Dress" },
+                { "value": "slip_dress", "label": "Slip Dress" },
+                { "value": "evening_dress", "label": "Evening Dress" }
               ],
               "highlights": [
                 { "ref": "fit_type" },

@@ -39,6 +39,7 @@ import axios from 'axios';
 import ColorVariantsEditor, {
   ColorVariantsEditorHandle,
 } from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
+import BasicDropdown from '../BasicDropdown';
 
 const TABS = [
   'Product Identity',
@@ -296,6 +297,9 @@ export default function ProductForm({
 
     return errors;
   };
+
+  // Basic dropdown state
+  const [condition, setCondition] = useState('');
 
   // Inside ProductForm, alongside `mode`, `isDealRoute`, `product` (whatever these are already destructured from)
 
@@ -954,18 +958,17 @@ export default function ProductForm({
       {/* Tabs Section */}
       <div className="w-full lg:w-full mx-auto bg-[#fff] ">
         {/* Tabs */}
-        <div className="flex justify-center  overflow-hidden mx-8">
+        <div className="flex justify-center overflow-hidden mx-8">
           {TABS.map((tab) => (
             <button
               key={tab}
-              type="button" // ✅ prevents accidental form submission
-              // onClick={() => setActiveTab(tab)}
+              type="button"
               onClick={() => handleTabChange(tab)}
-              className={`py-3 px-4 text-[15px] font-bold ${
+              className={`py-3 px-4 text-[15px] font-bold border-b-2 transition-colors duration-200 ${
                 activeTab === tab
-                  ? 'text-[#1C1C1E] border-b-2 border-[#FEA417]'
-                  : 'text-gray-500 border-b border-slate-300'
-              } transition-all duration-100`}
+                  ? 'text-[#1C1C1E] border-[#FEA417]'
+                  : 'text-gray-500 border-slate-300'
+              }`}
             >
               {tab}
             </button>
@@ -1003,7 +1006,7 @@ export default function ProductForm({
               </div>
               {/* Slug */}
               <div className="w-full flex flex-col items-start justify-start gap-1 px-4">
-                <div className="w-full flex items-start justify-end gap-3 bg-white px-0 pt-3 rounded-sm ">
+                <div className="w-full flex items-center justify-end gap-3 bg-white px-0 pt-3 rounded-sm ">
                   <p className="flex items-start justify-center gap-1 shrink-0">
                     <label className="block text-[15px] font-bold  text-gray-800 mb-2">
                       Slug *
@@ -2054,18 +2057,29 @@ export default function ProductForm({
                 </p>
                 <div className="w-[700px]">
                   <div className="w-[400px]">
-                    <Input
-                      id="condition"
-                      label=""
-                      placeholder="Example: New, Used, Renewed"
-                      type="text"
-                      className="text-[15px]"
-                      {...register('condition', {
+                    <Controller
+                      name="condition"
+                      control={control}
+                      rules={{
                         required: 'Item condition is required',
                         validate: (value) =>
                           value.trim().length > 0 ||
                           'Item condition cannot be empty',
-                      })}
+                      }}
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <BasicDropdown
+                            options={['New', 'Used', 'Renewed']}
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                          {fieldState.error && (
+                            <p className="text-red-500 text-xs mt-1">
+                              {fieldState.error.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
                     />
                   </div>
                 </div>

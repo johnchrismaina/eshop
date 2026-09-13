@@ -24,13 +24,13 @@ const HeaderBottom = () => {
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
-    <div className="relative z-10 w-full transition-all duration-300 bg-[#161617]/80 border-none border-gray-200 shadow-none shadow-gray-300/10 ">
-      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-4 h-full text-[#fff] ">
+    <div className="relative z-10 w-full transition-all duration-300 bg-[#fff] border-b border-gray-200 shadow-none shadow-gray-300/10 ">
+      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-4 h-full text-[#333] ">
         {/* All Dropdowns */}
         <div>
           {/* Bottom header button */}
           <button
-            className="flex items-center justify-center gap-2.5 px-2 py-2 text-[13.5px] text-[#fff] font-bold hover:text-[#fff] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0 "
+            className="flex items-center justify-center gap-2.5 px-2 py-2 text-[13.5px] text-[#333] font-bold hover:text-[#fff] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0 "
             onClick={() => setShowSidebar(true)}
           >
             <Menu size={16} />
@@ -51,7 +51,7 @@ const HeaderBottom = () => {
               className={`flex items-center px-3 py-2 text-[13.5px] h-full rounded-sm transition-colors duration-150 ${
                 i.accent
                   ? 'text-[#FEA417] font-semibold hover:text-amber-500'
-                  : 'text-[#fff] font-medim hover:text-[#fff]'
+                  : 'text-[#333] font-semibold hover:text-[#333]'
               }`}
               href={i.href}
               key={index}

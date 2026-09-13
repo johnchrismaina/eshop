@@ -2069,7 +2069,7 @@ export default function ProductForm({
                       render={({ field, fieldState }) => (
                         <div className="flex flex-col gap-1">
                           <BasicDropdown
-                            options={['New', 'Used', 'Renewed']}
+                            options={['New', 'Renewed', 'Used']}
                             value={field.value}
                             onChange={field.onChange}
                           />

@@ -295,7 +295,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
           <div
             ref={searchContainerRef}
-            className="flex items-center h-[38px] bg-[#fff] rounded-full border border-gray-200
+            className="flex items-center h-[36px] bg-[#fff] rounded-md border border-gray-200
                  focus-within:border-orange-500/50 overflow-hidden 
                  focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
                  transition-all duration-200 ease-out "
@@ -328,7 +328,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
             <button
               aria-label="Search"
-              className="flex items-center justify-center w-14 h-[38px] mr-[0px] rounded-r-full
+              className="flex items-center justify-center w-14 h-[36px] mr-[0px] rounded-r-md
                    text-[#EE7B30] hover:text-[#E85D1F] bg-[#fafafa] border-l border-[#ddd]
                    transition-colors flex-shrink-0"
             >

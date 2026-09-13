@@ -11694,6 +11694,1379 @@
           ]
         }
       ]
+    },
+    {
+      "value": "cellphones_accessories",
+      "label": "Cell Phones & Accessories",
+      "filterLibrary": [
+        {
+          "label": "Brands",
+          "value": "brands",
+          "type": "enum",
+          "options": [
+            "Nokia",
+            "Apple",
+            "Samsung",
+            "Motorola",
+            "Google",
+            "LG",
+            "Sony",
+            "Blackberry",
+            "OnePlus",
+            "XIAOMI",
+            "Realme",
+            "HTC",
+            "HONOR",
+            "OPPO",
+            "Tecno",
+            "Acer",
+            "TCL",
+            "Logitech",
+            "PHILIPS",
+            "JBL",
+            "Anker",
+            "Oraimo",
+            "OtterBox",
+            "PopSockets",
+            "Bose",
+            "Sonim"
+          ],
+          "multiSelect": true,
+          "render": "dropdown",
+          "sellerInput": "single",
+          "required": true,
+          "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+        },
+        {
+          "label": "Item Condition",
+          "value": "item_condition",
+          "type": "enum",
+          "options": ["New", "Renewed", "Used"],
+          "multiSelect": true,
+          "render": "dropdown",
+          "sellerInput": "single",
+          "required": true,
+          "tooltip": "Select the item condition of the product (e.g., New, Renewed, Used)."
+        },
+        {
+          "label": "Sustainability Features",
+          "value": "sustainability_features",
+          "type": "enum",
+          "options": [
+            "Carbon Impact",
+            "Energy Efficiency",
+            "Recycled Materials",
+            "Manufacturing Practices",
+            "Eco-Friendly Chemicals",
+            "Worker Wellbeing"
+          ],
+          "multiSelect": true,
+          "render": "dropdown",
+          "sellerInput": "single",
+          "required": false,
+          "tooltip": "Highlight any eco-friendly or sustainable qualities of the product (e.g., Organic Material, Recycled Fabric, Biodegradable)."
+        }
+      ],
+      "subCategories": [
+        {
+          "value": "cell_phones",
+          "label": "Cell Phones",
+          "filterGroups": [
+            {
+              "title": "Item details",
+              "filters": [
+                {
+                  "label": "Model Name",
+                  "value": "model_name",
+                  "multiSelect": false,
+                  "render": "text",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                },
+                {
+                  "label": "Manufacturer",
+                  "value": "manufacturer",
+                  "multiSelect": true,
+                  "render": "text",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Enter the official manufacturer name associated with the product."
+                }
+              ]
+            },
+            {
+              "title": "Features & Specs",
+              "filters": [
+                {
+                  "label": "Operating System",
+                  "value": "operating_system",
+                  "type": "enum",
+                  "options": [
+                    "Android",
+                    "iOS",
+                    "Blackberry",
+                    "Symbian",
+                    "Linux"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the operating system the product (e.g., Android, IOS)."
+                },
+                {
+                  "label": "Operating System Version",
+                  "value": "os_version",
+                  "type": "enum",
+                  "options": [
+                    "Android 14",
+                    "Android 13",
+                    "Android 12",
+                    "Android 11",
+                    "Android 10",
+                    "Android 9",
+                    "iOS 17",
+                    "iOS 16",
+                    "iOS 13",
+                    "Android 8.1",
+                    "Android 8.0",
+                    "Android 7.1",
+                    "Android 6.0",
+                    "Android 4.4",
+                    "BlackBerry 10.0"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the operating system version the product (e.g., Android 14, iOS 17)."
+                },
+                {
+                  "label": "Storage Capacity",
+                  "value": "storage_capacity",
+                  "type": "enum",
+                  "options": [
+                    "4 GB",
+                    "8 GB",
+                    "16 GB",
+                    "32 GB",
+                    "64 GB",
+                    "128 GB",
+                    "256 GB",
+                    "512 GB",
+                    "1 TB",
+                    "1 TB & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the storage capacity of the product (e.g., 4 GB, 32 GB, 256 GB)."
+                },
+                {
+                  "label": "Model Year",
+                  "value": "model_year",
+                  "type": "enum",
+                  "options": [
+                    "2026",
+                    "2025",
+                    "2024",
+                    "2023",
+                    "2022",
+                    "2021",
+                    "2020",
+                    "2019",
+                    "2018",
+                    "2017",
+                    "2016"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the model manufacturing year of the product (e.g., 2020, 2026)."
+                },
+                {
+                  "label": "RAM Size",
+                  "value": "ram_size",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1.9 GB",
+                    "2 to 3.9 GB",
+                    "4 to 5.9 GB",
+                    "6 to 7.9 GB",
+                    "8 to 9.9 GB",
+                    "10 BG and Above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the RAM Size of the product (e.g., Crew Neck, V-Neck, Turtleneck)."
+                },
+                {
+                  "label": "Special Features",
+                  "value": "special_features",
+                  "type": "enum",
+                  "options": [
+                    "Dual SIM",
+                    "Always On Display",
+                    "Fast Charging Support",
+                    "Built-In GPS",
+                    "Mobile Hotspot Capability",
+                    "Expandable Memory",
+                    "Wireless Charging",
+                    "Reverse Wireless Charging",
+                    "Rugged Body",
+                    "Quad-Band",
+                    "Stereo Speakers",
+                    "Water Resistant",
+                    "Dust Resistant"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Highlight any unique or standout qualities of the product (e.g., Always On Display, Water Resistant, Rugged Body)."
+                },
+                {
+                  "label": "Connectivity",
+                  "value": "connectivity",
+                  "type": "enum",
+                  "options": ["Wi-Fi", "Bluetooth", "USB", "NFC", "Infrared"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "multi",
+                  "required": true,
+                  "tooltip": "Highlight any connectivity features of the product (e.g., Wi-Fi, USB, Bluetooth)."
+                },
+                {
+                  "label": "Screen Size",
+                  "value": "screen_size",
+                  "type": "enum",
+                  "options": [
+                    "Up to 4.9 inches",
+                    "5 to 5.9 inches",
+                    "6 to 6.9 inches",
+                    "7 inches & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the screen size of the product (e.g., 5 to 5.9 inches, 6 to 6.9 inches)."
+                },
+                {
+                  "label": "Display Type",
+                  "value": "display_type",
+                  "type": "enum",
+                  "options": ["AMOLED", "LCD", "OLED"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Choose the display type of the product."
+                },
+                {
+                  "label": "Water Resistance Level",
+                  "value": "water_resistance",
+                  "type": "enum",
+                  "options": [
+                    "Water-Resistant",
+                    "Not Water Resistant",
+                    "Moisture Resistant",
+                    "Water Repellent",
+                    "Waterproof"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Specify the water resistance level of the product (e.g., Water-Resistant, Moisture Resistant)."
+                },
+                {
+                  "label": "Battery Capacity",
+                  "value": "battery_capacity",
+                  "type": "enum",
+                  "options": [
+                    "Up to 2,999 mAh",
+                    "3,000 to 3,999 mAh",
+                    "4,000 to 4,999 mAh",
+                    "5,000 to 5,999 mAh",
+                    "6,000 mAh & Above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Specify the battery capacity of the product."
+                },
+                {
+                  "label": "SIM Card Slot Count",
+                  "value": "sim_count",
+                  "type": "enum",
+                  "options": ["E SIM", "Single SIM", "Dual SIM", "Tripple SIM"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Specify the SIM card count of the product."
+                },
+                {
+                  "label": "Included Components",
+                  "value": "included_components",
+                  "type": "enum",
+                  "options": [
+                    "USB Cable",
+                    "Headset",
+                    "Power Adapter",
+                    "SIM Tray Ejector",
+                    "Phone Case",
+                    "Stylus",
+                    "Screen Protector",
+                    "USB OTG Adapter"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate whether the product ships with included components."
+                },
+                {
+                  "label": "Connector Type",
+                  "value": "connector_type",
+                  "type": "enum",
+                  "options": [
+                    "USB Type C",
+                    "Micro USB",
+                    "3.5mm Jack",
+                    "Lightning"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Select the connector type of the product (e.g., USB Type C, Micro USB)."
+                },
+                {
+                  "label": "Camera Resolution",
+                  "value": "camera_resolution",
+                  "type": "enum",
+                  "options": [
+                    "Up to 2.9 MP",
+                    "3 to 4.9 MP",
+                    "5 to 7.9 MP",
+                    "8 to 12.9 MP",
+                    "13 to 19.9 MP",
+                    "20 MP & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the camera resolution of the product."
+                },
+                {
+                  "label": "Purpose",
+                  "value": "purpose",
+                  "type": "enum",
+                  "options": [
+                    "Photography",
+                    "Streaming",
+                    "Video Conferencing",
+                    "Gaming"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the purpose that best describes the product."
+                },
+                {
+                  "label": "Phone Talk Time",
+                  "value": "talk_time",
+                  "type": "enum",
+                  "options": [
+                    "Up to 9 h",
+                    "10 to 14 h",
+                    "15 to 24 h",
+                    "25 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the cell phone talk time."
+                },
+                {
+                  "label": "Display Resolution",
+                  "value": "connector_type",
+                  "type": "enum",
+                  "options": [
+                    "1440x3088",
+                    "2640x1080",
+                    "720x1640",
+                    "2340 x 1080",
+                    "3840 x 2160",
+                    "1920 x 1080",
+                    "1440 x 3200",
+                    "1080 x 2340",
+                    "720 x 1280",
+                    "720 x 1560",
+                    "720 x 1440",
+                    "720 x 1600",
+                    "1600 x 720",
+                    "3040 x 1440",
+                    "1440 x 2880",
+                    "320 x 240",
+                    "1080 x 2280",
+                    "240 x 320",
+                    "720 x 1520",
+                    "3120 x 1440",
+                    "1080 x 1920",
+                    "1080 x 2400",
+                    "1280 x 720",
+                    "1080 x 2160",
+                    "1440 x 3120",
+                    "2400 x 1080",
+                    "2560 x 1440",
+                    "2960 x 1440",
+                    "1560 x 720",
+                    "480 x 800"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the display resolution of the product."
+                },
+                {
+                  "label": "Battery Type",
+                  "value": "battery_type",
+                  "type": "enum",
+                  "options": ["Lithium-Ion", "Lithium-Polymer"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the battery type of the product (e.g., Lithium-Ion, Lithium-Polymer)."
+                },
+                {
+                  "label": "Video Capture Resolution",
+                  "value": "video_resolution",
+                  "type": "enum",
+                  "options": ["1080p", "720p", "2K", "4K", "8K"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the video resolution of the product (e.g., 1080p, 4K, 8K)."
+                },
+                {
+                  "label": "Battery Life",
+                  "value": "battery_life",
+                  "type": "enum",
+                  "options": [
+                    "Up to 6.9 h",
+                    "7 to 12.9 h",
+                    "13 to 18.9 h",
+                    "19 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the battery life of the product."
+                },
+                {
+                  "label": "Security Feature",
+                  "value": "security_feature",
+                  "type": "enum",
+                  "options": [
+                    "Face Recognition",
+                    "Fingerprint Recognition",
+                    "Voice Recognition"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Highlight any security features of the product (e.g., Face Recognition, Fingerprint Recognition)."
+                },
+                {
+                  "label": "Width",
+                  "value": "width",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1 in",
+                    "1 to 1.9 in",
+                    "2 to 2.9 in",
+                    "3 in & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the product width."
+                },
+                {
+                  "label": "Wireless Network Technology",
+                  "value": "wireless_technology",
+                  "type": "enum",
+                  "options": [
+                    "LTE",
+                    "GSM",
+                    "Wi-Fi",
+                    "Bluetooth",
+                    "CDMA",
+                    "TDMA",
+                    "UMTS",
+                    "NFC"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Select the wireless network technology used by the product (e.g., LTE, GSM)."
+                },
+                {
+                  "label": "Item Height",
+                  "value": "item_height",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1 in",
+                    "1 to 1.9 in",
+                    "2 to 2.9 in",
+                    "3 in & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the height of the item."
+                },
+                {
+                  "label": "Average Battery Life Talk Time",
+                  "value": "average_talk_time",
+                  "type": "enum",
+                  "options": [
+                    "Up to 4 h",
+                    "5 to 9 h",
+                    "10 to 19 h",
+                    "20 to 24 h",
+                    "25 to 29 h",
+                    "30 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the Average battery life talk time of the product."
+                },
+                {
+                  "label": "Display Refresh Rate in Hertz",
+                  "value": "display_refresh",
+                  "type": "enum",
+                  "options": ["60", "90", "120", "144", "165"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the display refresh rate of the product."
+                },
+                {
+                  "label": "Sim Card Size",
+                  "value": "sim_size",
+                  "type": "enum",
+                  "options": ["eSIM", "Nano", "Micro", "Mini", "Standard"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the sim card size (e.g., eSIM, Micro)."
+                },
+                {
+                  "label": "Length",
+                  "value": "length",
+                  "type": "enum",
+                  "options": [
+                    "Up to 3.9 in",
+                    "4 to 4.9 in",
+                    "5 to 5.9 in",
+                    "6 in & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the length of the product."
+                },
+                {
+                  "label": "GenAI Model",
+                  "value": "ai_model",
+                  "type": "enum",
+                  "options": ["Gemini AI", "Galaxy AI"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the AI Model used by the product."
+                },
+                {
+                  "label": "Camera Feature",
+                  "value": "camera_feature",
+                  "type": "enum",
+                  "options": [
+                    "Optical Zoom",
+                    "Raw Capture",
+                    "AI Enhanced HDR",
+                    "AI Enhanced Zoom",
+                    "Eye Detection",
+                    "Face Detection",
+                    "Portrait Enhancement",
+                    "Real-time Object Recognition",
+                    "Scene Optimization",
+                    "Best Shot Selection",
+                    "Object/Subject Tracking",
+                    "Image Stacking",
+                    "Motion Detection"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "multi",
+                  "required": false,
+                  "tooltip": "Highlight any camera features of the product (e.g., Raw Capture, AI Enhanced HDR)."
+                },
+                {
+                  "label": "Input",
+                  "value": "input",
+                  "type": "enum",
+                  "options": [
+                    "Touchscreen",
+                    "Buttons",
+                    "Keyboard",
+                    "Keypad",
+                    "Gesture",
+                    "Dial",
+                    "Touchscreen with Stylus Support",
+                    "Microphone"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the input of the product."
+                },
+                {
+                  "label": "Battery Charge Time",
+                  "value": "charge_time",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1 h",
+                    "1 to 1.9 h",
+                    "2 to 2.9 h",
+                    "3 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the battery charge time of the product."
+                },
+                {
+                  "label": "Flash",
+                  "value": "flash",
+                  "type": "enum",
+                  "options": ["LED", "Dual LED", "Front Camera Flash"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the flash specification of the product."
+                },
+                {
+                  "label": "Aspect Ratio",
+                  "value": "aspect_ratio",
+                  "type": "enum",
+                  "options": ["16:10", "16:9", "4:3", "5:3", "5:4"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the aspect ratio of the product."
+                },
+                {
+                  "label": "Jack Type",
+                  "value": "jack_type",
+                  "type": "enum",
+                  "options": ["3.5 mm", "2.5 mm"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the jack type specification of the product."
+                }
+              ]
+            }
+          ],
+          "highlights": [
+            { "ref": "fit_type" },
+            { "ref": "pattern" },
+            { "ref": "material" },
+            { "ref": "product_care" }
+          ]
+        },
+        {
+          "value": "accessories",
+          "label": "Accessories",
+          "filterGroups": [
+            {
+              "title": "Item details",
+              "filters": [
+                {
+                  "label": "Model Name",
+                  "value": "model_name",
+                  "multiSelect": false,
+                  "render": "text",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                },
+                {
+                  "label": "Manufacturer",
+                  "value": "manufacturer",
+                  "multiSelect": true,
+                  "render": "text",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Enter the official manufacturer name associated with the product."
+                }
+              ]
+            },
+            {
+              "title": "Features & Specs",
+              "filters": [
+                {
+                  "label": "Operating System",
+                  "value": "operating_system",
+                  "type": "enum",
+                  "options": [
+                    "Android",
+                    "iOS",
+                    "Blackberry",
+                    "Symbian",
+                    "Linux"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the operating system the product (e.g., Android, IOS)."
+                },
+                {
+                  "label": "Operating System Version",
+                  "value": "os_version",
+                  "type": "enum",
+                  "options": [
+                    "Android 14",
+                    "Android 13",
+                    "Android 12",
+                    "Android 11",
+                    "Android 10",
+                    "Android 9",
+                    "iOS 17",
+                    "iOS 16",
+                    "iOS 13",
+                    "Android 8.1",
+                    "Android 8.0",
+                    "Android 7.1",
+                    "Android 6.0",
+                    "Android 4.4",
+                    "BlackBerry 10.0"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the operating system version the product (e.g., Android 14, iOS 17)."
+                },
+                {
+                  "label": "Storage Capacity",
+                  "value": "storage_capacity",
+                  "type": "enum",
+                  "options": [
+                    "4 GB",
+                    "8 GB",
+                    "16 GB",
+                    "32 GB",
+                    "64 GB",
+                    "128 GB",
+                    "256 GB",
+                    "512 GB",
+                    "1 TB",
+                    "1 TB & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the storage capacity of the product (e.g., 4 GB, 32 GB, 256 GB)."
+                },
+                {
+                  "label": "Model Year",
+                  "value": "model_year",
+                  "type": "enum",
+                  "options": [
+                    "2026",
+                    "2025",
+                    "2024",
+                    "2023",
+                    "2022",
+                    "2021",
+                    "2020",
+                    "2019",
+                    "2018",
+                    "2017",
+                    "2016"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the model manufacturing year of the product (e.g., 2020, 2026)."
+                },
+                {
+                  "label": "RAM Size",
+                  "value": "ram_size",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1.9 GB",
+                    "2 to 3.9 GB",
+                    "4 to 5.9 GB",
+                    "6 to 7.9 GB",
+                    "8 to 9.9 GB",
+                    "10 BG and Above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the RAM Size of the product (e.g., Crew Neck, V-Neck, Turtleneck)."
+                },
+                {
+                  "label": "Special Features",
+                  "value": "special_features",
+                  "type": "enum",
+                  "options": [
+                    "Dual SIM",
+                    "Always On Display",
+                    "Fast Charging Support",
+                    "Built-In GPS",
+                    "Mobile Hotspot Capability",
+                    "Expandable Memory",
+                    "Wireless Charging",
+                    "Reverse Wireless Charging",
+                    "Rugged Body",
+                    "Quad-Band",
+                    "Stereo Speakers",
+                    "Water Resistant",
+                    "Dust Resistant"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Highlight any unique or standout qualities of the product (e.g., Always On Display, Water Resistant, Rugged Body)."
+                },
+                {
+                  "label": "Connectivity",
+                  "value": "connectivity",
+                  "type": "enum",
+                  "options": ["Wi-Fi", "Bluetooth", "USB", "NFC", "Infrared"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "multi",
+                  "required": true,
+                  "tooltip": "Highlight any connectivity features of the product (e.g., Wi-Fi, USB, Bluetooth)."
+                },
+                {
+                  "label": "Screen Size",
+                  "value": "screen_size",
+                  "type": "enum",
+                  "options": [
+                    "Up to 4.9 inches",
+                    "5 to 5.9 inches",
+                    "6 to 6.9 inches",
+                    "7 inches & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Select the screen size of the product (e.g., 5 to 5.9 inches, 6 to 6.9 inches)."
+                },
+                {
+                  "label": "Display Type",
+                  "value": "display_type",
+                  "type": "enum",
+                  "options": ["AMOLED", "LCD", "OLED"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Choose the display type of the product."
+                },
+                {
+                  "label": "Water Resistance Level",
+                  "value": "water_resistance",
+                  "type": "enum",
+                  "options": [
+                    "Water-Resistant",
+                    "Not Water Resistant",
+                    "Moisture Resistant",
+                    "Water Repellent",
+                    "Waterproof"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Specify the water resistance level of the product (e.g., Water-Resistant, Moisture Resistant)."
+                },
+                {
+                  "label": "Battery Capacity",
+                  "value": "battery_capacity",
+                  "type": "enum",
+                  "options": [
+                    "Up to 2,999 mAh",
+                    "3,000 to 3,999 mAh",
+                    "4,000 to 4,999 mAh",
+                    "5,000 to 5,999 mAh",
+                    "6,000 mAh & Above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": true,
+                  "tooltip": "Specify the battery capacity of the product."
+                },
+                {
+                  "label": "SIM Card Slot Count",
+                  "value": "sim_count",
+                  "type": "enum",
+                  "options": ["E SIM", "Single SIM", "Dual SIM", "Tripple SIM"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Specify the SIM card count of the product."
+                },
+                {
+                  "label": "Included Components",
+                  "value": "included_components",
+                  "type": "enum",
+                  "options": [
+                    "USB Cable",
+                    "Headset",
+                    "Power Adapter",
+                    "SIM Tray Ejector",
+                    "Phone Case",
+                    "Stylus",
+                    "Screen Protector",
+                    "USB OTG Adapter"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate whether the product ships with included components."
+                },
+                {
+                  "label": "Connector Type",
+                  "value": "connector_type",
+                  "type": "enum",
+                  "options": [
+                    "USB Type C",
+                    "Micro USB",
+                    "3.5mm Jack",
+                    "Lightning"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Select the connector type of the product (e.g., USB Type C, Micro USB)."
+                },
+                {
+                  "label": "Camera Resolution",
+                  "value": "camera_resolution",
+                  "type": "enum",
+                  "options": [
+                    "Up to 2.9 MP",
+                    "3 to 4.9 MP",
+                    "5 to 7.9 MP",
+                    "8 to 12.9 MP",
+                    "13 to 19.9 MP",
+                    "20 MP & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the camera resolution of the product."
+                },
+                {
+                  "label": "Purpose",
+                  "value": "purpose",
+                  "type": "enum",
+                  "options": [
+                    "Photography",
+                    "Streaming",
+                    "Video Conferencing",
+                    "Gaming"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the purpose that best describes the product."
+                },
+                {
+                  "label": "Phone Talk Time",
+                  "value": "talk_time",
+                  "type": "enum",
+                  "options": [
+                    "Up to 9 h",
+                    "10 to 14 h",
+                    "15 to 24 h",
+                    "25 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the cell phone talk time."
+                },
+                {
+                  "label": "Display Resolution",
+                  "value": "connector_type",
+                  "type": "enum",
+                  "options": [
+                    "1440x3088",
+                    "2640x1080",
+                    "720x1640",
+                    "2340 x 1080",
+                    "3840 x 2160",
+                    "1920 x 1080",
+                    "1440 x 3200",
+                    "1080 x 2340",
+                    "720 x 1280",
+                    "720 x 1560",
+                    "720 x 1440",
+                    "720 x 1600",
+                    "1600 x 720",
+                    "3040 x 1440",
+                    "1440 x 2880",
+                    "320 x 240",
+                    "1080 x 2280",
+                    "240 x 320",
+                    "720 x 1520",
+                    "3120 x 1440",
+                    "1080 x 1920",
+                    "1080 x 2400",
+                    "1280 x 720",
+                    "1080 x 2160",
+                    "1440 x 3120",
+                    "2400 x 1080",
+                    "2560 x 1440",
+                    "2960 x 1440",
+                    "1560 x 720",
+                    "480 x 800"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the display resolution of the product."
+                },
+                {
+                  "label": "Battery Type",
+                  "value": "battery_type",
+                  "type": "enum",
+                  "options": ["Lithium-Ion", "Lithium-Polymer"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the battery type of the product (e.g., Lithium-Ion, Lithium-Polymer)."
+                },
+                {
+                  "label": "Video Capture Resolution",
+                  "value": "video_resolution",
+                  "type": "enum",
+                  "options": ["1080p", "720p", "2K", "4K", "8K"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the video resolution of the product (e.g., 1080p, 4K, 8K)."
+                },
+                {
+                  "label": "Battery Life",
+                  "value": "battery_life",
+                  "type": "enum",
+                  "options": [
+                    "Up to 6.9 h",
+                    "7 to 12.9 h",
+                    "13 to 18.9 h",
+                    "19 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the battery life of the product."
+                },
+                {
+                  "label": "Security Feature",
+                  "value": "security_feature",
+                  "type": "enum",
+                  "options": [
+                    "Face Recognition",
+                    "Fingerprint Recognition",
+                    "Voice Recognition"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Highlight any security features of the product (e.g., Face Recognition, Fingerprint Recognition)."
+                },
+                {
+                  "label": "Width",
+                  "value": "width",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1 in",
+                    "1 to 1.9 in",
+                    "2 to 2.9 in",
+                    "3 in & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the product width."
+                },
+                {
+                  "label": "Wireless Network Technology",
+                  "value": "wireless_technology",
+                  "type": "enum",
+                  "options": [
+                    "LTE",
+                    "GSM",
+                    "Wi-Fi",
+                    "Bluetooth",
+                    "CDMA",
+                    "TDMA",
+                    "UMTS",
+                    "NFC"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Select the wireless network technology used by the product (e.g., LTE, GSM)."
+                },
+                {
+                  "label": "Item Height",
+                  "value": "item_height",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1 in",
+                    "1 to 1.9 in",
+                    "2 to 2.9 in",
+                    "3 in & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the height of the item."
+                },
+                {
+                  "label": "Average Battery Life Talk Time",
+                  "value": "average_talk_time",
+                  "type": "enum",
+                  "options": [
+                    "Up to 4 h",
+                    "5 to 9 h",
+                    "10 to 19 h",
+                    "20 to 24 h",
+                    "25 to 29 h",
+                    "30 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the Average battery life talk time of the product."
+                },
+                {
+                  "label": "Display Refresh Rate in Hertz",
+                  "value": "display_refresh",
+                  "type": "enum",
+                  "options": ["60", "90", "120", "144", "165"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the display refresh rate of the product."
+                },
+                {
+                  "label": "Sim Card Size",
+                  "value": "sim_size",
+                  "type": "enum",
+                  "options": ["eSIM", "Nano", "Micro", "Mini", "Standard"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the sim card size (e.g., eSIM, Micro)."
+                },
+                {
+                  "label": "Length",
+                  "value": "length",
+                  "type": "enum",
+                  "options": [
+                    "Up to 3.9 in",
+                    "4 to 4.9 in",
+                    "5 to 5.9 in",
+                    "6 in & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the length of the product."
+                },
+                {
+                  "label": "GenAI Model",
+                  "value": "ai_model",
+                  "type": "enum",
+                  "options": ["Gemini AI", "Galaxy AI"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the AI Model used by the product."
+                },
+                {
+                  "label": "Camera Feature",
+                  "value": "camera_feature",
+                  "type": "enum",
+                  "options": [
+                    "Optical Zoom",
+                    "Raw Capture",
+                    "AI Enhanced HDR",
+                    "AI Enhanced Zoom",
+                    "Eye Detection",
+                    "Face Detection",
+                    "Portrait Enhancement",
+                    "Real-time Object Recognition",
+                    "Scene Optimization",
+                    "Best Shot Selection",
+                    "Object/Subject Tracking",
+                    "Image Stacking",
+                    "Motion Detection"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "multi",
+                  "required": false,
+                  "tooltip": "Highlight any camera features of the product (e.g., Raw Capture, AI Enhanced HDR)."
+                },
+                {
+                  "label": "Input",
+                  "value": "input",
+                  "type": "enum",
+                  "options": [
+                    "Touchscreen",
+                    "Buttons",
+                    "Keyboard",
+                    "Keypad",
+                    "Gesture",
+                    "Dial",
+                    "Touchscreen with Stylus Support",
+                    "Microphone"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the input of the product."
+                },
+                {
+                  "label": "Battery Charge Time",
+                  "value": "charge_time",
+                  "type": "enum",
+                  "options": [
+                    "Up to 1 h",
+                    "1 to 1.9 h",
+                    "2 to 2.9 h",
+                    "3 h & above"
+                  ],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the battery charge time of the product."
+                },
+                {
+                  "label": "Flash",
+                  "value": "flash",
+                  "type": "enum",
+                  "options": ["LED", "Dual LED", "Front Camera Flash"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the flash specification of the product."
+                },
+                {
+                  "label": "Aspect Ratio",
+                  "value": "aspect_ratio",
+                  "type": "enum",
+                  "options": ["16:10", "16:9", "4:3", "5:3", "5:4"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the aspect ratio of the product."
+                },
+                {
+                  "label": "Jack Type",
+                  "value": "jack_type",
+                  "type": "enum",
+                  "options": ["3.5 mm", "2.5 mm"],
+                  "multiSelect": true,
+                  "render": "dropdown",
+                  "sellerInput": "single",
+                  "required": false,
+                  "tooltip": "Indicate the jack type specification of the product."
+                }
+              ]
+            }
+          ],
+          "highlights": [
+            { "ref": "fit_type" },
+            { "ref": "pattern" },
+            { "ref": "material" },
+            { "ref": "product_care" }
+          ]
+        }
+      ]
     }
   ]
 }

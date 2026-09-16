@@ -11,7 +11,7 @@ export const StarFilled: FC<{
     height={size}
     viewBox="0 0 24 24"
     fill={color}
-    stroke={color}
+    stroke={stroke}
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"

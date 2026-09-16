@@ -38,14 +38,14 @@ const Breadcrumbs = () => {
 
           return (
             <React.Fragment key={href}>
-              <span className="text-[#333] pr-1">/</span>
+              <span className="text-gray-500 pr-1">/</span>
               <li>
                 {isLast ? (
-                  <span className="text-[#000000cc] font-normal">
+                  <span className="text-gray-500 font-normal">
                     {prettify(segment)}
                   </span>
                 ) : (
-                  <Link href={href} className="hover:underline text-[#333]/80">
+                  <Link href={href} className="hover:underline text-gray-500">
                     {prettify(segment)}
                   </Link>
                 )}

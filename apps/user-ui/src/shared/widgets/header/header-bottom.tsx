@@ -5,39 +5,51 @@ import { navItems } from 'apps/user-ui/src/configs/constants';
 import useUser from 'apps/user-ui/src/hooks/useUser';
 // import { useStore } from 'apps/user-ui/src/store';
 // import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
-import { Menu } from 'lucide-react';
+import { ChevronDown, Menu } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 // import { BsBag } from 'react-icons/bs';
 import SidebarMenu from '../../components/sidebar-menu';
+import { usePathname } from 'next/navigation';
 // import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
+import { HiOutlineUser } from 'react-icons/hi';
 
 const HeaderBottom = () => {
   const [showSidebar, setShowSidebar] = useState(false);
 
   const { user } = useUser();
+  const [open, setOpen] = useState(false);
 
-  console.log(user);
+  // console.log(user);
 
   // bg-gradient-to-b from-[#5C5C62] to-[#4A4A50]
   // bg-[#161617]/80
+  // bg-[#525050]
+
+  const pathname = usePathname();
+  const isLanding = pathname === '/';
 
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
-    <div className="relative z-10 w-full transition-all duration-300 bg-[#fff] border-b border-gray-200 shadow-none shadow-gray-300/10 ">
-      <div className="w-full px-8 mx-auto pt-0.5 pb-0.5 relative flex items-center justify-between gap-4 h-full text-[#333] ">
+    <div
+      className={`relative z-10 w-full transition-all duration-300 border-b border-gray-200 shadow-none shadow-gray-300/10 ${
+        isLanding ? 'bg-[#424248]' : 'bg-[#424248]'
+      } `}
+    >
+      <div className="px-8 mx-auto pt-0 pb-0 relative flex items-center justify-center gap-1 h-full text-[#fff] ">
         {/* All Dropdowns */}
-        <div>
-          {/* Bottom header button */}
-          <button
-            className="flex items-center justify-center gap-2.5 px-2 py-2 text-[13.5px] text-[#333] font-bold hover:text-[#fff] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0 "
-            onClick={() => setShowSidebar(true)}
-          >
-            <Menu size={16} />
-            All Categories
+        <div
+          className="relative"
+          onMouseEnter={() => setShowSidebar(true)}
+          onMouseLeave={() => setShowSidebar(false)}
+        >
+          <button className="flex items-center justify-center gap-1.5 px-2 py-2 text-[13.5px] text-gray-100 font-medium hover:text-[#fff] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0">
+            Departments
+            <div className="shrink-0">
+              <ChevronDown size={12} />
+            </div>
           </button>
 
-          {/* Sidebar controlled by parent state */}
           <SidebarMenu
             isOpen={showSidebar}
             onClose={() => setShowSidebar(false)}
@@ -45,13 +57,13 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex flex-1 items-center justify-start gap-1 ml-0 ">
+        <nav className="flex items-center justify-center gap-3 ml-0 ">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
               className={`flex items-center px-3 py-2 text-[13.5px] h-full rounded-sm transition-colors duration-150 ${
                 i.accent
                   ? 'text-[#FEA417] font-semibold hover:text-amber-500'
-                  : 'text-[#333] font-semibold hover:text-[#333]'
+                  : 'text-gray-100 font-medium hover:text-[#fff]'
               }`}
               href={i.href}
               key={index}
@@ -62,7 +74,7 @@ const HeaderBottom = () => {
         </nav>
 
         {/* </div> */}
-        <div className="flex items-center justify-end gap-1 ml-0 h-full text-[13.5px] font-medium rounded-sm transition-colors duration-150 ">
+        <div className="flex items-center justify-center gap-1 ml-0 h-full text-[13.5px] font-medium rounded-sm transition-colors duration-150 ">
           <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:text-[#fff] hidden">
             Sell
           </span>

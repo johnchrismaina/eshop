@@ -5,6 +5,11 @@ export const navItems: NavItemsTypes[] = [
     accent: false,
   },
   {
+    title: 'Coupons',
+    href: '/coupons',
+    accent: false,
+  },
+  {
     title: 'Women',
     href: '/women',
     accent: false,

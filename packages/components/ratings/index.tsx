@@ -16,13 +16,13 @@ const Ratings: FC<Props> = ({ rating }) => {
   for (let i = 1; i <= 5; i++) {
     if (rating >= i) {
       // full star
-      stars.push(<StarFilled key={`star-${i}`} size={12} />);
+      stars.push(<StarFilled key={`star-${i}`} size={10} />);
     } else if (rating >= i - 0.5) {
       // half star
-      stars.push(<HalfStar key={`star-${i}`} size={12} />);
+      stars.push(<HalfStar key={`star-${i}`} size={10} />);
     } else {
       // empty star
-      stars.push(<Star key={`star-${i}`} size={12} color="#f2a71b" />);
+      stars.push(<Star key={`star-${i}`} size={10} color="#f2a71b" />);
     }
   }
 

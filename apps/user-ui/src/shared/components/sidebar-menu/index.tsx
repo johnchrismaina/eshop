@@ -1,5 +1,5 @@
 import { ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const categories: Record<string, string[]> = {
   Sneakers: ['Running', 'Basketball', 'Lifestyle', 'Skateboarding'],
@@ -18,43 +18,59 @@ interface SidebarMenuProps {
   onClose: () => void;
 }
 
+const CLOSE_DELAY = 250; // ms grace period when the cursor hits the backdrop
+
 export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
   const [hovered, setHovered] = useState<string | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 👇 Lock body scroll when sidebar is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    if (!isOpen) setHovered(null);
   }, [isOpen]);
+
+  // clear any pending delayed-close if the component unmounts mid-timer
+  useEffect(
+    () => () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    },
+    []
+  );
 
   if (!isOpen) return null;
 
+  const closeNow = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    onClose();
+  };
+
+  const scheduleClose = () => {
+    closeTimer.current = setTimeout(onClose, CLOSE_DELAY);
+  };
+
+  const cancelScheduledClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop — hovering it schedules a delayed close; moving back
+          off it before the delay elapses cancels that close */}
       <div
-        className="fixed inset-0 bg-black/40 mt-[94px] z-40"
-        // onMouseEnter
-        onClick={() => {
-          onClose();
-          setHovered(null);
-        }}
+        className="fixed inset-0 bg-black/30 top-[92px] z-40"
+        onMouseEnter={scheduleClose}
+        onMouseLeave={cancelScheduledClose}
+        onClick={closeNow}
       />
 
-      {/* Dropdown container */}
       <div
-        className="absolute left-0 top-[40px] py-4 h-[500px] flex bg-white rounded-b-lg z-50"
-        onClick={() => setHovered(null)} // 👈 attach here, not on the first panel (onMouseEnter - other option)
+        className="absolute top-full left-0 py-4 h-[500px] flex bg-white rounded-b-lg shadow-[0_0_30px_rgba(0,0,0,0.1)] z-50"
+        onMouseEnter={cancelScheduledClose}
       >
-        {/* First window */}
-        <div className="w-52 overflow-y-auto ">
-          <h3 className=" text-[#333] font-semibold mb-2 px-6">Categories</h3>
+        <div className="w-52 overflow-y-auto">
+          <h3 className="text-[#333] font-semibold mb-2 px-6">Categories</h3>
           <ul className="text-sm text-gray-600">
             {Object.keys(categories).map((cat) => (
               <li
@@ -82,10 +98,9 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
           </ul>
         </div>
 
-        {/* Second window */}
         {hovered && (
-          <div className="w-52 h-[500px] overflow-y-auto ">
-            <h3 className="font-semibold mb-2 px-4 ">{hovered}</h3>
+          <div className="w-52 h-[500px] overflow-y-auto border-l">
+            <h3 className="font-semibold mb-2 px-4">{hovered}</h3>
             <ul className="text-sm text-gray-600">
               {(categories[hovered] || brands[hovered] || []).map((sub) => (
                 <li

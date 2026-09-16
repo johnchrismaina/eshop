@@ -38,7 +38,7 @@ export const Carousel: React.FC<CarouselProps> = ({ data }) => {
           src={item.src}
           alt={item.alt}
           key={idx}
-          className={`w-full h-full object-center object-cover transition-opacity duration-1000 rounded-lg ${
+          className={`w-full h-full object-top object-cover transition-opacity duration-1000 rounded-lg ${
             slide === idx ? 'opacity-100 ring-1 ' : 'opacity-0 absolute ring-1 '
           }`}
         />

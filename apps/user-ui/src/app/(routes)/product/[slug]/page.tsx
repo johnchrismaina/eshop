@@ -1,4 +1,3 @@
-// import ProductDetails from 'apps/user-ui/src/shared/modules/product/product-details';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
 import { Metadata } from 'next';
 import React from 'react';

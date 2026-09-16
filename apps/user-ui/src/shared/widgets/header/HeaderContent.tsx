@@ -2,37 +2,44 @@
 
 import Link from 'next/link';
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import { ChevronDown, Heart, MapPin, ShoppingBag } from 'lucide-react';
+import { ChevronDown, Heart, MapPin } from 'lucide-react';
 // import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
 import useLayout from 'apps/user-ui/src/hooks/useLayout';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   useAuthStore,
   hadPreviousSession,
 } from 'apps/user-ui/src/store/authStore';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
-// import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 import { CgShoppingCart } from 'react-icons/cg';
 import { useEffect } from 'react';
-import { Search } from 'lucide-react';
-// import ProfileIcon from 'apps/user-ui/src/assets/svgs/profile-icon';
-// import ChevronDownIcon from 'apps/user-ui/src/assets/svgs/chevron-down';
-// import { PiShoppingBag } from 'react-icons/pi';
 import { CgShoppingBag } from 'react-icons/cg';
 import { HiOutlineUser } from 'react-icons/hi';
-import { AiOutlineUser } from 'react-icons/ai';
-// import SidebarMenu from '../../components/sidebar-menu';
+import SmartSearchBar from '../../components/SmartSearchBar';
 
 <style>
   @import
   url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 </style>;
 
-// ----------------------------------
+// --------------
+
+// Search logics
+// types/search.ts
+export interface SearchProduct {
+  id: string;
+  title: string;
+  slug: string;
+  category?: string;
+  // add optional fields if you want to show them in dropdown
+  imageUrl?: string;
+  price?: number;
+}
+
+// -------------
 
 function useScrolled(threshold = 8) {
   const [scrolled, setScrolled] = useState(false);
@@ -44,16 +51,6 @@ function useScrolled(threshold = 8) {
   return scrolled;
 }
 
-// const DEPARTMENTS = [
-//   { label: 'Deals', href: '#' },
-//   { label: 'Electronics', href: '#' },
-//   { label: 'Fashion', href: '#' },
-//   { label: 'Home & Living', href: '#' },
-//   { label: 'Groceries', href: '#' },
-//   { label: 'Sell on Sokonis', href: '#' },
-//   { label: 'Customer Service', href: '#' },
-// ];
-
 const SEARCH_CATEGORIES = [
   'All',
   'Electronics',
@@ -62,7 +59,7 @@ const SEARCH_CATEGORIES = [
   'Groceries',
 ];
 
-// ----------------------------------
+// ---------------
 
 // HeaderContent.tsx
 interface HeaderContentProps {
@@ -75,7 +72,7 @@ interface SearchScopeDropdownProps {
   onChange: (newValue: string) => void;
 }
 
-// ----------------------------------
+// --------------
 
 // All Departments Dropdown
 
@@ -108,17 +105,31 @@ function SearchScopeDropdown({
 const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   //Image and layout used by logo
   // const scrolled = useScrolled();
-  // const [searchScope, setSearchScope] = useState('All');
 
-  const [scrolled, setScrolled] = useState(false);
+  // --------------
+  // Search logics
+  // Make your header aware of the query param
+  const params = useSearchParams();
+  const initialQuery = params.get('q') || ''; // ✅ read query param
+
+  // Search useState hook
   const [searchScope, setSearchScope] = useState('All');
-  const [openDepartments, setOpenDepartments] = useState(false);
   const searchWrapperRef = useRef<HTMLDivElement>(null);
-
   const [openSearchBackdrop, setOpenSearchBackdrop] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  // -------------
 
-  // const [showSidebar, setShowSidebar] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [openDepartments, setOpenDepartments] = useState(false);
+
+  // Example: products fetched from backend or context
+  const [allProducts, setAllProducts] = useState<SearchProduct[]>([]);
+
+  useEffect(() => {
+    axiosProductService.get('/product/get-all-products').then((res) => {
+      setAllProducts(res.data.products as SearchProduct[]);
+    });
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
@@ -233,36 +244,37 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   };
 
   // bg-gradient-to-b from-[#38383B] to-[#1C1C1E]
+  // 313133
 
   return (
-    <div className="w-full px-8 mx-auto pt-2 pb-2 grid grid-cols-[1fr_300px] items-center justify-start gap-3 bg-[#313133] ">
+    <div className="w-full px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[340px_1fr_340px] items-center justify-start gap-2 bg-[#424248]">
       <div className="flex items-center justify-start gap-2">
         {/* Logo */}
-        <div
-          className="flex items-center gap-1.5 px-2 font-medium text-2xl tracking-wide text-[#fff] -mt-[4px]"
-          style={{ fontFamily: "'Oswald', sans-serif" }}
-        >
-          <div className="shrink-0 mt-1">
-            {/* <CgShoppingBag color="FF9F1C" size={30} /> */}
-            <CgShoppingBag color="EE7B30" size={26} />
-            {/* <CgShoppingBag color="FF9F1C" size={26} /> */}
-          </div>
+        <Link href="/">
+          <div
+            className="flex items-center gap-1.5 px-2 font-medium text-2xl tracking-wide text-[#fff] -mt-[4px]"
+            style={{ fontFamily: "'Oswald', sans-serif" }}
+          >
+            <div className="shrink-0 mt-1">
+              {/* <CgShoppingBag color="FF9F1C" size={30} /> */}
+              {/* <CgShoppingBag color="EE7B30" size={30} /> */}
+              <CgShoppingBag color="fff" size={26} />
+            </div>
 
-          <p className="">
-            Sokonis<span className="text-[#E85D1F] hidden">.</span>
-          </p>
-        </div>
+            <span className="">
+              Sokonis<span className="text-[#E85D1F] hidden">.</span>
+            </span>
+          </div>
+        </Link>
+        {/* bg-[#52525B] */}
 
         {/* Delivery location - can be dropdown in future */}
-        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-[#424248] rounded-full cursor-pointer transition-colors duration-150 shrink-0">
+        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 rounded-md hover:bg-[#54545A] cursor-pointer transition-colors duration-150 shrink-0">
           {/* </div> */}
           <div className="">
             <MapPin size={16} color="#fff" />
           </div>
           <div className="flex items-center justify-center gap-0.5">
-            <span className="text-[11.0px] font-semibold text-[#5B6265] hover:text-[#000] mt-0 hidden">
-              Deliver to
-            </span>
             <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
               Deliver to Naivasha
             </span>
@@ -289,81 +301,50 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
             </div>
           </button>
         </div>
+      </div>
 
-        {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
+      {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
-          <div
-            ref={searchContainerRef}
-            className="flex items-center h-[36px] bg-[#fff] rounded-md border border-gray-200
-                 focus-within:border-orange-500/50 overflow-hidden 
-                 focus-within:ring-1 focus-within:ring-opacity-50 focus-within:ring-orange-500 
-                 transition-all duration-200 ease-out "
-          >
-            <SearchScopeDropdown
-              value={searchScope}
-              onToggle={() => setOpenDepartments((o) => !o)}
-            />
+      <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
+        {/* Smart Search Bar */}
+        <SmartSearchBar
+          products={allProducts}
+          searchScope={searchScope}
+          setSearchScope={setSearchScope}
+          openSearchBackdrop={openSearchBackdrop}
+          setOpenSearchBackdrop={setOpenSearchBackdrop}
+          searchContainerRef={searchContainerRef}
+          initialQuery={initialQuery} // ✅ pass down
+        />
 
-            <input
-              type="text"
-              onFocus={() => setOpenSearchBackdrop(true)} // open backdrop when input is focused
-              placeholder="Search products, brands, categories..."
-              className="flex-1 h-10 bg-transparent outline-none border-none text-[14.0px] 
-                   placeholder:font-normal placeholder:text-[#6e6e73] pl-6 pr-4 py-0 
-                   focus:border-blue-500 focus:border-2 focus:ring-0"
-            />
-
-            {/* Backdrop with synced fade */}
-            <div
-              className={`fixed top-[98px] left-0 right-0 bottom-0 bg-black 
-                   transition-opacity duration-200 ease-out z-[100] 
-                   ${
-                     openSearchBackdrop
-                       ? 'opacity-40'
-                       : 'opacity-0 pointer-events-none'
-                   }`}
-              onClick={() => setOpenSearchBackdrop(false)}
-            />
-
-            <button
-              aria-label="Search"
-              className="flex items-center justify-center w-14 h-[36px] mr-[0px] rounded-r-md
-                   text-[#EE7B30] hover:text-[#E85D1F] bg-[#fafafa] border-l border-[#ddd]
-                   transition-colors flex-shrink-0"
-            >
-              <Search strokeWidth={2} size={18} />
-            </button>
+        {/* dropdown panel unchanged */}
+        {openDepartments && (
+          <div className="absolute top-full left-0 mt-2 w-48 bg-[#f1f1f1] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
+            {SEARCH_CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => {
+                  setSearchScope(cat);
+                  setOpenDepartments(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-[13.5px] transition-colors ${
+                  cat === searchScope
+                    ? 'text-[#E85D1F] font-medium bg-[#FCE6D9]/40'
+                    : 'text-[#14181A] hover:bg-[#F6F5F1]'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
-          {/* dropdown panel unchanged */}
-          {openDepartments && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-[#f1f1f1] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
-              {SEARCH_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => {
-                    setSearchScope(cat);
-                    setOpenDepartments(false);
-                  }}
-                  className={`w-full text-left px-4 py-2 text-[13.5px] transition-colors ${
-                    cat === searchScope
-                      ? 'text-[#E85D1F] font-medium bg-[#FCE6D9]/40'
-                      : 'text-[#14181A] hover:bg-[#F6F5F1]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Account / Cart column */}
-      <div className="flex items-center justify-end w-full h-full gap-5">
+      <div className="flex items-center justify-end w-full h-full gap-0">
         {/* Delivery location - can be dropdown in future */}
-        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-slate-700 rounded-full cursor-pointer transition-colors duration-150 shrink-0">
+        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-[#54545A] rounded-md cursor-pointer transition-colors duration-150 shrink-0">
           <div className="shrink-0">
             <Heart size={16} color="#fff" />
           </div>
@@ -373,7 +354,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         </div>
         {/* Account/Trigger */}
         <div
-          className="relative flex items-center gap-1.5 text-gray-600 px-0 h-full "
+          className="relative flex items-center gap-1 text-gray-600 px-3 h-full "
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
         >
@@ -502,7 +483,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         </div>
 
         {/* Cart */}
-        <div className="flex items-center justify-start h-full gap-1.5 pr-2 cursor-pointer">
+        <div className="flex items-center justify-center h-full gap-1.5 px-2 cursor-pointer">
           <Link
             href="/cart"
             className="relative flex items-center justify-center mt-[0px] "
@@ -521,8 +502,8 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
-          <div className="flex items-end justify-center">
-            <span className="text-[13.0px] text-[#fff] font-normal tracking-tight px-0 py-1 rounded-full">
+          <div className="flex items-center justify-center">
+            <span className="text-[13.0px] text-[#fff] font-normal tracking-tight px-0 py-0 rounded-full">
               Ksh 0.00
             </span>
           </div>

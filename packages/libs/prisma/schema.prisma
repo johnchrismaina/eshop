@@ -219,6 +219,9 @@ model products {
   // ✅ Optional relation to color variants
   colorVariants color_variants[] @relation("ProductColorVariants")
 
+  // ✅ New relation: products → orderItem
+  orderItems orderItem[] // one product can appear in many order items
+
   @@index([createdAt])
 }
 
@@ -437,10 +440,13 @@ enum NotificationStatus {
 }
 
 model orderItem {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  orderId         String
-  order           orders @relation(fields: [orderId], references: [id])
-  productId       String
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  orderId String
+  order   orders @relation(fields: [orderId], references: [id])
+
+  productId String
+  product   products @relation(fields: [productId], references: [id]) // ✅ add relation
+
   quantity        Int
   price           Float
   selectedOptions Json? // ✅ store options as JSON (safe for arrays/objects)

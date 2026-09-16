@@ -26,22 +26,15 @@ import { isProtected } from 'apps/user-ui/src/utils/protected';
 import axiosInstance from 'apps/user-ui/src/utils/axiosInstance';
 import { useRouter } from 'next/navigation';
 import ProductCard from '../ProductCard';
-// import { userAgent } from 'next/server';
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/react';
-import ZoomImage from '../HoverMagnifier/HoverMagnifier';
+// import ZoomImage from '../HoverMagnifier/HoverMagnifier';
 import Breadcrumbs from '../breadcrumbs';
 import ColorThumbnail from '../ColorThumbnail/ColorThumbnail';
 import ImagePreviewModal from '../ImagePreviewModal';
-
-// const swatches = [
-//   { title: 'Brown', image: '/images/brown.png', price: 5000, dealPrice: 3999 },
-//   { title: 'Red', image: '/images/red.png', price: 5200 },
-//   { title: 'Blue', image: '/images/blue.png', price: 4800, dealPrice: 4500 },
-// ];
 
 interface ColorVariant {
   id: string;
@@ -103,19 +96,11 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const [isSelected, setIsSelected] = useState(
     productDetails?.colors?.[0] || ''
   );
-  // const [isSizeSelected, setIsSizeSelected] = useState(
-  //   productDetails?.sizes?.[0] || ''
-  // );
-  const [isSizeSelected] = useState(productDetails?.sizes?.[0] || '');
-  // const [quantity, setQuantity] = useState(1);
 
-  // const [quantity, setQuantity] = useState<number | ''>('');
+  const [isSizeSelected] = useState(productDetails?.sizes?.[0] || '');
+
   const [quantity, setQuantity] = useState<number>(1);
 
-  // const [priceRange, setPriceRange] = useState([
-  //   productDetails?.sale_price,
-  //   1199,
-  // ]);
   const [priceRange] = useState([productDetails?.sale_price, 1199]);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
@@ -219,7 +204,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   return (
     <div className="w-full bg-[#fff] px-8 text-[#1d1d1f]">
       {/* Breadcrumbs */}
-      <div className=" py-3">
+      <div className=" pt-4 pb-3">
         {/* Breadcrumbs */}
         <Breadcrumbs />
       </div>
@@ -699,7 +684,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           </div>
 
           {/* Order timeline */}
-          <div className="w-full flex items-start justify-start gap-1 p-2 mb-4 bg-[#FFF4EE] border border-[#FBD7C4] rounded-md">
+          <div className="w-full flex items-start justify-start gap-1 p-2 mb-4 bg-[#F6EFE8] border border-[#EADFD3] rounded-md">
             <p className="text-[13.5px] font-medium text-[#52525B] tracking-tight">
               Order within{' '}
               <span className="text-[13.5px] font-bold text-[#52525B] tracking-tight">

@@ -1033,6 +1033,67 @@ export const getProductBySlug = async (
   }
 };
 
+// Get trending products
+export const getTrendingProducts = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    console.log('🟢 getTrendingProducts called');
+
+    const trending = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      _sum: { quantity: true },
+      where: {
+        order: {
+          createdAt: {
+            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+          },
+        },
+      },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 10,
+    });
+
+    console.log('🟢 Prisma raw trending:', trending);
+
+    if (!trending || trending.length === 0) {
+      console.warn('⚠️ No trending products found');
+      res.status(404).json({ success: false, message: 'No trending products' });
+      return;
+    }
+
+    const products = await prisma.products.findMany({
+      where: { id: { in: trending.map((t) => t.productId) } },
+      include: {
+        images: true,
+        colorVariants: true,
+        product_specifications: true,
+        deals: true,
+        Shop: true,
+      },
+    });
+
+    // Merge sales counts into product objects
+    const merged = products.map((p) => ({
+      ...p,
+      totalSales:
+        trending.find((t) => t.productId === p.id)?._sum.quantity ?? 0,
+    }));
+
+    res.status(200).json({
+      success: true,
+      products: merged,
+    });
+    return;
+  } catch (error) {
+    console.error('❌ Error in getTrendingProducts:', error);
+    next(error);
+    return;
+  }
+};
+
 // Get logged in seller's products that are deals
 export const getShopDeals = async (
   req: any,
@@ -1310,12 +1371,12 @@ export const getStripeAccount = async (
   }
 };
 
-// Get all products
+// Get all products (latest or topSales)
 export const getAllProducts = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const prisma = new PrismaClient();
     const page = parseInt(req.query.page as string) || 1;
@@ -1323,11 +1384,8 @@ export const getAllProducts = async (
     const skip = (page - 1) * limit;
     const type = req.query.type;
 
-    const baseFilter = {
-      isDeleted: false,
-    };
+    const baseFilter = { isDeleted: false };
 
-    // Case 1: latest products
     if (type === 'latest') {
       const [products, total, top10Products] = await Promise.all([
         prisma.products.findMany({
@@ -1345,7 +1403,7 @@ export const getAllProducts = async (
         }),
       ]);
 
-      return res.status(200).json({
+      res.status(200).json({
         products,
         top10By: 'latest',
         top10Products,
@@ -1353,9 +1411,10 @@ export const getAllProducts = async (
         currentPage: page,
         totalPages: Math.ceil(total / limit),
       });
+      return;
     }
 
-    // Case 2: trending products by total sales
+    // Default case: topSales
     const trending = await prisma.orderItem.groupBy({
       by: ['productId'],
       _sum: { quantity: true },
@@ -1379,7 +1438,6 @@ export const getAllProducts = async (
       }),
     ]);
 
-    // Merge sales counts into product objects
     const top10WithSales = top10Products.map((p) => ({
       ...p,
       totalSales:
@@ -1394,8 +1452,11 @@ export const getAllProducts = async (
       currentPage: page,
       totalPages: Math.ceil(total / limit),
     });
+    return;
   } catch (error) {
+    console.error('❌ Error in getAllProducts:', error);
     next(error);
+    return;
   }
 };
 

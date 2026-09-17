@@ -13704,472 +13704,816 @@
             {
               "value": "cables_and_adapters",
               "label": "Cables & Adapters",
-              "filterGroups": [
+              "subCategories": [
                 {
-                  "label": "Item Condition",
-                  "value": "item_condition",
-                  "type": "enum",
-                  "options": ["New", "Renewed", "Used"],
-                  "multiSelect": true,
-                  "render": "dropdown",
-                  "sellerInput": "single",
-                  "required": true,
-                  "tooltip": "Select the item condition of the product (e.g., New, Renewed, Used)."
-                },
-                {
-                  "title": "Item details",
-                  "filters": [
+                  "value": "audio_adapters",
+                  "label": "Audio Adapters",
+                  "filterGroups": [
                     {
-                      "label": "Brand Name",
-                      "value": "brand_name",
-                      "multiSelect": true,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Enter the official brand name associated with the product."
+                      "title": "Item details",
+                      "filters": [
+                        {
+                          "label": "Model Name",
+                          "value": "model_name",
+                          "multiSelect": false,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                        },
+                        {
+                          "label": "Manufacturer",
+                          "value": "manufacturer",
+                          "multiSelect": true,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Enter the official manufacturer name associated with the product."
+                        }
+                      ]
                     },
                     {
-                      "label": "Model Name",
-                      "value": "model_name",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                      "title": "Features & Specs",
+                      "filters": [
+                        {
+                          "label": "Connector Type",
+                          "value": "connector_type",
+                          "type": "enum",
+                          "options": ["Auxiliary", "USB Type C", "Lightning"],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "multi",
+                          "required": false,
+                          "tooltip": "Select the connector type that best matches the product."
+                        },
+                        {
+                          "label": "Connector Gender",
+                          "value": "connector_gender",
+                          "type": "enum",
+                          "options": [
+                            "Male-to-Female",
+                            "Female-to-Female",
+                            "Male-to-Male"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the connector gender that best matches the product."
+                        }
+                      ]
                     },
                     {
-                      "label": "Manufacturer",
-                      "value": "manufacturer",
-                      "multiSelect": true,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Enter the official manufacturer name associated with the product."
+                      "title": "Materials & Care",
+                      "filters": [
+                        {
+                          "label": "Product Care Instructions",
+                          "value": "product_care",
+                          "type": "enum",
+                          "options": [
+                            "Wet Wipe Clean",
+                            "Dry gentle rub",
+                            "Use leather cleaner",
+                            "Compressed air spray",
+                            "Microfiber cloth buff",
+                            "Adhesive putty press",
+                            "Mild spot wash"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "multi",
+                          "required": true,
+                          "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Measurements",
+                      "filters": [
+                        {
+                          "label": "Item Weight",
+                          "value": "item_weight",
+                          "multiSelect": false,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Specify the product’s weight, including units (e.g., 10g, 20g, 50g)."
+                        }
+                      ]
                     }
+                  ],
+                  "highlights": [
+                    { "ref": "brand" },
+                    { "ref": "pattern" },
+                    { "ref": "form_factor" },
+                    { "ref": "number_of_compartmens" },
+                    { "ref": "wallet_compartment" },
+                    { "ref": "closure_type" }
                   ]
                 },
                 {
-                  "title": "Features & Specs",
-                  "filters": [
+                  "value": "lightning_cables",
+                  "label": "Lightning Cables",
+                  "filterGroups": [
                     {
-                      "label": "Item Length",
-                      "value": "item_length",
-                      "type": "enum",
-                      "options": [
-                        "Mini",
-                        "Midi",
-                        "Maxi",
-                        "Knee Length",
-                        "Above the Knee",
-                        "Below the Knee",
-                        "Mid-Thigh Length",
-                        "Ankle Length",
-                        "High Low",
-                        "Calf Length",
-                        "Mid-Calf Length",
-                        "Tea Length"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Select the item length that best matches the product (e.g., Mini, Knee Length, Maxi)."
+                      "title": "Item details",
+                      "filters": [
+                        {
+                          "label": "Model Name",
+                          "value": "model_name",
+                          "multiSelect": false,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                        },
+                        {
+                          "label": "Manufacturer",
+                          "value": "manufacturer",
+                          "multiSelect": true,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Enter the official manufacturer name associated with the product."
+                        }
+                      ]
                     },
                     {
-                      "label": "Occasion",
-                      "value": "occasion",
-                      "type": "enum",
-                      "options": [
-                        "Birthday",
-                        "Anniversary",
-                        "Prom Homecoming",
-                        "Baby Shower",
-                        "Bridal Shower",
-                        "Father's Day",
-                        "Mother's Day",
-                        "Easter",
-                        "Christmas",
-                        "Baptism",
-                        "Communion",
-                        "Valentine's Day",
-                        "Bachelorette Party",
-                        "Bachelor Party",
-                        "Dedication Ceremony",
-                        "Diwali",
-                        "Engagement",
-                        "Wedding",
-                        "Honeymoon",
-                        "Graduation",
-                        "Funeral",
-                        "Haloween",
-                        "New Baby",
-                        "New Year",
-                        "Thanksgiving",
-                        "Vacation",
-                        "Women's Day"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Select the occasion or event where the product is most suitable to wear (e.g., Anniversary, Graduation, Wedding)."
+                      "title": "Features & Specs",
+                      "filters": [
+                        {
+                          "label": "Cable Color ",
+                          "value": "cable_color",
+                          "type": "enum",
+                          "options": [
+                            "Black",
+                            "White",
+                            "Grey",
+                            "Purple",
+                            "Blue",
+                            "Multi",
+                            "Pink",
+                            "Yellow",
+                            "Green",
+                            "Gold",
+                            "Silver"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the cable color that best matches  the product."
+                        },
+                        {
+                          "label": "Indoor Outdoor Usage",
+                          "value": "indoor_outdoor_usage",
+                          "type": "enum",
+                          "options": ["Indoor", "Outdoor"],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "multi",
+                          "required": true,
+                          "tooltip": "Select the indoor outdoor usage best associated with the product."
+                        },
+                        {
+                          "label": "Connector Gender",
+                          "value": "connector_gender",
+                          "type": "enum",
+                          "options": [
+                            "Male-to-Female",
+                            "Female-to-Female",
+                            "Male-to-Male"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the connector gender that best matches the product."
+                        },
+                        {
+                          "label": "Shape",
+                          "value": "shape",
+                          "type": "enum",
+                          "options": ["Flat", "Round"],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the item shape that best matches the product."
+                        },
+                        {
+                          "label": "Cable Type",
+                          "value": "cable_type",
+                          "type": "enum",
+                          "options": [
+                            "AUX",
+                            "Lightning",
+                            "Ethernet",
+                            "Component",
+                            "Composite",
+                            "HDMI",
+                            "USB",
+                            "Serial",
+                            "SATA",
+                            "VGA"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the cable type that best matches the product."
+                        },
+                        {
+                          "label": "Ethernet Cable Category",
+                          "value": "ethernet_cable_category",
+                          "type": "enum",
+                          "options": [
+                            "Cat 5",
+                            "Cat 5e",
+                            "Cat 6",
+                            "Cat 6a",
+                            "Cat 7",
+                            "Cat 7a",
+                            "Cat 8"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the ethernet cable category that best matches the product."
+                        },
+                        {
+                          "label": "Number of Pins",
+                          "value": "number_of_pins",
+                          "type": "enum",
+                          "options": [
+                            "Up to 3",
+                            "4 to 7",
+                            "8 to 11",
+                            "12 & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the number of pins associated with the product."
+                        },
+                        {
+                          "label": "Data Transfer Rate",
+                          "value": "data_transfer_rate",
+                          "type": "enum",
+                          "options": [
+                            "Up to 3,809 Mbit/s",
+                            "3,810 to 6,919 Mbit/s",
+                            "6,920 to 10,029 Mbit/s",
+                            "10,030 Mbit/s & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the data transfer rate associated with the product."
+                        },
+                        {
+                          "label": "Maximum Voltage",
+                          "value": "maximum_voltage",
+                          "type": "enum",
+                          "options": [
+                            "Up to 9 V",
+                            "10 to 49 V",
+                            "150 V & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the maximum voltage associated with the product."
+                        }
+                      ]
                     },
                     {
-                      "label": "Lifestyle",
-                      "value": "lifestyle",
-                      "type": "enum",
-                      "options": [
-                        "Casual",
-                        "Business Casual",
-                        "Business Professional",
-                        "Formal",
-                        "Comfort",
-                        "Evening",
-                        "Prom",
-                        "Wedding",
-                        "Party",
-                        "Cocktail",
-                        "Club"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": true,
-                      "tooltip": "Select the lifestyle or dress code the product is best suited for (e.g., Casual, Business Casual, Formal)."
+                      "title": "Materials & Care",
+                      "filters": [
+                        {
+                          "label": "Material",
+                          "value": "material",
+                          "type": "enum",
+                          "options": [
+                            "Aluminum",
+                            "Silicone",
+                            "Carbon Fiber",
+                            "Carbon Steel",
+                            "Stainless Steel",
+                            "Alloy Steel",
+                            "Leather",
+                            "Faux Leather",
+                            "Plastic",
+                            "Iron",
+                            "Metal",
+                            "Rubber",
+                            "Wood",
+                            "Polycarbonate",
+                            "Acrylonitrile Butadiene Styrene",
+                            "Polytetrafluoroethylene (PTFE)",
+                            "Polyurethane",
+                            "Thermoplastic Rubber",
+                            "Thermoplastic Polyurethane",
+                            "Polyvinyl Chloride",
+                            "Polyester",
+                            "Nylon",
+                            "Zinc"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the material type that best matches the product."
+                        },
+                        {
+                          "label": "Product Care Instructions",
+                          "value": "product_care",
+                          "type": "enum",
+                          "options": [
+                            "Wet Wipe Clean",
+                            "Dry gentle rub",
+                            "Use leather cleaner",
+                            "Compressed air spray",
+                            "Microfiber cloth buff",
+                            "Adhesive putty press",
+                            "Mild spot wash"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "multi",
+                          "required": true,
+                          "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
+                        }
+                      ]
                     },
                     {
-                      "label": "Embellishment Feature",
-                      "value": "embellishment",
-                      "type": "enum",
-                      "options": [
-                        "Lace",
-                        "Glitter",
-                        "Bead",
-                        "Crystal",
-                        "Bow",
-                        "Sequin",
-                        "Buckle",
-                        "Fringe",
-                        "Feather",
-                        "Tassel",
-                        "Logo",
-                        "Pearl",
-                        "Twist Knot",
-                        "Rhinestone",
-                        "Piping"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the embellishment feature on the product (e.g., Adult, Senior)."
-                    },
-                    {
-                      "label": "Neck Style",
-                      "value": "neck_style",
-                      "type": "enum",
-                      "options": [
-                        "Round Neck",
-                        "Scoop Neck",
-                        "Notch Neck",
-                        "Square Neck",
-                        "Turtle Neck",
-                        "Jewel Neck",
-                        "Funnel Neck",
-                        "U-Neck",
-                        "V-Neck",
-                        "Off Shoulder Neck",
-                        "One Shoulder Neck",
-                        "Scallop Neck",
-                        "Boat Neck",
-                        "Halter Neck",
-                        "Crew Neck",
-                        "Asymmetric Neck",
-                        "Choker Neck",
-                        "Keyhole Neck",
-                        "Collared Neck",
-                        "Envelope Neck",
-                        "Plunging Neck",
-                        "Sweetheart Neck",
-                        "Scoop Neck",
-                        "High Neck",
-                        "Split Neck",
-                        "Cowl Neck",
-                        "Mock Neck",
-                        "Hooded Neck",
-                        "Surplice Neck",
-                        "Henley Neck",
-                        "Illusion Neck",
-                        "Tie Neck"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
-                      "label": "Silhouette",
-                      "value": "silhouette",
-                      "type": "enum",
-                      "options": [
-                        "A-line",
-                        "Ball Gown",
-                        "Princess",
-                        "Sheath",
-                        "Empire Waist",
-                        "Shift",
-                        "Mermaid",
-                        "Asymmetrical",
-                        "Fit-And-Flare",
-                        "Trumpet"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the silhouette on the product (e.g., A-line, Ball Gown, Princess)."
-                    },
-                    {
-                      "label": "Sleeve Type",
-                      "value": "sleeve_type",
-                      "type": "enum",
-                      "options": [
-                        "Short Sleeve",
-                        "Sleeveless",
-                        "Half Sleeve",
-                        "Bracelet Sleeve",
-                        "3/4 Sleeve",
-                        "Long Sleeve"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Select the sleeve design that best describes the product (e.g., Short Sleeve, Sleeveless, Three-Quarter Sleeve)."
-                    },
-                    {
-                      "label": "Closure Type",
-                      "value": "closure_type",
-                      "type": "enum",
-                      "options": [
-                        "Button",
-                        "Pull On",
-                        "Double Ring",
-                        "Drawstring",
-                        "Hook & Eye",
-                        "Hook & Loop",
-                        "Toggle",
-                        "Snap",
-                        "Magnetic",
-                        "Zipper"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the fastening method used to close the product (e.g., Button, Zipper, Velcro)."
-                    },
-                    {
-                      "label": "Fit Type",
-                      "value": "fit_type",
-                      "type": "enum",
-                      "options": [
-                        "Regular",
-                        "Fitted",
-                        "Flowy",
-                        "Slim",
-                        "Athletic",
-                        "Relaxed",
-                        "Loose",
-                        "Boxy",
-                        "Oversized",
-                        "Straight",
-                        "skinny",
-                        "Snug",
-                        "Tailored"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Choose the fit style that best describes the product."
-                    },
-                    {
-                      "label": "Weave Method",
-                      "value": "weave_method",
-                      "type": "enum",
-                      "options": ["Handloom", "Powerloom"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Specify the weave method of the product (e.g., Handloom, Powerloom)."
-                    },
-                    {
-                      "label": "Origin",
-                      "value": "origin",
-                      "type": "enum",
-                      "options": [
-                        "Made in Kenya",
-                        "Made in USA",
-                        "Made in China",
-                        "Made in India",
-                        "Imported",
-                        "Handmade"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Specify the country or region where the product was manufactured or sourced (e.g., Made in Kenya, Imported)."
-                    },
-                    {
-                      "label": "Sustainability Features",
-                      "value": "sustainability_features",
-                      "type": "enum",
-                      "options": [
-                        "Carbon Impact",
-                        "Recycled Fabric",
-                        "Eco-Friendly Fabric",
-                        "Biodegradable",
-                        "Worker Wellbeing"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Highlight any eco-friendly or sustainable qualities of the product (e.g., Organic Material, Recycled Fabric, Biodegradable)."
-                    },
-                    {
-                      "label": "Customizable Product",
-                      "value": "customizable_product",
-                      "type": "enum",
-                      "options": [
-                        "Customizable",
-                        "Personalized Text",
-                        "Custom Size",
-                        "Custom Color"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Indicate whether the product can be customized (e.g., Personalized Text, Custom Size, Custom Color)."
+                      "title": "Measurements",
+                      "filters": [
+                        {
+                          "label": "Item Weight",
+                          "value": "item_weight",
+                          "multiSelect": false,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Specify the product’s weight, including units (e.g., 10g, 20g, 50g)."
+                        },
+                        {
+                          "label": "Length",
+                          "value": "length",
+                          "type": "enum",
+                          "options": [
+                            "Up to 0.9 ft",
+                            "1 to 1.9 ft",
+                            "2 to 2.9 ft",
+                            "3 to 3.9 ft",
+                            "4 to 4.9 ft",
+                            "5 to 5.9 ft",
+                            "6 to 7.9 ft",
+                            "8 to 9.9 ft",
+                            "10 ft & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the item length associated with the product."
+                        }
+                      ]
                     }
+                  ],
+                  "highlights": [
+                    { "ref": "brand" },
+                    { "ref": "pattern" },
+                    { "ref": "form_factor" },
+                    { "ref": "number_of_compartmens" },
+                    { "ref": "wallet_compartment" },
+                    { "ref": "closure_type" }
                   ]
                 },
                 {
-                  "title": "Materials & Care",
-                  "filters": [
+                  "value": "otg_adapters",
+                  "label": "OTG Adapters",
+                  "filterGroups": [
                     {
-                      "label": "Fabric Type",
-                      "value": "fabric_type",
-                      "multiSelect": true,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Specify the fabric type used in the product (e.g., Denim, Silk, Jersey, 50% Polyester, 50% Cotton)."
-                    },
-
-                    {
-                      "label": "Product Care Instructions",
-                      "value": "product_care",
-                      "type": "enum",
-                      "options": [
-                        "Hand Wash",
-                        "Dry Clean Only",
-                        "Machine Wash"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
-                    },
-                    {
-                      "label": "Special Features",
-                      "value": "special_features",
-                      "type": "enum",
-                      "options": [
-                        "Lightweight",
-                        "Water Resistant",
-                        "Fade Resistant",
-                        "Breathable",
-                        "Quick Dry",
-                        "Sun Protection",
-                        "Skin Friendly",
-                        "Stain Resistant",
-                        "Wrinkle Free",
-                        "Stretchable",
-                        "Adjustable",
-                        "Thermal",
-                        "Absorbent",
-                        "Moisture Wicking",
-                        "Reversible",
-                        "Convertible"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
+                      "title": "Item details",
+                      "filters": [
+                        {
+                          "label": "Model Name",
+                          "value": "model_name",
+                          "multiSelect": false,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                        },
+                        {
+                          "label": "Manufacturer",
+                          "value": "manufacturer",
+                          "multiSelect": true,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Enter the official manufacturer name associated with the product."
+                        }
+                      ]
                     },
                     {
-                      "label": "Fabric Weight Class",
-                      "value": "fabric_weight",
-                      "type": "enum",
-                      "options": [
-                        "Lightweight",
-                        "Medium Weight",
-                        "Heavyweight"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the fabric weight category that best describes the product (e.g., Lightweight for summer wear, Heavyweight for winter wear)."
+                      "title": "Features & Specs",
+                      "filters": [
+                        {
+                          "label": "Connector Type",
+                          "value": "connector_type",
+                          "type": "enum",
+                          "options": [
+                            "USB Type C",
+                            "Lightning",
+                            "Mini USB",
+                            "Micro USB"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the connector type that best matches the product."
+                        },
+                        {
+                          "label": "Connector Gender",
+                          "value": "connector_gender",
+                          "type": "enum",
+                          "options": ["Male-to-Male", "Male-to-Female"],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the connector gender that best matches the product."
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Materials & Care",
+                      "filters": [
+                        {
+                          "label": "Material",
+                          "value": "material",
+                          "type": "enum",
+                          "options": [
+                            "Aluminum",
+                            "Carbon Fiber",
+                            "Carbon Steel",
+                            "Stainless Steel",
+                            "Alloy Steel",
+                            "Plastic",
+                            "Metal",
+                            "Polycarbonate",
+                            "Acrylonitrile Butadiene Styrene",
+                            "Polytetrafluoroethylene (PTFE)",
+                            "Polyurethane",
+                            "Thermoplastic Rubber",
+                            "Thermoplastic Polyurethane",
+                            "Polyvinyl Chloride"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the material type that best matches the product."
+                        },
+                        {
+                          "label": "Product Care Instructions",
+                          "value": "product_care",
+                          "type": "enum",
+                          "options": [
+                            "Wet Wipe Clean",
+                            "Dry gentle rub",
+                            "Use leather cleaner",
+                            "Compressed air spray",
+                            "Microfiber cloth buff",
+                            "Adhesive putty press",
+                            "Mild spot wash"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "multi",
+                          "required": true,
+                          "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Measurements",
+                      "filters": [
+                        {
+                          "label": "Item Weight",
+                          "value": "item_weight",
+                          "type": "enum",
+                          "options": ["Up to 1 lb"],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the weight of the item."
+                        }
+                      ]
                     }
+                  ],
+                  "highlights": [
+                    { "ref": "brand" },
+                    { "ref": "pattern" },
+                    { "ref": "form_factor" },
+                    { "ref": "number_of_compartmens" },
+                    { "ref": "wallet_compartment" },
+                    { "ref": "closure_type" }
                   ]
                 },
                 {
-                  "title": "Size & Fit",
-                  "filters": [
+                  "value": "usb_cables",
+                  "label": "USB Cables",
+                  "filterGroups": [
                     {
-                      "label": "Weight",
-                      "value": "weight",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Specify the product’s weight, including units (e.g., 500g, 2kg, 1.5 lbs)."
+                      "title": "Item details",
+                      "filters": [
+                        {
+                          "label": "Model Name",
+                          "value": "model_name",
+                          "multiSelect": false,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Enter the specific model name or identifier assigned to the product by the brand or manufacturer."
+                        },
+                        {
+                          "label": "Manufacturer",
+                          "value": "manufacturer",
+                          "multiSelect": true,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Enter the official manufacturer name associated with the product."
+                        }
+                      ]
                     },
                     {
-                      "label": "Item Size Country",
-                      "value": "size_country",
-                      "type": "enum",
-                      "options": [
-                        "United States",
-                        "UK",
-                        "EU",
-                        "Japan",
-                        "China",
-                        "India"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Select the sizing standard or country reference used for the product (e.g., US sizes, UK sizes, EU sizes)."
+                      "title": "Features & Specs",
+                      "filters": [
+                        {
+                          "label": "Cable Color",
+                          "value": "cable_color",
+                          "type": "enum",
+                          "options": [
+                            "Black",
+                            "White",
+                            "Grey",
+                            "Purple",
+                            "Blue",
+                            "Multi",
+                            "Pink",
+                            "Yellow",
+                            "Green",
+                            "Gold",
+                            "Silver"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the cable color that best matches  the product."
+                        },
+                        {
+                          "label": "Data Transfer Rate",
+                          "value": "data_transfer_rate",
+                          "type": "enum",
+                          "options": [
+                            "Up to 3,809 Mbit/s",
+                            "3,810 to 6,919 Mbit/s",
+                            "6,920 to 10,029 Mbit/s",
+                            "10,030 Mbit/s & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the data transfer rate associated with the product."
+                        },
+                        {
+                          "label": "Number of Pins",
+                          "value": "number_of_pins",
+                          "type": "enum",
+                          "options": [
+                            "Up to 3",
+                            "4 to 7",
+                            "8 to 11",
+                            "12 & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the number of pins associated with the product."
+                        },
+                        {
+                          "label": "Connector Gender",
+                          "value": "connector_gender",
+                          "type": "enum",
+                          "options": [
+                            "Male-to-Female",
+                            "Female-to-Female",
+                            "Male-to-Male"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the connector gender that best matches the product."
+                        },
+                        {
+                          "label": "Ethernet Cable Category",
+                          "value": "ethernet_cable_category",
+                          "type": "enum",
+                          "options": [
+                            "Cat 5",
+                            "Cat 5e",
+                            "Cat 6",
+                            "Cat 6a",
+                            "Cat 7",
+                            "Cat 7a",
+                            "Cat 8"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the ethernet cable category that best matches the product."
+                        },
+                        {
+                          "label": "Indoor Outdoor Usage",
+                          "value": "indoor_outdoor_usage",
+                          "type": "enum",
+                          "options": ["Indoor", "Outdoor"],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "multi",
+                          "required": true,
+                          "tooltip": "Select the indoor outdoor usage best associated with the product."
+                        },
+                        {
+                          "label": "Shape",
+                          "value": "shape",
+                          "type": "enum",
+                          "options": ["Flat", "Round"],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the item shape that best matches the product."
+                        },
+                        {
+                          "label": "Cable Type",
+                          "value": "cable_type",
+                          "type": "enum",
+                          "options": [
+                            "AUX",
+                            "Lightning",
+                            "Ethernet",
+                            "Component",
+                            "Composite",
+                            "HDMI",
+                            "USB",
+                            "Serial",
+                            "SATA",
+                            "VGA"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Select the cable type that best matches the product."
+                        },
+                        {
+                          "label": "Maximum Voltage",
+                          "value": "maximum_voltage",
+                          "type": "enum",
+                          "options": [
+                            "Up to 9 V",
+                            "10 to 49 V",
+                            "150 V & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the maximum voltage associated with the product."
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Materials & Care",
+                      "filters": [
+                        {
+                          "label": "Material",
+                          "value": "material",
+                          "type": "enum",
+                          "options": [
+                            "Aluminum",
+                            "Silicone",
+                            "Carbon Fiber",
+                            "Carbon Steel",
+                            "Stainless Steel",
+                            "Alloy Steel",
+                            "Leather",
+                            "Faux Leather",
+                            "Plastic",
+                            "Iron",
+                            "Metal",
+                            "Rubber",
+                            "Wood",
+                            "Polycarbonate",
+                            "Acrylonitrile Butadiene Styrene",
+                            "Polytetrafluoroethylene (PTFE)",
+                            "Polyurethane",
+                            "Thermoplastic Rubber",
+                            "Thermoplastic Polyurethane",
+                            "Polyvinyl Chloride",
+                            "Polyester",
+                            "Nylon",
+                            "Zinc"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Select the material type that best matches the product."
+                        },
+                        {
+                          "label": "Product Care Instructions",
+                          "value": "product_care",
+                          "type": "enum",
+                          "options": [
+                            "Wet Wipe Clean",
+                            "Dry gentle rub",
+                            "Use leather cleaner",
+                            "Compressed air spray",
+                            "Microfiber cloth buff",
+                            "Adhesive putty press",
+                            "Mild spot wash"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "multi",
+                          "required": true,
+                          "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Measurements",
+                      "filters": [
+                        {
+                          "label": "Item Weight",
+                          "value": "item_weight",
+                          "multiSelect": false,
+                          "render": "text",
+                          "sellerInput": "single",
+                          "required": false,
+                          "tooltip": "Specify the product’s weight, including units (e.g., 10g, 20g, 50g)."
+                        },
+                        {
+                          "label": "Length",
+                          "value": "length",
+                          "type": "enum",
+                          "options": [
+                            "Up to 0.9 ft",
+                            "1 to 1.9 ft",
+                            "2 to 2.9 ft",
+                            "3 to 3.9 ft",
+                            "4 to 4.9 ft",
+                            "5 to 5.9 ft",
+                            "6 to 7.9 ft",
+                            "8 to 9.9 ft",
+                            "10 ft & above"
+                          ],
+                          "multiSelect": true,
+                          "render": "dropdown",
+                          "sellerInput": "single",
+                          "required": true,
+                          "tooltip": "Highlight the item length associated with the product."
+                        }
+                      ]
                     }
+                  ],
+                  "highlights": [
+                    { "ref": "brand" },
+                    { "ref": "pattern" },
+                    { "ref": "form_factor" },
+                    { "ref": "number_of_compartmens" },
+                    { "ref": "wallet_compartment" },
+                    { "ref": "closure_type" }
                   ]
                 }
-              ],
-              "highlights": [
-                { "ref": "fit_type" },
-                { "ref": "pattern" },
-                { "ref": "material" },
-                { "ref": "product_care" }
               ]
             },
             {

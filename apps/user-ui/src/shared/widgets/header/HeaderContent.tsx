@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import { ChevronDown, Heart, MapPin } from 'lucide-react';
+import { ChevronDown, Heart, HeartIcon, MapPin } from 'lucide-react';
 // import useUser from 'apps/user-ui/src/hooks/useUser';
 import { useStore } from 'apps/user-ui/src/store';
 import axiosProductService from 'apps/user-ui/src/utils/axiosProductService';
@@ -19,6 +19,7 @@ import { useEffect } from 'react';
 import { CgShoppingBag } from 'react-icons/cg';
 import { HiOutlineUser } from 'react-icons/hi';
 import SmartSearchBar from '../../components/SmartSearchBar';
+import CartIcon from 'apps/user-ui/src/assets/svgs/cart-icon';
 
 <style>
   @import
@@ -243,11 +244,10 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
       .join(' ');
   };
 
-  // bg-gradient-to-b from-[#38383B] to-[#1C1C1E]
-  // 313133
+  // 292F36 - perfect --
 
   return (
-    <div className="w-full px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[340px_1fr_340px] items-center justify-start gap-2 bg-[#424248]">
+    <div className="w-full px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[340px_1fr_340px] items-center justify-between border-none border-gray-700 gap-2 bg-[#292F36]">
       <div className="flex items-center justify-start gap-2">
         {/* Logo */}
         <Link href="/">
@@ -305,60 +305,53 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
       {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-      <div ref={searchWrapperRef} className="relative w-full mx-auto ml-0">
-        {/* Smart Search Bar */}
-        <SmartSearchBar
-          products={allProducts}
-          searchScope={searchScope}
-          setSearchScope={setSearchScope}
-          openSearchBackdrop={openSearchBackdrop}
-          setOpenSearchBackdrop={setOpenSearchBackdrop}
-          searchContainerRef={searchContainerRef}
-          initialQuery={initialQuery} // ✅ pass down
-        />
+      <div className="flex w-full items-center justify-center">
+        <div ref={searchWrapperRef} className="relative w-[760px] ml-0">
+          {/* Smart Search Bar */}
+          <SmartSearchBar
+            products={allProducts}
+            searchScope={searchScope}
+            setSearchScope={setSearchScope}
+            openSearchBackdrop={openSearchBackdrop}
+            setOpenSearchBackdrop={setOpenSearchBackdrop}
+            searchContainerRef={searchContainerRef}
+            initialQuery={initialQuery} // ✅ pass down
+          />
 
-        {/* dropdown panel unchanged */}
-        {openDepartments && (
-          <div className="absolute top-full left-0 mt-2 w-48 bg-[#f1f1f1] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
-            {SEARCH_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => {
-                  setSearchScope(cat);
-                  setOpenDepartments(false);
-                }}
-                className={`w-full text-left px-4 py-2 text-[13.5px] transition-colors ${
-                  cat === searchScope
-                    ? 'text-[#E85D1F] font-medium bg-[#FCE6D9]/40'
-                    : 'text-[#14181A] hover:bg-[#F6F5F1]'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        )}
+          {/* dropdown panel unchanged */}
+          {openDepartments && (
+            <div className="absolute top-full left-0 mt-2 w-48 bg-[#f1f1f1] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
+              {SEARCH_CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => {
+                    setSearchScope(cat);
+                    setOpenDepartments(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-[13.5px] transition-colors ${
+                    cat === searchScope
+                      ? 'text-[#E85D1F] font-medium bg-[#FCE6D9]/40'
+                      : 'text-[#14181A] hover:bg-[#F6F5F1]'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Account / Cart column */}
       <div className="flex items-center justify-end w-full h-full gap-0">
-        {/* Delivery location - can be dropdown in future */}
-        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 hover:bg-[#54545A] rounded-md cursor-pointer transition-colors duration-150 shrink-0">
-          <div className="shrink-0">
-            <Heart size={16} color="#fff" />
-          </div>
-          <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
-            Orders
-          </span>
-        </div>
         {/* Account/Trigger */}
         <div
           className="relative flex items-center gap-1 text-gray-600 px-3 h-full "
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
         >
-          <HiOutlineUser size={16} color="#fff" />
+          {/* <HiOutlineUser size={16} color="#fff" /> */}
           {/* <AiOutlineUser size={16} color="#fff" /> */}
           <Link
             href={user?.name ? '/profile' : '/login'}
@@ -482,15 +475,25 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           )}
         </div>
 
+        {/* Orders */}
+        <div className=" flex items-center justify-center gap-1.5 px-2 py-2 hover:bg-[#54545A] text-[#fff] rounded-md cursor-pointer transition-colors duration-150 shrink-0">
+          <div className="shrink-0">
+            {/* <Heart size={18} color="#fff" /> */}
+            {/* <HeartIcon className="w-4 h-4" /> */}
+          </div>
+          <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
+            Orders
+          </span>
+        </div>
+
         {/* Cart */}
         <div className="flex items-center justify-center h-full gap-1.5 px-2 cursor-pointer">
           <Link
             href="/cart"
-            className="relative flex items-center justify-center mt-[0px] "
+            className="relative flex items-center justify-center mt-[0px] text-[#fff] "
           >
-            <CgShoppingCart size={16} color="#fff" />
-            {/* <CartIcon strokeWidth={1.5} size={16} color="#222" /> */}
-
+            {/* <CgShoppingCart size={18} color="#fff" /> */}
+            <CartIcon />
             {cart?.length > 0 && (
               <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#EE7B30] flex items-center justify-center mt-[0px]">
                 <span className="text-[#333] font-bold text-[11px] leading-none">

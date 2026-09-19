@@ -21,10 +21,7 @@ const HeaderBottom = () => {
   const [open, setOpen] = useState(false);
 
   // console.log(user);
-
-  // bg-gradient-to-b from-[#5C5C62] to-[#4A4A50]
-  // bg-[#161617]/80
-  // bg-[#525050]
+  // 292F36 - perfect --
 
   const pathname = usePathname();
   const isLanding = pathname === '/';
@@ -32,8 +29,10 @@ const HeaderBottom = () => {
   return (
     // <div className="w-full transition-all duration-300 bg-[#fff] border-b border-gray-100 shadow-xl">
     <div
-      className={`relative z-10 w-full transition-all duration-300 border-b border-gray-200 shadow-none shadow-gray-300/10 ${
-        isLanding ? 'bg-[#424248]' : 'bg-[#424248]'
+      // className={`relative z-10 w-full transition-all duration-300 border-b border-gray-200 shadow-none shadow-gray-300/10 ${
+      //   isLanding ? 'bg-[#4E4D5C]' : 'bg-[#4E4D5C]'
+      // } `}
+      className={`relative z-10 w-full transition-all duration-300 border-b border-gray-200 shadow-none shadow-gray-300/10 bg-[#292F36]
       } `}
     >
       <div className="px-8 mx-auto pt-0 pb-0 relative flex items-center justify-center gap-1 h-full text-[#fff] ">

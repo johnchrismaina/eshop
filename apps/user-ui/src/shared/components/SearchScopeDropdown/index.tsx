@@ -5,6 +5,8 @@ interface SearchScopeDropdownProps {
   onToggle: () => void;
 }
 
+// bg-[#F1F0ED]
+
 export default function SearchScopeDropdown({
   value,
   onToggle,
@@ -13,9 +15,9 @@ export default function SearchScopeDropdown({
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-1.5 h-10 pl-4 pr-3 text-[13px] text-[#333] 
-                 hover:text-[#14181A] bg-[#F1F0ED] rounded-l-md transition-colors 
-                 flex-shrink-0 outline-none focus:outline-none focus-visible:outline-none"
+      className="flex items-center gap-1.5 h-6 pl-4 pr-3 text-[13px] text-[#333] 
+                 hover:text-[#14181A] rounded-l-md transition-colors 
+                 flex-shrink-0 outline-none focus:outline-none focus-visible:outline-none border-r border-gray-300"
     >
       {value}
       <ChevronDown size={14} />

@@ -149,7 +149,7 @@ export default function SmartSearchBar({
     <div ref={searchContainerRef} className="relative w-full">
       <form
         onSubmit={handleSubmit}
-        className="flex items-center h-[36px] bg-[#fff] rounded-md border border-gray-200
+        className="flex items-center h-[36px] bg-[#fff] rounded-full border border-gray-200
                    focus-within:border-orange-500/50 overflow-hidden 
                    focus-within:ring-1 focus-within:ring-orange-500 transition-all relative"
       >
@@ -167,13 +167,13 @@ export default function SmartSearchBar({
           onFocus={() => setOpenSearchBackdrop(true)}
           placeholder="Search products, brands, categories..."
           className="flex-1 h-10 bg-transparent outline-none border-none text-sm 
-                     placeholder:text-gray-500 pl-6 pr-4 focus:border-blue-500 focus:border-2 focus:ring-0"
+                     placeholder:text-gray-500 pl-4 pr-4 focus:border-blue-500 focus:border-2 focus:ring-0"
         />
 
         <button
           aria-label="Search"
           type="submit"
-          className="flex items-center justify-center w-12 h-[36px] rounded-r-md
+          className="flex items-center justify-center w-14 h-[36px] rounded-r-full
                      text-orange-600 hover:text-orange-700 bg-gray-50 border-l border-gray-200 transition-colors"
         >
           <Search strokeWidth={2} size={18} />

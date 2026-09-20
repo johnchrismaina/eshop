@@ -29,11 +29,11 @@ export const navItems: NavItemsTypes[] = [
     href: '/fashion',
     accent: false,
   },
-  {
-    title: 'Home ',
-    href: '/home',
-    accent: false,
-  },
+  // {
+  //   title: 'Home ',
+  //   href: '/home',
+  //   accent: false,
+  // },
   // {
   //   title: 'Groceries',
   //   href: '/groceries',

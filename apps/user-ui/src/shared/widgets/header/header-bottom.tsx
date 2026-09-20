@@ -35,14 +35,14 @@ const HeaderBottom = () => {
       className={`relative z-10 w-full transition-all duration-300 border-b border-gray-200 shadow-none shadow-gray-300/10 bg-[#292F36]
       } `}
     >
-      <div className="px-8 mx-auto pt-0 pb-0 relative flex items-center justify-center gap-1 h-full text-[#fff] ">
+      <div className="w-[1460px] px-8 mx-auto pt-0.5 pb-0.5 relative grid grid-cols-[120px_1fr_240px] items-center justify-between gap-1 h-full text-[#fff] ">
         {/* All Dropdowns */}
         <div
           className="relative"
           onMouseEnter={() => setShowSidebar(true)}
           onMouseLeave={() => setShowSidebar(false)}
         >
-          <button className="flex items-center justify-center gap-1.5 px-2 py-2 text-[13.5px] text-gray-100 font-medium hover:text-[#fff] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0">
+          <button className="flex items-center justify-start gap-1.5 px-2 py-2 text-[14px] text-gray-100 font-medium hover:text-[#fff] rounded-sm transition-colors duration-300 mr-0 flex-shrink-0">
             Departments
             <div className="shrink-0">
               <ChevronDown size={12} />
@@ -56,7 +56,7 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex items-center justify-center gap-3 ml-0 ">
+        <nav className="flex items-start justify-start gap-3 ml-0 ">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
               className={`flex items-center px-3 py-2 text-[13.5px] h-full rounded-sm transition-colors duration-150 ${
@@ -73,11 +73,11 @@ const HeaderBottom = () => {
         </nav>
 
         {/* </div> */}
-        <div className="flex items-center justify-center gap-1 ml-0 h-full text-[13.5px] font-medium rounded-sm transition-colors duration-150 ">
-          <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:text-[#fff] hidden">
+        <div className="flex items-center justify-end gap-1 ml-0 h-full text-[13.5px] font-medium rounded-sm transition-colors duration-150 ">
+          <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:text-[#fff] ">
             Sell
           </span>
-          <span className="cursor-pointer px-3 py-2 transition-colors duration-100 hover:text-[#fff]">
+          <span className="cursor-pointer px-2 py-2 transition-colors duration-100 hover:text-[#fff]">
             Customer Service
           </span>
         </div>

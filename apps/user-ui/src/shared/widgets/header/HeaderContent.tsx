@@ -247,268 +247,270 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
   // 292F36 - perfect --
 
   return (
-    <div className="w-full px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[340px_1fr_340px] items-center justify-between border-none border-gray-700 gap-2 bg-[#292F36]">
-      <div className="flex items-center justify-start gap-2">
-        {/* Logo */}
-        <Link href="/">
-          <div
-            className="flex items-center gap-1.5 px-2 font-medium text-2xl tracking-wide text-[#fff] -mt-[4px]"
-            style={{ fontFamily: "'Oswald', sans-serif" }}
-          >
-            <div className="shrink-0 mt-1">
-              {/* <CgShoppingBag color="FF9F1C" size={30} /> */}
-              {/* <CgShoppingBag color="EE7B30" size={30} /> */}
-              <CgShoppingBag color="fff" size={26} />
-            </div>
+    <div className="w-full bg-[#292F36]">
+      <div className="w-[1460px] px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[320px_1fr_240px] items-center justify-between border-none border-gray-700 gap-3 ">
+        <div className="flex items-center justify-start gap-2">
+          {/* Logo */}
+          <Link href="/">
+            <div
+              className="flex items-center gap-1.5 px-2 font-medium text-3xl tracking-wide text-[#fff] -mt-[4px]"
+              style={{ fontFamily: "'Oswald', sans-serif" }}
+            >
+              <div className="shrink-0 mt-1">
+                {/* <CgShoppingBag color="FF9F1C" size={30} /> */}
+                {/* <CgShoppingBag color="EE7B30" size={30} /> */}
+                <CgShoppingBag color="fff" size={26} />
+              </div>
 
-            <span className="">
-              Sokonis<span className="text-[#E85D1F] hidden">.</span>
-            </span>
-          </div>
-        </Link>
-        {/* bg-[#52525B] */}
-
-        {/* Delivery location - can be dropdown in future */}
-        <div className=" flex items-center justify-center gap-1.5 px-3 py-2 rounded-md hover:bg-[#54545A] cursor-pointer transition-colors duration-150 shrink-0">
-          {/* </div> */}
-          <div className="">
-            <MapPin size={16} color="#fff" />
-          </div>
-          <div className="flex items-center justify-center gap-0.5">
-            <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
-              Deliver to Naivasha
-            </span>
-            <div className="shrink-0 mt-[0px]">
-              <ChevronDown size={12} color="#fff" />
-            </div>
-          </div>
-        </div>
-
-        <div>
-          {/* Categories */}
-          <button
-            className=" items-center justify-center px-3 py-1 rounded-md gap-1 hover:bg-gray-600 transition-colors duration-300 mr-0 flex-shrink-0 hidden"
-            onClick={() => setShowSidebar(true)}
-          >
-            <div className="flex flex-col items-start shrink-0 text-[#5B6265] ">
-              <span className="text-[11.0px] font-normal ">Shop </span>
-              <span className="text-[14.0px] font-bold -mt-[4px] text-[#1d1d1f]">
-                Categories
+              <span className="">
+                Sokonis<span className="text-[#E85D1F] hidden">.</span>
               </span>
             </div>
-            <div className="mt-4">
-              <ChevronDown size={12} color="#fff" />
-            </div>
-          </button>
-        </div>
-      </div>
-
-      {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
-              This is what click-outside watches, and what holds the panel. */}
-      <div className="flex w-full items-center justify-center">
-        <div ref={searchWrapperRef} className="relative w-[760px] ml-0">
-          {/* Smart Search Bar */}
-          <SmartSearchBar
-            products={allProducts}
-            searchScope={searchScope}
-            setSearchScope={setSearchScope}
-            openSearchBackdrop={openSearchBackdrop}
-            setOpenSearchBackdrop={setOpenSearchBackdrop}
-            searchContainerRef={searchContainerRef}
-            initialQuery={initialQuery} // ✅ pass down
-          />
-
-          {/* dropdown panel unchanged */}
-          {openDepartments && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-[#f1f1f1] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
-              {SEARCH_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => {
-                    setSearchScope(cat);
-                    setOpenDepartments(false);
-                  }}
-                  className={`w-full text-left px-4 py-2 text-[13.5px] transition-colors ${
-                    cat === searchScope
-                      ? 'text-[#E85D1F] font-medium bg-[#FCE6D9]/40'
-                      : 'text-[#14181A] hover:bg-[#F6F5F1]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Account / Cart column */}
-      <div className="flex items-center justify-end w-full h-full gap-0">
-        {/* Account/Trigger */}
-        <div
-          className="relative flex items-center gap-1 text-gray-600 px-3 h-full "
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
-        >
-          {/* <HiOutlineUser size={16} color="#fff" /> */}
-          {/* <AiOutlineUser size={16} color="#fff" /> */}
-          <Link
-            href={user?.name ? '/profile' : '/login'}
-            className="flex flex-col gap-0 items-start justify-start "
-          >
-            {/* <UserRound size={18} /> */}
-            <span className="block text-sm font-normal text-[#fff] mt-[0px]">
-              {!mounted ? (
-                // SSR + first client render: invisible placeholder to prevent hydration mismatch
-                <span className="">Sign in</span>
-              ) : hadSession && !hydrated ? (
-                // Had previous session, still hydrating: show skeleton
-                <span className="block w-12 h-3rounded animate-pulse"></span>
-              ) : user?.name ? (
-                // Hydrated with user: show username
-                <span className="">
-                  {`Hi, ${capitalizeWords(user.name.split(' ')[0])}`}
-                </span>
-              ) : (
-                // No user or no previous session: show Log in
-                <span className="flex items-center justify-center ">
-                  {/* <ProfileIcon size={18} color="#fff" /> */}
-                  Sign in
-                </span>
-              )}
-            </span>
-
-            <span className="relative items-center text-[14.0px] text-[#1d1d1f] font-bold gap-1 -mt-[4px] hidden">
-              Account
-              <div className="mt-[0px]">
-                {/* <ChevronDownIcon size={8} color="#333" /> */}
-                <ChevronDown size={12} color="#333" />
-              </div>
-            </span>
           </Link>
+          {/* bg-[#52525B] */}
 
-          {/* Backdrop */}
-          {open && (
-            <div
-              className="fixed top-[98px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
-              onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
+          {/* Delivery location - can be dropdown in future */}
+          <div className=" flex items-center justify-center gap-1.5 px-3 py-2 cursor-pointer rounded-full hover:bg-[#3B4148] transition-all duration-150 shrink-0">
+            {/* </div> */}
+            <div className="">
+              <MapPin size={16} color="#fff" />
+            </div>
+            <div className="flex items-center justify-center gap-0.5">
+              <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
+                Deliver to Naivasha
+              </span>
+              <div className="shrink-0 mt-[0px] hidden">
+                <ChevronDown size={12} color="#fff" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            {/* Categories */}
+            <button
+              className=" items-center justify-center px-3 py-1 rounded-md gap-1 hover:bg-gray-600 transition-colors duration-300 mr-0 flex-shrink-0 hidden"
+              onClick={() => setShowSidebar(true)}
+            >
+              <div className="flex flex-col items-start shrink-0 text-[#5B6265] ">
+                <span className="text-[11.0px] font-normal ">Shop </span>
+                <span className="text-[14.0px] font-bold -mt-[4px] text-[#1d1d1f]">
+                  Categories
+                </span>
+              </div>
+              <div className="mt-4">
+                <ChevronDown size={12} color="#fff" />
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
+              This is what click-outside watches, and what holds the panel. */}
+        <div className="flex w-full items-center justify-center">
+          <div ref={searchWrapperRef} className="relative w-full ml-4">
+            {/* Smart Search Bar */}
+            <SmartSearchBar
+              products={allProducts}
+              searchScope={searchScope}
+              setSearchScope={setSearchScope}
+              openSearchBackdrop={openSearchBackdrop}
+              setOpenSearchBackdrop={setOpenSearchBackdrop}
+              searchContainerRef={searchContainerRef}
+              initialQuery={initialQuery} // ✅ pass down
             />
-          )}
 
-          {/* Floating Panel */}
-          {open && (
-            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-[0] w-64 bg-[#fff] shadow-[0_0_30px_rgba(0,0,0,0.1)] z-[110] rounded-md ">
-              {/* Arrow pointing up */}
-              {/* <div
+            {/* dropdown panel unchanged */}
+            {openDepartments && (
+              <div className="absolute top-full left-0 mt-2 w-48 bg-[#f1f1f1] border border-[#E7E5E0] rounded-md shadow-lg py-1 z-50">
+                {SEARCH_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => {
+                      setSearchScope(cat);
+                      setOpenDepartments(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-[13.5px] transition-colors ${
+                      cat === searchScope
+                        ? 'text-[#E85D1F] font-medium bg-[#FCE6D9]/40'
+                        : 'text-[#14181A] hover:bg-[#F6F5F1]'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Account / Cart column */}
+        <div className="flex items-center justify-end w-full h-full gap-0">
+          {/* Account/Trigger */}
+          <div
+            className="relative flex items-center gap-1 text-gray-600 px-3 h-full "
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+          >
+            {/* <HiOutlineUser size={16} color="#fff" /> */}
+            {/* <AiOutlineUser size={16} color="#fff" /> */}
+            <Link
+              href={user?.name ? '/profile' : '/login'}
+              className="flex flex-col gap-0 items-start justify-start "
+            >
+              {/* <UserRound size={18} /> */}
+              <span className="block text-sm font-normal text-[#fff] mt-[0px]">
+                {!mounted ? (
+                  // SSR + first client render: invisible placeholder to prevent hydration mismatch
+                  <span className="">Sign in</span>
+                ) : hadSession && !hydrated ? (
+                  // Had previous session, still hydrating: show skeleton
+                  <span className="block w-12 h-3rounded animate-pulse"></span>
+                ) : user?.name ? (
+                  // Hydrated with user: show username
+                  <span className="">
+                    {`Hi, ${capitalizeWords(user.name.split(' ')[0])}`}
+                  </span>
+                ) : (
+                  // No user or no previous session: show Log in
+                  <span className="flex items-center justify-center ">
+                    {/* <ProfileIcon size={18} color="#fff" /> */}
+                    Sign in
+                  </span>
+                )}
+              </span>
+
+              <span className="relative items-center text-[14.0px] text-[#1d1d1f] font-bold gap-1 -mt-[4px] hidden">
+                Account
+                <div className="mt-[0px]">
+                  {/* <ChevronDownIcon size={8} color="#333" /> */}
+                  <ChevronDown size={12} color="#333" />
+                </div>
+              </span>
+            </Link>
+
+            {/* Backdrop */}
+            {open && (
+              <div
+                className="fixed top-[98px] left-0 right-0 bottom-0 bg-black/40 transition-opacity z-[100]"
+                onMouseEnter={() => setOpen(false)} // hover backdrop closes everything
+              />
+            )}
+
+            {/* Floating Panel */}
+            {open && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-[0] w-64 bg-[#fff] shadow-[0_0_30px_rgba(0,0,0,0.1)] z-[110] rounded-md ">
+                {/* Arrow pointing up */}
+                {/* <div
                     className="absolute -top-2 right-4 w-0 h-0 
                             border-l-[10px] border-l-transparent 
                             border-r-[10px] border-r-transparent 
                             border-b-[12px] border-gray-400"
                   ></div> */}
 
-              <div className="p-6">
-                {user?.name ? (
-                  <div className="flex flex-col items-start rounded-md bg-gray-100 px-6 py-2">
-                    <span className="block font-semibold text-base">
-                      {capitalizeWords(user?.name)}
-                    </span>
-                    <span className="block font-normal text-sm text-gray-600 mb-1">
-                      {user?.email?.split(' ')[0]}
-                    </span>
-                    <Link
-                      href="#"
-                      className="text-blue-800 text-sm font-medium no-underline hover:underline"
-                      onClick={() => {
-                        logOutHandler();
-                        setOpen(false);
-                      }}
-                    >
-                      Sign Out
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-start">
-                    <Link
-                      href="/login"
-                      className="block w-full rounded-md text-gray-800 bg-amber-300 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
-                      onClick={() => setOpen(false)}
-                    >
-                      Sign in
-                    </Link>
-                    <div className="flex items-center mt-3 gap-1 text-gray-800">
-                      <span className="text-sm">New customer?</span>
+                <div className="p-6">
+                  {user?.name ? (
+                    <div className="flex flex-col items-start rounded-md bg-gray-100 px-6 py-2">
+                      <span className="block font-semibold text-base">
+                        {capitalizeWords(user?.name)}
+                      </span>
+                      <span className="block font-normal text-sm text-gray-600 mb-1">
+                        {user?.email?.split(' ')[0]}
+                      </span>
                       <Link
-                        href="/register"
-                        className="text-sm text-blue-600 hover:underline"
+                        href="#"
+                        className="text-blue-800 text-sm font-medium no-underline hover:underline"
+                        onClick={() => {
+                          logOutHandler();
+                          setOpen(false);
+                        }}
+                      >
+                        Sign Out
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-start">
+                      <Link
+                        href="/login"
+                        className="block w-full rounded-md text-gray-800 bg-amber-300 px-4 py-2 text-sm text-center font-medium no-underline hover:underline"
                         onClick={() => setOpen(false)}
                       >
-                        Sign up
+                        Sign in
+                      </Link>
+                      <div className="flex items-center mt-3 gap-1 text-gray-800">
+                        <span className="text-sm">New customer?</span>
+                        <Link
+                          href="/register"
+                          className="text-sm text-blue-600 hover:underline"
+                          onClick={() => setOpen(false)}
+                        >
+                          Sign up
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="w-full h-[0.5px] bg-gray-300 my-4"></div>
+
+                  <div className="flex flex-col mt-0 gap-2">
+                    <span className="text-gray-900 font-semibold text-base">
+                      Account
+                    </span>
+                    <div className="flex flex-col mt-0 gap-2 text-[13px] text-gray-600 font-normal ">
+                      <Link href="/sign-in" className="hover:underline">
+                        My Account
+                      </Link>
+                      <Link href="/sign-in" className="hover:underline">
+                        My Orders
+                      </Link>
+                      <Link href="/sign-in" className="hover:underline">
+                        Watchlist
+                      </Link>
+                      <Link href="/sign-in" className="hover:underline">
+                        Customer Service
                       </Link>
                     </div>
                   </div>
-                )}
-
-                <div className="w-full h-[0.5px] bg-gray-300 my-4"></div>
-
-                <div className="flex flex-col mt-0 gap-2">
-                  <span className="text-gray-900 font-semibold text-base">
-                    Account
-                  </span>
-                  <div className="flex flex-col mt-0 gap-2 text-[13px] text-gray-600 font-normal ">
-                    <Link href="/sign-in" className="hover:underline">
-                      My Account
-                    </Link>
-                    <Link href="/sign-in" className="hover:underline">
-                      My Orders
-                    </Link>
-                    <Link href="/sign-in" className="hover:underline">
-                      Watchlist
-                    </Link>
-                    <Link href="/sign-in" className="hover:underline">
-                      Customer Service
-                    </Link>
-                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Orders */}
-        <div className=" flex items-center justify-center gap-1.5 px-2 py-2 hover:bg-[#54545A] text-[#fff] rounded-md cursor-pointer transition-colors duration-150 shrink-0">
-          <div className="shrink-0">
-            {/* <Heart size={18} color="#fff" /> */}
-            {/* <HeartIcon className="w-4 h-4" /> */}
-          </div>
-          <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
-            Orders
-          </span>
-        </div>
-
-        {/* Cart */}
-        <div className="flex items-center justify-center h-full gap-1.5 px-2 cursor-pointer">
-          <Link
-            href="/cart"
-            className="relative flex items-center justify-center mt-[0px] text-[#fff] "
-          >
-            {/* <CgShoppingCart size={18} color="#fff" /> */}
-            <CartIcon />
-            {cart?.length > 0 && (
-              <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#EE7B30] flex items-center justify-center mt-[0px]">
-                <span className="text-[#333] font-bold text-[11px] leading-none">
-                  {cart.length > 99 ? '99+' : cart.length}
-                </span>
-              </div>
             )}
-          </Link>
-          {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
+          </div>
+
+          {/* Orders */}
+          <div className=" flex items-center justify-center gap-1.5 px-2 py-2 text-[#fff] cursor-pointer rounded-full shrink-0">
+            <div className="shrink-0">
+              {/* <Heart size={18} color="#fff" /> */}
+              {/* <HeartIcon className="w-4 h-4" /> */}
+            </div>
+            <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
+              Orders
+            </span>
+          </div>
+
+          {/* Cart */}
+          <div className="flex items-center justify-center h-full gap-1.5 px-2 cursor-pointer ">
+            <Link
+              href="/cart"
+              className="relative flex items-center justify-center mt-[0px] text-[#fff] "
+            >
+              {/* <CgShoppingCart size={18} color="#fff" /> */}
+              <CartIcon />
+              {cart?.length > 0 && (
+                <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#EE7B30] flex items-center justify-center mt-[0px]">
+                  <span className="text-[#333] font-bold text-[11px] leading-none">
+                    {cart.length > 99 ? '99+' : cart.length}
+                  </span>
+                </div>
+              )}
+            </Link>
+            {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
-          <div className="flex items-center justify-center">
-            <span className="text-[13.0px] text-[#fff] font-normal tracking-tight px-0 py-0 rounded-full">
-              Ksh 0.00
-            </span>
+            <div className="flex items-center justify-center">
+              <span className="text-[13.0px] text-[#fff] font-normal tracking-tight px-0 py-0 rounded-full">
+                Ksh 0.00
+              </span>
+            </div>
           </div>
         </div>
       </div>

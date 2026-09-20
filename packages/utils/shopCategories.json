@@ -13,12 +13,24 @@
               "value": "brand",
               "type": "enum",
               "options": [
+                "Ingenuity",
                 "Bright Starts",
                 "Fisher-Price",
-                "Baby Einstein",
-                "Ingenuity",
+                "Boppy",
+                "Konssy",
                 "Skip Hop",
-                "Graco"
+                "Baby Einstein",
+                "Graco",
+                "BabyBjörn",
+                "Delta Children",
+                "Infantino",
+                "Slevoo",
+                "4moms",
+                "Maxi-Cosi",
+                "G TALECO GEAR",
+                "American Baby Company",
+                "KeaBabies",
+                "Evenflo"
               ],
               "multiSelect": true,
               "render": "dropdown",
@@ -42,6 +54,44 @@
               "sellerInput": "single",
               "required": true,
               "tooltip": "Select the age range that best matches the item."
+            },
+            {
+              "label": "Material Type",
+              "value": "material_type",
+              "type": "enum",
+              "options": [
+                "Fabric",
+                "Cotton",
+                "Rayon",
+                "Jersey",
+                "Plastic",
+                "ABS Plastic",
+                "Foam",
+                "Silicone",
+                "Food-Grade Silicone",
+                "Polypropylene (PP)",
+                "EVA Foam (Ethylene-Vinyl Acetate)",
+                "TPE (Thermoplastic Elastomers)",
+                "Organic Cotton",
+                "Polyester Plush / Minky",
+                "Wool Felt",
+                "Synthetic Felt",
+                "Muslin",
+                "Satin",
+                "Hardwoods",
+                "Rubber",
+                "Natural Cork",
+                "Satin",
+                "Polyester Fiberfill",
+                "Cellophane / Crinkle Paper",
+                "Metal Bells",
+                "Shakers"
+              ],
+              "multiSelect": true,
+              "render": "dropdown",
+              "sellerInput": "multi",
+              "required": false,
+              "tooltip": "Specify the material type used in the product."
             },
             {
               "label": "Sustainability Features",
@@ -114,8 +164,8 @@
                   "title": "Features & Specs",
                   "filters": [
                     {
-                      "label": "Cable Color ",
-                      "value": "cable_color",
+                      "label": "Color ",
+                      "value": "color",
                       "type": "enum",
                       "options": [
                         "Black",
@@ -134,10 +184,10 @@
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Highlight the cable color that best matches  the product."
+                      "tooltip": "Highlight the cable color that best matches the item."
                     },
                     {
-                      "label": "Age Range Description",
+                      "label": "Age Description",
                       "value": "age_description",
                       "type": "enum",
                       "options": [
@@ -214,49 +264,50 @@
                       "tooltip": "Select the target gender that best matches the product."
                     },
                     {
-                      "label": "Special Features ",
-                      "value": "special_features",
-                      "type": "enum",
-                      "options": [
-                        "Non Toxic",
-                        "3 Height Modes up to 30 in.",
-                        "Interactive Toys",
-                        "Dishwasher Safe Tray",
-                        "Machine Washable Seat Pad"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
                       "label": "Special Features",
                       "value": "special_features",
                       "type": "enum",
                       "options": [
+                        "Non Toxic",
                         "Lightweight",
+                        "3 Height Modes up",
+                        "Interactive Toys",
+                        "Dishwasher Safe Tray",
+                        "Machine Washable Seat",
                         "Water Resistant",
-                        "Fade Resistant",
-                        "Breathable",
-                        "Quick Dry",
-                        "Sun Protection",
                         "Skin Friendly",
-                        "Stain Resistant",
-                        "Wrinkle Free",
                         "Stretchable",
-                        "Adjustable",
-                        "Thermal",
-                        "Absorbent",
-                        "Moisture Wicking",
-                        "Reversible",
-                        "Convertible"
+                        "Adjustable"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": false,
-                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
+                      "tooltip": "Highlight any unique or standout qualities of the product."
+                    },
+                    {
+                      "label": "Number of Pieces",
+                      "value": "number_of_pieces",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the maximum height of the item, included as part of the item (e.g., 2, 5, 10)."
+                    },
+                    {
+                      "label": "Included Components",
+                      "value": "included components",
+                      "type": "enum",
+                      "options": [
+                        "Baby Playmat",
+                        "Linkable Toys",
+                        "Baby Piano"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the total components, included as part of the item (e.g., 3 Removable rubber balls, 1 baby piano)."
                     },
                     {
                       "label": "Toy Building Block Type",
@@ -338,53 +389,23 @@
                   "title": "Materials & Care",
                   "filters": [
                     {
-                      "label": "Material Type",
-                      "value": "material_type",
-                      "type": "enum",
-                      "options": [
-                        "Fabric",
-                        "Food-Grade Silicone",
-                        "Plastic",
-                        "ABS Plastic",
-                        "Foam",
-                        "Polypropylene (PP)",
-                        "EVA Foam (Ethylene-Vinyl Acetate)",
-                        "TPE (Thermoplastic Elastomers)",
-                        "Organic Cotton",
-                        "Polyester Plush / Minky",
-                        "Wool Felt",
-                        "Synthetic Felt",
-                        "Muslin",
-                        "Satin",
-                        "Hardwoods",
-                        "Rubber",
-                        "Natural Cork",
-                        "Satin",
-                        "Polyester Fiberfill",
-                        "Cellophane / Crinkle Paper",
-                        "Metal Bells",
-                        "Shakers"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Specify the material type used in the product."
-                    },
-                    {
                       "label": "Product Care Instructions",
                       "value": "product_care",
                       "type": "enum",
                       "options": [
-                        "Hand Wash",
-                        "Dry Clean Only",
-                        "Machine Wash"
+                        "Wet Wipe Clean",
+                        "Dry gentle rub",
+                        "Use leather cleaner",
+                        "Compressed air spray",
+                        "Microfiber cloth buff",
+                        "Adhesive putty press",
+                        "Mild spot wash"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
                     }
                   ]
                 },
@@ -392,22 +413,13 @@
                   "title": "Measurements",
                   "filters": [
                     {
-                      "label": "Number of Pieces",
-                      "value": "number_of_pieces",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Specify the maximum height of the item, included as part of the item (e.g., 2, 5, 10)."
-                    },
-                    {
                       "label": "Item Dimensions L x W x H",
                       "value": "item_dimensions",
                       "multiSelect": false,
                       "render": "text",
                       "sellerInput": "single",
                       "required": false,
-                      "tooltip": "Specify the item dimensions, including units (e.g., 0.03 inches L x 0.39 inches W x 0.03 inches H)."
+                      "tooltip": "Specify the item dimensions, including units (e.g., 0.03 inches x 0.39 inches x 0.03 inches)."
                     },
                     {
                       "label": "Item Weight",
@@ -416,7 +428,7 @@
                       "render": "text",
                       "sellerInput": "single",
                       "required": false,
-                      "tooltip": "Specify the item weight, including units (e.g., 10.9 ounces, 5 kg, 10 kg)."
+                      "tooltip": "Specify the item weight, including units (e.g., 10.9 ounces, 5 pounds, 5 kg)."
                     },
                     {
                       "label": "Maximum Height",
@@ -477,8 +489,8 @@
                   "title": "Features & Specs",
                   "filters": [
                     {
-                      "label": "Cable Color ",
-                      "value": "cable_color",
+                      "label": "Color",
+                      "value": "color",
                       "type": "enum",
                       "options": [
                         "Black",
@@ -497,10 +509,10 @@
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Highlight the cable color that best matches  the product."
+                      "tooltip": "Highlight the cable color that best matches the item."
                     },
                     {
-                      "label": "Age Range Description",
+                      "label": "Age Description",
                       "value": "age_description",
                       "type": "enum",
                       "options": [
@@ -577,49 +589,50 @@
                       "tooltip": "Select the target gender that best matches the product."
                     },
                     {
-                      "label": "Special Features ",
-                      "value": "special_features",
-                      "type": "enum",
-                      "options": [
-                        "Non Toxic",
-                        "3 Height Modes up to 30 in.",
-                        "Interactive Toys",
-                        "Dishwasher Safe Tray",
-                        "Machine Washable Seat Pad"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
                       "label": "Special Features",
                       "value": "special_features",
                       "type": "enum",
                       "options": [
+                        "Non Toxic",
                         "Lightweight",
+                        "3 Height Modes up",
+                        "Interactive Toys",
+                        "Dishwasher Safe Tray",
+                        "Machine Washable Seat",
                         "Water Resistant",
-                        "Fade Resistant",
-                        "Breathable",
-                        "Quick Dry",
-                        "Sun Protection",
                         "Skin Friendly",
-                        "Stain Resistant",
-                        "Wrinkle Free",
                         "Stretchable",
-                        "Adjustable",
-                        "Thermal",
-                        "Absorbent",
-                        "Moisture Wicking",
-                        "Reversible",
-                        "Convertible"
+                        "Adjustable"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": false,
-                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
+                      "tooltip": "Highlight any unique or standout qualities of the product."
+                    },
+                    {
+                      "label": "Number of Pieces",
+                      "value": "number_of_pieces",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the number of components, included as part of the item (e.g., 2, 5, 10)."
+                    },
+                    {
+                      "label": "Included Components",
+                      "value": "included components",
+                      "type": "enum",
+                      "options": [
+                        "Baby Playmat",
+                        "Linkable Toys",
+                        "Baby Piano"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the total components, included as part of the item (e.g., 3 Removable rubber balls, 1 baby piano)."
                     },
                     {
                       "label": "Toy Building Block Type",
@@ -665,7 +678,7 @@
                       "options": [
                         "AA Batteries",
                         "No batteries required",
-                        "AA Batteries"
+                        "AAA Batteries"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
@@ -701,45 +714,29 @@
                   "title": "Materials & Care",
                   "filters": [
                     {
-                      "label": "Material Type",
-                      "value": "material_type",
-                      "type": "enum",
-                      "options": ["Fabric", "Plastic", "Foam"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Specify the material type used in the product."
-                    },
-                    {
                       "label": "Product Care Instructions",
                       "value": "product_care",
                       "type": "enum",
                       "options": [
-                        "Hand Wash",
-                        "Dry Clean Only",
-                        "Machine Wash"
+                        "Wet Wipe Clean",
+                        "Dry gentle rub",
+                        "Machine Wash",
+                        "Compressed air spray",
+                        "Microfiber cloth buff",
+                        "Adhesive putty press",
+                        "Mild spot wash"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
                     }
                   ]
                 },
                 {
                   "title": "Measurements",
                   "filters": [
-                    {
-                      "label": "Number of Pieces",
-                      "value": "number_of_pieces",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Specify the maximum height of the item, included as part of the item (e.g., 2, 5, 10)."
-                    },
                     {
                       "label": "Item Dimensions L x W x H",
                       "value": "item_dimensions",
@@ -817,8 +814,8 @@
                   "title": "Features & Specs",
                   "filters": [
                     {
-                      "label": "Cable Color ",
-                      "value": "cable_color",
+                      "label": "Color",
+                      "value": "color",
                       "type": "enum",
                       "options": [
                         "Black",
@@ -837,10 +834,10 @@
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Highlight the cable color that best matches  the product."
+                      "tooltip": "Highlight the cable color that best matches the item."
                     },
                     {
-                      "label": "Age Range Description",
+                      "label": "Age Description",
                       "value": "age_description",
                       "type": "enum",
                       "options": [
@@ -917,49 +914,50 @@
                       "tooltip": "Select the target gender that best matches the product."
                     },
                     {
-                      "label": "Special Features ",
-                      "value": "special_features",
-                      "type": "enum",
-                      "options": [
-                        "Non Toxic",
-                        "3 Height Modes up to 30 in.",
-                        "Interactive Toys",
-                        "Dishwasher Safe Tray",
-                        "Machine Washable Seat Pad"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
                       "label": "Special Features",
                       "value": "special_features",
                       "type": "enum",
                       "options": [
+                        "Non Toxic",
                         "Lightweight",
+                        "3 Height Modes up",
+                        "Interactive Toys",
+                        "Dishwasher Safe Tray",
+                        "Machine Washable Seat",
                         "Water Resistant",
-                        "Fade Resistant",
-                        "Breathable",
-                        "Quick Dry",
-                        "Sun Protection",
                         "Skin Friendly",
-                        "Stain Resistant",
-                        "Wrinkle Free",
                         "Stretchable",
-                        "Adjustable",
-                        "Thermal",
-                        "Absorbent",
-                        "Moisture Wicking",
-                        "Reversible",
-                        "Convertible"
+                        "Adjustable"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": false,
-                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
+                      "tooltip": "Highlight any unique or standout qualities of the product."
+                    },
+                    {
+                      "label": "Number of Pieces",
+                      "value": "number_of_pieces",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the number of components, included as part of the item (e.g., 2, 5, 10)."
+                    },
+                    {
+                      "label": "Included Components",
+                      "value": "included components",
+                      "type": "enum",
+                      "options": [
+                        "Baby Playmat",
+                        "Linkable Toys",
+                        "Baby Piano"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the total components, included as part of the item (e.g., 3 Removable rubber balls, 1 baby piano)."
                     },
                     {
                       "label": "Toy Building Block Type",
@@ -1005,7 +1003,7 @@
                       "options": [
                         "AA Batteries",
                         "No batteries required",
-                        "AA Batteries"
+                        "AAA Batteries"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
@@ -1041,45 +1039,29 @@
                   "title": "Materials & Care",
                   "filters": [
                     {
-                      "label": "Material Type",
-                      "value": "material_type",
-                      "type": "enum",
-                      "options": ["Fabric", "Plastic", "Foam"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Specify the material type used in the product."
-                    },
-                    {
                       "label": "Product Care Instructions",
                       "value": "product_care",
                       "type": "enum",
                       "options": [
-                        "Hand Wash",
-                        "Dry Clean Only",
-                        "Machine Wash"
+                        "Wet Wipe Clean",
+                        "Dry gentle rub",
+                        "Machine Wash",
+                        "Compressed air spray",
+                        "Microfiber cloth buff",
+                        "Adhesive putty press",
+                        "Mild spot wash"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
                     }
                   ]
                 },
                 {
                   "title": "Measurements",
                   "filters": [
-                    {
-                      "label": "Number of Pieces",
-                      "value": "number_of_pieces",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Specify the maximum height of the item, included as part of the item (e.g., 2, 5, 10)."
-                    },
                     {
                       "label": "Item Dimensions L x W x H",
                       "value": "item_dimensions",
@@ -1109,6 +1091,11 @@
                     }
                   ]
                 }
+              ],
+              "subCategories": [
+                { "value": "bouncers", "label": "Bouncers" },
+                { "value": "jumpers", "label": "Jumpers" },
+                { "value": "swings", "label": "Swings" }
               ],
               "highlights": [
                 { "ref": "fit_type" },
@@ -1157,8 +1144,8 @@
                   "title": "Features & Specs",
                   "filters": [
                     {
-                      "label": "Cable Color ",
-                      "value": "cable_color",
+                      "label": "Color",
+                      "value": "color",
                       "type": "enum",
                       "options": [
                         "Black",
@@ -1177,10 +1164,10 @@
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Highlight the cable color that best matches  the product."
+                      "tooltip": "Highlight the cable color that best matches the item."
                     },
                     {
-                      "label": "Age Range Description",
+                      "label": "Age Description",
                       "value": "age_description",
                       "type": "enum",
                       "options": [
@@ -1257,49 +1244,50 @@
                       "tooltip": "Select the target gender that best matches the product."
                     },
                     {
-                      "label": "Special Features ",
-                      "value": "special_features",
-                      "type": "enum",
-                      "options": [
-                        "Non Toxic",
-                        "3 Height Modes up to 30 in.",
-                        "Interactive Toys",
-                        "Dishwasher Safe Tray",
-                        "Machine Washable Seat Pad"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
                       "label": "Special Features",
                       "value": "special_features",
                       "type": "enum",
                       "options": [
+                        "Non Toxic",
                         "Lightweight",
+                        "3 Height Modes up",
+                        "Interactive Toys",
+                        "Dishwasher Safe Tray",
+                        "Machine Washable Seat",
                         "Water Resistant",
-                        "Fade Resistant",
-                        "Breathable",
-                        "Quick Dry",
-                        "Sun Protection",
                         "Skin Friendly",
-                        "Stain Resistant",
-                        "Wrinkle Free",
                         "Stretchable",
-                        "Adjustable",
-                        "Thermal",
-                        "Absorbent",
-                        "Moisture Wicking",
-                        "Reversible",
-                        "Convertible"
+                        "Adjustable"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": false,
-                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
+                      "tooltip": "Highlight any unique or standout qualities of the product."
+                    },
+                    {
+                      "label": "Number of Pieces",
+                      "value": "number_of_pieces",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the number of components, included as part of the item (e.g., 2, 5, 10)."
+                    },
+                    {
+                      "label": "Included Components",
+                      "value": "included components",
+                      "type": "enum",
+                      "options": [
+                        "Baby Playmat",
+                        "Linkable Toys",
+                        "Baby Piano"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the total components, included as part of the item (e.g., 3 Removable rubber balls, 1 baby piano)."
                     },
                     {
                       "label": "Toy Building Block Type",
@@ -1345,7 +1333,7 @@
                       "options": [
                         "AA Batteries",
                         "No batteries required",
-                        "AA Batteries"
+                        "AAA Batteries"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
@@ -1381,45 +1369,29 @@
                   "title": "Materials & Care",
                   "filters": [
                     {
-                      "label": "Material Type",
-                      "value": "material_type",
-                      "type": "enum",
-                      "options": ["Fabric", "Plastic", "Foam"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Specify the material type used in the product."
-                    },
-                    {
                       "label": "Product Care Instructions",
                       "value": "product_care",
                       "type": "enum",
                       "options": [
-                        "Hand Wash",
-                        "Dry Clean Only",
-                        "Machine Wash"
+                        "Wet Wipe Clean",
+                        "Dry gentle rub",
+                        "Machine Wash",
+                        "Compressed air spray",
+                        "Microfiber cloth buff",
+                        "Adhesive putty press",
+                        "Mild spot wash"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
                     }
                   ]
                 },
                 {
                   "title": "Measurements",
                   "filters": [
-                    {
-                      "label": "Number of Pieces",
-                      "value": "number_of_pieces",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Specify the maximum height of the item, included as part of the item (e.g., 2, 5, 10)."
-                    },
                     {
                       "label": "Item Dimensions L x W x H",
                       "value": "item_dimensions",
@@ -1497,8 +1469,8 @@
                   "title": "Features & Specs",
                   "filters": [
                     {
-                      "label": "Cable Color ",
-                      "value": "cable_color",
+                      "label": "Color",
+                      "value": "color",
                       "type": "enum",
                       "options": [
                         "Black",
@@ -1517,10 +1489,64 @@
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Highlight the cable color that best matches  the product."
+                      "tooltip": "Highlight the cable color that best matches the item."
                     },
                     {
-                      "label": "Age Range Description",
+                      "label": "Material Type",
+                      "value": "material_type",
+                      "type": "enum",
+                      "options": [
+                        "Fabric",
+                        "Cotton",
+                        "Rayon",
+                        "Foam",
+                        "Organic Cotton",
+                        "Polyester Plush / Minky",
+                        "Wool Felt",
+                        "Synthetic Felt",
+                        "Muslin",
+                        "Satin",
+                        "Natural Cork",
+                        "Satin"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "multi",
+                      "required": false,
+                      "tooltip": "Specify the material type used in the product."
+                    },
+                    {
+                      "label": "Pattern",
+                      "value": "pattern",
+                      "type": "enum",
+                      "options": [
+                        "Solid",
+                        "Striped",
+                        "Floral",
+                        "Checkered",
+                        "Geometric",
+                        "Camouflage",
+                        "Animal Print",
+                        "Letter Print",
+                        "Polka Dots",
+                        "Hearts",
+                        "Plaid",
+                        "Stars",
+                        "Chevron",
+                        "Argyle",
+                        "Fruits",
+                        "Herringbone",
+                        "Houndstooth",
+                        "Paisley"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Choose the main pattern used in the product."
+                    },
+                    {
+                      "label": "Age Description",
                       "value": "age_description",
                       "type": "enum",
                       "options": [
@@ -1597,49 +1623,50 @@
                       "tooltip": "Select the target gender that best matches the product."
                     },
                     {
-                      "label": "Special Features ",
-                      "value": "special_features",
-                      "type": "enum",
-                      "options": [
-                        "Non Toxic",
-                        "3 Height Modes up to 30 in.",
-                        "Interactive Toys",
-                        "Dishwasher Safe Tray",
-                        "Machine Washable Seat Pad"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
                       "label": "Special Features",
                       "value": "special_features",
                       "type": "enum",
                       "options": [
+                        "Non Toxic",
                         "Lightweight",
+                        "3 Height Modes up",
+                        "Interactive Toys",
+                        "Dishwasher Safe Tray",
+                        "Machine Washable Seat",
                         "Water Resistant",
-                        "Fade Resistant",
-                        "Breathable",
-                        "Quick Dry",
-                        "Sun Protection",
                         "Skin Friendly",
-                        "Stain Resistant",
-                        "Wrinkle Free",
                         "Stretchable",
-                        "Adjustable",
-                        "Thermal",
-                        "Absorbent",
-                        "Moisture Wicking",
-                        "Reversible",
-                        "Convertible"
+                        "Adjustable"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": false,
-                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
+                      "tooltip": "Highlight any unique or standout qualities of the product."
+                    },
+                    {
+                      "label": "Number of Pieces",
+                      "value": "number_of_pieces",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the number of components, included as part of the item (e.g., 2, 5, 10)."
+                    },
+                    {
+                      "label": "Included Components",
+                      "value": "included components",
+                      "type": "enum",
+                      "options": [
+                        "Baby Playmat",
+                        "Linkable Toys",
+                        "Baby Piano"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the total components, included as part of the item (e.g., 3 Removable rubber balls, 1 baby piano)."
                     },
                     {
                       "label": "Toy Building Block Type",
@@ -1685,7 +1712,7 @@
                       "options": [
                         "AA Batteries",
                         "No batteries required",
-                        "AA Batteries"
+                        "AAA Batteries"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
@@ -1721,45 +1748,29 @@
                   "title": "Materials & Care",
                   "filters": [
                     {
-                      "label": "Material Type",
-                      "value": "material_type",
-                      "type": "enum",
-                      "options": ["Fabric", "Plastic", "Foam"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Specify the material type used in the product."
-                    },
-                    {
                       "label": "Product Care Instructions",
                       "value": "product_care",
                       "type": "enum",
                       "options": [
-                        "Hand Wash",
-                        "Dry Clean Only",
-                        "Machine Wash"
+                        "Wet Wipe Clean",
+                        "Dry gentle rub",
+                        "Machine Wash",
+                        "Compressed air spray",
+                        "Microfiber cloth buff",
+                        "Adhesive putty press",
+                        "Mild spot wash"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
                     }
                   ]
                 },
                 {
                   "title": "Measurements",
                   "filters": [
-                    {
-                      "label": "Number of Pieces",
-                      "value": "number_of_pieces",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Specify the maximum height of the item, included as part of the item (e.g., 2, 5, 10)."
-                    },
                     {
                       "label": "Item Dimensions L x W x H",
                       "value": "item_dimensions",
@@ -1837,8 +1848,8 @@
                   "title": "Features & Specs",
                   "filters": [
                     {
-                      "label": "Cable Color ",
-                      "value": "cable_color",
+                      "label": "Color",
+                      "value": "color",
                       "type": "enum",
                       "options": [
                         "Black",
@@ -1857,10 +1868,10 @@
                       "render": "dropdown",
                       "sellerInput": "single",
                       "required": true,
-                      "tooltip": "Highlight the cable color that best matches  the product."
+                      "tooltip": "Highlight the cable color that best matches the item."
                     },
                     {
-                      "label": "Age Range Description",
+                      "label": "Age Description",
                       "value": "age_description",
                       "type": "enum",
                       "options": [
@@ -1937,49 +1948,50 @@
                       "tooltip": "Select the target gender that best matches the product."
                     },
                     {
-                      "label": "Special Features ",
-                      "value": "special_features",
-                      "type": "enum",
-                      "options": [
-                        "Non Toxic",
-                        "3 Height Modes up to 30 in.",
-                        "Interactive Toys",
-                        "Dishwasher Safe Tray",
-                        "Machine Washable Seat Pad"
-                      ],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "single",
-                      "required": false,
-                      "tooltip": "Select the neckline design that best describes the product (e.g., Crew Neck, V-Neck, Turtleneck)."
-                    },
-                    {
                       "label": "Special Features",
                       "value": "special_features",
                       "type": "enum",
                       "options": [
+                        "Non Toxic",
                         "Lightweight",
+                        "3 Height Modes up",
+                        "Interactive Toys",
+                        "Dishwasher Safe Tray",
+                        "Machine Washable Seat",
                         "Water Resistant",
-                        "Fade Resistant",
-                        "Breathable",
-                        "Quick Dry",
-                        "Sun Protection",
                         "Skin Friendly",
-                        "Stain Resistant",
-                        "Wrinkle Free",
                         "Stretchable",
-                        "Adjustable",
-                        "Thermal",
-                        "Absorbent",
-                        "Moisture Wicking",
-                        "Reversible",
-                        "Convertible"
+                        "Adjustable"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": false,
-                      "tooltip": "Highlight any unique or standout qualities of the product (e.g., Water Resistant, Breathable, Quick Dry)."
+                      "tooltip": "Highlight any unique or standout qualities of the product."
+                    },
+                    {
+                      "label": "Number of Pieces",
+                      "value": "number_of_pieces",
+                      "multiSelect": false,
+                      "render": "text",
+                      "sellerInput": "single",
+                      "required": true,
+                      "tooltip": "Specify the number of components, included as part of the item (e.g., 2, 5, 10)."
+                    },
+                    {
+                      "label": "Included Components",
+                      "value": "included components",
+                      "type": "enum",
+                      "options": [
+                        "Baby Playmat",
+                        "Linkable Toys",
+                        "Baby Piano"
+                      ],
+                      "multiSelect": true,
+                      "render": "dropdown",
+                      "sellerInput": "single",
+                      "required": false,
+                      "tooltip": "Specify the total components, included as part of the item (e.g., 3 Removable rubber balls, 1 baby piano)."
                     },
                     {
                       "label": "Toy Building Block Type",
@@ -2025,7 +2037,7 @@
                       "options": [
                         "AA Batteries",
                         "No batteries required",
-                        "AA Batteries"
+                        "AAA Batteries"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
@@ -2061,45 +2073,29 @@
                   "title": "Materials & Care",
                   "filters": [
                     {
-                      "label": "Material Type",
-                      "value": "material_type",
-                      "type": "enum",
-                      "options": ["Fabric", "Plastic", "Foam"],
-                      "multiSelect": true,
-                      "render": "dropdown",
-                      "sellerInput": "multi",
-                      "required": false,
-                      "tooltip": "Specify the material type used in the product."
-                    },
-                    {
                       "label": "Product Care Instructions",
                       "value": "product_care",
                       "type": "enum",
                       "options": [
-                        "Hand Wash",
-                        "Dry Clean Only",
-                        "Machine Wash"
+                        "Wet Wipe Clean",
+                        "Dry gentle rub",
+                        "Machine Wash",
+                        "Compressed air spray",
+                        "Microfiber cloth buff",
+                        "Adhesive putty press",
+                        "Mild spot wash"
                       ],
                       "multiSelect": true,
                       "render": "dropdown",
                       "sellerInput": "multi",
                       "required": true,
-                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Hand Wash Recommended, Dry Clean Only, Machine Wash)."
+                      "tooltip": "Provide clear care guidelines for maintaining the product (e.g., Wet wipe clean (for plastics / tech), Use leather cleaner (for leather), Soap and water (for silicone), Compressed air spray (for keyboards), Microfiber cloth buff (for metal / glass), Adhesive putty press (for earbud grilles), Mild spot wash (for canvas bags))."
                     }
                   ]
                 },
                 {
                   "title": "Measurements",
                   "filters": [
-                    {
-                      "label": "Number of Pieces",
-                      "value": "number_of_pieces",
-                      "multiSelect": false,
-                      "render": "text",
-                      "sellerInput": "single",
-                      "required": true,
-                      "tooltip": "Specify the maximum height of the item, included as part of the item (e.g., 2, 5, 10)."
-                    },
                     {
                       "label": "Item Dimensions L x W x H",
                       "value": "item_dimensions",

@@ -7,7 +7,16 @@ import React, { useEffect, useState } from 'react';
 // import useDeviceTracking from 'apps/user-ui/src/hooks/useDeviceTracking';
 // import ProductDetailsCard from 'apps/user-ui/src/shared/components/cards/product-details.card';
 import Ratings from '../ratings';
-// import ProductDetails from '../ProductDetails';
+
+interface ColorVariant {
+  id: string;
+  name: string;
+  hex: string;
+  title: string;
+  price: number;
+  isDefault: boolean;
+  images: string[];
+}
 
 const ProductCard = ({
   product,
@@ -17,6 +26,32 @@ const ProductCard = ({
   isDeal?: boolean;
 }) => {
   const [timeLeft, setTimeLeft] = useState('');
+
+  function getActiveImages(product: any): string[] {
+    // 1. Check for default swatch
+    const defaultSwatch = product?.colorVariants?.find((v: any) => v.isDefault);
+
+    // console.log('Color swatches', product?.colorVariants);
+
+    if (defaultSwatch && defaultSwatch.images?.length > 0) {
+      return defaultSwatch.images; // already string[]
+    }
+
+    // 2. Fallback to main images (objects → urls)
+    if (product?.images?.length > 0) {
+      return product.images.map((img: any) => img.url);
+    }
+
+    // 3. Final fallback placeholder
+    return [
+      'https://ik.imagekit.io/johnchrismaina/products/slider-img-1.webp?updatedAt=1763137176151',
+    ];
+  }
+
+  // const activeImages = defaultSwatch ? defaultSwatch.images : product?.images; // fallback to main images
+  const activeImages = getActiveImages(product);
+
+  console.log('Main images', product?.images);
 
   useEffect(() => {
     if (isDeal && product?.ending_date) {
@@ -63,13 +98,10 @@ const ProductCard = ({
 
       <Link
         href={`/product/${product?.slug}`}
-        className="block relative max-w-[270px] h-[200px] overflow-hidden bg-white "
+        className="block relative max-w-[270px] h-[200px] overflow-hidden bg-white"
       >
         <img
-          src={
-            product?.images[0]?.url ||
-            'https://ik.imagekit.io/johnchrismaina/products/slider-img-1.webp?updatedAt=1763137176151'
-          }
+          src={activeImages[0]}
           alt={product?.title || 'product'}
           className="w-full h-full object-contain"
           style={{ display: 'block' }}

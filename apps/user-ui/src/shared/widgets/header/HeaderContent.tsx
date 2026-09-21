@@ -248,15 +248,15 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
   return (
     <div className="w-full bg-[#292F36]">
-      <div className="w-[1460px] px-8 mx-auto pt-2.5 pb-2.5 grid grid-cols-[320px_1fr_240px] items-center justify-between border-none border-gray-700 gap-3 ">
+      <div className="w-[1400px] px-0 mx-auto pt-0 pb-0 grid grid-cols-[300px_1fr_240px] items-center justify-between border-b border-gray-700 gap-3 ">
         <div className="flex items-center justify-start gap-2">
           {/* Logo */}
           <Link href="/">
             <div
-              className="flex items-center gap-1.5 px-2 font-medium text-3xl tracking-wide text-[#fff] -mt-[4px]"
+              className="flex items-center gap-1.5 px-2 font-medium text-2xl tracking-wide text-[#fff] -mt-[4px]"
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
-              <div className="shrink-0 mt-1">
+              <div className="shrink-0 mt-0">
                 {/* <CgShoppingBag color="FF9F1C" size={30} /> */}
                 {/* <CgShoppingBag color="EE7B30" size={30} /> */}
                 <CgShoppingBag color="fff" size={26} />
@@ -270,15 +270,13 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           {/* bg-[#52525B] */}
 
           {/* Delivery location - can be dropdown in future */}
-          <div className=" flex items-center justify-center gap-1.5 px-3 py-2 cursor-pointer rounded-full hover:bg-[#3B4148] transition-all duration-150 shrink-0">
+          <div className=" flex items-center justify-center gap-1.5 px-3 h-[38px] text-[#D3D6DA] hover:text-[#fff] cursor-pointer rounded-full hover:bg-[#3B4148] transition-all duration-150 shrink-0">
             {/* </div> */}
-            <div className="">
-              <MapPin size={16} color="#fff" />
+            <div className="-mt-1">
+              <MapPin size={14} />
             </div>
             <div className="flex items-center justify-center gap-0.5">
-              <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
-                Deliver to Naivasha
-              </span>
+              <span className="text-sm font-normal ">Deliver to Naivasha</span>
               <div className="shrink-0 mt-[0px] hidden">
                 <ChevronDown size={12} color="#fff" />
               </div>
@@ -306,8 +304,8 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div className="flex w-full items-center justify-center">
-          <div ref={searchWrapperRef} className="relative w-full ml-4">
+        <div className="flex w-full items-center justify-center py-3">
+          <div ref={searchWrapperRef} className="relative w-full ml-0">
             {/* Smart Search Bar */}
             <SmartSearchBar
               products={allProducts}
@@ -359,7 +357,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
               className="flex flex-col gap-0 items-start justify-start "
             >
               {/* <UserRound size={18} /> */}
-              <span className="block text-sm font-normal text-[#fff] mt-[0px]">
+              <span className="block text-sm font-normal text-[#D3D6DA] hover:text-[#fff] mt-[0px]">
                 {!mounted ? (
                   // SSR + first client render: invisible placeholder to prevent hydration mismatch
                   <span className="">Sign in</span>
@@ -477,24 +475,22 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           </div>
 
           {/* Orders */}
-          <div className=" flex items-center justify-center gap-1.5 px-2 py-2 text-[#fff] cursor-pointer rounded-full shrink-0">
+          <div className=" flex items-center justify-center gap-1.5 px-2 py-2 text-[#D3D6DA] hover:text-[#fff] cursor-pointer rounded-full shrink-0">
             <div className="shrink-0">
               {/* <Heart size={18} color="#fff" /> */}
               {/* <HeartIcon className="w-4 h-4" /> */}
             </div>
-            <span className="text-sm font-normal text-[#fff] hover:text-[#fff] ">
-              Orders
-            </span>
+            <span className="text-sm font-normal ">Orders</span>
           </div>
 
           {/* Cart */}
-          <div className="flex items-center justify-center h-full gap-1.5 px-2 cursor-pointer ">
+          <div className="flex items-center justify-center h-full gap-1.5 px-2 text-[#D3D6DA] hover:text-[#fff] cursor-pointer ">
             <Link
               href="/cart"
-              className="relative flex items-center justify-center mt-[0px] text-[#fff] "
+              className="relative flex items-center justify-center mt-[0px] "
             >
-              {/* <CgShoppingCart size={18} color="#fff" /> */}
-              <CartIcon />
+              <CgShoppingCart size={18} />
+              {/* <CartIcon /> */}
               {cart?.length > 0 && (
                 <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#EE7B30] flex items-center justify-center mt-[0px]">
                   <span className="text-[#333] font-bold text-[11px] leading-none">
@@ -507,7 +503,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
                 KES 0.00
               </span> */}
             <div className="flex items-center justify-center">
-              <span className="text-[13.0px] text-[#fff] font-normal tracking-tight px-0 py-0 rounded-full">
+              <span className="text-[13.0px] font-normal tracking-tight px-0 py-0 rounded-full">
                 Ksh 0.00
               </span>
             </div>

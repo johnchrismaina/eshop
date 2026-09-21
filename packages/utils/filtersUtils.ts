@@ -73,6 +73,13 @@ export function splitSchema(categories: ShopCategory[]): {
 
     // From filterGroups
     cat.filterGroups?.forEach((group) => {
+      if (!group.filters) {
+        console.warn(
+          `⚠️ Missing filters in category "${cat.label}" (value: ${cat.value}), group "${group.title}"`
+        );
+        return; // skip this group
+      }
+
       group.filters.forEach((f) => {
         sellerFilters.push({
           label: f.label,

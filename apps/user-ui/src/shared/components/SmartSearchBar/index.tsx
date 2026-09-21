@@ -149,7 +149,7 @@ export default function SmartSearchBar({
     <div ref={searchContainerRef} className="relative w-full">
       <form
         onSubmit={handleSubmit}
-        className="flex items-center h-[36px] bg-[#fff] rounded-full border border-gray-200
+        className="flex items-center h-[38px] bg-[#fff] rounded-full border border-gray-200
                    focus-within:border-orange-500/50 overflow-hidden 
                    focus-within:ring-1 focus-within:ring-orange-500 transition-all relative"
       >
@@ -173,7 +173,7 @@ export default function SmartSearchBar({
         <button
           aria-label="Search"
           type="submit"
-          className="flex items-center justify-center w-14 h-[36px] rounded-r-full
+          className="flex items-center justify-center w-14 h-[38px] rounded-r-full
                      text-orange-600 hover:text-orange-700 bg-gray-50 border-l border-gray-200 transition-colors"
         >
           <Search strokeWidth={2} size={18} />

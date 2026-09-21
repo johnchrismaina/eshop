@@ -489,24 +489,30 @@ export const createDeal = async (
       subCategory,
       short_description,
       detailed_description,
-      tags,
-      sizes,
-      colors,
+      sizes = [],
+      colors = [],
       custom_properties,
-      product_specifications,
-      product_details,
+      product_specifications = [],
       stock,
-      regular_price = 0,
+      regular_price,
       sale_price,
       deal_start,
       deal_end,
       images = [],
+      colorVariants = [],
+      sku,
+      condition,
+      shippingOption,
+      discountCodes = [],
+      discount_start,
+      discount_end,
+      total_tickets,
     } = req.body;
 
-    if (!deal_start || !deal_end || !sale_price) {
-      return next(new ValidationError('Missing required fields'));
+    // ✅ Required deal fields
+    if (!deal_start || !deal_end || !sale_price || !sku?.trim()) {
+      return next(new ValidationError('Missing required deal fields'));
     }
-
     if (!req.seller?.id || !req.seller?.shops?.length) {
       return next(
         new AuthError(
@@ -515,10 +521,10 @@ export const createDeal = async (
       );
     }
 
+    // ✅ Validate dates
     const startDate = new Date(deal_start);
     const endDate = new Date(deal_end);
     const now = new Date();
-
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
       return next(new ValidationError('Invalid date format'));
     }
@@ -529,25 +535,39 @@ export const createDeal = async (
       return next(new ValidationError('Start date cannot be after end date'));
     }
 
+    // ✅ Validate sale price
     const parsedSalePrice = parseFloat(sale_price);
-    if (isNaN(parsedSalePrice) || parsedSalePrice < 0) {
-      return next(new ValidationError('Invalid sale price'));
+    if (isNaN(parsedSalePrice) || parsedSalePrice < 1) {
+      return next(new ValidationError('Sale price must be at least 1'));
     }
 
-    // Map frontend shape → Prisma shape once
-    const mappedImages = (images as { fileId: string; file_url: string }[]).map(
-      (img) => ({
-        file_id: img.fileId,
-        url: img.file_url,
-      })
-    );
+    // ✅ Map images
+    const mappedImages = (images as { fileId: string; file_url: string }[])
+      .filter((img) => img?.fileId && img?.file_url)
+      .map((img) => ({ file_id: img.fileId, url: img.file_url }));
+
+    // ✅ Map specifications
+    const mappedSpecifications = (product_specifications as any[])
+      .filter((spec) => spec.label)
+      .map((spec) => ({ label: spec.label, value: spec.value ?? null }));
+
+    // ✅ Map color variants (deal applies only to default variant)
+    const mappedVariants = (colorVariants as any[]).map((variant) => ({
+      name: variant.name,
+      title: variant.title,
+      hex: variant.hex ?? null,
+      price: parseFloat(variant.price),
+      isDefault: variant.isDefault ?? false,
+      images: (variant.images || [])
+        .filter((img: any) => img?.file_url)
+        .map((img: any) => img.file_url),
+    }));
 
     let product;
-
     if (productId) {
       product = await prisma.products.findUnique({
         where: { id: productId },
-        include: { images: true },
+        include: { colorVariants: true },
       });
       if (!product) return next(new ValidationError('Product not found'));
 
@@ -559,7 +579,11 @@ export const createDeal = async (
           deal_start: startDate,
           deal_end: endDate,
         },
-        include: { images: true },
+        include: {
+          images: true,
+          colorVariants: true,
+          product_specifications: true,
+        },
       });
     } else {
       product = await prisma.products.create({
@@ -572,31 +596,47 @@ export const createDeal = async (
           short_description: short_description?.trim() || 'No description',
           detailed_description: detailed_description ?? null,
           stock: parseInt(stock),
-          regular_price: parseFloat(regular_price),
+          regular_price:
+            mappedVariants.length > 0 ? null : parseFloat(regular_price),
           isDeal: true,
           sale_price: parsedSalePrice,
           deal_start: startDate,
           deal_end: endDate,
           Shop: { connect: { id: req.seller.shops[0].id } },
-          tags: tags || [],
-          colors: colors || [],
-          sizes: sizes || [],
+          colors,
+          sizes,
+          sku,
+          condition,
+          shippingOption,
           custom_properties: custom_properties ?? null,
-          product_specifications: product_specifications ?? null,
-          product_details: product_details ?? null,
-          images: {
-            create: mappedImages, // ✅ Prisma sets productId automatically
-          },
+          product_specifications: { create: mappedSpecifications },
+          images: { create: mappedImages },
+          colorVariants: { create: mappedVariants },
         },
-        include: { images: true },
+        include: {
+          images: true,
+          colorVariants: true,
+          product_specifications: true,
+        },
       });
     }
 
-    console.log(
-      '➡️ Backend received images proceeding to deal record:',
-      images
-    );
+    // ✅ Apply deal to default variant if variants exist
+    if (product.colorVariants?.length > 0) {
+      const defaultVariant = product.colorVariants.find((v) => v.isDefault);
+      if (defaultVariant) {
+        await prisma.color_variants.update({
+          where: { id: defaultVariant.id },
+          data: {
+            dealPrice: parsedSalePrice,
+            dealStart: startDate,
+            dealEnd: endDate,
+          },
+        });
+      }
+    }
 
+    // ✅ Create deal record linked to product
     const newDeal = await prisma.deals.create({
       data: {
         productId: product.id,
@@ -605,7 +645,10 @@ export const createDeal = async (
           : product.slug + '-deal',
         deal_start: startDate,
         deal_end: endDate,
-        regular_price: parseFloat(regular_price) || product.regular_price,
+        regular_price:
+          regular_price != null && !isNaN(parseFloat(regular_price))
+            ? parseFloat(regular_price)
+            : product.regular_price ?? 0,
         sale_price: parsedSalePrice,
         shopId: req.seller.shops[0].id,
         category: category?.trim() || product.category || 'Uncategorized',
@@ -614,25 +657,34 @@ export const createDeal = async (
           product.short_description ||
           'No description',
         subCategory: subCategory ?? product.subCategory ?? null,
-        tags: tags || product.tags || [],
         colors: colors || product.colors || [],
         sizes: sizes || product.sizes || [],
-        product_specifications:
-          product_specifications ?? product.product_specifications ?? null,
-        product_details: product_details ?? product.product_details ?? null,
-        images: {
-          create: mappedImages, // ✅ Prisma sets eventId automatically
-        },
+        sku: sku || product.sku,
+        condition: condition || product.condition,
+        shippingOption: shippingOption || product.shippingOption,
+        product_specifications: mappedSpecifications.length
+          ? { create: mappedSpecifications }
+          : undefined,
+        images: { create: mappedImages },
+        discountCodes: discountCodes.length
+          ? { connect: discountCodes.map((id: string) => ({ id })) }
+          : undefined,
+        discount_start: discount_start ? new Date(discount_start) : null,
+        discount_end: discount_end ? new Date(discount_end) : null,
+        total_tickets: total_tickets ?? null,
       },
-      include: { images: true, product: { include: { images: true } } },
+      include: {
+        images: true,
+        product: { include: { images: true, colorVariants: true } },
+        discountCodes: true,
+      },
     });
 
     console.log('✅ Deal created successfully:', newDeal.id);
-
     return res.status(201).json({ success: true, product, deal: newDeal });
   } catch (error) {
     console.error('💥 Error in createDeal:', error);
-    return next(error);
+    next(error);
   }
 };
 
@@ -1391,7 +1443,11 @@ export const getAllProducts = async (
         prisma.products.findMany({
           skip,
           take: limit,
-          include: { images: true, Shop: true },
+          include: {
+            images: true, // relation table
+            Shop: true, // relation table
+            colorVariants: true, // scalar array + relation fields
+          },
           where: baseFilter,
           orderBy: { createdAt: 'desc' },
         }),
@@ -1400,6 +1456,11 @@ export const getAllProducts = async (
           take: 10,
           where: baseFilter,
           orderBy: { createdAt: 'desc' },
+          include: {
+            images: true,
+            Shop: true,
+            colorVariants: true,
+          },
         }),
       ]);
 
@@ -1428,13 +1489,21 @@ export const getAllProducts = async (
       prisma.products.findMany({
         skip,
         take: limit,
-        include: { images: true, Shop: true },
+        include: {
+          images: true,
+          Shop: true,
+          colorVariants: true,
+        },
         where: baseFilter,
       }),
       prisma.products.count({ where: baseFilter }),
       prisma.products.findMany({
         where: { id: { in: productIds } },
-        include: { images: true, Shop: true },
+        include: {
+          images: true,
+          Shop: true,
+          colorVariants: true,
+        },
       }),
     ]);
 

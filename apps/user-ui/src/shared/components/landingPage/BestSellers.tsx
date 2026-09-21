@@ -80,13 +80,13 @@ const BestSellers = () => {
           <div
             ref={scrollRef}
             className="
-    grid grid-flow-col 
-    auto-cols-[40%]        /* mobile: 2.5 items (100 / 40 ≈ 2.5) */
-    sm:auto-cols-[28.5%]   /* tablet: 3.5 items (100 / 28.5 ≈ 3.5) */
-    md:auto-cols-[22%]     /* medium: 4.5 items (100 / 22 ≈ 4.5) */
-    lg:auto-cols-[calc(16.6666%-13.3333px)] /* desktop: 6 items perfectly aligned */
-    gap-4 overflow-x-auto scrollbar-hide w-full
-  "
+            grid grid-flow-col 
+            auto-cols-[40%]        /* mobile: 2.5 items (100 / 40 ≈ 2.5) */
+            sm:auto-cols-[28.5%]   /* tablet: 3.5 items (100 / 28.5 ≈ 3.5) */
+            md:auto-cols-[22%]     /* medium: 4.5 items (100 / 22 ≈ 4.5) */
+            lg:auto-cols-[calc(16.6666%-13.3333px)] /* desktop: 6 items perfectly aligned */
+            gap-4 overflow-x-auto scrollbar-hide w-full
+          "
           >
             {latestProducts.map((product: any) => (
               <ProductCard key={product.id} product={product} />
@@ -99,13 +99,13 @@ const BestSellers = () => {
               scrollRef.current?.scrollBy({ left: -250, behavior: 'smooth' })
             }
             className={`absolute left-0 top-20 flex items-center justify-center 
-    w-12 h-12 bg-gray-200 shadow-sm rounded-full 
-    transition-all duration-100 ease-in-out
-    ${
-      canScrollLeft
-        ? 'opacity-100 hover:bg-gray-100'
-        : 'opacity-0 pointer-events-none'
-    }`}
+            w-12 h-12 bg-gray-200 shadow-sm rounded-full 
+            transition-all duration-100 ease-in-out
+            ${
+              canScrollLeft
+                ? 'opacity-100 hover:bg-gray-100'
+                : 'opacity-0 pointer-events-none'
+            }`}
           >
             <ChevronLeft
               size={30}
@@ -119,13 +119,13 @@ const BestSellers = () => {
               scrollRef.current?.scrollBy({ left: 250, behavior: 'smooth' })
             }
             className={`absolute right-0 top-20 flex items-center justify-center 
-    w-12 h-12 bg-gray-200 shadow-sm rounded-full 
-    transition-all duration-100 ease-in-out
-    ${
-      canScrollRight
-        ? 'opacity-100 hover:bg-gray-100'
-        : 'opacity-0 pointer-events-none'
-    }`}
+            w-12 h-12 bg-gray-200 shadow-sm rounded-full 
+            transition-all duration-100 ease-in-out
+            ${
+              canScrollRight
+                ? 'opacity-100 hover:bg-gray-100'
+                : 'opacity-0 pointer-events-none'
+            }`}
           >
             <ChevronRight
               strokeWidth="2"

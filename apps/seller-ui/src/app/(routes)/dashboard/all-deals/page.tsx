@@ -8,7 +8,16 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 
-import { Search, Pencil, Trash, Eye, Plus, BarChart, Star } from 'lucide-react';
+import {
+  Search,
+  Pencil,
+  Trash,
+  Eye,
+  Plus,
+  BarChart,
+  Star,
+  RotateCcwIcon,
+} from 'lucide-react';
 
 import Link from 'next/link';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
@@ -16,27 +25,34 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import DeleteConfirmationModal from 'apps/seller-ui/src/shared/components/modals/delete.confirmation.modal';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
-
-const fetchDeals = async () => {
-  const res = await axiosProduct.get('/get-shop-deals');
-  return res?.data?.deals;
-};
-
-const deleteDeal = async (dealId: string) => {
-  await axiosProduct.delete(`/delete-deal/${dealId}`);
-};
-
-const restoreDeal = async (dealId: string) => {
-  await axiosProduct.put(`/restore-deal/${dealId}`);
-};
+import RotateCcwClock from 'apps/seller-ui/src/assets/svgs/rotate-ccw-clock';
 
 const DealList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
   // const [analyticsData, setAnalyticsData] = useState(null);
   // const [showAnalytics, setShowAnalytics] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedDeal, setSelectedDeal] = useState<any>();
+  // const [showDeleteModal, setShowDeleteModal] = useState(false);
+  // const [selectedDeal, setSelectedDeal] = useState<any>();
   const queryClient = useQueryClient();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState<any>(null);
+  const [modalMode, setModalMode] = useState<'delete' | 'restore'>('delete');
+
+  const fetchDeals = async () => {
+    const res = await axiosProduct.get('/get-shop-deals');
+    return res?.data?.deals;
+  };
+
+  const deleteDeal = async (id: string) => {
+    console.log('Frontend calling DELETE with id:', id);
+    await axiosProduct.delete(`/product/delete-deal/${id}`);
+  };
+
+  const restoreDeal = async (id: string) => {
+    console.log('Frontend calling RESTORE with id:', id);
+    await axiosProduct.put(`/product/restore-deal/${id}`);
+  };
 
   const { data: deals = [], isLoading } = useQuery({
     queryKey: ['deals'],
@@ -61,6 +77,8 @@ const DealList = () => {
       setShowDeleteModal(false);
     },
   });
+
+  console.log('data:', deals);
 
   const USER_UI_BASE_URL =
     process.env.NEXT_PUBLIC_USER_UI_BASE_URL || 'http://localhost:3001';
@@ -183,13 +201,50 @@ const DealList = () => {
               <BarChart size={18} />
             </button>
 
-            {/* Delete button */}
-            <button
-              className="text-red-400 hover:text-red-300 transition"
-              onClick={() => openDeleteModal(row.original)}
-            >
-              <Trash size={18} />
-            </button>
+            <div className="flex gap-4 text-gray-800">
+              {/* Restore button */}
+              <button
+                disabled={!row.original.isDeleted} // disable if not deleted
+                className={`${
+                  !row.original.isDeleted
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'text-green-400 hover:text-green-300'
+                } transition font-semibold`}
+                onClick={() => {
+                  if (row.original.isDeleted) {
+                    setSelectedDeal(row.original);
+                    setModalMode('restore');
+                    setShowDeleteModal(true);
+                  }
+                }}
+              >
+                {/* <RotateCcwIcon size={18} /> */}
+                <RotateCcwClock size={12} />
+              </button>
+
+              {/* Delete button */}
+              <button
+                disabled={row.original.isDeleted} // disable if already deleted
+                className={`${
+                  row.original.isDeleted
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'text-red-400 hover:text-red-300'
+                } transition`}
+                onClick={() => {
+                  console.log(
+                    'Delete button clicked for deal:',
+                    row.original.id
+                  );
+                  if (!row.original.isDeleted) {
+                    setSelectedDeal(row.original);
+                    setModalMode('delete');
+                    setShowDeleteModal(true);
+                  }
+                }}
+              >
+                <Trash size={18} />
+              </button>
+            </div>
           </div>
         ),
       },
@@ -215,10 +270,10 @@ const DealList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen p-8">
+    <div className="w-full min-h-screen px-10 py-4 bg-[#f5f5f5]">
       {/* Header */}
-      <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2l text-gray-700 font-semibold">All Deals</h2>
+      <div className="flex justify-between items-end mb-1 border-b border-gray-300 py-3">
+        <h2 className="text-xl text-gray-900 font-semibold">All Deals</h2>
         <Link
           href="/dashboard/create-deal"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
@@ -228,10 +283,12 @@ const DealList = () => {
       </div>
 
       {/* Breadcrumbs */}
-      <Breadcrumbs title="All Deals" />
+      <div className="py-3">
+        <Breadcrumbs title="All Deals" />
+      </div>
 
       {/* Search Bar */}
-      <div className="mb-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
+      <div className="mb-6 flex items-center bg-white border border-gray-200 p-2 rounded-md flex-1">
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
@@ -243,11 +300,11 @@ const DealList = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
+      <div className="overflow-x-auto text-gray-800 bg-white py-6 px-8 border border-gray-200 rounded-lg ">
         {isLoading ? (
-          <p className="text-center text-white">Loading offers...</p>
+          <p className="text-center text-gray-700">Loading offers...</p>
         ) : (
-          <table className="w-full text-white">
+          <table className="w-full text-gray-700">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="border-b border-gray-800">
@@ -266,10 +323,7 @@ const DealList = () => {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b border-gray-800 hover:border-gray-900 transition"
-                >
+                <tr key={row.id} className="border-b border-gray-400">
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-3">
                       {flexRender(
@@ -286,10 +340,14 @@ const DealList = () => {
 
         {showDeleteModal && (
           <DeleteConfirmationModal
-            deal={selectedDeal}
+            item={selectedDeal}
+            mode={modalMode} // 'delete' or 'restore'
             onClose={() => setShowDeleteModal(false)}
-            onConfirm={() => deleteMutation.mutate(selectedDeal?.id)}
-            onRestore={() => restoreMutation.mutate(selectedDeal?.id)}
+            onConfirm={(id: string) =>
+              modalMode === 'delete'
+                ? deleteMutation.mutate(id)
+                : restoreMutation.mutate(id)
+            }
           />
         )}
       </div>

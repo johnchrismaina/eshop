@@ -491,7 +491,6 @@ export const createDeal = async (
       detailed_description,
       sizes = [],
       colors = [],
-      custom_properties,
       product_specifications = [],
       stock,
       regular_price,
@@ -504,8 +503,8 @@ export const createDeal = async (
       condition,
       shippingOption,
       discountCodes = [],
-      discount_start,
-      discount_end,
+      // discount_start,
+      // discount_end,
       total_tickets,
     } = req.body;
 
@@ -608,7 +607,6 @@ export const createDeal = async (
           sku,
           condition,
           shippingOption,
-          custom_properties: custom_properties ?? null,
           product_specifications: { create: mappedSpecifications },
           images: { create: mappedImages },
           colorVariants: { create: mappedVariants },
@@ -662,23 +660,35 @@ export const createDeal = async (
         sku: sku || product.sku,
         condition: condition || product.condition,
         shippingOption: shippingOption || product.shippingOption,
+        stock: parseInt(stock ?? product.stock ?? 0),
         product_specifications: mappedSpecifications.length
           ? { create: mappedSpecifications }
           : undefined,
         images: { create: mappedImages },
-        discountCodes: discountCodes.length
-          ? { connect: discountCodes.map((id: string) => ({ id })) }
+
+        // ✅ Create junction rows automatically
+        dealDiscountCodes: discountCodes.length
+          ? {
+              create: discountCodes.map((id: string) => ({
+                discount: { connect: { id } },
+              })),
+            }
           : undefined,
-        discount_start: discount_start ? new Date(discount_start) : null,
-        discount_end: discount_end ? new Date(discount_end) : null,
-        total_tickets: total_tickets ?? null,
       },
       include: {
         images: true,
         product: { include: { images: true, colorVariants: true } },
-        discountCodes: true,
+        dealDiscountCodes: { include: { discount: true } },
       },
     });
+
+    // ✅ Update ticket counts on discount codes
+    if (discountCodes.length && total_tickets != null) {
+      await prisma.discount_codes.updateMany({
+        where: { id: { in: discountCodes } },
+        data: { total_tickets: total_tickets },
+      });
+    }
 
     console.log('✅ Deal created successfully:', newDeal.id);
     return res.status(201).json({ success: true, product, deal: newDeal });
@@ -989,7 +999,29 @@ export const demoteToProduct = async (
     });
     if (!product) return next(new ValidationError('Product not found'));
 
-    const [updatedProduct, updatedDeal] = await prisma.$transaction([
+    const deal = await prisma.deals.findUnique({
+      where: { id: dealId },
+      include: { dealDiscountCodes: true },
+    });
+    if (!deal) return next(new ValidationError('Deal not found'));
+
+    // ✅ Find existing product-discount links
+    const existingLinks = await prisma.product_discount_codes.findMany({
+      where: { productId },
+      select: { discountId: true },
+    });
+    const existingIds = new Set(existingLinks.map((e) => e.discountId));
+
+    // ✅ Filter out duplicates
+    const newLinks = deal.dealDiscountCodes
+      .filter((dc) => !existingIds.has(dc.discountId))
+      .map((dc) => ({
+        productId: deal.productId,
+        discountId: dc.discountId,
+      }));
+
+    const result = await prisma.$transaction([
+      // 1. Update product back to normal (remove deal fields)
       prisma.products.update({
         where: { id: productId },
         data: {
@@ -999,17 +1031,46 @@ export const demoteToProduct = async (
           deal_end: null,
         },
       }),
+
+      // 2. Move discount codes to product_discount_codes
+      ...(newLinks.length > 0
+        ? [prisma.product_discount_codes.createMany({ data: newLinks })]
+        : []),
+
+      // 3. Clear dealDiscountCodes junction
+      prisma.deal_discount_codes.deleteMany({
+        where: { dealId },
+      }),
+
+      // 4. Archive the deal (instead of expiring)
       prisma.deals.update({
         where: { id: dealId },
         data: {
-          status: 'Expired',
-          deal_end: new Date(), // mark end now
+          status: 'Archived',
+          isDeleted: true,
+          deletedAt: new Date(),
         },
       }),
     ]);
 
-    res.json({ success: true, product: updatedProduct, deal: updatedDeal });
+    // ✅ Fetch product with discounts (tickets intact)
+    const productWithDiscounts = await prisma.products.findUnique({
+      where: { id: productId },
+      include: {
+        productDiscountCodes: {
+          include: { discount: true }, // includes ticket fields
+        },
+      },
+    });
+
+    res.json({
+      success: true,
+      product: productWithDiscounts,
+      deal: result[result.length - 1],
+      movedDiscounts: newLinks.length,
+    });
   } catch (error) {
+    console.error('💥 Error in demoteToProduct:', error);
     next(error);
   }
 };
@@ -1238,51 +1299,6 @@ export const deleteProduct = async (
   }
 };
 
-// Delete deal
-export const deleteDeal = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { dealId } = req.params;
-    const sellerId = req.seller?.shops?.[0]?.id; // ✅ use shops[0].id
-
-    const deal = await prisma.deals.findUnique({
-      where: { id: dealId },
-      select: { id: true, shopId: true, isDeleted: true },
-    });
-
-    if (!deal) {
-      return next(new ValidationError('Deal not found'));
-    }
-
-    if (deal.shopId !== sellerId) {
-      return next(new ValidationError('Unauthorized action'));
-    }
-
-    if (deal.isDeleted) {
-      return next(new ValidationError('Deal is already deleted'));
-    }
-
-    const deletedDeal = await prisma.deals.update({
-      where: { id: dealId },
-      data: {
-        isDeleted: true,
-        deletedAt: new Date(Date.now() + 2 * 60 * 60 * 1000), // ✅ 2 hours
-      },
-    });
-
-    return res.status(200).json({
-      message:
-        'Deal is scheduled for deletion in 2 hours. You can restore it within this time',
-      deletedAt: deletedDeal.deletedAt,
-    });
-  } catch (error) {
-    return next(error);
-  }
-};
-
 // Restore product
 export const restoreProduct = async (
   req: any,
@@ -1330,7 +1346,44 @@ export const restoreProduct = async (
   }
 };
 
-// Restore deal
+// Delete deal (soft delete with 24h expiry)
+// Delete deal
+export const deleteDeal = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log('🔥 deleteDeal controller triggered with params:', req.params);
+
+  const { id } = req.params; // ✅ matches route
+  const sellerId = req.seller?.shops?.[0]?.id;
+
+  const deal = await prisma.deals.findUnique({
+    where: { id },
+    select: { id: true, shopId: true, isDeleted: true },
+  });
+
+  if (!deal) return next(new ValidationError('Deal not found'));
+  if (deal.shopId !== sellerId)
+    return next(new ValidationError('Unauthorized action'));
+  if (deal.isDeleted)
+    return next(new ValidationError('Deal is already deleted'));
+
+  const deletedDeal = await prisma.deals.update({
+    where: { id },
+    data: {
+      isDeleted: true,
+      deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h expiry
+    },
+  });
+
+  return res.status(200).json({
+    message: 'Deal scheduled for deletion in 24 hours.',
+    deletedAt: deletedDeal.deletedAt,
+  });
+};
+
+// Restore deal (only within 24h window)
 export const restoreDeal = async (
   req: any,
   res: Response,
@@ -1357,13 +1410,17 @@ export const restoreDeal = async (
       return res.status(400).json({ message: 'Deal is not in deleted state' });
     }
 
-    // ✅ Optional: check if restore window expired
+    // ✅ Check if restore window expired
     if (deal.deletedAt && deal.deletedAt < new Date()) {
+      // Hard delete if expired
+      await prisma.deals.delete({ where: { id: dealId } });
       return res.status(400).json({
-        message: 'Restore window has expired. Deal is permanently deleted.',
+        message:
+          'Restore window has expired. Deal has been permanently deleted.',
       });
     }
 
+    // ✅ Restore deal
     await prisma.deals.update({
       where: { id: dealId },
       data: { isDeleted: false, deletedAt: null },

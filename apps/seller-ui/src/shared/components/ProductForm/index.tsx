@@ -1694,58 +1694,58 @@ export default function ProductForm({
 
               {/* Case 1: No color variants → global pricing */}
               {/* Regular Price */}
-              {colorVariants.length < 1 && (
-                <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
-                  <p className="flex items-center justify-center gap-1">
-                    <label
-                      htmlFor="regular_price"
-                      className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
-                    >
-                      Base Price * <span className="text-sm">(Ksh)</span>
-                    </label>
-                    <span>
-                      <Info size={16} color="#333" />
-                    </span>
-                  </p>
+              {/* {colorVariants.length < 1 && ( */}
+              <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
+                <p className="flex items-center justify-center gap-1">
+                  <label
+                    htmlFor="regular_price"
+                    className="text-[15px] font-bold text-gray-700 shrink-0 py-2"
+                  >
+                    Base Price * <span className="text-sm">(Ksh)</span>
+                  </label>
+                  <span>
+                    <Info size={16} color="#333" />
+                  </span>
+                </p>
 
-                  <div className="w-[700px]">
-                    <div className="w-[400px]">
-                      <Input
-                        id="regular_price"
-                        label=""
-                        type="number"
-                        placeholder="0"
-                        disabled={colorVariants.length > 0} // ✅ disable when variants exist
-                        className="bg-[#fff] text-[15px]"
-                        {...register('regular_price', {
-                          required:
-                            colorVariants.length === 0
-                              ? 'Base Price is required when no color variants exist'
-                              : false,
-                          setValueAs: (v) => (v === '' ? undefined : Number(v)),
-                          min:
-                            colorVariants.length === 0
-                              ? {
-                                  value: 1,
-                                  message: 'Price must be at least 1',
-                                }
-                              : undefined,
-                          validate: (value) =>
-                            colorVariants.length > 0 ||
-                            (typeof value === 'number' && !isNaN(value)) ||
-                            'Only numbers are allowed',
-                        })}
-                      />
-                    </div>
+                <div className="w-[700px]">
+                  <div className="w-[400px]">
+                    <Input
+                      id="regular_price"
+                      label=""
+                      type="number"
+                      placeholder="0"
+                      // disabled={colorVariants.length > 0} // ✅ disable when variants exist
+                      className="bg-[#fff] text-[15px]"
+                      {...register('regular_price', {
+                        required:
+                          colorVariants.length === 0
+                            ? 'Base Price is required when no color variants exist'
+                            : false,
+                        setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                        min:
+                          colorVariants.length === 0
+                            ? {
+                                value: 1,
+                                message: 'Price must be at least 1',
+                              }
+                            : undefined,
+                        validate: (value) =>
+                          colorVariants.length > 0 ||
+                          (typeof value === 'number' && !isNaN(value)) ||
+                          'Only numbers are allowed',
+                      })}
+                    />
                   </div>
-
-                  {errors.regular_price && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.regular_price.message as string}
-                    </p>
-                  )}
                 </div>
-              )}
+
+                {errors.regular_price && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.regular_price.message as string}
+                  </p>
+                )}
+              </div>
+              {/* )} */}
 
               {/* Sale Price */}
               {isDealRoute && (

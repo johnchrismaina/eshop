@@ -43,9 +43,15 @@ const ProductList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
   // const [analyticsData, setAnalyticsData] = useState(null);
   // const [showAnalytics, setShowAnalytics] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   // const [selectedProduct, setSelectedProduct] = useState<any>();
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  // const [showDeleteModal, setShowDeleteModal] = useState(false);
+  // const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [modalMode, setModalMode] = useState<'delete' | 'restore'>('delete');
+
   const queryClient = useQueryClient();
 
   const { data: products = [], isLoading } = useQuery({
@@ -178,12 +184,42 @@ const ProductList = () => {
             >
               <BarChart size={18} />
             </button>
-            <button
-              className="text-red-400 hover:text-red-300 transition"
-              onClick={() => openDeleteModal(row.original)}
-            >
-              <Trash size={18} />
-            </button>
+
+            <div className="flex gap-2">
+              {/* Delete button */}
+              <button
+                disabled={row.original.isDeleted} // disable if already deleted
+                className={`${
+                  row.original.isDeleted
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'text-red-400 hover:text-red-300'
+                } transition`}
+                onClick={() => {
+                  setSelectedProduct(row.original);
+                  setModalMode('delete'); // ✅ set mode
+                  setShowDeleteModal(true);
+                }}
+              >
+                <Trash size={18} />
+              </button>
+
+              {/* Restore button */}
+              <button
+                disabled={!row.original.isDeleted} // disable if not deleted
+                className={`${
+                  !row.original.isDeleted
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'text-green-400 hover:text-green-300'
+                } transition font-semibold`}
+                onClick={() => {
+                  setSelectedProduct(row.original);
+                  setModalMode('restore'); // ✅ set mode
+                  setShowDeleteModal(true);
+                }}
+              >
+                Restore
+              </button>
+            </div>
           </div>
         ),
       },
@@ -225,7 +261,7 @@ const ProductList = () => {
     <div className="w-full min-h-screen px-10 py-4 bg-[#f5f5f5]">
       {/* Header */}
       <div className="flex justify-between items-end mb-1 border-b border-gray-300 py-3">
-        <h2 className="text-xl text-[#000] font-semibold">All Products</h2>
+        <h2 className="text-xl text-gray-900 font-semibold">All Products</h2>
         <Link
           href="/dashboard/create-product"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
@@ -275,7 +311,7 @@ const ProductList = () => {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="border-b border-gray-200 ">
+                <tr key={row.id} className="border-b border-gray-400 ">
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-3">
                       {flexRender(
@@ -291,18 +327,15 @@ const ProductList = () => {
         )}
 
         {showDeleteModal && (
-          // <DeleteConfirmationModal
-          //   product={selectedProduct}
-          //   onClose={() => setShowDeleteModal(false)}
-          //   onConfirm={() => deleteMutation.mutate(selectedProduct?.id)}
-          //   onRestore={() => restoreMutation.mutate(selectedProduct?.id)}
-          // />
-
           <DeleteConfirmationModal
-            product={selectedProduct}
+            item={selectedProduct}
+            mode={modalMode} // 'delete' or 'restore'
             onClose={() => setShowDeleteModal(false)}
-            onConfirm={(id: string) => deleteMutation.mutate(id)}
-            onRestore={(id: string) => restoreMutation.mutate(id)}
+            onConfirm={(id: string) =>
+              modalMode === 'delete'
+                ? deleteMutation.mutate(id)
+                : restoreMutation.mutate(id)
+            }
           />
         )}
       </div>

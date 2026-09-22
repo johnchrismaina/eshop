@@ -67,6 +67,17 @@ app.use(
   })
 ); // Order Service
 app.use('/seller', proxy('http://localhost:6003')); // Seller Service
+
+// ✅ Global request logger
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.originalUrl}`, {
+    params: req.params,
+    query: req.query,
+    body: req.body,
+  });
+  next();
+});
+
 app.use(
   '/product',
   proxy('http://localhost:6002', {

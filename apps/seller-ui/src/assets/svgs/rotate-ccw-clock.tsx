@@ -7,14 +7,14 @@ interface RotateIconProps {
 }
 
 const RotateCcwClock: React.FC<RotateIconProps> = ({
-  size = 16,
+  size = 18,
   strokeWidth = 1.5,
   color = '#333',
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     fill="none"
     // stroke="currentColor"

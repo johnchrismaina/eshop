@@ -56,7 +56,7 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex items-start justify-start gap-3 ml-6 ">
+        <nav className="flex items-start justify-start gap-2 ml-2 ">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
               className={`flex items-center px-3 py-2 text-[13.5px] h-full rounded-sm transition-colors duration-150 ${

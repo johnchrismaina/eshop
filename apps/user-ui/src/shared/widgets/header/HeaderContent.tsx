@@ -248,7 +248,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
   return (
     <div className="w-full bg-[#292F36]">
-      <div className="w-[1400px] px-0 mx-auto pt-0 pb-0 grid grid-cols-[300px_1fr_240px] items-center justify-between border-b border-gray-700 gap-3 ">
+      <div className="w-[1400px] px-0 mx-auto pt-0 pb-0 grid grid-cols-[320px_1fr_240px] items-center justify-between border-none border-gray-700 gap-3 ">
         <div className="flex items-center justify-start gap-2">
           {/* Logo */}
           <Link href="/">
@@ -270,14 +270,14 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           {/* bg-[#52525B] */}
 
           {/* Delivery location - can be dropdown in future */}
-          <div className=" flex items-center justify-center gap-1.5 px-3 h-[38px] text-[#D3D6DA] hover:text-[#fff] cursor-pointer rounded-full hover:bg-[#3B4148] transition-all duration-150 shrink-0">
+          <div className=" flex items-center justify-center gap-1.5 px-3 h-[38px] text-[#D3D6DA] hover:text-[#fff] cursor-pointer rounded-full bg-[#3B4148] transition-all duration-150 shrink-0">
             {/* </div> */}
             <div className="-mt-1">
               <MapPin size={14} />
             </div>
             <div className="flex items-center justify-center gap-0.5">
               <span className="text-sm font-normal ">Deliver to Naivasha</span>
-              <div className="shrink-0 mt-[0px] hidden">
+              <div className="shrink-0 mt-[0px] ">
                 <ChevronDown size={12} color="#fff" />
               </div>
             </div>

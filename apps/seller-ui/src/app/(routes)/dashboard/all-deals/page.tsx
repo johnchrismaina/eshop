@@ -17,6 +17,7 @@ import {
   BarChart,
   Star,
   RotateCcwIcon,
+  // RotateCcwClock,
 } from 'lucide-react';
 
 import Link from 'next/link';
@@ -25,7 +26,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import DeleteConfirmationModal from 'apps/seller-ui/src/shared/components/modals/delete.confirmation.modal';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
-import RotateCcwClock from 'apps/seller-ui/src/assets/svgs/rotate-ccw-clock';
+// import RotateCcwClock from 'apps/seller-ui/src/assets/svgs/rotate-ccw-clock';
 
 const DealList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
@@ -44,27 +45,29 @@ const DealList = () => {
     return res?.data?.deals;
   };
 
-  const deleteDeal = async (id: string) => {
-    console.log('Frontend calling DELETE with id:', id);
-    await axiosProduct.delete(`/product/delete-deal/${id}`);
-  };
-
-  const restoreDeal = async (id: string) => {
-    console.log('Frontend calling RESTORE with id:', id);
-    await axiosProduct.put(`/product/restore-deal/${id}`);
-  };
-
   const { data: deals = [], isLoading } = useQuery({
     queryKey: ['deals'],
     queryFn: fetchDeals,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  console.log('data:', deals);
+
+  const deleteDeal = async (id: string) => {
+    console.log('Frontend calling DELETE with id:', id);
+    await axiosProduct.delete(`/delete-deal/${id}`);
+  };
+
+  const restoreDeal = async (id: string) => {
+    console.log('Frontend calling RESTORE with id:', id);
+    await axiosProduct.put(`/restore-deal/${id}`);
+  };
+
   //   Delete Deal Mutation
   const deleteMutation = useMutation({
     mutationFn: deleteDeal,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-deals'] });
+      queryClient.invalidateQueries({ queryKey: ['deals'] });
       setShowDeleteModal(false);
     },
   });
@@ -73,12 +76,10 @@ const DealList = () => {
   const restoreMutation = useMutation({
     mutationFn: restoreDeal,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-deals'] });
+      queryClient.invalidateQueries({ queryKey: ['deals'] });
       setShowDeleteModal(false);
     },
   });
-
-  console.log('data:', deals);
 
   const USER_UI_BASE_URL =
     process.env.NEXT_PUBLIC_USER_UI_BASE_URL || 'http://localhost:3001';
@@ -92,10 +93,27 @@ const DealList = () => {
         accessorKey: 'images',
         header: 'Image',
         cell: ({ row }: any) => {
-          const images = row.original.images;
+          const product = row.original;
 
-          // Handle cases where images is missing or not an array
-          const imageUrl = Array.isArray(images) ? images[0]?.url : images?.url;
+          let imageUrl: string | undefined;
+
+          // ✅ Case 1: product has variants → show first image of isDefault variant
+          if (
+            Array.isArray(product.colorVariants) &&
+            product.colorVariants.length > 0
+          ) {
+            const defaultVariant = product.colorVariants.find(
+              (v: any) => v.isDefault
+            );
+            if (defaultVariant?.images?.length) {
+              imageUrl = defaultVariant.images[0].url;
+            }
+          } else {
+            // ✅ Case 2: no variants → fallback to main product images
+            imageUrl = Array.isArray(product.images)
+              ? product.images[0]?.url
+              : product.images?.url;
+          }
 
           return imageUrl ? (
             <Image
@@ -146,12 +164,10 @@ const DealList = () => {
         cell: ({ row }: any) => (
           <span
             className={
-              row.original.available_tickets < 10
-                ? 'text-red-500'
-                : 'text-white'
+              row.original.stock < 10 ? 'text-red-500' : 'text-gray-700'
             }
           >
-            {row.original.available_tickets} left
+            {row.original.stock} left
           </span>
         ),
       },
@@ -168,6 +184,20 @@ const DealList = () => {
             <span className="text-white">{row.original.ratings || 4}</span>
           </div>
         ),
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => {
+          const deal = row.original;
+          if (!deal.isDeleted)
+            return <span className="text-green-600 ">Active</span>;
+          if (deal.deletedAt && new Date(deal.deletedAt) > new Date()) {
+            return <span className="text-yellow-600">Pending Deletion</span>;
+            // ✅ future date means still pending
+          }
+          return <span className="text-red-600">Expired</span>; // ✅ past date means expired
+        },
       },
       {
         header: 'Actions',
@@ -218,8 +248,8 @@ const DealList = () => {
                   }
                 }}
               >
-                {/* <RotateCcwIcon size={18} /> */}
-                <RotateCcwClock size={12} />
+                <RotateCcwIcon size={18} />
+                {/* <RotateCcwClock size={18} /> */}
               </button>
 
               {/* Delete button */}
@@ -270,7 +300,7 @@ const DealList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen px-10 py-4 bg-[#f5f5f5]">
+    <div className="w-full min-h-screen px-10 py-4 bg-[#f5f5f5] ">
       {/* Header */}
       <div className="flex justify-between items-end mb-1 border-b border-gray-300 py-3">
         <h2 className="text-xl text-gray-900 font-semibold">All Deals</h2>
@@ -300,7 +330,7 @@ const DealList = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto text-gray-800 bg-white py-6 px-8 border border-gray-200 rounded-lg ">
+      <div className="overflow-x-auto text-[15px] text-gray-800 bg-white py-6 px-8 border border-gray-200 rounded-lg ">
         {isLoading ? (
           <p className="text-center text-gray-700">Loading offers...</p>
         ) : (
@@ -341,12 +371,17 @@ const DealList = () => {
         {showDeleteModal && (
           <DeleteConfirmationModal
             item={selectedDeal}
-            mode={modalMode} // 'delete' or 'restore'
+            mode={modalMode}
             onClose={() => setShowDeleteModal(false)}
-            onConfirm={(id: string) =>
+            onConfirm={(id) =>
               modalMode === 'delete'
                 ? deleteMutation.mutate(id)
                 : restoreMutation.mutate(id)
+            }
+            isLoading={
+              modalMode === 'delete'
+                ? deleteMutation.isPending // ✅ use isPending
+                : restoreMutation.isPending
             }
           />
         )}

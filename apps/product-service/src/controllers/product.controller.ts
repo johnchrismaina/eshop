@@ -1216,21 +1216,17 @@ export const getShopDeals = async (
   try {
     const deals = await prisma.products.findMany({
       where: {
-        isDeal: true, // ✅ only products marked as deals
-        Shop: {
-          id: req?.seller?.shops?.[0]?.id, // ✅ filter by seller's shop
-        },
+        isDeal: true,
+        Shop: { id: req?.seller?.shops?.[0]?.id },
       },
       include: {
-        images: true, // include product images
-        Shop: true, // optional: include shop info
+        images: true,
+        Shop: true,
+        colorVariants: true,
       },
     });
 
-    res.status(200).json({
-      success: true,
-      deals,
-    });
+    res.status(200).json({ success: true, deals });
   } catch (error) {
     next(error);
   }
@@ -1347,40 +1343,50 @@ export const restoreProduct = async (
 };
 
 // Delete deal (soft delete with 24h expiry)
-// Delete deal
 export const deleteDeal = async (
   req: any,
   res: Response,
   next: NextFunction
 ) => {
-  console.log('🔥 deleteDeal controller triggered with params:', req.params);
+  try {
+    const { id } = req.params;
+    const sellerId = req.seller?.shops?.[0]?.id;
 
-  const { id } = req.params; // ✅ matches route
-  const sellerId = req.seller?.shops?.[0]?.id;
+    const product = await prisma.products.findUnique({
+      where: { id },
+      select: { id: true, shopId: true, isDeal: true, isDeleted: true },
+    });
 
-  const deal = await prisma.deals.findUnique({
-    where: { id },
-    select: { id: true, shopId: true, isDeleted: true },
-  });
+    if (!product || !product.isDeal) {
+      return next(new ValidationError('Deal not found'));
+    }
+    console.log('Seller object:', req.seller);
 
-  if (!deal) return next(new ValidationError('Deal not found'));
-  if (deal.shopId !== sellerId)
-    return next(new ValidationError('Unauthorized action'));
-  if (deal.isDeleted)
-    return next(new ValidationError('Deal is already deleted'));
+    console.log('Deal shopId:', product.shopId, 'Seller shopId:', sellerId);
 
-  const deletedDeal = await prisma.deals.update({
-    where: { id },
-    data: {
-      isDeleted: true,
-      deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h expiry
-    },
-  });
+    if (product.shopId !== sellerId) {
+      return next(new ValidationError('Unauthorized action'));
+    }
 
-  return res.status(200).json({
-    message: 'Deal scheduled for deletion in 24 hours.',
-    deletedAt: deletedDeal.deletedAt,
-  });
+    if (product.isDeleted) {
+      return next(new ValidationError('Deal is already deleted'));
+    }
+
+    const deletedDeal = await prisma.products.update({
+      where: { id },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return res.status(200).json({
+      message: 'Deal scheduled for deletion in 24 hours.',
+      deletedAt: deletedDeal.deletedAt,
+    });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // Restore deal (only within 24h window)
@@ -1390,39 +1396,35 @@ export const restoreDeal = async (
   next: NextFunction
 ) => {
   try {
-    const { dealId } = req.params;
-    const sellerId = req.seller?.shops?.[0]?.id; // ✅ match deleteDeal logic
+    const { id } = req.params;
+    const sellerId = req.seller?.shops?.[0]?.id;
 
-    const deal = await prisma.deals.findUnique({
-      where: { id: dealId },
-      select: { id: true, shopId: true, isDeleted: true, deletedAt: true },
+    const product = await prisma.products.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        shopId: true,
+        isDeal: true,
+        isDeleted: true,
+        deletedAt: true,
+      },
     });
 
-    if (!deal) {
-      return next(new ValidationError('Deal not found'));
-    }
-
-    if (deal.shopId !== sellerId) {
+    if (!product) return next(new ValidationError('Deal not found'));
+    if (product.shopId !== sellerId)
       return next(new ValidationError('Unauthorized action'));
-    }
-
-    if (!deal.isDeleted) {
+    if (!product.isDeleted)
       return res.status(400).json({ message: 'Deal is not in deleted state' });
+
+    if (product.deletedAt && product.deletedAt < new Date()) {
+      await prisma.products.delete({ where: { id } });
+      return res
+        .status(400)
+        .json({ message: 'Restore window expired. Deal permanently deleted.' });
     }
 
-    // ✅ Check if restore window expired
-    if (deal.deletedAt && deal.deletedAt < new Date()) {
-      // Hard delete if expired
-      await prisma.deals.delete({ where: { id: dealId } });
-      return res.status(400).json({
-        message:
-          'Restore window has expired. Deal has been permanently deleted.',
-      });
-    }
-
-    // ✅ Restore deal
-    await prisma.deals.update({
-      where: { id: dealId },
+    await prisma.products.update({
+      where: { id },
       data: { isDeleted: false, deletedAt: null },
     });
 

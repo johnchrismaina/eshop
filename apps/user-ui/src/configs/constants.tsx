@@ -24,11 +24,11 @@ export const navItems: NavItemsTypes[] = [
     href: '/kids',
     accent: false,
   },
-  {
-    title: 'Fashion',
-    href: '/fashion',
-    accent: false,
-  },
+  // {
+  //   title: 'Fashion',
+  //   href: '/fashion',
+  //   accent: false,
+  // },
   // {
   //   title: 'Home ',
   //   href: '/home',

@@ -201,7 +201,6 @@ const DealList = () => {
           </span>
         ),
       },
-      ,
       {
         accessorKey: 'category',
         header: 'Category',

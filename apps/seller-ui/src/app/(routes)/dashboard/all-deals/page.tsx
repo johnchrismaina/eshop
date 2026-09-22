@@ -16,8 +16,7 @@ import {
   Plus,
   BarChart,
   Star,
-  RotateCcwIcon,
-  // RotateCcwClock,
+  RotateCcwClock,
 } from 'lucide-react';
 
 import Link from 'next/link';
@@ -26,7 +25,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import DeleteConfirmationModal from 'apps/seller-ui/src/shared/components/modals/delete.confirmation.modal';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
-// import RotateCcwClock from 'apps/seller-ui/src/assets/svgs/rotate-ccw-clock';
+import Ratings from 'packages/components/ratings';
 
 const DealList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
@@ -95,25 +94,54 @@ const DealList = () => {
         cell: ({ row }: any) => {
           const product = row.original;
 
+          // console.log('--- Image cell debug ---');
+          // console.log('product.id:', product.id);
+          // console.log('product.colorVariants:', product.colorVariants);
+          // console.log('product.images:', product.images);
+
           let imageUrl: string | undefined;
 
-          // ✅ Case 1: product has variants → show first image of isDefault variant
-          if (
-            Array.isArray(product.colorVariants) &&
-            product.colorVariants.length > 0
-          ) {
-            const defaultVariant = product.colorVariants.find(
-              (v: any) => v.isDefault
-            );
-            if (defaultVariant?.images?.length) {
-              imageUrl = defaultVariant.images[0].url;
+          const variants = Array.isArray(product.colorVariants)
+            ? product.colorVariants
+            : [];
+
+          if (variants.length > 0) {
+            const chosenVariant =
+              variants.find((v: any) => v.isDefault) ?? variants[0];
+
+            // console.log('chosenVariant:', chosenVariant);
+            // console.log('chosenVariant.images:', chosenVariant?.images);
+
+            if (
+              Array.isArray(chosenVariant?.images) &&
+              chosenVariant.images.length > 0
+            ) {
+              const firstImage = chosenVariant.images[0];
+              // console.log(
+              //   'firstImage (raw):',
+              //   firstImage,
+              //   'typeof:',
+              //   typeof firstImage
+              // );
+
+              // Handle both shapes: array of URL strings, or array of {url} objects
+              imageUrl =
+                typeof firstImage === 'string' ? firstImage : firstImage?.url;
             }
-          } else {
-            // ✅ Case 2: no variants → fallback to main product images
+          }
+
+          // console.log('imageUrl after variant check:', imageUrl);
+
+          // Fallback to main product images if variants had none
+          if (!imageUrl) {
             imageUrl = Array.isArray(product.images)
-              ? product.images[0]?.url
+              ? typeof product.images[0] === 'string'
+                ? product.images[0]
+                : product.images[0]?.url
               : product.images?.url;
           }
+
+          // console.log('final imageUrl:', imageUrl);
 
           return imageUrl ? (
             <Image
@@ -161,16 +189,19 @@ const DealList = () => {
       {
         accessorKey: 'stock',
         header: 'Stock',
+        size: 90, // fixed width for the column (if your table lib supports this)
+        minSize: 90, // prevents it from shrinking below this
         cell: ({ row }: any) => (
           <span
-            className={
+            className={`whitespace-nowrap ${
               row.original.stock < 10 ? 'text-red-500' : 'text-gray-700'
-            }
+            }`}
           >
             {row.original.stock} left
           </span>
         ),
       },
+      ,
       {
         accessorKey: 'category',
         header: 'Category',
@@ -178,12 +209,15 @@ const DealList = () => {
       {
         accessorKey: 'rating',
         header: 'Rating',
-        cell: ({ row }: any) => (
-          <div className="flex items-center gap-1 text-yellow-400">
-            <Star size={18} fill="#fde047" />{' '}
-            <span className="text-white">{row.original.ratings || 4}</span>
-          </div>
-        ),
+        cell: ({ row }: any) => {
+          const rating = row.original.ratings ?? 4;
+          return (
+            <div className="flex items-center gap-2">
+              <Ratings rating={rating} />
+              <span className="text-white text-sm">{rating}</span>
+            </div>
+          );
+        },
       },
       {
         accessorKey: 'status',
@@ -248,8 +282,7 @@ const DealList = () => {
                   }
                 }}
               >
-                <RotateCcwIcon size={18} />
-                {/* <RotateCcwClock size={18} /> */}
+                <RotateCcwClock size={18} />
               </button>
 
               {/* Delete button */}

@@ -96,7 +96,7 @@ function SearchScopeDropdown({
       <ChevronDown size={12} color="#333" />
       {/* <ChevronDownIcon width={10} height={20} color="#4c4c4c" /> */}
       {/* divider */}
-      <div className=" w-px h-6 bg-gray-200 ml-2" />
+      <div className=" w-px h-10 bg-gray-200 ml-2" />
     </button>
   );
 }
@@ -248,7 +248,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
   return (
     <div className="w-full bg-[#292F36]">
-      <div className="w-[1400px] px-0 mx-auto pt-0 pb-0 grid grid-cols-[320px_1fr_240px] items-center justify-between border-none border-gray-700 gap-3 ">
+      <div className="w-[1400px] px-0 mx-auto pt-1 pb-1 grid grid-cols-[300px_1fr_240px] items-center justify-between border-none border-gray-700 gap-3 ">
         <div className="flex items-center justify-start gap-2">
           {/* Logo */}
           <Link href="/">
@@ -270,14 +270,16 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           {/* bg-[#52525B] */}
 
           {/* Delivery location - can be dropdown in future */}
-          <div className=" flex items-center justify-center gap-1.5 px-3 h-[38px] text-[#D3D6DA] hover:text-[#fff] cursor-pointer rounded-full bg-[#3B4148] transition-all duration-150 shrink-0">
+          <div className=" flex items-center justify-center gap-1.5 px-3 h-[38px] text-[#f5f5f5] hover:text-[#fff] cursor-pointer rounded-full hover:bg-[#3B4148] transition-all duration-150 shrink-0 ">
             {/* </div> */}
             <div className="-mt-1">
               <MapPin size={14} />
             </div>
             <div className="flex items-center justify-center gap-0.5">
-              <span className="text-sm font-normal ">Deliver to Naivasha</span>
-              <div className="shrink-0 mt-[0px] ">
+              <span className="text-[14px] font-normal ">
+                Deliver to Naivasha
+              </span>
+              <div className="shrink-0 mt-[0px] hidden">
                 <ChevronDown size={12} color="#fff" />
               </div>
             </div>
@@ -304,7 +306,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
         {/* Search bar — OUTER wrapper: relative, no overflow-hidden.
               This is what click-outside watches, and what holds the panel. */}
-        <div className="flex w-full items-center justify-center py-3">
+        <div className="flex w-full items-center justify-start py-1">
           <div ref={searchWrapperRef} className="relative w-full ml-0">
             {/* Smart Search Bar */}
             <SmartSearchBar
@@ -346,7 +348,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
         <div className="flex items-center justify-end w-full h-full gap-0">
           {/* Account/Trigger */}
           <div
-            className="relative flex items-center gap-1 text-gray-600 px-3 h-full "
+            className="relative flex items-center gap-1 text-gray-600 px-2 h-full "
             onMouseEnter={() => setOpen(true)}
             onMouseLeave={() => setOpen(false)}
           >
@@ -357,7 +359,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
               className="flex flex-col gap-0 items-start justify-start "
             >
               {/* <UserRound size={18} /> */}
-              <span className="block text-sm font-normal text-[#D3D6DA] hover:text-[#fff] mt-[0px]">
+              <span className="block text-[14px] font-normal text-[#f5f5f5] hover:text-[#fff] mt-[0px]">
                 {!mounted ? (
                   // SSR + first client render: invisible placeholder to prevent hydration mismatch
                   <span className="">Sign in</span>
@@ -475,35 +477,36 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
           </div>
 
           {/* Orders */}
-          <div className=" flex items-center justify-center gap-1.5 px-2 py-2 text-[#D3D6DA] hover:text-[#fff] cursor-pointer rounded-full shrink-0">
+          <div className=" flex items-center justify-center gap-1.5 px-2 py-2 text-[#f5f5f5] hover:text-[#fff] cursor-pointer rounded-full shrink-0">
             <div className="shrink-0">
               {/* <Heart size={18} color="#fff" /> */}
               {/* <HeartIcon className="w-4 h-4" /> */}
             </div>
-            <span className="text-sm font-normal ">Orders</span>
+            <span className="text-[14px] font-normal ">Orders</span>
           </div>
 
+          {/* hover:bg-[#3B4148] */}
           {/* Cart */}
-          <div className="flex items-center justify-center h-full gap-1.5 px-2 text-[#D3D6DA] hover:text-[#fff] cursor-pointer ">
+          <div className="flex items-center justify-center h-full gap-1.5 px-2 text-[#f5f5f5] hover:text-[#fff] cursor-pointer hover:ring-1 ring-gray-200 rounded-sm ">
             <Link
               href="/cart"
               className="relative flex items-center justify-center mt-[0px] "
             >
-              <CgShoppingCart size={18} />
+              <CgShoppingCart size={20} />
               {/* <CartIcon /> */}
-              {cart?.length > 0 && (
-                <div className="absolute top-[-8px] right-[-8px] min-w-[16px] h-4 px-0 rounded-full bg-[#EE7B30] flex items-center justify-center mt-[0px]">
-                  <span className="text-[#333] font-bold text-[11px] leading-none">
-                    {cart.length > 99 ? '99+' : cart.length}
-                  </span>
-                </div>
-              )}
+              {/* {cart?.length > 0 && ( */}
+              <div className="absolute top-[-4px] right-[-6px] min-w-[16px] h-4 px-0 rounded-full bg-[#E85D1F] flex items-center justify-center mt-[0px]">
+                <span className="text-[#fff] font-bold text-[11px] leading-none">
+                  {cart.length > 99 ? '99+' : cart.length}
+                </span>
+              </div>
+              {/* )} */}
             </Link>
             {/* <span className="flex items-center justify-center py-1 px-1 ml-0 text-[11.5px] text-gray-900 font-medium ">
                 KES 0.00
               </span> */}
             <div className="flex items-center justify-center">
-              <span className="text-[13.0px] font-normal tracking-tight px-0 py-0 rounded-full">
+              <span className="text-[14px] font-normal tracking-tight px-2 py-1 rounded-full">
                 Ksh 0.00
               </span>
             </div>

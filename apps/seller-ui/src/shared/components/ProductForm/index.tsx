@@ -26,12 +26,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
-// import Select from 'react-select';
 import { usePathname } from 'next/navigation';
 import CustomAccordion from '../CustomAccordion';
 import { validateWordCount } from 'apps/seller-ui/src/utils/validation';
 import AutoResizeTextarea from 'packages/components/AutoResizeTextArea';
-// import ColorVariantsEditor from 'apps/seller-ui/src/shared/components/ColorVariantsEditor';
 import { splitSchema } from 'packages/utils/filtersUtils';
 import { renderFilterRow } from 'packages/utils/renderFilterRow';
 import { Dropdown } from '../CustomDropdown';
@@ -207,8 +205,6 @@ export default function ProductForm({
     }
   }, [mode, product, reset]);
 
-  const enableDeal = watch('enableDeal');
-
   const [hasColors, setHasColors] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -218,9 +214,6 @@ export default function ProductForm({
 
   const colorVariants = watch('colorVariants') ?? [];
 
-  // const colorVariantsRef = useRef<ColorVariantsEditorHandle>(null);
-
-  // const colorVariantsRef = useRef(null);
   const colorVariantsRef = useRef<ColorVariantsEditorHandle>(null);
 
   const handleAddColorSwatchClick = () => {
@@ -244,9 +237,9 @@ export default function ProductForm({
     setActiveImageTab(hasColors ? 'variants' : 'main');
   }, [hasColors]);
 
-  const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
+  // const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
+  // const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
 
-  const [pictureUploadingLoader, setPictureUploadingLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   // const router = useRouter();
@@ -254,9 +247,6 @@ export default function ProductForm({
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [activeImageTab, setActiveImageTab] = useState('main'); // 'main' | 'variants'
 
-  const [images, setImages] = useState<(UploadedImage | null)[]>(
-    Array(8).fill(null)
-  );
   const [mainImages, setMainImages] = useState<(UploadedImage | null)[]>(
     Array(8).fill(null)
   );
@@ -268,7 +258,7 @@ export default function ProductForm({
   const [mainPreviewImage, setMainPreviewImage] = useState<string | null>(null);
   const [openMainPreviewModal, setOpenMainPreviewModal] = useState(false);
 
-  const hasVariants = colorVariants.length > 0;
+  // const hasVariants = colorVariants.length > 0;
 
   const validateProductForm = (values: FormValues) => {
     const errors: Record<string, string> = {};
@@ -299,14 +289,9 @@ export default function ProductForm({
   };
 
   // Basic dropdown state
-  const [condition, setCondition] = useState('');
+  // const [condition, setCondition] = useState('');
 
   // Inside ProductForm, alongside `mode`, `isDealRoute`, `product` (whatever these are already destructured from)
-
-  // const draftKey =
-  //   mode === 'editProduct'
-  //     ? `colorVariantsDraft-edit-${product?.slug}`
-  //     : `colorVariantsDraft-create-${isDealRoute ? 'deal' : 'product'}`;
 
   const draftKey =
     mode === 'editProduct'

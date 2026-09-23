@@ -8,7 +8,16 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 
-import { Search, Pencil, Trash, Eye, Plus, BarChart, Star } from 'lucide-react';
+import {
+  Search,
+  Pencil,
+  Trash,
+  Eye,
+  Plus,
+  BarChart,
+  Star,
+  RotateCcwClock,
+} from 'lucide-react';
 
 import Link from 'next/link';
 import axiosProduct from 'apps/seller-ui/src/utils/axiosProduct';
@@ -16,43 +25,21 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import DeleteConfirmationModal from 'apps/seller-ui/src/shared/components/modals/delete.confirmation.modal';
 import Breadcrumbs from 'apps/seller-ui/src/shared/components/breadcrumbs';
-
-const fetchProducts = async () => {
-  const res = await axiosProduct.get('/get-shop-products');
-  return res?.data?.products;
-};
-
-// frontend deleteProduct function
-const deleteProduct = async (id: string) => {
-  const res = await fetch(`/api/delete-product/${id}`, {
-    method: 'DELETE',
-    credentials: 'include', // critical for auth
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to delete');
-  }
-  return res.json();
-};
-
-const restoreProduct = async (productId: string) => {
-  await axiosProduct.put(`/restore-product/${productId}`);
-};
+import Ratings from 'packages/components/ratings';
 
 const ProductList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
-  // const [analyticsData, setAnalyticsData] = useState(null);
-  // const [showAnalytics, setShowAnalytics] = useState(false);
-  // const [selectedProduct, setSelectedProduct] = useState<any>();
 
-  // const [showDeleteModal, setShowDeleteModal] = useState(false);
-  // const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const queryClient = useQueryClient();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [modalMode, setModalMode] = useState<'delete' | 'restore'>('delete');
 
-  const queryClient = useQueryClient();
+  const fetchProducts = async () => {
+    const res = await axiosProduct.get('/get-shop-products');
+    return res?.data?.products;
+  };
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
@@ -60,10 +47,39 @@ const ProductList = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  console.log('data:', products);
+
+  // frontend deleteProduct function
+  // const deleteProduct = async (id: string) => {
+  //   const res = await fetch(`/api/delete-product/${id}`, {
+  //     method: 'DELETE',
+  //     credentials: 'include', // critical for auth
+  //   });
+  //   if (!res.ok) {
+  //     const err = await res.json().catch(() => ({}));
+  //     throw new Error(err.message || 'Failed to delete');
+  //   }
+  //   return res.json();
+  // };
+
+  // const restoreProduct = async (productId: string) => {
+  //   await axiosProduct.put(`/restore-product/${productId}`);
+  // };
+
+  const deleteProduct = async (id: string) => {
+    console.log('Frontend calling DELETE Product with id:', id);
+    await axiosProduct.delete(`/delete-product/${id}`);
+  };
+
+  const restoreProduct = async (id: string) => {
+    console.log('Frontend calling RESTORE Product with id:', id);
+    await axiosProduct.put(`/restore-product/${id}`);
+  };
+
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-products'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       setShowDeleteModal(false);
     },
     onError: (err) => {
@@ -76,7 +92,7 @@ const ProductList = () => {
   const restoreMutation = useMutation({
     mutationFn: restoreProduct,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shop-products'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       setShowDeleteModal(false);
     },
   });
@@ -93,10 +109,56 @@ const ProductList = () => {
         accessorKey: 'images',
         header: 'Image',
         cell: ({ row }: any) => {
-          const images = row.original.images;
+          const product = row.original;
 
-          // Handle cases where images is missing or not an array
-          const imageUrl = Array.isArray(images) ? images[0]?.url : images?.url;
+          // console.log('--- Image cell debug ---');
+          // console.log('product.id:', product.id);
+          // console.log('product.colorVariants:', product.colorVariants);
+          // console.log('product.images:', product.images);
+
+          let imageUrl: string | undefined;
+
+          const variants = Array.isArray(product.colorVariants)
+            ? product.colorVariants
+            : [];
+
+          if (variants.length > 0) {
+            const chosenVariant =
+              variants.find((v: any) => v.isDefault) ?? variants[0];
+
+            // console.log('chosenVariant:', chosenVariant);
+            // console.log('chosenVariant.images:', chosenVariant?.images);
+
+            if (
+              Array.isArray(chosenVariant?.images) &&
+              chosenVariant.images.length > 0
+            ) {
+              const firstImage = chosenVariant.images[0];
+              // console.log(
+              //   'firstImage (raw):',
+              //   firstImage,
+              //   'typeof:',
+              //   typeof firstImage
+              // );
+
+              // Handle both shapes: array of URL strings, or array of {url} objects
+              imageUrl =
+                typeof firstImage === 'string' ? firstImage : firstImage?.url;
+            }
+          }
+
+          // console.log('imageUrl after variant check:', imageUrl);
+
+          // Fallback to main product images if variants had none
+          if (!imageUrl) {
+            imageUrl = Array.isArray(product.images)
+              ? typeof product.images[0] === 'string'
+                ? product.images[0]
+                : product.images[0]?.url
+              : product.images?.url;
+          }
+
+          // console.log('final imageUrl:', imageUrl);
 
           return imageUrl ? (
             <Image
@@ -132,16 +194,20 @@ const ProductList = () => {
         },
       },
       {
-        accessorKey: 'price',
-        header: 'Price',
-        cell: ({ row }: any) => <span>${row.original.sale_price}</span>,
+        accessorKey: 'regular_price',
+        header: 'Regular Price',
+        cell: ({ row }: any) => <span>${row.original.regular_price}</span>,
       },
       {
         accessorKey: 'stock',
         header: 'Stock',
+        size: 90, // fixed width for the column (if your table lib supports this)
+        minSize: 90, // prevents it from shrinking below this
         cell: ({ row }: any) => (
           <span
-            className={row.original.stock < 10 ? 'text-red-500' : 'text-white'}
+            className={`whitespace-nowrap ${
+              row.original.stock < 10 ? 'text-red-500' : 'text-gray-700'
+            }`}
           >
             {row.original.stock} left
           </span>
@@ -154,12 +220,29 @@ const ProductList = () => {
       {
         accessorKey: 'rating',
         header: 'Rating',
-        cell: ({ row }: any) => (
-          <div className="flex items-center gap-1 text-yellow-400">
-            <Star size={18} fill="#fde047" />{' '}
-            <span className="text-white">{row.original.ratings || 5}</span>
-          </div>
-        ),
+        cell: ({ row }: any) => {
+          const rating = row.original.ratings ?? 4;
+          return (
+            <div className="flex items-center gap-2">
+              <Ratings rating={rating} />
+              <span className="text-white text-sm">{rating}</span>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => {
+          const deal = row.original;
+          if (!deal.isDeleted)
+            return <span className="text-green-600 ">Active</span>;
+          if (deal.deletedAt && new Date(deal.deletedAt) > new Date()) {
+            return <span className="text-yellow-600">Pending Deletion</span>;
+            // ✅ future date means still pending
+          }
+          return <span className="text-red-600">Expired</span>; // ✅ past date means expired
+        },
       },
       {
         header: 'Actions',
@@ -185,24 +268,7 @@ const ProductList = () => {
               <BarChart size={18} />
             </button>
 
-            <div className="flex gap-2">
-              {/* Delete button */}
-              <button
-                disabled={row.original.isDeleted} // disable if already deleted
-                className={`${
-                  row.original.isDeleted
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'text-red-400 hover:text-red-300'
-                } transition`}
-                onClick={() => {
-                  setSelectedProduct(row.original);
-                  setModalMode('delete'); // ✅ set mode
-                  setShowDeleteModal(true);
-                }}
-              >
-                <Trash size={18} />
-              </button>
-
+            <div className="flex gap-4 text-gray-800">
               {/* Restore button */}
               <button
                 disabled={!row.original.isDeleted} // disable if not deleted
@@ -212,12 +278,37 @@ const ProductList = () => {
                     : 'text-green-400 hover:text-green-300'
                 } transition font-semibold`}
                 onClick={() => {
-                  setSelectedProduct(row.original);
-                  setModalMode('restore'); // ✅ set mode
-                  setShowDeleteModal(true);
+                  if (row.original.isDeleted) {
+                    setSelectedProduct(row.original);
+                    setModalMode('restore');
+                    setShowDeleteModal(true);
+                  }
                 }}
               >
-                Restore
+                <RotateCcwClock size={18} />
+              </button>
+
+              {/* Delete button */}
+              <button
+                disabled={row.original.isDeleted} // disable if already deleted
+                className={`${
+                  row.original.isDeleted
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'text-red-400 hover:text-red-300'
+                } transition`}
+                onClick={() => {
+                  console.log(
+                    'Delete button clicked for deal:',
+                    row.original.id
+                  );
+                  if (!row.original.isDeleted) {
+                    setSelectedProduct(row.original);
+                    setModalMode('delete');
+                    setShowDeleteModal(true);
+                  }
+                }}
+              >
+                <Trash size={18} />
               </button>
             </div>
           </div>
@@ -245,11 +336,6 @@ const ProductList = () => {
     title: string;
     isDeleted?: boolean;
   };
-
-  // const openDeleteModal = (product: any) => {
-  //   setSelectedProduct(product);
-  //   setShowDeleteModal(true);
-  // };
 
   const openDeleteModal = (product: Product) => {
     console.log('Opening delete modal for:', product.id);
@@ -335,6 +421,11 @@ const ProductList = () => {
               modalMode === 'delete'
                 ? deleteMutation.mutate(id)
                 : restoreMutation.mutate(id)
+            }
+            isLoading={
+              modalMode === 'delete'
+                ? deleteMutation.isPending // ✅ use isPending
+                : restoreMutation.isPending
             }
           />
         )}

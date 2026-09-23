@@ -5,25 +5,50 @@ export const navItems: NavItemsTypes[] = [
     accent: false,
   },
   {
-    title: 'Coupons',
-    href: '/coupons',
+    title: 'For You',
+    href: '/for_you',
     accent: false,
   },
   {
-    title: 'Women',
-    href: '/women',
+    title: 'Recently Viewed',
+    href: '/viewed',
     accent: false,
   },
   {
-    title: 'Men',
-    href: '/men',
+    title: 'Registry',
+    href: '/registry',
     accent: false,
   },
   {
-    title: 'Kids',
-    href: '/kids',
+    title: 'Saved',
+    href: '/saved',
     accent: false,
   },
+  {
+    title: 'Reorder',
+    href: '/reorder',
+    accent: false,
+  },
+  // {
+  //   title: 'Coupons',
+  //   href: '/coupons',
+  //   accent: false,
+  // },
+  // {
+  //   title: 'Women',
+  //   href: '/women',
+  //   accent: false,
+  // },
+  // {
+  //   title: 'Men',
+  //   href: '/men',
+  //   accent: false,
+  // },
+  // {
+  //   title: 'Kids',
+  //   href: '/kids',
+  //   accent: false,
+  // },
   // {
   //   title: 'Fashion',
   //   href: '/fashion',

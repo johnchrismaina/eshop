@@ -15,7 +15,6 @@ import {
   Eye,
   Plus,
   BarChart,
-  Star,
   RotateCcwClock,
 } from 'lucide-react';
 
@@ -29,10 +28,6 @@ import Ratings from 'packages/components/ratings';
 
 const DealList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
-  // const [analyticsData, setAnalyticsData] = useState(null);
-  // const [showAnalytics, setShowAnalytics] = useState(false);
-  // const [showDeleteModal, setShowDeleteModal] = useState(false);
-  // const [selectedDeal, setSelectedDeal] = useState<any>();
   const queryClient = useQueryClient();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -53,12 +48,12 @@ const DealList = () => {
   console.log('data:', deals);
 
   const deleteDeal = async (id: string) => {
-    console.log('Frontend calling DELETE with id:', id);
+    console.log('Frontend calling DELETE Deal with id:', id);
     await axiosProduct.delete(`/delete-deal/${id}`);
   };
 
   const restoreDeal = async (id: string) => {
-    console.log('Frontend calling RESTORE with id:', id);
+    console.log('Frontend calling RESTORE Deal with id:', id);
     await axiosProduct.put(`/restore-deal/${id}`);
   };
 

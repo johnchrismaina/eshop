@@ -59,7 +59,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
       {/* Backdrop — hovering it schedules a delayed close; moving back
           off it before the delay elapses cancels that close */}
       <div
-        className="fixed inset-0 bg-black/30 top-[92px] z-40"
+        className="fixed inset-0 bg-black/30 top-[104px] z-40"
         onMouseEnter={scheduleClose}
         onMouseLeave={cancelScheduledClose}
         onClick={closeNow}
@@ -99,7 +99,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
         </div>
 
         {hovered && (
-          <div className="w-52 h-[500px] overflow-y-auto border-l">
+          <div className="w-52 h-[500px] overflow-y-auto border-l border-gray-400">
             <h3 className="font-semibold mb-2 px-4">{hovered}</h3>
             <ul className="text-sm text-gray-600">
               {(categories[hovered] || brands[hovered] || []).map((sub) => (

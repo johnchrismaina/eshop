@@ -63,12 +63,12 @@ router.get('/get-shop-products', isAuthenticated, getShopProducts);
 // router.get('/get-product', isAuthenticated, getProductBySlug);
 router.get('/product/get-product/:slug', isAuthenticated, getProductBySlug);
 router.get('/get-shop-deals', isAuthenticated, getShopDeals);
-router.delete('/delete-product/:productId', isAuthenticated, deleteProduct);
-router.put('/restore-product/:productId', isAuthenticated, restoreProduct);
-// router.delete('/delete-deal/:dealId', isAuthenticated, deleteDeal);
-// router.put('/restore-deal/:dealId', isAuthenticated, restoreDeal);
+
+router.delete('/delete-product/:id', isAuthenticated, deleteProduct);
+router.put('/restore-product/:id', isAuthenticated, restoreProduct);
 router.delete('/delete-deal/:id', isAuthenticated, deleteDeal);
 router.put('/restore-deal/:id', isAuthenticated, restoreDeal);
+
 router.get('/get-stripe-account', isAuthenticated, isSeller, getStripeAccount);
 router.get('/get-all-products', getAllProducts);
 router.get('/get-all-deals', getAllDeals);

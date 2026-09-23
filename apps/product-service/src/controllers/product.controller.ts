@@ -503,8 +503,6 @@ export const createDeal = async (
       condition,
       shippingOption,
       discountCodes = [],
-      // discount_start,
-      // discount_end,
       total_tickets,
     } = req.body;
 
@@ -538,6 +536,16 @@ export const createDeal = async (
     const parsedSalePrice = parseFloat(sale_price);
     if (isNaN(parsedSalePrice) || parsedSalePrice < 1) {
       return next(new ValidationError('Sale price must be at least 1'));
+    }
+
+    // ✅ Validate regular price
+    const parsedRegularPrice = parseFloat(regular_price);
+    if (isNaN(parsedRegularPrice) || parsedRegularPrice < 1) {
+      return next(
+        new ValidationError(
+          'Regular price must be a valid number greater than 0'
+        )
+      );
     }
 
     // ✅ Map images
@@ -574,6 +582,7 @@ export const createDeal = async (
         where: { id: productId },
         data: {
           isDeal: true,
+          regular_price: parsedRegularPrice, // ✅ ensure regular price is updated
           sale_price: parsedSalePrice,
           deal_start: startDate,
           deal_end: endDate,
@@ -595,8 +604,7 @@ export const createDeal = async (
           short_description: short_description?.trim() || 'No description',
           detailed_description: detailed_description ?? null,
           stock: parseInt(stock),
-          regular_price:
-            mappedVariants.length > 0 ? null : parseFloat(regular_price),
+          regular_price: parsedRegularPrice, // ✅ validated regular price
           isDeal: true,
           sale_price: parsedSalePrice,
           deal_start: startDate,
@@ -643,10 +651,7 @@ export const createDeal = async (
           : product.slug + '-deal',
         deal_start: startDate,
         deal_end: endDate,
-        regular_price:
-          regular_price != null && !isNaN(parseFloat(regular_price))
-            ? parseFloat(regular_price)
-            : product.regular_price ?? 0,
+        regular_price: parsedRegularPrice, // ✅ validated regular price
         sale_price: parsedSalePrice,
         shopId: req.seller.shops[0].id,
         category: category?.trim() || product.category || 'Uncategorized',
@@ -665,8 +670,6 @@ export const createDeal = async (
           ? { create: mappedSpecifications }
           : undefined,
         images: { create: mappedImages },
-
-        // ✅ Create junction rows automatically
         dealDiscountCodes: discountCodes.length
           ? {
               create: discountCodes.map((id: string) => ({
@@ -1075,31 +1078,6 @@ export const demoteToProduct = async (
   }
 };
 
-// Get logged in seller products
-export const getShopProducts = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const products = await prisma.products.findMany({
-      where: {
-        shopId: req?.seller?.shop?.id,
-      },
-      include: {
-        images: true,
-      },
-    });
-
-    res.status(201).json({
-      success: true,
-      products,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 // Get single product by slug
 export const getProductBySlug = async (
   req: any,
@@ -1207,6 +1185,36 @@ export const getTrendingProducts = async (
   }
 };
 
+// Get logged in seller's products (excluding deals)
+export const getShopProducts = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const products = await prisma.products.findMany({
+      where: {
+        Shop: {
+          id: req?.seller?.shops?.[0]?.id,
+        },
+        isDeal: false, // ✅ exclude deals
+      },
+      include: {
+        images: true,
+        Shop: true,
+        colorVariants: true, // ✅ include variants
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get logged in seller's products that are deals
 export const getShopDeals = async (
   req: any,
@@ -1232,62 +1240,44 @@ export const getShopDeals = async (
   }
 };
 
-// Delete product
+// Delete product (soft delete with 24h expiry)
 export const deleteProduct = async (
   req: any,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { productId } = req.params;
-
-    console.log('DeleteProduct controller hit, productId:', productId);
+    const { id } = req.params;
 
     if (!req.seller) {
-      console.log('No seller attached → Unauthorized');
       return next(new ValidationError('Unauthorized action'));
     }
 
     const product = await prisma.products.findUnique({
-      where: { id: productId },
+      where: { id: id },
       select: { id: true, shopId: true, isDeleted: true },
     });
 
-    if (!product) {
-      console.log('Product not found in DB');
-      return next(new ValidationError('Product not found'));
-    }
-
-    console.log('Product shopId:', product.shopId);
-    console.log('Seller shopIds:', req.seller.shopIds);
+    if (!product) return next(new ValidationError('Product not found'));
 
     if (!req.seller.shopIds.includes(product.shopId)) {
-      console.log('Shop mismatch → Unauthorized');
       return next(new ValidationError('Unauthorized action'));
     }
 
     if (product.isDeleted) {
-      console.log('Product already deleted');
       return next(new ValidationError('Product is already deleted'));
     }
 
     const deletedProduct = await prisma.products.update({
-      where: { id: productId },
+      where: { id: id },
       data: {
         isDeleted: true,
-        deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        deletedAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h window
       },
     });
 
-    console.log('req.seller.shopIds:', req.seller.shopIds);
-    console.log('product.shopId:', product.shopId);
-    console.log('product.isDeleted:', product.isDeleted);
-
-    console.log('Delete response sent');
-
     return res.status(200).json({
-      message:
-        'Product is scheduled for deletion in 24 hours. You can restore it within this time',
+      message: 'Product scheduled for deletion in 24 hours.',
       deletedAt: deletedProduct.deletedAt,
     });
   } catch (error) {
@@ -1295,7 +1285,7 @@ export const deleteProduct = async (
   }
 };
 
-// Restore product
+// Restore product (only within 24h window)
 export const restoreProduct = async (
   req: any,
   res: Response,
@@ -1303,24 +1293,15 @@ export const restoreProduct = async (
 ) => {
   try {
     const { productId } = req.params;
-
-    // const sellerId = req.seller?.shop?.id;
-    // ✅ Use all shop IDs attached in middleware
     const sellerShopIds = req.seller?.shopIds || [];
 
     const product = await prisma.products.findUnique({
       where: { id: productId },
-      select: { id: true, shopId: true, isDeleted: true },
+      select: { id: true, shopId: true, isDeleted: true, deletedAt: true },
     });
 
-    if (!product) {
-      return next(new ValidationError('Product not found'));
-    }
+    if (!product) return next(new ValidationError('Product not found'));
 
-    // if (product.shopId !== sellerId) {
-    //   return next(new ValidationError('Unauthorized action'));
-    // }
-    // ✅ Check against all shop IDs
     if (!sellerShopIds.includes(product.shopId)) {
       return next(new ValidationError('Unauthorized action'));
     }
@@ -1329,6 +1310,14 @@ export const restoreProduct = async (
       return res
         .status(400)
         .json({ message: 'Product is not in deleted state' });
+    }
+
+    // ✅ Expiry check
+    if (product.deletedAt && product.deletedAt < new Date()) {
+      await prisma.products.delete({ where: { id: productId } });
+      return res.status(400).json({
+        message: 'Restore window expired. Product permanently deleted.',
+      });
     }
 
     await prisma.products.update({

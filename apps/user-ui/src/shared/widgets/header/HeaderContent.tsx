@@ -248,7 +248,7 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
 
   return (
     <div className="w-full bg-[#292F36]">
-      <div className="w-[1400px] px-0 mx-auto pt-1 pb-1 grid grid-cols-[300px_1fr_240px] items-center justify-between border-none border-gray-700 gap-3 ">
+      <div className="w-[1400px] px-0 mx-auto pt-1.5 pb-1.5 grid grid-cols-[300px_1fr_240px] items-center justify-between border-none border-gray-700 gap-3 ">
         <div className="flex items-center justify-start gap-2">
           {/* Logo */}
           <Link href="/">

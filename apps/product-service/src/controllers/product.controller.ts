@@ -1163,6 +1163,7 @@ export const getTrendingProducts = async (
         product_specifications: true,
         deals: true,
         Shop: true,
+        isDeleted: false,
       },
     });
 
@@ -1198,11 +1199,12 @@ export const getShopProducts = async (
           id: req?.seller?.shops?.[0]?.id,
         },
         isDeal: false, // ✅ exclude deals
+        isDeleted: false,
       },
       include: {
         images: true,
-        Shop: true,
         colorVariants: true, // ✅ include variants
+        Shop: true,
       },
     });
 
@@ -1225,12 +1227,13 @@ export const getShopDeals = async (
     const deals = await prisma.products.findMany({
       where: {
         isDeal: true,
+        isDeleted: false,
         Shop: { id: req?.seller?.shops?.[0]?.id },
       },
       include: {
         images: true,
-        Shop: true,
         colorVariants: true,
+        Shop: true,
       },
     });
 
@@ -1423,160 +1426,6 @@ export const restoreDeal = async (
   }
 };
 
-// Get seller stripe information
-export const getStripeAccount = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-      apiVersion: '2025-10-29.clover', // always pin API version
-    });
-
-    // 1. Extract sellerId from request (could be params or auth middleware)
-    const { sellerId } = req.params;
-
-    if (!sellerId) {
-      return res.status(400).json({ error: 'Seller ID is required' });
-    }
-
-    // 2. Look up seller in DB
-    const seller = await prisma.sellers.findUnique({
-      where: { id: sellerId },
-      select: { stripeId: true },
-    });
-
-    if (!seller || !seller.stripeId) {
-      return res
-        .status(404)
-        .json({ error: 'Seller or Stripe account not found' });
-    }
-
-    // 3. Fetch account details from Stripe
-    const account = await stripe.accounts.retrieve(seller.stripeId);
-
-    // 4. Return safe subset of account info
-    return res.status(200).json({
-      id: account.id,
-      email: account.email,
-      business_type: account.business_type,
-      charges_enabled: account.charges_enabled,
-      payouts_enabled: account.payouts_enabled,
-      requirements: account.requirements,
-    });
-  } catch (err) {
-    console.error('Error fetching Stripe account:', err);
-    return next(err); // pass to error middleware
-  }
-};
-
-// Get all products (latest or topSales)
-export const getAllProducts = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const prisma = new PrismaClient();
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const skip = (page - 1) * limit;
-    const type = req.query.type;
-
-    const baseFilter = { isDeleted: false };
-
-    if (type === 'latest') {
-      const [products, total, top10Products] = await Promise.all([
-        prisma.products.findMany({
-          skip,
-          take: limit,
-          include: {
-            images: true, // relation table
-            Shop: true, // relation table
-            colorVariants: true, // scalar array + relation fields
-          },
-          where: baseFilter,
-          orderBy: { createdAt: 'desc' },
-        }),
-        prisma.products.count({ where: baseFilter }),
-        prisma.products.findMany({
-          take: 10,
-          where: baseFilter,
-          orderBy: { createdAt: 'desc' },
-          include: {
-            images: true,
-            Shop: true,
-            colorVariants: true,
-          },
-        }),
-      ]);
-
-      res.status(200).json({
-        products,
-        top10By: 'latest',
-        top10Products,
-        total,
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-      });
-      return;
-    }
-
-    // Default case: topSales
-    const trending = await prisma.orderItem.groupBy({
-      by: ['productId'],
-      _sum: { quantity: true },
-      orderBy: { _sum: { quantity: 'desc' } },
-      take: 10,
-    });
-
-    const productIds = trending.map((t) => t.productId);
-
-    const [products, total, top10Products] = await Promise.all([
-      prisma.products.findMany({
-        skip,
-        take: limit,
-        include: {
-          images: true,
-          Shop: true,
-          colorVariants: true,
-        },
-        where: baseFilter,
-      }),
-      prisma.products.count({ where: baseFilter }),
-      prisma.products.findMany({
-        where: { id: { in: productIds } },
-        include: {
-          images: true,
-          Shop: true,
-          colorVariants: true,
-        },
-      }),
-    ]);
-
-    const top10WithSales = top10Products.map((p) => ({
-      ...p,
-      totalSales:
-        trending.find((t) => t.productId === p.id)?._sum.quantity ?? 0,
-    }));
-
-    res.status(200).json({
-      products,
-      top10By: 'topSales',
-      top10Products: top10WithSales,
-      total,
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-    });
-    return;
-  } catch (error) {
-    console.error('❌ Error in getAllProducts:', error);
-    next(error);
-    return;
-  }
-};
-
 // Get product details
 export const getProductDetails = async (
   req: Request,
@@ -1725,7 +1574,114 @@ export const getFilteredProducts = async (
   }
 };
 
-// Get all deals
+// Get all products (latest or topSales)
+export const getAllProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const prisma = new PrismaClient();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+    const type = req.query.type;
+
+    const baseFilter = { isDeleted: false };
+
+    if (type === 'latest') {
+      const [products, total, top10Products] = await Promise.all([
+        prisma.products.findMany({
+          skip,
+          take: limit,
+          include: {
+            images: true, // relation table
+            colorVariants: true, // scalar array + relation fields
+            Shop: true, // relation table
+            // isDeleted: false,
+          },
+          where: baseFilter,
+          orderBy: { createdAt: 'desc' },
+        }),
+        prisma.products.count({ where: baseFilter }),
+        prisma.products.findMany({
+          take: 10,
+          where: baseFilter,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            images: true,
+            Shop: true,
+            colorVariants: true,
+          },
+        }),
+      ]);
+
+      res.status(200).json({
+        products,
+        top10By: 'latest',
+        top10Products,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      });
+      return;
+    }
+
+    // Default case: topSales
+    const trending = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 10,
+    });
+
+    const productIds = trending.map((t) => t.productId);
+
+    const [products, total, top10Products] = await Promise.all([
+      prisma.products.findMany({
+        skip,
+        take: limit,
+        include: {
+          images: true,
+          Shop: true,
+          colorVariants: true,
+        },
+        where: baseFilter,
+      }),
+      prisma.products.count({ where: baseFilter }),
+      prisma.products.findMany({
+        where: { id: { in: productIds } },
+        include: {
+          images: true,
+          Shop: true,
+          colorVariants: true,
+        },
+      }),
+    ]);
+
+    const top10WithSales = top10Products.map((p) => ({
+      ...p,
+      totalSales:
+        trending.find((t) => t.productId === p.id)?._sum.quantity ?? 0,
+    }));
+
+    res.status(200).json({
+      products,
+      top10By: 'topSales',
+      top10Products: top10WithSales,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    });
+    return;
+  } catch (error) {
+    console.error('❌ Error in getAllProducts:', error);
+    next(error);
+    return;
+  }
+};
+
+// Get all deals (products with deal records, unified structure)
 export const getAllDeals = async (
   req: Request,
   res: Response,
@@ -1736,47 +1692,104 @@ export const getAllDeals = async (
     const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
 
-    // Base filter: only deals with valid dates and not deleted
     const baseFilter = {
-      AND: [
-        { deal_start: { not: undefined } },
-        { deal_end: { not: undefined } },
-        { isDeleted: false },
-      ],
+      isDeal: true,
+      isDeleted: false,
+      deal_start: { not: null },
+      deal_end: { not: null },
     };
 
-    // Count total deals
-    const total = await prisma.deals.count({ where: baseFilter });
+    const total = await prisma.products.count({ where: baseFilter });
 
-    // ✅ Default ordering: use dealtRankScore if we have enough deals
     let orderLogic: any = { createdAt: 'desc' };
-
     if (total >= 10) {
-      orderLogic = { dealRankScore: 'desc' }; // rank by score
+      orderLogic = { dealRankScore: 'desc' };
     }
 
-    const [deals, top10Upcoming] = await Promise.all([
-      prisma.deals.findMany({
+    const [products, upcoming] = await Promise.all([
+      prisma.products.findMany({
         skip,
         take: limit,
         where: baseFilter,
         include: {
           images: true,
+          colorVariants: true,
           Shop: true,
+          deals: {
+            include: { dealDiscountCodes: { include: { discount: true } } },
+          },
         },
         orderBy: orderLogic,
       }),
-
-      prisma.deals.findMany({
+      prisma.products.findMany({
         where: baseFilter,
         take: 10,
-        orderBy: { deal_start: 'asc' }, // upcoming deals list
+        orderBy: { deal_start: 'asc' },
+        include: {
+          images: true,
+          colorVariants: true,
+          Shop: true,
+          deals: true,
+        },
       }),
     ]);
 
+    // ✅ Helper to pick one image (default variant first, fallback to product image)
+    const getThumbnail = (p: any): string | undefined => {
+      if (Array.isArray(p.colorVariants) && p.colorVariants.length > 0) {
+        const defaultVariant = p.colorVariants.find((v: any) => v.isDefault);
+        if (defaultVariant?.images?.length) {
+          return defaultVariant.images[0].url;
+        }
+      }
+      if (Array.isArray(p.images) && p.images.length > 0) {
+        return p.images[0].url;
+      }
+      return undefined;
+    };
+
+    // ✅ Merge product + deal info into unified objects
+    const unifiedDeals = products.map((p) => {
+      const deal = p.deals?.[0];
+      return {
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        category: p.category,
+        subCategory: p.subCategory,
+        stock: p.stock,
+        regular_price: p.regular_price,
+        sale_price: p.sale_price,
+        image: getThumbnail(p),
+        colorVariants: p.colorVariants, // ✅ add this
+        images: p.images, // ✅ add this if ProductCard needs the fallback too
+        shop: p.Shop,
+        dealId: deal?.id,
+        deal_start: deal?.deal_start ?? p.deal_start,
+        deal_end: deal?.deal_end ?? p.deal_end,
+        dealRankScore: deal?.dealRankScore ?? p.dealRankScore,
+        discountCodes: deal?.dealDiscountCodes || [],
+      };
+    });
+
+    const unifiedUpcoming = upcoming.map((p) => {
+      const deal = p.deals?.[0];
+      return {
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        regular_price: p.regular_price,
+        sale_price: p.sale_price,
+        image: getThumbnail(p), // ✅ single image field
+        shop: p.Shop,
+        deal_start: deal?.deal_start ?? p.deal_start,
+        deal_end: deal?.deal_end ?? p.deal_end,
+      };
+    });
+
     res.status(200).json({
-      deals: deals || [],
-      top10Upcoming: top10Upcoming || [],
+      deals: unifiedDeals,
+      top10Upcoming: unifiedUpcoming,
       total,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
@@ -2077,5 +2090,53 @@ export const updateShopDetails = async (
     });
   } catch (error) {
     return next(error);
+  }
+};
+
+// Get seller stripe information
+export const getStripeAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+      apiVersion: '2025-10-29.clover', // always pin API version
+    });
+
+    // 1. Extract sellerId from request (could be params or auth middleware)
+    const { sellerId } = req.params;
+
+    if (!sellerId) {
+      return res.status(400).json({ error: 'Seller ID is required' });
+    }
+
+    // 2. Look up seller in DB
+    const seller = await prisma.sellers.findUnique({
+      where: { id: sellerId },
+      select: { stripeId: true },
+    });
+
+    if (!seller || !seller.stripeId) {
+      return res
+        .status(404)
+        .json({ error: 'Seller or Stripe account not found' });
+    }
+
+    // 3. Fetch account details from Stripe
+    const account = await stripe.accounts.retrieve(seller.stripeId);
+
+    // 4. Return safe subset of account info
+    return res.status(200).json({
+      id: account.id,
+      email: account.email,
+      business_type: account.business_type,
+      charges_enabled: account.charges_enabled,
+      payouts_enabled: account.payouts_enabled,
+      requirements: account.requirements,
+    });
+  } catch (err) {
+    console.error('Error fetching Stripe account:', err);
+    return next(err); // pass to error middleware
   }
 };

@@ -42,7 +42,7 @@ const HeaderBottom = () => {
           onMouseLeave={() => setShowSidebar(false)}
           className="relative flex items-center justify-center h-full hover:bg-[#3B4148]"
         >
-          <button className="flex items-center justify-start gap-1.5 px-2 py-0 text-[16px] font-medium text-[#fff]  rounded-sm transition-colors duration-300 mr-0 flex-shrink-0">
+          <button className="flex items-center justify-start gap-1.5 px-3 py-0 text-[16px] font-medium text-[#fff]  rounded-sm transition-colors duration-300 mr-0 flex-shrink-0">
             Shop Departments
             <div className="shrink-0">
               <ChevronDown size={12} />
@@ -56,10 +56,10 @@ const HeaderBottom = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex items-start justify-start gap-4 ml-0 ">
+        <div className="flex items-start justify-start gap-2 ml-0 h-full ">
           {navItems.map((i: NavItemsTypes, index: number) => (
             <Link
-              className={`flex items-center px-2 py-0 text-[14px] h-full rounded-sm transition-colors duration-150 ${
+              className={`flex items-center px-3 py-0 text-[14px] h-full rounded-sm transition-colors duration-150 ${
                 i.accent
                   ? 'text-[#FEA417] font-semibold hover:text-amber-500'
                   : 'text-[#f5f5f5] font-medium hover:bg-[#3B4148]'
@@ -70,15 +70,15 @@ const HeaderBottom = () => {
               {i.title}
             </Link>
           ))}
-        </nav>
+        </div>
 
         {/* </div> */}
         <div className="flex items-center justify-end gap-2 ml-0 h-full text-[14px] text-[#f5f5f5] font-medium rounded-sm transition-colors duration-150 ">
-          <span className="cursor-pointer px-2 py-0 transition-colors duration-100 hover:bg-[#3B4148] shrink-0">
+          <span className="flex items-center h-full cursor-pointer px-3 py-0 transition-colors duration-100 hover:bg-[#3B4148] shrink-0">
             Sell
           </span>
-          <div className=" w-px h-4 bg-gray-600 ml-2" />
-          <span className="cursor-pointer px-2 py-0 transition-colors duration-100 hover:bg-[#3B4148] shrink-0">
+          <div className=" w-px h-4 bg-gray-600 " />
+          <span className="flex items-center h-full cursor-pointer px-3 py-0 transition-colors duration-100 hover:bg-[#3B4148] shrink-0">
             Customer Service
           </span>
         </div>

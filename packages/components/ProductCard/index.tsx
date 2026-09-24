@@ -27,7 +27,7 @@ const ProductCard = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState('');
 
-  function getActiveImages(product: any): string[] {
+  function getActiveImage(product: any): string[] {
     // 1. Check for default swatch
     const defaultSwatch = product?.colorVariants?.find((v: any) => v.isDefault);
 
@@ -49,7 +49,7 @@ const ProductCard = ({
   }
 
   // const activeImages = defaultSwatch ? defaultSwatch.images : product?.images; // fallback to main images
-  const activeImages = getActiveImages(product);
+  const activeImages = getActiveImage(product);
 
   console.log('Main images', product?.images);
 
@@ -98,7 +98,7 @@ const ProductCard = ({
 
       <Link
         href={`/product/${product?.slug}`}
-        className="block relative max-w-[270px] h-[200px] overflow-hidden bg-white"
+        className="block relative w-full max-w-[288px] aspect-square overflow-hidden bg-white"
       >
         <img
           src={activeImages[0]}
@@ -123,34 +123,34 @@ const ProductCard = ({
       </div> */}
 
       {/* product price */}
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-3 flex items-baseline gap-2">
         <div className="flex items-center gap-1">
           <span
             className={`text-sm font-bold ${
-              isDeal ? 'text-green-700' : 'text-gray-900'
+              product?.sale_price ? 'text-green-700' : 'text-gray-900'
             }`}
           >
-            KSh
+            Ksh
           </span>
           <span
-            className={`text-xl font-bold tracking-tight ${
-              isDeal ? 'text-green-700' : 'text-gray-900'
+            className={`text-2xl font-extrabold tracking-tight ${
+              product?.sale_price ? 'text-green-700' : 'text-gray-900'
             }`}
           >
-            {isDeal ? product?.sale_price : product?.regular_price}
+            {product?.sale_price ?? product?.regular_price}
           </span>
         </div>
 
-        {isDeal && (
-          <span className="text-xs font-normal line-through text-gray-500">
-            KSh {product?.regular_price}
+        {product?.sale_price && (
+          <span className="text-base font-normal line-through text-gray-500">
+            Ksh {product?.regular_price}
           </span>
         )}
       </div>
 
       {/* product title */}
       <Link href={`/product/${product?.slug}`}>
-        <h3 className="text-[15px] tracking-tight font-normal !text-gray-900">
+        <h3 className="text-[15px] tracking-tight truncate font-normal !text-gray-900">
           {capitalizeWords(product?.title)}
         </h3>
       </Link>

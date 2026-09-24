@@ -174,7 +174,7 @@ export default function SmartSearchBar({
           aria-label="Search"
           type="submit"
           className="flex items-center justify-center w-14 h-[40px] rounded-r-full
-                     text-orange-600 hover:text-orange-700 bg-gray-50 border-l border-gray-200 transition-colors"
+                     text-[#D97706] hover:text-orange-700 bg-gray-50 border-l border-gray-200 transition-colors"
         >
           <Search strokeWidth={2} size={18} />
         </button>

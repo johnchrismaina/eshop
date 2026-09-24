@@ -129,7 +129,7 @@
     "@types/node": "^20.19.9",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^7.0.2",
-    "@types/react": "^18.3.28",
+    "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
     "@types/react-simple-maps": "^3.0.6",
     "@types/swagger-ui-express": "^4.1.8",

@@ -495,8 +495,8 @@ const HeaderContent = ({ setShowSidebar }: HeaderContentProps) => {
               <CgShoppingCart size={20} />
               {/* <CartIcon /> */}
               {/* {cart?.length > 0 && ( */}
-              <div className="absolute top-[-4px] right-[-6px] min-w-[16px] h-4 px-0 rounded-full bg-[#E85D1F] flex items-center justify-center mt-[0px]">
-                <span className="text-[#fff] font-bold text-[11px] leading-none">
+              <div className="absolute top-[-4px] right-[-6px] min-w-[16px] h-4 px-0 rounded-full bg-[#E8890C] flex items-center justify-center mt-[0px]">
+                <span className="text-[#1C1C1E] font-bold text-[11px] leading-none">
                   {cart.length > 99 ? '99+' : cart.length}
                 </span>
               </div>

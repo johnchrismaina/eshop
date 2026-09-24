@@ -16,7 +16,6 @@ const Products = () => {
 
   const {
     data: products = [],
-    // data,
     isLoading,
     isError,
     isFetched,
@@ -27,9 +26,7 @@ const Products = () => {
     gcTime: 5 * 60 * 1000,
   });
 
-  // const products = data?.products ?? [];
-
-  console.log('Products data:', products);
+  // console.log('Products data:', products);
 
   // ... scroll logic
   const scrollRef = useRef<HTMLDivElement>(null);

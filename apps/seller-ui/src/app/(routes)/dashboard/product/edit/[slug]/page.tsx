@@ -16,6 +16,8 @@ export default function EditProductPage() {
     },
   });
 
+  console.log('Product to edit:', product);
+
   if (!product)
     return (
       <div className="flex items-center justify-center min-h-screen">

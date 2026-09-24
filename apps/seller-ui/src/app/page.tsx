@@ -14,8 +14,8 @@ import {
   Trash2,
   Users,
   XIcon,
-  YoutubeIcon,
 } from 'lucide-react';
+import { CiYoutube } from 'react-icons/ci';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -327,9 +327,9 @@ const SellerProfile = () => {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="opacity-[.9]"
+                            className="opacity-[.9] text-white"
                           >
-                            {link.type === 'youtube' && <YoutubeIcon />}
+                            {link.type === 'youtube' && <CiYoutube />}
                             {link.type === 'X' && <XIcon />}
                           </a>
                         )

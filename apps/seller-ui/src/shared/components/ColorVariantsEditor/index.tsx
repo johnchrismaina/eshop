@@ -23,14 +23,6 @@ type VariantImage = {
   file_url: string;
 };
 
-// type ColorVariant = {
-//   name: string;
-//   title: string;
-//   price: number;
-//   images: (VariantImage | null)[]; // ✅ always objects with file_url
-//   isDefault: boolean;
-// };
-
 // Define what the ref exposes — this is the "public API" the parent can call
 export interface ColorVariantsEditorHandle {
   addVariant: () => void;

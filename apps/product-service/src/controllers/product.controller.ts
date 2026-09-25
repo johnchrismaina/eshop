@@ -380,7 +380,7 @@ export const createProduct = async (
         url: img.file_url,
       }));
 
-    // ✅ Map product specifications (use label, not key)
+    // ✅ Map product specifications (embedded composite type, plain array — not a relation)
     const mappedSpecifications = (product_specifications as any[])
       .filter((spec) => spec.label)
       .map((spec) => ({
@@ -435,9 +435,7 @@ export const createProduct = async (
         sizes,
         aspect,
         detailed_description,
-        product_specifications: {
-          create: mappedSpecifications,
-        },
+        product_specifications: mappedSpecifications, // ✅ plain array, embedded composite type
         shopId: req.seller.shops[0].id,
         stock: parseInt(stock),
         regular_price:
@@ -457,7 +455,8 @@ export const createProduct = async (
       include: {
         images: true,
         colorVariants: true,
-        product_specifications: true,
+        // ✅ product_specifications removed from include — it's embedded now,
+        // not a relation, so it comes back on newProduct automatically
       },
     });
 
@@ -553,7 +552,7 @@ export const createDeal = async (
       .filter((img) => img?.fileId && img?.file_url)
       .map((img) => ({ file_id: img.fileId, url: img.file_url }));
 
-    // ✅ Map specifications
+    // ✅ Map specifications (embedded composite type, plain array — not a relation)
     const mappedSpecifications = (product_specifications as any[])
       .filter((spec) => spec.label)
       .map((spec) => ({ label: spec.label, value: spec.value ?? null }));
@@ -590,7 +589,7 @@ export const createDeal = async (
         include: {
           images: true,
           colorVariants: true,
-          product_specifications: true,
+          // ✅ product_specifications removed — embedded, not a relation
         },
       });
     } else {
@@ -615,14 +614,14 @@ export const createDeal = async (
           sku,
           condition,
           shippingOption,
-          product_specifications: { create: mappedSpecifications },
+          product_specifications: mappedSpecifications, // ✅ plain array
           images: { create: mappedImages },
           colorVariants: { create: mappedVariants },
         },
         include: {
           images: true,
           colorVariants: true,
-          product_specifications: true,
+          // ✅ product_specifications removed — embedded, not a relation
         },
       });
     }
@@ -666,9 +665,7 @@ export const createDeal = async (
         condition: condition || product.condition,
         shippingOption: shippingOption || product.shippingOption,
         stock: parseInt(stock ?? product.stock ?? 0),
-        product_specifications: mappedSpecifications.length
-          ? { create: mappedSpecifications }
-          : undefined,
+        product_specifications: mappedSpecifications, // ✅ plain array, embedded
         images: { create: mappedImages },
         dealDiscountCodes: discountCodes.length
           ? {
@@ -701,7 +698,7 @@ export const createDeal = async (
   }
 };
 
-// Update product by slug and sync deal
+// Update product by slug and sync deal + color variants
 export const updateProductBySlug = async (
   req: any,
   res: Response,
@@ -716,27 +713,25 @@ export const updateProductBySlug = async (
       subCategory,
       short_description,
       detailed_description,
-      tags,
       sizes,
       colors,
-      custom_properties,
       product_specifications,
-      product_details,
       regular_price,
       sale_price,
       deal_start,
       deal_end,
       stock,
       images,
+      colorVariants,
       enableDeal,
       video_url,
       ratings,
-      removedImageIds = [], // ✅ accept removed IDs
+      removedImageIds = [],
     } = req.body;
 
     const product = await prisma.products.findUnique({
       where: { slug },
-      include: { deals: true, images: true },
+      include: { deals: true, images: true, colorVariants: true },
     });
 
     if (!product) {
@@ -752,8 +747,18 @@ export const updateProductBySlug = async (
       });
     }
 
+    // ✅ Parse/coerce incoming values
+    const parsedRegularPrice =
+      regular_price != null ? parseFloat(regular_price) : product.regular_price;
+    const parsedSalePrice =
+      enableDeal && sale_price != null ? parseFloat(sale_price) : null;
+    const parsedStock = stock != null ? parseInt(stock) : product.stock;
+    const parsedDealStart =
+      enableDeal && deal_start ? new Date(deal_start) : null;
+    const parsedDealEnd = enableDeal && deal_end ? new Date(deal_end) : null;
+
     // ✅ Update product
-    const updatedProduct = await prisma.products.update({
+    await prisma.products.update({
       where: { slug },
       data: {
         title,
@@ -766,20 +771,16 @@ export const updateProductBySlug = async (
           'No description',
         detailed_description:
           detailed_description ?? product.detailed_description ?? null,
-        regular_price,
-        sale_price: enableDeal ? sale_price : null,
-        deal_start: enableDeal ? deal_start : null,
-        deal_end: enableDeal ? deal_end : null,
+        regular_price: parsedRegularPrice,
+        sale_price: parsedSalePrice,
+        deal_start: parsedDealStart,
+        deal_end: parsedDealEnd,
         isDeal: enableDeal,
-        stock,
-        tags: tags || product.tags || [],
+        stock: parsedStock,
         colors: colors || product.colors || [],
         sizes: sizes || product.sizes || [],
-        custom_properties:
-          custom_properties ?? product.custom_properties ?? null,
         product_specifications:
-          product_specifications ?? product.product_specifications ?? null,
-        product_details: product_details ?? product.product_details ?? null,
+          product_specifications ?? product.product_specifications ?? [],
         video_url,
         ratings,
         images: {
@@ -791,12 +792,74 @@ export const updateProductBySlug = async (
           })),
         },
       },
-      include: { images: true, deals: true },
     });
+
+    // ✅ Sync color variants: update existing, create new, delete removed
+    const incomingVariants = colorVariants || [];
+    const existingVariantIds = product.colorVariants.map((v: any) => v.id);
+    const incomingIds = incomingVariants
+      .filter((v: any) => v.id)
+      .map((v: any) => v.id);
+
+    const idsToDelete = existingVariantIds.filter(
+      (id: string) => !incomingIds.includes(id)
+    );
+
+    if (idsToDelete.length > 0) {
+      await prisma.color_variants.deleteMany({
+        where: { id: { in: idsToDelete } },
+      });
+    }
+
+    const mapVariantData = (variant: any) => ({
+      name: variant.name,
+      title: variant.title,
+      hex: variant.hex ?? null,
+      price: parseFloat(variant.price),
+      isDefault: variant.isDefault ?? false,
+      images: (variant.images || [])
+        .filter((img: any) => img?.file_url)
+        .map((img: any) => img.file_url),
+      // ✅ per-variant deal fields
+      dealPrice:
+        variant.dealPrice != null ? parseFloat(variant.dealPrice) : null,
+      dealStart: variant.dealStart ? new Date(variant.dealStart) : null,
+      dealEnd: variant.dealEnd ? new Date(variant.dealEnd) : null,
+    });
+
+    await Promise.all(
+      incomingVariants.map((variant: any) => {
+        if (variant.id) {
+          return prisma.color_variants.update({
+            where: { id: variant.id },
+            data: mapVariantData(variant),
+          });
+        }
+        return prisma.color_variants.create({
+          data: {
+            ...mapVariantData(variant),
+            productId: product.id,
+          },
+        });
+      })
+    );
 
     // ✅ Sync deal table if product is a deal
     let updatedDeal = null;
     if (enableDeal) {
+      // ✅ Require deal fields when enabling a deal
+      if (
+        parsedSalePrice == null ||
+        parsedDealStart == null ||
+        parsedDealEnd == null
+      ) {
+        return next(
+          new ValidationError(
+            'Sale price, deal start and deal end are required when enabling a deal'
+          )
+        );
+      }
+
       const activeDeal = product.deals.find(
         (d) => d.status === 'Active' && (!d.deal_end || d.deal_end > new Date())
       );
@@ -805,11 +868,10 @@ export const updateProductBySlug = async (
         updatedDeal = await prisma.deals.update({
           where: { id: activeDeal.id },
           data: {
-            sale_price,
-            deal_start,
-            deal_end,
-            regular_price,
-            tags: tags || product.tags || [],
+            sale_price: parsedSalePrice, // now narrowed to `number`
+            deal_start: parsedDealStart, // now narrowed to `Date`
+            deal_end: parsedDealEnd, // now narrowed to `Date`
+            regular_price: parsedRegularPrice ?? product.regular_price ?? 0,
             colors: colors || product.colors || [],
             sizes: sizes || product.sizes || [],
             category: category?.trim() || product.category || 'Uncategorized',
@@ -819,8 +881,7 @@ export const updateProductBySlug = async (
               product.short_description ||
               'No description',
             product_specifications:
-              product_specifications ?? product.product_specifications ?? null,
-            product_details: product_details ?? product.product_details ?? null,
+              product_specifications ?? product.product_specifications ?? [],
           },
         });
       } else {
@@ -830,12 +891,11 @@ export const updateProductBySlug = async (
             slug: product.slug.includes('-deal')
               ? product.slug
               : product.slug + '-deal',
-            deal_start,
-            deal_end,
-            regular_price,
-            sale_price,
+            deal_start: parsedDealStart,
+            deal_end: parsedDealEnd,
+            regular_price: parsedRegularPrice ?? product.regular_price ?? 0,
+            sale_price: parsedSalePrice,
             shopId: product.shopId,
-            tags: tags || [],
             colors: colors || [],
             sizes: sizes || [],
             category: category?.trim() || product.category || 'Uncategorized',
@@ -844,16 +904,23 @@ export const updateProductBySlug = async (
               short_description?.trim() ||
               product.short_description ||
               'No description',
-            product_specifications: product_specifications ?? null,
-            product_details: product_details ?? null,
+            stock: parsedStock,
+            product_specifications: product_specifications ?? [],
           },
         });
       }
     }
+    // }
+
+    // ✅ Refetch with final colorVariants state to return to client
+    const finalProduct = await prisma.products.findUnique({
+      where: { slug },
+      include: { images: true, deals: true, colorVariants: true },
+    });
 
     return res.status(200).json({
       success: true,
-      product: updatedProduct,
+      product: finalProduct,
       deal: updatedDeal,
     });
   } catch (error) {
@@ -1452,8 +1519,9 @@ export const getProductDetails = async (
         images: true,
         Shop: true,
         colorVariants: true, // ✅ include variants
-        product_specifications: true, // ✅ include specifications
         deals: true,
+        // ✅ product_specifications removed from include — embedded composite
+        // field, comes back automatically as part of the product document
       },
     });
 
@@ -1464,9 +1532,8 @@ export const getProductDetails = async (
         include: {
           images: true,
           Shop: true,
-          // deals model may not have variants/specs, but include if defined
           colorVariants: true,
-          product_specifications: true,
+          // ✅ product_specifications removed here too
         },
       });
     }

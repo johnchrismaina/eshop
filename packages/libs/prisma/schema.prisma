@@ -158,6 +158,61 @@ model site_config {
   banner        String?
 }
 
+model category {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String         @unique
+  subCategories sub_category[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Self relation for hierarchy
+  parentId String?
+  parent   category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children category[] @relation("CategoryHierarchy")
+}
+
+model sub_category {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String   @unique // globally unique
+  categoryId String   @db.ObjectId
+  category   category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model color_variants {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  hex       String?
+  title     String
+  price     Float
+  isDefault Boolean @default(false)
+
+  // ✅ Store up to 8 image URLs per variant
+  images String[] @default([])
+
+  // ✅ Deal fields per variant
+  dealPrice Float?
+  dealStart DateTime?
+  dealEnd   DateTime?
+
+  productId String   @db.ObjectId
+  product   products @relation("ProductColorVariants", fields: [productId], references: [id])
+
+  // ✅ Optional relation to deals
+  dealId String? @db.ObjectId
+  deal   deals?  @relation("DealColorVariants", fields: [dealId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Embedded sub-document — no @id, no separate collection
+type ProductSpecification {
+  label String?
+  value String?
+}
+
 enum productStatus {
   Active
   Pending
@@ -165,40 +220,37 @@ enum productStatus {
 }
 
 model products {
-  id                     String                   @id @default(auto()) @map("_id") @db.ObjectId
+  id                     String                 @id @default(auto()) @map("_id") @db.ObjectId
   title                  String
-  aspect                 String                   @default("square")
-  slug                   String                   @unique
-  ratings                Float                    @default(4)
-  colors                 String[]                 @default([])
-  sizes                  String[]                 @default([])
+  aspect                 String                 @default("square")
+  slug                   String                 @unique
+  ratings                Float                  @default(4)
+  colors                 String[]               @default([])
+  sizes                  String[]               @default([])
   category               String
   subCategory            String?
   short_description      String
   detailed_description   String?
-  product_specifications product_specifications[]
+  product_specifications ProductSpecification[] // ✅ embedded, not a relation
   video_url              String?
   sku                    String?
   regular_price          Float?
   stock                  Int
   condition              String?
   shippingOption         String?
-  isDeleted              Boolean?                 @default(false)
-  status                 productStatus            @default(Active)
+  isDeleted              Boolean?               @default(false)
+  status                 productStatus          @default(Active)
   deletedAt              DateTime?
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @updatedAt
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
 
-  // ✅ Junction relation
   productDiscountCodes product_discount_codes[]
 
-  // Deal fields
   isDeal     Boolean   @default(false)
   sale_price Float?
   deal_start DateTime?
   deal_end   DateTime?
 
-  // Analytics
   views          Int   @default(0)
   clicks         Int   @default(0)
   redemptions    Int   @default(0)
@@ -208,7 +260,6 @@ model products {
   totalSales     Int   @default(0)
   totalAddToCart Int   @default(0)
 
-  // Relations
   shopId String   @db.ObjectId
   Shop   shops    @relation("ShopProducts", fields: [shopId], references: [id])
   images images[] @relation("ProductImages")
@@ -220,12 +271,6 @@ model products {
   @@index([createdAt])
 }
 
-enum DealStatus {
-  Active
-  Expired
-  Archived
-}
-
 model deals {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   slug          String   @unique
@@ -234,13 +279,12 @@ model deals {
   deal_start    DateTime
   deal_end      DateTime
 
-  // ✅ snapshot fields
   category               String
   subCategory            String?
   short_description      String
   detailed_description   String?
-  product_specifications product_specifications[] @relation("DealProductSpecifications")
-  aspect                 String                   @default("square") // default at DB level too
+  product_specifications ProductSpecification[] // ✅ same composite type, embedded
+  aspect                 String                 @default("square")
   colors                 String[]
   sizes                  String[]
   sku                    String?
@@ -248,10 +292,8 @@ model deals {
   shippingOption         String?
   stock                  Int
 
-  // Status
-  status DealStatus @default(Active) // Active | Expired | Archived
+  status DealStatus @default(Active)
 
-  // Analytics
   views          Int   @default(0)
   clicks         Int   @default(0)
   redemptions    Int   @default(0)
@@ -261,7 +303,6 @@ model deals {
   totalSales     Int   @default(0)
   totalAddToCart Int   @default(0)
 
-  // Relations
   productId String   @db.ObjectId
   product   products @relation("ProductDeal", fields: [productId], references: [id])
 
@@ -270,18 +311,21 @@ model deals {
 
   images images[] @relation("EventImages")
 
-  // ✅ New relation: deals → color_variants
   colorVariants color_variants[] @relation("DealColorVariants")
 
-  // ✅ Explicit relation via junction
   dealDiscountCodes deal_discount_codes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Soft delete
   isDeleted Boolean   @default(false)
   deletedAt DateTime?
+}
+
+enum DealStatus {
+  Active
+  Expired
+  Archived
 }
 
 enum DiscountStatus {
@@ -337,86 +381,6 @@ model deal_discount_codes {
 enum DiscountType {
   percentage
   flat
-}
-
-model category {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  name          String         @unique
-  subCategories sub_category[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  // Self relation for hierarchy
-  parentId String?
-  parent   category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  children category[] @relation("CategoryHierarchy")
-}
-
-model sub_category {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String   @unique // globally unique
-  categoryId String   @db.ObjectId
-  category   category @relation(fields: [categoryId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model product_specifications {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  label String?
-  value String?
-
-  // ✅ relation to products
-  productId String?   @db.ObjectId
-  product   products? @relation(fields: [productId], references: [id])
-
-  // ✅ Optional relation to deals
-  dealId String? @db.ObjectId
-  deal   deals?  @relation("DealProductSpecifications", fields: [dealId], references: [id])
-}
-
-model Deal {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  price         Float
-  originalPrice Float
-  createdAt     DateTime @default(now())
-
-  totalSales     Int   @default(0)
-  totalRevenue   Float @default(0)
-  totalViews     Int   @default(0)
-  totalAddToCart Int   @default(0)
-
-  dealScore Float @default(0)
-
-  category String
-}
-
-model color_variants {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  hex       String?
-  title     String
-  price     Float
-  isDefault Boolean @default(false)
-
-  // ✅ Store up to 8 image URLs per variant
-  images String[] @default([])
-
-  // ✅ Deal fields per variant
-  dealPrice Float?
-  dealStart DateTime?
-  dealEnd   DateTime?
-
-  productId String   @db.ObjectId
-  product   products @relation("ProductColorVariants", fields: [productId], references: [id])
-
-  // ✅ Optional relation to deals
-  dealId String? @db.ObjectId
-  deal   deals?  @relation("DealColorVariants", fields: [dealId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 // Define an embedded type for actions

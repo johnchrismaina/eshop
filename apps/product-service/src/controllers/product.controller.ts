@@ -502,6 +502,8 @@ export const createDeal = async (
       condition,
       shippingOption,
       discountCodes = [],
+      discount_start, // ✅ added
+      discount_end, // ✅ added
       total_tickets,
     } = req.body;
 
@@ -557,19 +559,34 @@ export const createDeal = async (
       .filter((spec) => spec.label)
       .map((spec) => ({ label: spec.label, value: spec.value ?? null }));
 
-    // ✅ Map color variants (deal applies only to default variant)
-    const mappedVariants = (colorVariants as any[]).map((variant) => ({
-      name: variant.name,
-      title: variant.title,
-      hex: variant.hex ?? null,
-      price: parseFloat(variant.price),
-      isDefault: variant.isDefault ?? false,
-      images: (variant.images || [])
-        .filter((img: any) => img?.file_url)
-        .map((img: any) => img.file_url),
-    }));
+    // ✅ Map color variants — carry each variant's OWN deal fields, not the top-level ones
+    const mapVariantData = (variant: any) => {
+      const dealPrice =
+        variant.dealPrice != null && variant.dealPrice !== ''
+          ? parseFloat(variant.dealPrice)
+          : null;
+      const dealStart = variant.dealStart ? new Date(variant.dealStart) : null;
+      const dealEnd = variant.dealEnd ? new Date(variant.dealEnd) : null;
 
-    let product;
+      return {
+        name: variant.name,
+        title: variant.title,
+        hex: variant.hex ?? null,
+        price: parseFloat(variant.price),
+        isDefault: variant.isDefault ?? false,
+        images: (variant.images || [])
+          .filter((img: any) => img?.file_url)
+          .map((img: any) => img.file_url),
+        dealPrice, // ✅ each variant's own value
+        dealStart, // ✅ each variant's own value
+        dealEnd, // ✅ each variant's own value
+      };
+    };
+
+    const mappedVariants = (colorVariants as any[]).map(mapVariantData);
+
+    // let product;
+    let product: any;
     if (productId) {
       product = await prisma.products.findUnique({
         where: { id: productId },
@@ -581,7 +598,7 @@ export const createDeal = async (
         where: { id: productId },
         data: {
           isDeal: true,
-          regular_price: parsedRegularPrice, // ✅ ensure regular price is updated
+          regular_price: parsedRegularPrice,
           sale_price: parsedSalePrice,
           deal_start: startDate,
           deal_end: endDate,
@@ -589,9 +606,28 @@ export const createDeal = async (
         include: {
           images: true,
           colorVariants: true,
-          // ✅ product_specifications removed — embedded, not a relation
         },
       });
+
+      // ✅ Sync existing variants (update by id, create any new ones)
+      // — this path never touched colorVariants before, so nothing persisted
+      const incomingVariants = colorVariants as any[];
+      await Promise.all(
+        incomingVariants.map((variant) => {
+          if (variant.id) {
+            return prisma.color_variants.update({
+              where: { id: variant.id },
+              data: mapVariantData(variant),
+            });
+          }
+          return prisma.color_variants.create({
+            data: {
+              ...mapVariantData(variant),
+              productId: product.id,
+            },
+          });
+        })
+      );
     } else {
       product = await prisma.products.create({
         data: {
@@ -603,7 +639,7 @@ export const createDeal = async (
           short_description: short_description?.trim() || 'No description',
           detailed_description: detailed_description ?? null,
           stock: parseInt(stock),
-          regular_price: parsedRegularPrice, // ✅ validated regular price
+          regular_price: parsedRegularPrice,
           isDeal: true,
           sale_price: parsedSalePrice,
           deal_start: startDate,
@@ -614,32 +650,20 @@ export const createDeal = async (
           sku,
           condition,
           shippingOption,
-          product_specifications: mappedSpecifications, // ✅ plain array
+          product_specifications: mappedSpecifications,
           images: { create: mappedImages },
-          colorVariants: { create: mappedVariants },
+          colorVariants: { create: mappedVariants }, // ✅ now includes deal fields per variant
         },
         include: {
           images: true,
           colorVariants: true,
-          // ✅ product_specifications removed — embedded, not a relation
         },
       });
     }
 
-    // ✅ Apply deal to default variant if variants exist
-    if (product.colorVariants?.length > 0) {
-      const defaultVariant = product.colorVariants.find((v) => v.isDefault);
-      if (defaultVariant) {
-        await prisma.color_variants.update({
-          where: { id: defaultVariant.id },
-          data: {
-            dealPrice: parsedSalePrice,
-            dealStart: startDate,
-            dealEnd: endDate,
-          },
-        });
-      }
-    }
+    // ❌ removed: the old "apply deal to default variant only" block —
+    // superseded by per-variant sync above, which respects what the
+    // seller actually entered for each variant
 
     // ✅ Create deal record linked to product
     const newDeal = await prisma.deals.create({
@@ -650,7 +674,7 @@ export const createDeal = async (
           : product.slug + '-deal',
         deal_start: startDate,
         deal_end: endDate,
-        regular_price: parsedRegularPrice, // ✅ validated regular price
+        regular_price: parsedRegularPrice,
         sale_price: parsedSalePrice,
         shopId: req.seller.shops[0].id,
         category: category?.trim() || product.category || 'Uncategorized',
@@ -665,7 +689,7 @@ export const createDeal = async (
         condition: condition || product.condition,
         shippingOption: shippingOption || product.shippingOption,
         stock: parseInt(stock ?? product.stock ?? 0),
-        product_specifications: mappedSpecifications, // ✅ plain array, embedded
+        product_specifications: mappedSpecifications,
         images: { create: mappedImages },
         dealDiscountCodes: discountCodes.length
           ? {
@@ -682,11 +706,17 @@ export const createDeal = async (
       },
     });
 
-    // ✅ Update ticket counts on discount codes
-    if (discountCodes.length && total_tickets != null) {
+    // ✅ Update discount code window + ticket count
+    if (discountCodes.length) {
       await prisma.discount_codes.updateMany({
         where: { id: { in: discountCodes } },
-        data: { total_tickets: total_tickets },
+        data: {
+          ...(total_tickets != null ? { total_tickets } : {}),
+          ...(discount_start
+            ? { discount_start: new Date(discount_start) }
+            : {}),
+          ...(discount_end ? { discount_end: new Date(discount_end) } : {}),
+        },
       });
     }
 
@@ -723,7 +753,6 @@ export const updateProductBySlug = async (
       stock,
       images,
       colorVariants,
-      enableDeal,
       video_url,
       ratings,
       removedImageIds = [],
@@ -747,15 +776,19 @@ export const updateProductBySlug = async (
       });
     }
 
+    // ✅ Derive deal status from the presence of deal fields —
+    // no separate enableDeal flag anymore. ProductForm only sends
+    // sale_price/deal_start/deal_end when the product is a deal.
+    const isDeal = Boolean(sale_price && deal_start && deal_end);
+
     // ✅ Parse/coerce incoming values
     const parsedRegularPrice =
       regular_price != null ? parseFloat(regular_price) : product.regular_price;
     const parsedSalePrice =
-      enableDeal && sale_price != null ? parseFloat(sale_price) : null;
+      isDeal && sale_price != null ? parseFloat(sale_price) : null;
     const parsedStock = stock != null ? parseInt(stock) : product.stock;
-    const parsedDealStart =
-      enableDeal && deal_start ? new Date(deal_start) : null;
-    const parsedDealEnd = enableDeal && deal_end ? new Date(deal_end) : null;
+    const parsedDealStart = isDeal && deal_start ? new Date(deal_start) : null;
+    const parsedDealEnd = isDeal && deal_end ? new Date(deal_end) : null;
 
     // ✅ Update product
     await prisma.products.update({
@@ -775,7 +808,7 @@ export const updateProductBySlug = async (
         sale_price: parsedSalePrice,
         deal_start: parsedDealStart,
         deal_end: parsedDealEnd,
-        isDeal: enableDeal,
+        isDeal,
         stock: parsedStock,
         colors: colors || product.colors || [],
         sizes: sizes || product.sizes || [],
@@ -846,7 +879,7 @@ export const updateProductBySlug = async (
 
     // ✅ Sync deal table if product is a deal
     let updatedDeal = null;
-    if (enableDeal) {
+    if (isDeal) {
       // ✅ Require deal fields when enabling a deal
       if (
         parsedSalePrice == null ||
@@ -868,9 +901,9 @@ export const updateProductBySlug = async (
         updatedDeal = await prisma.deals.update({
           where: { id: activeDeal.id },
           data: {
-            sale_price: parsedSalePrice, // now narrowed to `number`
-            deal_start: parsedDealStart, // now narrowed to `Date`
-            deal_end: parsedDealEnd, // now narrowed to `Date`
+            sale_price: parsedSalePrice,
+            deal_start: parsedDealStart,
+            deal_end: parsedDealEnd,
             regular_price: parsedRegularPrice ?? product.regular_price ?? 0,
             colors: colors || product.colors || [],
             sizes: sizes || product.sizes || [],
@@ -910,7 +943,6 @@ export const updateProductBySlug = async (
         });
       }
     }
-    // }
 
     // ✅ Refetch with final colorVariants state to return to client
     const finalProduct = await prisma.products.findUnique({

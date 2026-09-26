@@ -1,5 +1,5 @@
 import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import { UseFormSetValue } from 'react-hook-form';
+import { UseFormGetValues, UseFormSetValue } from 'react-hook-form';
 import type { FormValues } from '../ProductForm'; // adjust path
 import { ColorVariant } from '../ProductForm'; // adjust path
 import ImagePlaceholder from 'apps/seller-ui/src/shared/components/image-placeholder';
@@ -13,15 +13,15 @@ export interface ColorVariantsEditorHandle {
   resetVariants: () => void;
 }
 
-interface UploadedImage {
-  fileId: string;
-  file_url: string;
-}
+// interface UploadedImage {
+//   fileId: string;
+//   file_url: string;
+// }
 
-type VariantImage = {
-  fileId: string;
-  file_url: string;
-};
+// type VariantImage = {
+//   fileId: string;
+//   file_url: string;
+// };
 
 // Define what the ref exposes — this is the "public API" the parent can call
 export interface ColorVariantsEditorHandle {
@@ -33,6 +33,7 @@ interface ColorVariantsEditorProps {
   aspect: 'square' | 'portrait'; // ✅ passed from parent form
   onHasColorsChange?: (hasColors: boolean) => void; // ✅ notify parent to disable main images
   setValue: UseFormSetValue<FormValues>; // ✅ sync with parent form
+  getValues: UseFormGetValues<FormValues>; // ✅ add this
   productTitle: string; // ✅ new
   variants: FormValues['colorVariants'];
 }
@@ -41,7 +42,7 @@ const ColorVariantsEditor = forwardRef<
   ColorVariantsEditorHandle,
   ColorVariantsEditorProps
 >(function ColorVariantsEditor(
-  { aspect, onHasColorsChange, setValue, productTitle, variants },
+  { aspect, onHasColorsChange, setValue, getValues, productTitle, variants },
   ref
 ) {
   // const [variants, setVariants] = useState<ColorVariant[]>([]);
@@ -89,7 +90,7 @@ const ColorVariantsEditor = forwardRef<
     imageIndex: number,
     file: File | null
   ) => {
-    const updated = [...variants];
+    let newImageValue: { fileId: string; file_url: string } | null = null;
 
     if (file) {
       const formData = new FormData();
@@ -99,24 +100,29 @@ const ColorVariantsEditor = forwardRef<
         const response = await axiosProduct.post(
           '/upload-variant-image',
           formData,
-          {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          }
+          { headers: { 'Content-Type': 'multipart/form-data' } }
         );
 
-        updated[variantIndex].images[imageIndex] = {
+        newImageValue = {
           fileId: response.data.fileId,
-          file_url: response.data.file_url, // ✅ permanent ImageKit URL
+          file_url: response.data.file_url,
         };
       } catch (error) {
         toast.error('Variant image upload failed');
         return;
       }
-    } else {
-      updated[variantIndex].images[imageIndex] = null;
     }
 
-    // setVariants(updated);
+    // ✅ Re-read the LATEST form state now, after the upload finished —
+    // captures any deal price/date edits made while the upload was in flight
+    const current = getValues('colorVariants') || [];
+    const updated = [...current];
+    updated[variantIndex] = {
+      ...updated[variantIndex],
+      images: [...updated[variantIndex].images],
+    };
+    updated[variantIndex].images[imageIndex] = newImageValue;
+
     setValue('colorVariants', updated, { shouldValidate: true });
   };
 

@@ -136,7 +136,7 @@ export type FormValues = {
   discountCodes: string[];
   availableTickets?: number;
   total_tickets?: number;
-  enableDeal: boolean;
+  isDeal?: boolean;
 };
 
 export default function ProductForm({
@@ -149,6 +149,8 @@ export default function ProductForm({
   const router = useRouter();
   const pathname = usePathname();
   const isDealRoute = pathname.includes('create-deal');
+  const isEditingExistingDeal = mode === 'editProduct' && !!product?.isDeal;
+  const showDealFields = isDealRoute || isEditingExistingDeal;
 
   // Detect which route we're on
   const isDeal = pathname.includes('create-deal');
@@ -193,7 +195,7 @@ export default function ProductForm({
         discountCodes: [],
         availableTickets: undefined,
         total_tickets: undefined,
-        enableDeal: isDealRoute,
+        // enableDeal: isDealRoute,
         // ✅ initialize empty colorVariants array
       } as FormValues),
   });
@@ -883,6 +885,8 @@ export default function ProductForm({
         })),
       };
 
+      // if (isDealRoute || data.enableDeal) {
+
       // ✅ Branch logic
       if (mode === 'createProduct') {
         await axiosProduct.post('/create-product', payload);
@@ -897,7 +901,7 @@ export default function ProductForm({
         toast.success('Deal created!');
         router.push('/dashboard/all-deals');
       } else {
-        if (isDealRoute || data.enableDeal) {
+        if (isDealRoute || isEditingExistingDeal) {
           await axiosProduct.post('/create-deal', payload);
           toast.success('Deal created!');
           router.push('/dashboard/all-deals');
@@ -1482,6 +1486,7 @@ export default function ProductForm({
                       aspect={watch('aspect')}
                       onHasColorsChange={setHasColors}
                       setValue={setValue}
+                      getValues={getValues} // ✅ add this
                       productTitle={watch('title')}
                       variants={watch('colorVariants')}
                     />
@@ -1733,7 +1738,7 @@ export default function ProductForm({
               {/* )} */}
 
               {/* Sale Price */}
-              {isDealRoute && (
+              {showDealFields && (
                 <div className="w-full flex items-start justify-end gap-3 px-4 py-2 rounded-sm">
                   <p className="flex items-center justify-center gap-1">
                     <label
@@ -1780,7 +1785,7 @@ export default function ProductForm({
               )}
 
               {/* Conditionally render deal dates */}
-              {isDealRoute && (
+              {showDealFields && (
                 <div className="w-full flex flex-col items-center justify-center gap-3 px-4 ">
                   {/* Deal Start Date */}
                   <div className="w-full flex items-center justify-end gap-2 rounded-md">
@@ -2086,7 +2091,7 @@ export default function ProductForm({
                   </span>
                 </p>
                 <div className="w-[700px] ">
-                  <div className="w-[600px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
+                  <div className="w-[400px] flex flex-col gap-2 text-[15px] px-3 py-2 border border-gray-300 rounded-md">
                     <label className="flex items-center gap-2">
                       <input
                         type="radio"
@@ -2119,7 +2124,7 @@ export default function ProductForm({
               </div>
 
               {/* Discount Codes */}
-              {isDealRoute && (
+              {showDealFields && (
                 <>
                   <div className="w-full flex items-start justify-end gap-3 bg-white px-4 py-2 rounded-sm">
                     <p className="flex items-center justify-center gap-1">
@@ -2284,9 +2289,26 @@ export default function ProductForm({
                     )}
                   </div>
 
-                  <div className="text-sm text-gray-600 mt-1">
-                    Remaining tickets:{' '}
-                    <span>{availableTickets ?? total_tickets ?? 0}</span>
+                  {/* Remaining Tickets  */}
+                  <div className="w-full flex items-center justify-end gap-3 bg-white px-4 py-2 rounded-sm ">
+                    <p className="flex items-center justify-center gap-1">
+                      <label className="shrink-0 text-[15px] font-bold text-gray-700 py-2">
+                        Remaining Tickets
+                      </label>
+                      <span>
+                        <Info size={16} color="#333" />
+                      </span>
+                    </p>
+                    <div className="w-[700px]">
+                      <div className="w-[400px] bg-gray-100 px-3 py-1.5 rounded-md border border-gray-200">
+                        <span>{availableTickets ?? total_tickets ?? 0}</span>
+                      </div>
+                    </div>
+                    {errors.total_tickets && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.total_tickets.message as string}
+                      </p>
+                    )}
                   </div>
                 </>
               )}

@@ -72,7 +72,7 @@ router.put('/restore-deal/:id', isAuthenticated, restoreDeal);
 router.get('/get-stripe-account', isAuthenticated, isSeller, getStripeAccount);
 router.get('/get-all-products', getAllProducts);
 router.get('/get-all-deals', getAllDeals);
-router.get('/get-product/:slug', getProductDetails);
+router.get('/get-product/:slug', getProductDetails); // Used by edit page
 router.put('/update-product/:slug', updateProductBySlug);
 router.get('/product/get-trending-products', getTrendingProducts);
 router.get('/get-filtered-products', getFilteredProducts);

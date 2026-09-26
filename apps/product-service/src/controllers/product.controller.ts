@@ -388,13 +388,25 @@ export const createProduct = async (
         value: spec.value ?? null,
       }));
 
-    // ✅ Map color variants (hex optional, price required, images as URL strings)
-    const mappedVariants = (colorVariants as any[]).map((variant) => {
-      if (variant.price == null || isNaN(parseFloat(variant.price))) {
+    // ✅ Map color variants — same empty-string-safe pattern used in createDeal
+    const mapVariantData = (variant: any) => {
+      if (
+        variant.price == null ||
+        variant.price === '' ||
+        isNaN(parseFloat(variant.price))
+      ) {
         throw new ValidationError(
           'Each variant must have a valid price when variants are defined'
         );
       }
+
+      const dealPrice =
+        variant.dealPrice != null && variant.dealPrice !== ''
+          ? parseFloat(variant.dealPrice)
+          : null;
+      const dealStart = variant.dealStart ? new Date(variant.dealStart) : null;
+      const dealEnd = variant.dealEnd ? new Date(variant.dealEnd) : null;
+
       return {
         name: variant.name,
         title: variant.title,
@@ -404,19 +416,16 @@ export const createProduct = async (
         images: (variant.images || [])
           .filter((img: any) => img?.file_url)
           .map((img: any) => img.file_url), // ✅ only store URLs
+        dealPrice,
+        dealStart,
+        dealEnd,
       };
-    });
+    };
+
+    const mappedVariants = (colorVariants as any[]).map(mapVariantData);
 
     // ✅ Enforce conditional pricing logic
-    if (mappedVariants.length > 0) {
-      mappedVariants.forEach((v) => {
-        if (v.price == null || isNaN(v.price)) {
-          throw new ValidationError(
-            'Each variant must have a valid price when variants are defined'
-          );
-        }
-      });
-    } else {
+    if (mappedVariants.length === 0) {
       if (regular_price == null || isNaN(parseFloat(regular_price))) {
         throw new ValidationError(
           'Regular price is required when no variants exist'
@@ -455,8 +464,6 @@ export const createProduct = async (
       include: {
         images: true,
         colorVariants: true,
-        // ✅ product_specifications removed from include — it's embedded now,
-        // not a relation, so it comes back on newProduct automatically
       },
     });
 
@@ -502,8 +509,8 @@ export const createDeal = async (
       condition,
       shippingOption,
       discountCodes = [],
-      discount_start, // ✅ added
-      discount_end, // ✅ added
+      discount_start,
+      discount_end,
       total_tickets,
     } = req.body;
 
@@ -559,7 +566,7 @@ export const createDeal = async (
       .filter((spec) => spec.label)
       .map((spec) => ({ label: spec.label, value: spec.value ?? null }));
 
-    // ✅ Map color variants — carry each variant's OWN deal fields, not the top-level ones
+    // ✅ Map color variants — each variant carries its OWN deal fields
     const mapVariantData = (variant: any) => {
       const dealPrice =
         variant.dealPrice != null && variant.dealPrice !== ''
@@ -577,15 +584,14 @@ export const createDeal = async (
         images: (variant.images || [])
           .filter((img: any) => img?.file_url)
           .map((img: any) => img.file_url),
-        dealPrice, // ✅ each variant's own value
-        dealStart, // ✅ each variant's own value
-        dealEnd, // ✅ each variant's own value
+        dealPrice,
+        dealStart,
+        dealEnd,
       };
     };
 
     const mappedVariants = (colorVariants as any[]).map(mapVariantData);
 
-    // let product;
     let product: any;
     if (productId) {
       product = await prisma.products.findUnique({
@@ -609,8 +615,7 @@ export const createDeal = async (
         },
       });
 
-      // ✅ Sync existing variants (update by id, create any new ones)
-      // — this path never touched colorVariants before, so nothing persisted
+      // ✅ Sync variants on the promote-existing-product path
       const incomingVariants = colorVariants as any[];
       await Promise.all(
         incomingVariants.map((variant) => {
@@ -652,7 +657,7 @@ export const createDeal = async (
           shippingOption,
           product_specifications: mappedSpecifications,
           images: { create: mappedImages },
-          colorVariants: { create: mappedVariants }, // ✅ now includes deal fields per variant
+          colorVariants: { create: mappedVariants },
         },
         include: {
           images: true,
@@ -661,11 +666,8 @@ export const createDeal = async (
       });
     }
 
-    // ❌ removed: the old "apply deal to default variant only" block —
-    // superseded by per-variant sync above, which respects what the
-    // seller actually entered for each variant
-
-    // ✅ Create deal record linked to product
+    // ✅ Create deal record linked to product, with per-deal discount
+    // code windows + ticket allotments on the junction rows
     const newDeal = await prisma.deals.create({
       data: {
         productId: product.id,
@@ -695,6 +697,12 @@ export const createDeal = async (
           ? {
               create: discountCodes.map((id: string) => ({
                 discount: { connect: { id } },
+                discount_start: discount_start
+                  ? new Date(discount_start)
+                  : null,
+                discount_end: discount_end ? new Date(discount_end) : null,
+                total_tickets: total_tickets ?? null,
+                available_tickets: total_tickets ?? null, // seed full allotment
               })),
             }
           : undefined,
@@ -706,19 +714,8 @@ export const createDeal = async (
       },
     });
 
-    // ✅ Update discount code window + ticket count
-    if (discountCodes.length) {
-      await prisma.discount_codes.updateMany({
-        where: { id: { in: discountCodes } },
-        data: {
-          ...(total_tickets != null ? { total_tickets } : {}),
-          ...(discount_start
-            ? { discount_start: new Date(discount_start) }
-            : {}),
-          ...(discount_end ? { discount_end: new Date(discount_end) } : {}),
-        },
-      });
-    }
+    // ❌ removed: the old discount_codes.updateMany block —
+    // window + tickets now live on deal_discount_codes per-deal
 
     console.log('✅ Deal created successfully:', newDeal.id);
     return res.status(201).json({ success: true, product, deal: newDeal });
@@ -1525,7 +1522,7 @@ export const restoreDeal = async (
   }
 };
 
-// Get product details
+// Get product details - used by edit page
 export const getProductDetails = async (
   req: Request,
   res: Response,
@@ -1534,15 +1531,7 @@ export const getProductDetails = async (
   try {
     console.log('🟢 getProductDetails called with slug:', req.params.slug);
 
-    let product:
-      | (products & {
-          images: any;
-          Shop: any;
-          colorVariants?: any;
-          product_specifications?: any;
-          deals?: any;
-        })
-      | null = null;
+    let product: any = null; // ✅ loosened — holds either a products or deals record
 
     // ✅ First check products
     product = await prisma.products.findUnique({
@@ -1550,10 +1539,12 @@ export const getProductDetails = async (
       include: {
         images: true,
         Shop: true,
-        colorVariants: true, // ✅ include variants
-        deals: true,
-        // ✅ product_specifications removed from include — embedded composite
-        // field, comes back automatically as part of the product document
+        colorVariants: true,
+        deals: {
+          include: {
+            dealDiscountCodes: { include: { discount: true } },
+          },
+        },
       },
     });
 
@@ -1565,7 +1556,7 @@ export const getProductDetails = async (
           images: true,
           Shop: true,
           colorVariants: true,
-          // ✅ product_specifications removed here too
+          dealDiscountCodes: { include: { discount: true } },
         },
       });
     }
@@ -1576,7 +1567,6 @@ export const getProductDetails = async (
       return;
     }
 
-    // ✅ Debug logs
     console.log('🟢 Product images:', product.images);
     console.log('🟢 Product colorVariants:', product.colorVariants);
     console.log('🟢 Product specifications:', product.product_specifications);

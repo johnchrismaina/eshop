@@ -130,8 +130,8 @@ model shops {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   products      products[]    @relation("ShopProducts") // one-to-many products
-  // deal          deals[]       @relation("ShopDeals") // one-to-many events
-  deals         deals[]       @relation("ShopDeals") // one-to-many events
+  // deal          deals[]       @relation("ShopDeals") // one-to-many deals
+  deals         deals[]       @relation("ShopDeals") // one-to-many deals
 
   orders    orders[]
   followers userFollowsShop[]
@@ -335,25 +335,35 @@ enum DiscountStatus {
 }
 
 model discount_codes {
-  id                String       @id @default(auto()) @map("_id") @db.ObjectId
-  public_name       String
-  discountType      DiscountType
-  discountValue     Float
-  discountCode      String       @unique
-  sellerId          String       @db.ObjectId
-  total_tickets     Int?
-  available_tickets Int?
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  public_name   String
+  discountType  DiscountType
+  discountValue Float
+  discountCode  String         @unique
+  sellerId      String         @db.ObjectId
+  status        DiscountStatus @default(Active)
 
-  discount_start DateTime?
-  discount_end   DateTime?
-  status         DiscountStatus @default(Active)
-
-  // ✅ Junction relations
   dealDiscountCodes    deal_discount_codes[]
   productDiscountCodes product_discount_codes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model deal_discount_codes {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  dealId     String @db.ObjectId
+  discountId String @db.ObjectId
+
+  deal     deals          @relation(fields: [dealId], references: [id])
+  discount discount_codes @relation(fields: [discountId], references: [id])
+
+  discount_start    DateTime?
+  discount_end      DateTime?
+  total_tickets     Int?
+  available_tickets Int?
+
+  createdAt DateTime @default(now())
 }
 
 model product_discount_codes {
@@ -364,16 +374,10 @@ model product_discount_codes {
   product  products       @relation(fields: [productId], references: [id])
   discount discount_codes @relation(fields: [discountId], references: [id])
 
-  createdAt DateTime @default(now())
-}
-
-model deal_discount_codes {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  dealId     String @db.ObjectId
-  discountId String @db.ObjectId
-
-  deal     deals          @relation(fields: [dealId], references: [id])
-  discount discount_codes @relation(fields: [discountId], references: [id])
+  discount_start    DateTime?
+  discount_end      DateTime?
+  total_tickets     Int?
+  available_tickets Int?
 
   createdAt DateTime @default(now())
 }

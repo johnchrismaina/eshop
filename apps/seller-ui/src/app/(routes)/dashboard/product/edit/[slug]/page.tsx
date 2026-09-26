@@ -54,14 +54,36 @@ function mapSpecsArrayToRecord(
   return record;
 }
 
+// Finds the active deal on a product (matches the same logic used
+// server-side when syncing deals), then flattens its discount-code
+// junction rows into the flat shape ProductForm expects.
+function extractDiscountFields(product: any) {
+  const deals = product.deals ?? [];
+  const activeDeal =
+    deals.find((d: any) => d.status === 'Active') ?? deals[0] ?? null;
+
+  const junctionRows = activeDeal?.dealDiscountCodes ?? [];
+
+  return {
+    discountCodes: junctionRows.map((row: any) => row.discountId),
+    // Use the first junction row's window/tickets as the form's single
+    // set of fields — if multiple codes have different windows, this
+    // takes the first one; adjust if you need per-code display instead.
+    discount_start: toDateInputString(junctionRows[0]?.discount_start),
+    discount_end: toDateInputString(junctionRows[0]?.discount_end),
+    total_tickets: junctionRows[0]?.total_tickets ?? undefined,
+  };
+}
+
 function mapProductToFormValues(product: any): FormValues {
+  const discountFields = extractDiscountFields(product);
+
   return {
     ...product,
     images: normalizeImages(product.images),
     deal_start: toDateInputString(product.deal_start),
     deal_end: toDateInputString(product.deal_end),
-    discount_start: toDateInputString(product.discount_start),
-    discount_end: toDateInputString(product.discount_end),
+    ...discountFields, // ✅ discountCodes, discount_start, discount_end, total_tickets
     stock: product.stock != null ? Number(product.stock) : undefined,
     regular_price:
       product.regular_price != null ? Number(product.regular_price) : undefined,
